@@ -1,0 +1,38 @@
+$frame gun02
+
+$frame stand1 stand2 stand3 stand4 stand5 stand6 stand7 stand8 stand9 stand10
+$frame stand11 stand12 stand13 stand14 stand15 stand16 stand17 stand18 stand19 stand20
+$frame stand21 stand22 stand23 stand24 stand25 stand26 stand27 stand28 stand29 stand30
+$frame stand31 stand32 stand33 stand34 stand35 stand36 stand37 stand38 stand39 stand40
+$frame stand41 stand42 stand43 stand44 stand45 stand46 stand47 stand48 stand49 stand50
+$frame stand51 stand52 stand53 stand54 stand55 stand56 stand57 stand58 stand59 stand60
+$frame stand61 stand62 stand63 stand64 stand65 stand66 stand67 stand68 stand69 stand70 stand71
+
+$frame walk01 walk02 walk03 walk04 walk05 walk06 walk07 walk08
+$frame walk09 walk10 walk11 walk12 walk13 walk14 walk15 walk16
+$frame walk17 walk18 walk19 walk20
+
+$frame run01 run02 run03 run04 run05 run06 run07 run08
+
+$frame pain101 pain102 pain103 pain104 pain105 pain106 pain107 pain108 pain109 pain110
+
+$frame pain201 pain202 pain203 pain204 pain205 pain206 pain207 pain208 pain209 pain210
+
+$frame duck01 duck02 duck03 duck04 duck05
+
+$frame death101 death102 death103 death104 death105 death106 death107 death108
+$frame death109 death110 death111 death112 death113 death114 death115 death116 death117
+$frame death118 death119 death120
+
+$frame death201 death202 death203 death204 death205 death206 death207 death208
+$frame death209 death210 death211 death212 death213 death214 death215 death216 death217
+$frame death218 death219 death220 death221 death222 death223 death224 death225
+
+$frame death301 death302 death303 death304 death305 death306 death307 death308
+$frame death309
+
+$frame load1 load2 load3 load4 load5 load6 load7 load8 load9 load10 load11
+
+$frame shoot1 shoot2 shoot3 shoot4 shoot5 shoot6 shoot7 shoot8 shoot9
+
+$frame FRAME_attak201 FRAME_attak202 FRAME_attak203 FRAME_attak204 FRAME_attak205 FRAME_attak206 FRAME_attak207 FRAME_attak208        	206

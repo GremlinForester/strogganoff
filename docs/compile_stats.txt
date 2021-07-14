@@ -1,0 +1,471 @@
+//******************************************************
+
+Cataboligne
+
+compile stats for various quake-c code sets
+
+-O2 switch is for fteqcc optimizations, level 2
+
+-Wall provides very excessive warnings for every last thing warn-able
+
+You can see where the -O2 switch provides considerable space savings
+in progs.dat.  There are 2 higher levels -O3 and -O4.  Further savings
+are not greatly significant and these are labeled "experimental".
+
+//******************************************************
+
+v101
+
+compiled on 11.23.14 - fteqcc
+
+ 88296 strofs (of 1000000)
+ 20229 numstatements (of 524288)
+  2091 numfunctions (of 16384)
+  4274 numglobaldefs (of 32768)
+   218 numfielddefs (195 unique) (of 2048)
+  4321 numpr_globals (of 65536)
+Writing ../progs.dat
+378810 TOTAL SIZE
+Writing ../progs.lno
+225 unique precache_sounds
+ 95 unique precache_models
+104 unique precache_files
+Compile Complete
+
+optres_shortenifnots 109
+optres_overlaptemps 7043
+optres_constantarithmatic 16
+optres_nonvec_parms 3901
+optres_assignments 398
+optres_unreferenced 68
+optres_dupconstdefs 101
+numtemps 127
+78 warnings
+
+
+//******************************************************
+
+v105
+
+compiled on 11.23.14 - fteqcc
+
+ 88436 strofs (of 1000000)
+ 20302 numstatements (of 524288)
+  2091 numfunctions (of 16384)
+  4281 numglobaldefs (of 32768)
+   218 numfielddefs (195 unique) (of 2048)
+  4327 numpr_globals (of 65536)
+Writing ../progs.dat
+379614 TOTAL SIZE
+Writing ../progs.lno
+225 unique precache_sounds
+ 95 unique precache_models
+104 unique precache_files
+Compile Complete
+
+optres_shortenifnots 115
+optres_overlaptemps 7093
+optres_constantarithmatic 16
+optres_nonvec_parms 3887
+optres_assignments 406
+optres_unreferenced 68
+optres_dupconstdefs 101
+numtemps 126
+78 warnings
+
+compiled on 11.23.14 - fteqcc -Wall -O2
+
+ 41164 strofs (of 1000000)
+ 20092 numstatements (of 524288)
+  2091 numfunctions (of 16384)
+  3013 numglobaldefs (of 32768)
+   218 numfielddefs (195 unique) (of 2048)
+  4229 numpr_globals (of 65536)
+Writing ../progs.dat
+320126 TOTAL SIZE
+Not writing linenumbers file due to conflicting optimisation
+225 unique precache_sounds
+ 95 unique precache_models
+104 unique precache_files
+Compile Complete
+
+optres_shortenifnots 115
+optres_overlaptemps 7093
+optres_noduplicatestrings 26272
+optres_constantarithmatic 16
+optres_nonvec_parms 3782
+optres_constant_names 8201
+optres_precache_file 1413
+optres_filenames 269
+optres_assignments 406
+optres_unreferenced 68
+optres_locals 5360
+optres_function_names 552
+optres_dupconstdefs 101
+numtemps 126
+244 warnings
+
+//******************************************************
+
+v106.0
+
+compiled on 11.23.14 - fteqcc
+
+ 88540 strofs (of 1000000)
+ 20419 numstatements (of 524288)
+  2091 numfunctions (of 16384)
+  4290 numglobaldefs (of 32768)
+   218 numfielddefs (195 unique) (of 2048)
+  4338 numpr_globals (of 65536)
+Writing ../progs.dat
+380770 TOTAL SIZE
+Writing ../progs.lno
+225 unique precache_sounds
+ 95 unique precache_models
+104 unique precache_files
+Compile Complete
+
+optres_shortenifnots 115
+optres_overlaptemps 7149
+optres_constantarithmatic 16
+optres_nonvec_parms 3898
+optres_assignments 408
+optres_unreferenced 68
+optres_dupconstdefs 101
+numtemps 128
+78 warnings
+
+compiled on 11.23.14 - fteqcc -Wall -O2
+
+ 41164 strofs (of 1000000)
+ 20209 numstatements (of 524288)
+  2091 numfunctions (of 16384)
+  3019 numglobaldefs (of 32768)
+   218 numfielddefs (195 unique) (of 2048)
+  4240 numpr_globals (of 65536)
+Writing ../progs.dat
+321154 TOTAL SIZE
+Not writing linenumbers file due to conflicting optimisation
+225 unique precache_sounds
+ 95 unique precache_models
+104 unique precache_files
+Compile Complete
+
+optres_shortenifnots 115
+optres_overlaptemps 7149
+optres_noduplicatestrings 26290
+optres_constantarithmatic 16
+optres_nonvec_parms 3793
+optres_constant_names 8218
+optres_precache_file 1413
+optres_filenames 269
+optres_assignments 408
+optres_unreferenced 68
+optres_locals 5414
+optres_function_names 552
+optres_dupconstdefs 101
+numtemps 128
+244 warnings
+
+//******************************************************
+
+v106
+
+compiled on 11.23.14 - fteqcc
+
+ 88564 strofs (of 1000000)
+ 20427 numstatements (of 524288)
+  2091 numfunctions (of 16384)
+  4294 numglobaldefs (of 32768)
+   218 numfielddefs (195 unique) (of 2048)
+  4340 numpr_globals (of 65536)
+Writing ./progs.dat
+380898 TOTAL SIZE
+Writing ./progs.lno
+225 unique precache_sounds
+ 95 unique precache_models
+104 unique precache_files
+Compile Complete
+
+optres_shortenifnots 116
+optres_overlaptemps 7148
+optres_constantarithmatic 16
+optres_nonvec_parms 3908
+optres_assignments 407
+optres_unreferenced 67
+optres_dupconstdefs 101
+numtemps 128
+62 warnings
+
+compiled on 11.23.14 - fteqcc -Wall -O2
+
+ 41164 strofs (of 1000000)
+ 20217 numstatements (of 524288)
+  2091 numfunctions (of 16384)
+  3019 numglobaldefs (of 32768)
+   218 numfielddefs (195 unique) (of 2048)
+  4242 numpr_globals (of 65536)
+Writing ./progs.dat
+321226 TOTAL SIZE
+Not writing linenumbers file due to conflicting optimisation
+225 unique precache_sounds
+ 95 unique precache_models
+104 unique precache_files
+Compile Complete
+
+optres_shortenifnots 116
+optres_overlaptemps 7148
+optres_noduplicatestrings 26290
+optres_constantarithmatic 16
+optres_nonvec_parms 3803
+optres_constant_names 8240
+optres_precache_file 1413
+optres_filenames 269
+optres_assignments 407
+optres_unreferenced 67
+optres_locals 5414
+optres_function_names 552
+optres_dupconstdefs 101
+numtemps 128
+228 warnings
+
+//******************************************************
+
+v106_cln
+
+compiled on 11.23.14 - fteqcc
+
+ 88568 strofs (of 1000000)
+ 20457 numstatements (of 524288)
+  2091 numfunctions (of 16384)
+  4293 numglobaldefs (of 32768)
+   218 numfielddefs (195 unique) (of 2048)
+  4340 numpr_globals (of 65536)
+Writing ../progs.dat
+381134 TOTAL SIZE
+Writing ../progs.lno
+225 unique precache_sounds
+ 95 unique precache_models
+104 unique precache_files
+Compile Complete
+
+optres_shortenifnots 116
+optres_overlaptemps 7173
+optres_constantarithmatic 19
+optres_nonvec_parms 3904
+optres_assignments 408
+optres_unreferenced 67
+optres_dupconstdefs 101
+numtemps 128
+62 warnings
+
+compiled on 11.23.14 - fteqcc -Wall -O2
+
+ 41164 strofs (of 1000000)
+ 20247 numstatements (of 524288)
+  2091 numfunctions (of 16384)
+  3019 numglobaldefs (of 32768)
+   218 numfielddefs (195 unique) (of 2048)
+  4242 numpr_globals (of 65536)
+Writing ../progs.dat
+321466 TOTAL SIZE
+Not writing linenumbers file due to conflicting optimisation
+225 unique precache_sounds
+ 95 unique precache_models
+104 unique precache_files
+Compile Complete
+
+optres_shortenifnots 116
+optres_overlaptemps 7173
+optres_noduplicatestrings 26290
+optres_constantarithmatic 19
+optres_nonvec_parms 3799
+optres_constant_names 8245
+optres_precache_file 1413
+optres_filenames 269
+optres_assignments 408
+optres_unreferenced 67
+optres_locals 5414
+optres_function_names 552
+optres_dupconstdefs 101
+numtemps 128
+228 warnings
+
+//******************************************************
+
+v107 qc++
+
+compiled on 4.26.14 - fteqcc -Wno-mundane
+
+ 48452 strofs (of 1000000)
+ 21089 numstatements (of 524288)
+   639 numfunctions (of 16384)
+  2303 numglobaldefs (of 32768)
+   270 numfielddefs (245 unique) (of 2048)
+  2674 numpr_globals (of 65536)
+Writing ./progs.dat
+271628 TOTAL SIZE
+Writing ./progs.lno
+ 69 unique precache_models
+Compile Complete
+
+optres_shortenifnots 157
+optres_overlaptemps 11429
+optres_constantarithmatic 158
+optres_nonvec_parms 3404
+optres_assignments 361
+optres_unreferenced 117
+optres_dupconstdefs 1
+numtemps 152
+69 warnings
+
+
+compiled on 4.26.14 - fteqcc -Wall -O2
+
+ 24796 strofs (of 1000000)
+ 21089 numstatements (of 524288)
+   639 numfunctions (of 16384)
+  1597 numglobaldefs (of 32768)
+   270 numfielddefs (245 unique) (of 2048)
+  2674 numpr_globals (of 65536)
+Writing ./progs.dat
+242324 TOTAL SIZE
+Not writing linenumbers file due to conflicting optimisation
+ 69 unique precache_models
+Compile Complete
+
+optres_shortenifnots 157
+optres_overlaptemps 11429
+optres_noduplicatestrings 10470
+optres_constantarithmatic 158
+optres_nonvec_parms 3404
+optres_constant_names 4812
+optres_filenames 346
+optres_assignments 361
+optres_unreferenced 117
+optres_locals 5233
+optres_function_names 441
+optres_dupconstdefs 1
+numtemps 152
+1079 warnings
+
+//******************************************************
+
+v106 recoded (release *)
+
+compiled on 5.9.15 - fteqcc -Wno-mundane
+
+ 44936 strofs (of 1000000)
+ 18439 numstatements (of 524288)
+   606 numfunctions (of 16384)
+  2086 numglobaldefs (of 32768)
+   210 numfielddefs (188 unique) (of 2048)
+  2430 numpr_globals (of 65536)
+Writing ./progs.dat
+242482 TOTAL SIZE
+Writing ./progs.lno
+ 69 unique precache_models
+Compile Complete
+
+optres_shortenifnots 140
+optres_overlaptemps 9771
+optres_constantarithmatic 158
+optres_nonvec_parms 3144
+optres_assignments 284
+optres_unreferenced 117
+numtemps 142
+69 warnings
+
+compiled on 5.9.15 - fteqcc -Wno-mundane -Wall -O2
+
+ 23372 strofs (of 1000000)
+ 18439 numstatements (of 524288)
+   606 numfunctions (of 16384)
+  1440 numglobaldefs (of 32768)
+   210 numfielddefs (188 unique) (of 2048)
+  2430 numpr_globals (of 65536)
+Writing ./progs.dat
+215750 TOTAL SIZE
+Not writing linenumbers file due to conflicting optimisation
+ 69 unique precache_models
+Compile Complete
+
+optres_shortenifnots 140
+optres_overlaptemps 9771
+optres_noduplicatestrings 9468
+optres_constantarithmatic 158
+optres_nonvec_parms 3144
+optres_constant_names 4488
+optres_filenames 316
+optres_assignments 284
+optres_unreferenced 117
+optres_locals 4790
+optres_function_names 382
+numtemps 142
+1077 warnings
+
+
+
+
+//******************************************************
+
+before ai_rep:
+
+ 66092 strofs (of 1000000)
+ 20971 numstatements (of 524288)
+  1235 numfunctions (of 16384)
+  3269 numglobaldefs (of 32768)
+   217 numfielddefs (194 unique) (of 2048)
+  3422 numpr_globals (of 65536)
+Writing ./progs.dat
+320153 TOTAL SIZE
+Writing ./progs.lno
+225 unique precache_sounds
+ 95 unique precache_models
+104 unique precache_files
+Compile Complete
+
+optres_shortenifnots 125
+optres_overlaptemps 9162
+optres_constantarithmatic 94
+optres_nonvec_parms 3775
+optres_assignments 411
+optres_dupconstdefs 1
+numtemps 129
+
+ai_rep coded in:
+
+ 66092 strofs (of 1000000)
+ 21016 numstatements (of 524288)
+  1235 numfunctions (of 16384)
+  3269 numglobaldefs (of 32768)
+   217 numfielddefs (194 unique) (of 2048)
+  3422 numpr_globals (of 65536)
+Writing ./progs.dat
+320513 TOTAL SIZE
+Writing ./progs.lno
+225 unique precache_sounds
+ 95 unique precache_models
+104 unique precache_files
+Compile Complete
+
+optres_shortenifnots 125
+optres_overlaptemps 9185
+optres_constantarithmatic 94
+optres_nonvec_parms 3782
+optres_assignments 411
+optres_dupconstdefs 1
+numtemps 129
+
+
+
+
+
+
+
+
+//******************************************************
+
+
+
+

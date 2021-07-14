@@ -1,0 +1,74 @@
+../progs.dat
+
+/// v1.06 RECODED
+
+// control file
+compiler.qc
+shared/defs.qc
+shared/nepdefs.qc
+
+//darkplaces extensions
+//dpext.qc
+
+shared/dpextensions.qc
+shared/strogganoff_defs.qc
+
+//material crap went here before frik
+
+effects.qc //muzzle flashes, shell casings, etc...
+
+playermovement.qc
+
+// frikbot module - 0.10.1.cat 
+
+frikbot/frik_code.qc
+
+materialsys_surface.qc
+materialsys_gibs.qc
+materialsys_breakable.qc
+
+subs.qc
+fight.qc
+ai.qc
+combat.qc
+items.qc
+weaponsys_anim.qc
+weapons_projectiles.qc
+weapons.qc
+world.qc
+client.qc
+player.qc
+q2_player.qc
+monsters.qc
+doors.qc
+buttons.qc
+triggers.qc
+plats.qc
+misc.qc
+
+q2_misc.qc
+
+q2/monsterq2_soldier.qc
+q2/monsterq2_berserk.qc
+q2/monsterq2_mutant.qc
+q2/monsterq2_brain.qc
+q2/monsterq2_infantry.qc
+q2/monsterq2_gladiator.qc
+
+q1/ogre.qc
+q1/demon.qc
+q1/shambler.qc
+q1/knight.qc
+q1/soldier.qc
+q1/wizard.qc
+q1/dog.qc
+q1/zombie.qc
+q1/boss.qc
+q1/tarbaby.qc		// registered
+q1/hknight.qc		// registered
+q1/fish.qc			// registered
+q1/shalrath.qc		// registered
+q1/enforcer.qc		// registered
+q1/oldone.qc		// registered
+
+debug.qc

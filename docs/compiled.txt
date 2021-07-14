@@ -1,0 +1,173 @@
+Title    : version 1.06 quake-c (RECODED)
+Filename : v106qc_recoded.zip
+Version  : 1.06
+Date     : 5.9.15
+Coder    : Number Six
+Email    : quakec@cataboligne.org
+Web site : http://www.moddb.com/members/invadercat
+Download : http://www.moddb.com/groups/qc/downloads
+
+Engines
+-------
+Darkplaces - comment out this line in compiler.qc: "// #define nondp"
+
+Quake - (should run under any engine that runs quake one)
+ - make this line in compiler.qc: "#define nondp"
+
+Construction
+------------
+Base          : v1.06 quake-c
+Tools         : fteqcc 1.00, scite 1.71, cats qr* grep scripts and qvar scripts
+option        : frikbot - version 0.10.1.cat (see readme for credit)
+
+Credit
+------
+iD software, John Carmack '96
+
+Shouts
+------
+qc forum - http://www.moddb.com/groups/qc/members
+
+What is this?
+-------------
+Original quake one 1.06 .qc files with various qc++ enhancements
+
+items:
+- compiler warnings fixed
+- operational enhancements (may or may _not_ affect game play, map loads, etc.)
+- server halting error() and objerror() statements removed
+- pointless code removed
+- ability to restore the above to v1.06 with #define (or commenting out such) in compiler.qc
+- many frame macros replaced with simpler framer macro
+- massive global variable reduction
+- new qc programming concepts (fteqcc is required to compile this)
+- darkplaces specific enhancements (this is the default compile)
+
+What if I dont use darplaces?
+
+You MUST uncomment:
+#define nondp
+so it looks like that in compiler.qc
+
+Why are the 69 warnings in darkplaces mode?
+
+Darkplaces has dynamic precache - you do not need to precache anything. So:
+69 unique precache_models
+All precache calls are removed - these 69 models have no precache, so the compiler complains.
+Why dont the individual warnings appear?
+I took them out in my compile script - 
+QCC="fteqcc -Wno-mundane"
+($QCC "$@") | grep -v "not precached"
+-Wno-mundane also removes some warnings.
+Compile with 'fteqcc' to see _all_ the warnings.  And no - they can not all be fixed.
+
+What is qc++?
+
+This is my designation for a new quake-c programming mantra.
+The end goal is a slimmer code base that is more mod friendly.
+Fteqcc #define statements are used to control a series of compile in modules.
+Such as frikbot - you can remove all the code by commenting out - //#define FRIKBOT.
+Framer defines and other smart code are included under this banner.
+
+Other notes:
+
+Code was only compiled with fteqcc.  Other qcc compilers may have serious issues with this code.
+
+The new "framer" macro was numerically verified to match the old frame macro.   See framer_tests.txt
+However, extensive / exhaustive testing was not performed.  I leave that to you if you desire.
+The original macros have been left in comment blocks for comparison.
+
+Nor was unmodified v106 code that may be affected by enhanced code deeply tested.
+
+See compile_stats.txt for comparison of code base usages.
+
+
+Instructions
+------------
+
+Extract source files to an empty folder, open a command line interface in that folder and:
+
+fteqcc -O2 -Wno-mundane
+
+if no errors are present, copy the resultant progs.dat to /quake/id1 or a designated mod sub-folder "/quake/v106recoded"
+
+Launch the game to run:
+
+darkplaces
+
+or
+
+darkplaces -game v106recoded
+
+
+
+sample compile output below:
+
+--------------- fteqcc 1.00 ----------------
+Source file: progs.src
+outputfile: ./progs.dat
+compiling compiler.qc
+#message:                       -- version 1.06 RECODED -- compile with fteqcc
+#message:                       -- (c) 1996 iD software, (c) 2014 Number Six
+#message:                       -- GPL - see license.txt for rights and details
+#message:
+#message:                       -- compile: qc++ v1.07 included
+#message:                       -- compile: operation upgrade v1.07 included
+#message:                       -- compile: objerror() and error() statements removed
+#message:                       -- compile: xvars level 0 control package
+compiling dpext.qc
+compiling defs.qc
+compiling frikbot/frik_code.qc
+compiling subs.qc
+compiling fight.qc
+compiling ai.qc
+compiling combat.qc
+compiling items.qc
+compiling weapons.qc
+compiling world.qc
+compiling client.qc
+compiling player.qc
+compiling monsters.qc
+compiling doors.qc
+compiling buttons.qc
+compiling triggers.qc
+compiling plats.qc
+compiling misc.qc
+compiling ogre.qc
+compiling demon.qc
+compiling shambler.qc
+compiling knight.qc
+compiling soldier.qc
+compiling wizard.qc
+compiling dog.qc
+compiling zombie.qc
+compiling boss.qc
+compiling tarbaby.qc
+compiling hknight.qc
+compiling fish.qc
+compiling shalrath.qc
+compiling enforcer.qc
+compiling oldone.qc
+compiling debug.qc
+Progs should run on any Quake executor
+ 44936 strofs (of 1000000)
+ 18439 numstatements (of 524288)
+   606 numfunctions (of 16384)
+  2086 numglobaldefs (of 32768)
+   210 numfielddefs (188 unique) (of 2048)
+  2430 numpr_globals (of 65536)
+Writing ./progs.dat
+242482 TOTAL SIZE
+Writing ./progs.lno
+ 69 unique precache_models
+Compile Complete
+
+optres_shortenifnots 140
+optres_overlaptemps 9771
+optres_constantarithmatic 158
+optres_nonvec_parms 3144
+optres_assignments 284
+optres_unreferenced 117
+numtemps 142
+69 warnings
+

@@ -1,0 +1,688 @@
+/*
+==============================================================================
+
+QUAKE II STROGG SOLDIERS
+
+monster_soldier_light
+monster_soldier
+monster_soldier_ss
+
+TODO: Machine gun attack is currently only a single frame and not a multi-shot attack.
+
+Corpse stuff.
+
+==============================================================================
+*/
+
+#include "monsterq2_soldier.qh"
+
+void() q2soldier_fire;
+void() q2soldier_death1fire;
+void() q2soldier_selectwalk;
+
+// STAND 1
+
+framerloop($stand101, $stand130, q2soldier_stand1, 0.1, ai_stand());
+
+// STAND 2
+
+framerloop($stand301, $stand339, q2soldier_stand2_1, 0.1, ai_stand());
+
+// WALK 1
+
+framerloop($walk101, $walk133, q2soldier_1walk1, 0.1,
+
+	frame_arb($walk133, q2soldier_selectwalk(););
+//	frame_arb($walk104, footsetp(););
+//	frame_arb($walk109, footstep(););
+	frame_arb($walk104,
+//	footsetp();	
+	if (self.bIsWounded && self.bleedcount < MAX_BLEED)
+	{
+		local	vector	org;
+		org = self.origin + '0 0 24';
+		SpawnBlood (org, '0 0 0', 5);
+		self.bleedcount++;
+	}
+	);
+
+	ai_rep($walk101, ai_walk, 3, 6, 3, 2, 2, 2, 1, 6);
+	ai_rep($walk109, ai_walk, 5, 3, -1, 0, 0, 0, 0, 0);
+	ai_rep($walk117, ai_walk, 0, 0, 0, 0, 0, 0, 0, 0);
+	ai_rep($walk125, ai_walk, 0, 0, 0, 0, 0, 0, 0, 0);
+);
+
+// WALK 2
+
+framerloop($walk209, $walk218, q2soldier_2walk1, 0.1,
+
+	frame_arb($walk218, q2soldier_selectwalk(););
+//	frame_arb($walk210, footsetp(););
+//	frame_arb($walk214, footstep(););
+
+	ai_rep($walk209, ai_walk, 4, 4, 9, 8, 5, 1, 3, 7);
+	ai_rep($walk217, ai_walk, 6, 7, 0, 0, 0, 0, 0, 0);
+);
+
+// RUN
+
+framerloop($run03, $run08, q2soldier_run1, 0.1,
+
+//	frame_arb($run04, footsetp(););
+//	frame_arb($run08, footstep(););
+
+	frame_arb($run04, 
+//	footstep();
+	if (self.bIsWounded && self.bleedcount < MAX_BLEED)
+	{
+		local	vector	org;
+		org = self.origin + '0 0 24';
+		SpawnBlood (org, '0 0 0', 5);
+		self.bleedcount++;
+	}
+	);
+	ai_rep($run03, ai_run, 10, 11, 11, 16, 10, 15, 0, 0);
+);
+
+// ATTACK
+
+framer($attak101, $attak112, q2soldier_atk1, q2soldier_run1, 0.1, ai_face();
+	
+	frame_arb($attak103,
+		q2soldier_fire();
+		self.effects = self.effects | EF_MUZZLEFLASH;
+	);
+	
+	frame_arb($attak106,
+		SUB_CheckRefire (q2soldier_atk1);
+	);
+	
+	frame_arb($attak108,
+		sound (self, CHAN_VOICE, "infantry/infatck3.wav", 1, ATTN_IDLE);
+	);
+);
+
+// PAIN1
+
+framer($pain101, $pain105, q2soldier_pain1, q2soldier_run1, 0.1, 
+	
+	frame_arb($pain101,
+		local	vector	org;
+		org = self.origin + '0 0 24';
+		SpawnBlood (org, '0 0 0', 20);
+	);
+	
+	frame_arb($pain105,
+		ai_pain(1);
+	);
+);
+
+// PAIN2
+
+framer($pain201, $pain207, q2soldier_painb1, q2soldier_run1, 0.1, 
+	
+	frame_arb($pain201,
+		local	vector	org;
+		org = self.origin + '0 0 24';
+		SpawnBlood (org, '0 0 0', 20);
+	);
+);
+
+// PAIN3
+
+framer($pain301, $pain318, q2soldier_pain3, q2soldier_run1, 0.1, 
+	
+	frame_arb($pain201,
+		local	vector	org;
+		org = self.origin + '0 0 24';
+		SpawnBlood (org, '0 0 0', 20);
+	);
+);
+
+// PAIN4
+
+framer($pain401, $pain417, q2soldier_pain4, q2soldier_run1, 0.1, 
+	
+	frame_arb($pain201,
+		local	vector	org;
+		org = self.origin + '0 0 24';
+		SpawnBlood (org, '0 0 0', 20);
+	);
+);
+
+void() q2Soldier_Random_Pain_Sound =
+{
+	local float r; 
+	r = random() * 3;
+	
+	if (r < 1) 
+	{ 
+		sound(self, CHAN_VOICE, "soldier/solpain1.wav", 1, ATTN_NORM);
+	}
+	else if (r < 2)
+	{
+		 sound(self, CHAN_VOICE, "soldier/solpain2.wav", 1, ATTN_NORM);
+	}
+	else
+	{ 			
+		sound(self, CHAN_VOICE, "soldier/solpain3.wav", 1, ATTN_NORM);
+	}
+}
+
+void(entity attacker, float damage)	q2soldier_pain =
+{
+	local float r;
+
+	//SKIN 0 = Red, Laser monster_soldier_light
+	//SKIN 2 = Shotgun monster_soldier
+	//SKIN 4 = Chaingun monster_soldier_ss
+	local	vector	org;
+	org = self.origin + '0 0 24';
+	SpawnBlood (org, '0 0 0', 30);
+	
+	if (self.skin == 4 && self.classname == "monster_soldier_ss") //machinegun soldier
+	{
+		self.skin = 5;
+	}
+	else if (self.skin == 2 && self.classname == "monster_soldier") //shogun soldier
+	{
+		self.skin = 3;
+	}
+	else if (self.skin == 0 && self.classname == "monster_soldier_light") //laser soldier
+	{
+		self.skin = 1; 
+	}
+
+	if (self.pain_finished > time)
+		return;
+
+	r = random();
+
+	if (r < 0.2)
+	{
+		self.pain_finished = time + 0.6;
+		q2soldier_pain1 ();
+	//	sound (self, CHAN_VOICE, "soldier/solpain1.wav", 1, ATTN_NORM);
+		q2Soldier_Random_Pain_Sound();
+	}
+	else if (r < 0.4)
+	{
+		self.pain_finished = time + 0.5;
+		q2soldier_painb1 ();
+	//	sound (self, CHAN_VOICE, "soldier/solpain2.wav", 1, ATTN_NORM);
+		q2Soldier_Random_Pain_Sound();
+	}
+	else if (r < 0.6)
+	{
+		self.pain_finished = time + 1.8;
+		q2soldier_pain3 ();
+	//	sound (self, CHAN_VOICE, "soldier/solpain3.wav", 1, ATTN_NORM);
+		q2Soldier_Random_Pain_Sound();
+	}
+	else
+	{
+		self.pain_finished = time + 1.7;
+		q2soldier_pain4 ();
+	//	sound (self, CHAN_VOICE, "soldier/solpain3.wav", 1, ATTN_NORM);
+		q2Soldier_Random_Pain_Sound();
+	}
+	
+	self.bIsWounded = 1;
+	self.bleedcount = 1;
+};
+
+void() Q2Laser_Touch =
+{
+	local vector org;
+
+	if (other == self.owner)
+		return;		// don't explode on owner
+
+	if (pointcontents(self.origin) == CONTENT_SKY)
+	{
+		remove(self);
+		return;
+	}
+
+	sound (self, CHAN_WEAPON, "enforcer/enfstop.wav", 1, ATTN_STATIC);
+	org = self.origin - 8*normalize(self.velocity);
+
+	if (other.health)
+	{
+		SpawnBlood (org, self.velocity*0.2, 15);
+		T_Damage (other, self, self.owner, 15);
+	}
+	else
+	{
+		WriteByte (MSG_BROADCAST, SVC_TEMPENTITY);
+		WriteByte (MSG_BROADCAST, TE_GUNSHOT);
+		WriteCoord (MSG_BROADCAST, org_x);
+		WriteCoord (MSG_BROADCAST, org_y);
+		WriteCoord (MSG_BROADCAST, org_z);
+	}
+
+	remove(self);
+};
+
+void(vector org, vector vec) LaunchQ2Laser =
+{
+	//local	vector	vec;
+
+	vec = normalize(vec);
+
+	newmis = spawn();
+	newmis.owner = self;
+	newmis.movetype = MOVETYPE_FLY;
+	newmis.solid = SOLID_BBOX;
+	//newmis.effects = EF_DIMLIGHT;
+	newmis.modelflags = MF_TRACER2;
+	newmis.glow_color = '200 0 0';
+	newmis.glow_size = 100;
+	newmis.light_lev = 200;
+	newmis.color = '1 0 0'; // color (does not affect radius), typical value '1 1 1' (bright white), can be up to '255 255 255' (nuclear blast)
+	newmis.style = 6; // light style (like normal light entities, flickering torches or switchable, etc)
+	newmis.pflags = PFLAGS_FULLDYNAMIC; // flags (see PFLAGS_ constants)
+	newmis.angles = '0 0 0'; // orientation of the light
+
+	setmodel (newmis, "progs/laser.mdl");
+	setsize (newmis, '0 0 0', '0 0 0');
+
+	setorigin (newmis, org);
+
+	newmis.velocity = vec * 600;
+	newmis.angles = vectoangles(newmis.velocity);
+
+	newmis.nextthink = time + 5;
+	newmis.think = SUB_Remove;
+	newmis.touch = Q2Laser_Touch;
+};
+
+void() q2soldier_fire =
+{
+	local	vector	dir;
+	local	entity	en;
+	local vector org;
+
+	ai_face();
+
+// fire somewhat behind the player, so a dodging player is harder to hit
+	en = self.enemy;
+
+	dir = en.origin - en.velocity*0.2;
+	dir = normalize (dir - self.origin);
+
+	org = self.origin + v_forward * 30 + v_right * -8.5 + '0 0 16';
+
+	if (self.classname == "monster_soldier")
+	{
+		FireBullets (4, dir, '0.1 0.1 0');
+		sound (self, CHAN_WEAPON, "soldier/solatck3.wav", 1, ATTN_NORM);
+
+	}
+	else if (self.classname == "monster_soldier_ss")
+	{
+		FireBullets (1, dir, '0.1 0.1 0');
+		sound (self, CHAN_WEAPON, "soldier/Solatck1.wav", 1, ATTN_NORM);
+	}
+	else
+	{
+		LaunchQ2Laser(org, self.enemy.origin - self.origin);
+	}
+};
+
+void() q2soldier_death1fire =
+{
+	local	vector	dir;
+	local	entity	en;
+	local vector org;
+
+	if (!visible (self.enemy))
+	return;
+
+	ai_face();
+
+	// fire somewhat behind the player, so a dodging player is harder to hit
+	en = self.enemy;
+
+	dir = en.origin - en.velocity*0.2;
+	dir = normalize (dir - self.origin);
+
+	org = self.origin + v_forward * 30 + v_right * 4 + '0 0 8';
+
+	if (self.skin == 5)
+	{
+		FireBullets (4, dir, '0.1 0.1 0');
+		sound (self, CHAN_WEAPON, "soldier/solatck3.wav", 1, ATTN_NORM);
+
+	}
+	else if (self.skin == 3)
+	{
+		FireBullets (4, dir, '0.1 0.1 0');
+		sound (self, CHAN_WEAPON, "soldier/Solatck1.wav", 1, ATTN_NORM);
+	}
+	else
+	{
+		LaunchQ2Laser(org, self.enemy.origin - self.origin);
+		sound (self, CHAN_WEAPON, "soldier/Solatck2.wav", 1, ATTN_NORM);
+	}
+};
+
+void() q2soldier_explode =
+{
+	self.movetype = MOVETYPE_NONE;
+	self.velocity = '0 0 0';
+	self.touch = SUB_Null;
+	self.solid = SOLID_NOT;
+	self.takedamage = DAMAGE_NO;
+	// did say self.owner
+	T_RadiusDamage (self, self, 30, world);
+	sound (self, CHAN_VOICE, "weapons/r_exp3.wav", 1, ATTN_NORM);
+	particle (self.origin, '0 0 0', 75, 255);
+	ThrowGib ("models/objects/gibs/arm/tris.md2", self.health, GIB_FLESH);
+	ThrowGib ("models/objects/gibs/chest/tris.md2", self.health, GIB_FLESH);
+	ThrowGib ("models/objects/gibs/head/tris.md2", self.health, GIB_FLESH);
+	ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health, GIB_FLESH);
+	/*
+	ThrowGib ("models/objects/gibs/arm/tris.md2", self.health, GIB_FLESH, 1);
+	ThrowGib ("models/objects/gibs/chest/tris.md2", self.health, GIB_FLESH, 1);
+	ThrowGib ("models/objects/gibs/head/tris.md2", self.health, GIB_FLESH, 1);
+	ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health, GIB_FLESH, 1);
+	ThrowGib ("progs/gib1.mdl", self.health, GIB_FLAMING);
+	ThrowGib ("progs/gib2.mdl", self.health, GIB_FLAMING);
+	ThrowGib ("progs/gib3.mdl", self.health, GIB_FLAMING);
+	*/
+	self.origin_z = self.origin_z + 32;
+	remove(self);
+};
+
+// DEATH1
+
+framer($death101, $death136, q2soldier_die1, SUB_Null, 0.1,
+	
+	frame_arb($death103,
+
+		self.solid = SOLID_NOT;
+		self.ammo_shells = 5;
+		DropBackpack();
+	);
+	
+		frame_arb($death122,
+		q2soldier_death1fire();
+	);
+	
+		frame_arb($death126,
+		q2soldier_death1fire();
+	);
+);
+
+
+// DEATH2
+
+framer($death201, $death235, q2soldier_die2, SUB_Null, 0.1,
+	
+	frame_arb($death203,
+
+		self.solid = SOLID_NOT;
+		self.ammo_shells = 5;
+		DropBackpack();
+	);
+);
+
+// DEATH3
+
+framer($death301, $death345, q2soldier_die3, SUB_Null, 0.1,
+	
+	frame_arb($death303,
+
+		self.solid = SOLID_NOT;
+		self.ammo_shells = 5;
+		DropBackpack();
+	);
+);
+
+// DEATH 4
+
+framer($death401, $death453, q2soldier_die4, SUB_Null, 0.1,
+	
+	frame_arb($death402,
+
+		self.solid = SOLID_NOT;
+		self.ammo_shells = 5;
+		DropBackpack();
+	);
+);
+
+// DEATH 5
+
+framer($death501, $death524, q2soldier_die5, SUB_Null, 0.1,
+	
+	frame_arb($death502,
+
+		self.solid = SOLID_NOT;
+		self.ammo_shells = 5;
+		DropBackpack();
+	);
+);
+
+// DEATH 6
+
+framer($death601, $death610, q2soldier_die6, SUB_Null, 0.1,
+	
+	frame_arb($death602,
+
+		self.solid = SOLID_NOT;
+		self.ammo_shells = 5;
+		DropBackpack();
+	);
+);
+
+
+void() q2soldier_die =
+{
+	local float r;
+// check for gib
+	if (self.health < -35)
+	{
+		sound (self, CHAN_VOICE, "misc/udeath.wav", 1, ATTN_NORM);
+/* 		ThrowGib ("models/objects/gibs/arm/tris.md2", self.health);
+		ThrowGib ("models/objects/gibs/chest/tris.md2", self.health);
+		ThrowGib ("models/objects/gibs/head/tris.md2", self.health);
+		ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health);
+		ThrowHead ("progs/h_player.mdl", self.health); */
+		q2soldier_explode();
+		remove(self);
+		return;
+	}
+
+// regular death
+	sound (self, CHAN_VOICE, "soldier/soldeth2.wav", 1, ATTN_NORM);
+	
+	r = random() * 6;
+		if (r < 1) q2soldier_die1 ();
+		else if (r < 2) q2soldier_die2 ();
+		else if (r < 3) q2soldier_die3 ();
+		else if (r < 4) q2soldier_die4 ();
+		else if (r < 5) q2soldier_die5 ();
+		else            q2soldier_die6 ();
+};
+
+void()	q2soldier_selectwalk =
+{
+	local float r;
+
+	r = random();
+
+	if (r < 0.1)
+	{
+		q2soldier_1walk1 ();
+	}
+	else
+	{
+		q2soldier_2walk1 ();
+	}
+};
+
+/*QUAKED monsterqc_soldier (1 0 0) (-16 -16 -24) (16 16 40) Ambush
+*/
+//SKIN 0 = Red, Laser monster_soldier_light
+//SKIN 2 = Shotgun monster_soldier
+//SKIN 4 = Chaingun monster_soldier_ss
+
+/*QUAKED monster_soldier_light (1 .5 0) (-16 -16 -24) (16 16 32) Ambush Trigger_Spawn Sight
+*/
+
+void () monster_soldier_light =
+{
+	self.classname = "monster_soldier_light";
+	if (deathmatch)
+	{
+		remove(self);
+		return;
+	}
+	precache_model ("models/monsters/soldier/tris.md2");
+	precache_model ("progs/h_guard.mdl");
+	precache_model ("progs/gib1.mdl");
+	precache_model ("progs/gib2.mdl");
+	precache_model ("progs/gib3.mdl");
+
+	// SHARED SOUNDS
+	precache_sound ("soldier/solidle1.wav");
+	precache_sound ("soldier/solsght1.wav");
+	precache_sound ("soldier/solsrch1.wav");
+	precache_sound ("infantry/infatck3.wav");
+
+	precache_sound ("misc/udeath.wav");		// gib death
+
+	self.solid = SOLID_SLIDEBOX;
+	self.movetype = MOVETYPE_STEP;
+
+	setmodel (self, "models/monsters/soldier/tris.md2");
+
+	setsize (self, '-16 -16 -24', '16 16 32');
+	self.health = 30;
+
+	self.th_stand = q2soldier_stand1;
+	self.th_walk = q2soldier_selectwalk; //q2soldier_2walk1;
+	self.th_run = q2soldier_run1;
+	self.th_missile = q2soldier_atk1;
+	self.th_pain = q2soldier_pain;
+	self.th_die = q2soldier_die;
+
+	walkmonster_start;
+
+	precache_sound ("soldier/solpain2.wav");
+	precache_sound ("soldier/soldeth2.wav");
+	precache_sound ("models/objects/laser/tris.md2");
+	precache_sound("misc/lasfly.wav");
+	precache_sound("soldier/solatck2.wav");
+
+	self.skin = 0; //laser
+}
+
+/*QUAKED monster_soldier (1 .5 0) (-16 -16 -24) (16 16 32) Ambush Trigger_Spawn Sight
+*/
+void () monster_soldier =
+{
+	self.classname = "monster_soldier";
+	if (deathmatch)
+	{
+		remove(self);
+		return;
+	}
+	precache_model ("models/monsters/soldier/tris.md2");
+	precache_model ("progs/h_guard.mdl");
+	precache_model ("progs/gib1.mdl");
+	precache_model ("progs/gib2.mdl");
+	precache_model ("progs/gib3.mdl");
+
+	// SHARED SOUNDS
+	precache_sound ("soldier/solidle1.wav");
+	precache_sound ("soldier/solsght1.wav");
+	precache_sound ("soldier/solsrch1.wav");
+	precache_sound ("infantry/infatck3.wav");
+
+	precache_sound ("misc/udeath.wav");		// gib death
+
+	self.solid = SOLID_SLIDEBOX;
+	self.movetype = MOVETYPE_STEP;
+
+	setmodel (self, "models/monsters/soldier/tris.md2");
+
+	setsize (self, '-16 -16 -24', '16 16 32');
+	self.health = 30;
+
+	self.th_stand = q2soldier_stand1;
+	self.th_walk = q2soldier_selectwalk; //q2soldier_2walk1;
+	self.th_run = q2soldier_run1;
+	self.th_missile = q2soldier_atk1;
+	self.th_pain = q2soldier_pain;
+	self.th_die = q2soldier_die;
+
+	walkmonster_start;
+
+	precache_sound ("soldier/solpain1.wav");
+	precache_sound ("soldier/soldeth1.wav");
+	precache_sound ("soldier/solatck1.wav");
+
+	self.skin = 2; //shotgun
+}
+
+/*QUAKED monster_soldier_ss (1 .5 0) (-16 -16 -24) (16 16 32) Ambush Trigger_Spawn Sight
+*/
+void () monster_soldier_ss =
+{
+	self.classname = "monster_soldier_ss";
+	if (deathmatch)
+	{
+		remove(self);
+		return;
+	}
+	precache_model ("models/monsters/soldier/tris.md2");
+	precache_model ("progs/h_guard.mdl");
+	precache_model ("progs/gib1.mdl");
+	precache_model ("progs/gib2.mdl");
+	precache_model ("progs/gib3.mdl");
+
+	// SHARED SOUNDS
+	precache_sound ("soldier/solidle1.wav");
+	precache_sound ("soldier/solsght1.wav");
+	precache_sound ("soldier/solsrch1.wav");
+	precache_sound ("infantry/infatck3.wav");
+
+	precache_sound ("soldier/solpain3.wav");
+	precache_sound ("soldier/soldeth3.wav");
+	precache_sound ("soldier/solatck3.wav");
+
+	precache_sound ("misc/udeath.wav");		// gib death
+
+	self.solid = SOLID_SLIDEBOX;
+	self.movetype = MOVETYPE_STEP;
+
+	setmodel (self, "models/monsters/soldier/tris.md2");
+
+	setsize (self, '-16 -16 -24', '16 16 32');
+	self.health = 40;
+
+	self.th_stand = q2soldier_stand1;
+	self.th_walk = q2soldier_selectwalk; //q2soldier_2walk1;
+	self.th_run = q2soldier_run1;
+	self.th_missile = q2soldier_atk1;
+	self.th_pain = q2soldier_pain;
+	self.th_die = q2soldier_die;
+
+	walkmonster_start;
+
+	self.skin = 4; //machinegun
+}
+
+#ifdef q2monster_replace_soldier
+void() monster_army =
+{
+	local float r;
+	
+		r = random() * 2;
+		if (r < 1) monster_soldier_light ();
+		else if (r < 2) monster_soldier ();
+		else            monster_soldier_ss ();
+};
+#endifdef
