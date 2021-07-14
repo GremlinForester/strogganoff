@@ -14,6 +14,8 @@ Unknow programmer, for his great and simple use of csqc
 http://www.quakewiki.net/quake-1/mods/custom-hud/
 To compile use fteqcc (not included)
 Nahuel.
-************************************
-v3
+
 show players in game and  end stats maps, (kleshik and nexuiz stuff in "kleshikstuff.qc)
+************************************
+
+Hopefully is is somewhat accurate. If not please let me know and I'll correct.
