@@ -13,6 +13,7 @@ Seven, for arranging my code
 Unknow programmer, for his great and simple use of csqc
 http://www.quakewiki.net/quake-1/mods/custom-hud/
 To compile use fteqcc (not included)
+
 Nahuel.
 
 show players in game and  end stats maps, (kleshik and nexuiz stuff in "kleshikstuff.qc)
