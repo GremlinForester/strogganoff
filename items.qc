@@ -530,6 +530,20 @@ void() weapon_touch =
 			self.ammo_shells = self.ammo_shells + 5;
 		}
 	}
+	else if (stemp.classname == "weapon_shotgun")
+	{
+		if (leave && (self.items & WEP_SHOTGUN) )
+			return;
+#ifdef unused
+		hadammo = self.ammo_rockets;
+#endifdef
+		new = WEP_SHOTGUN;
+		
+		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
+		if (self != stemp.owner){
+			self.ammo_shells = self.ammo_shells + 5;
+		}
+	}
 	else if (stemp.classname == "weapon_rocketlauncher")
 	{
 		if (leave && (self.items & WEP_ROCKET_LAUNCHER) )
@@ -643,6 +657,22 @@ void() weapon_touch =
 
 // note: this can be overriden like item_shells, but has little advantage besides sticking in other map models & netnames that transform to q1 stuff in 1pv
 
+void() weapon_shotgun =
+{
+	if (!self.model) // allow next 5 functions to come here & not run this set
+	{
+		precache_model ("models/weapons/g_shotg/tris.md2");
+		setmodel (self, "models/weapons/g_shotg/tris.md2");
+		self.weapon = WEP_SHOTGUN;
+		self.netname = "Shotgun";
+	}
+	self.classname = "weapon_shotgun";
+	self.modelflags = MF_ROTATE;
+	self.touch = weapon_touch;
+	setsize (self, '-16 -16 0', '16 16 56');
+	StartItem ();
+};
+
 void() weapon_supershotgun =
 {
 	if (!self.model) // allow next 5 functions to come here & not run this set
@@ -669,6 +699,7 @@ void() weapon_machinegun =
 	self.netname = "Machinegun";
 	self.classname = "weapon_machinegun";
 //	weapon_supershotgun();
+	self.modelflags = MF_ROTATE;
 	self.touch = weapon_touch;
 	setsize (self, '-16 -16 0', '16 16 56');
 	StartItem ();
@@ -1739,6 +1770,10 @@ void() q2_tossWeapon{
 	if (this.weapon == WEP_SUPERSHOTGUN){
 		weapon_supershotgun();
 		self.classname = "weapon_supershotgun";
+	}
+	else if (this.weapon == WEP_SHOTGUN){
+		weapon_shotgun();
+		self.classname = "weapon_shotgun";
 	}
 	else if (this.weapon == WEP_MACHINEGUN){
 		weapon_machinegun();
