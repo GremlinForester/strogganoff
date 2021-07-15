@@ -20,3 +20,5 @@ show players in game and  end stats maps, (kleshik and nexuiz stuff in "kleshiks
 ************************************
 
 Hopefully is is somewhat accurate. If not please let me know and I'll correct.
+
+Testing.
