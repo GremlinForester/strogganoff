@@ -1739,32 +1739,26 @@ void() q2_tossWeapon{
 	if (this.weapon == WEP_SUPERSHOTGUN){
 		weapon_supershotgun();
 		self.classname = "weapon_supershotgun";
-		this.currentammo = this.ammo_shells = max(0, this.ammo_shells - 5, this.ammo_shells);
 	}
 	else if (this.weapon == WEP_MACHINEGUN){
 		weapon_machinegun();
 		self.classname = "weapon_machinegun";
-		this.currentammo = this.inv_ammo_bullets = max(0, this.inv_ammo_bullets - 30, this.inv_ammo_bullets);
 	}
 	else if (this.weapon == WEP_CHAINGUN){
 		weapon_chaingun();
 		self.classname = "weapon_chaingun";
-		this.currentammo = this.inv_ammo_bullets = max(0, this.inv_ammo_bullets - 30, this.inv_ammo_bullets);
 	}
 	else if (this.weapon == WEP_GRENADE_LAUNCHER){
 		weapon_grenadelauncher();
 		self.classname = "weapon_grenadelauncher";
-		this.currentammo = this.ammo_rockets = max(0, this.ammo_rockets - 5, this.ammo_rockets);
 	}
 	else if (this.weapon == WEP_ROCKET_LAUNCHER){
 		weapon_rocketlauncher();
 		self.classname = "weapon_rocketlauncher";
-		this.currentammo = this.ammo_rockets = max(0, this.ammo_rockets - 5, this.ammo_rockets);
 	}
 	else if (this.weapon == WEP_HYPERBLASTER){
 		weapon_hyperblaster();
 		self.classname = "weapon_hyperblaster";
-		this.currentammo = this.ammo_cells = max(0, this.ammo_cells - 15, this.ammo_cells);
 	}
 	else{
 		self = this;
