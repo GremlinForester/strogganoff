@@ -496,7 +496,13 @@ void() weapon_touch =
 		hadammo = self.inv_ammo_bullets;			
 #endifdef
 		new = WEP_MACHINEGUN;
-		self.inv_ammo_bullets = self.inv_ammo_bullets + 30;
+		
+		//tossWeapon ammo regain balancing
+		if (self == stemp.owner){
+			self.inv_ammo_bullets = self.inv_ammo_bullets + max(0, min(0, 30 - self.inv_ammo_bullets));
+		}else{
+			self.inv_ammo_bullets = self.inv_ammo_bullets + 30;
+		}
 	}
 	else if (stemp.classname == "weapon_chaingun")
 	{
@@ -506,17 +512,29 @@ void() weapon_touch =
 		hadammo = self.ammo_rockets;			
 #endifdef
 		new = WEP_CHAINGUN;
-		self.inv_ammo_bullets = self.inv_ammo_bullets + 30;
+		
+		//tossWeapon ammo regain balancing
+		if (self == stemp.owner){
+			self.inv_ammo_bullets = self.inv_ammo_bullets + max(0, min(0, 30 - self.inv_ammo_bullets));
+		}else{
+			self.inv_ammo_bullets = self.inv_ammo_bullets + 30;
+		}
 	}
 	else if (stemp.classname == "weapon_supershotgun")
 	{
 		if (leave && (self.items & WEP_SUPERSHOTGUN) )
 			return;
 #ifdef unused
-		hadammo = self.ammo_rockets;			
+		hadammo = self.ammo_rockets;
 #endifdef
 		new = WEP_SUPERSHOTGUN;
-		self.ammo_shells = self.ammo_shells + 5;
+		
+		//tossWeapon ammo regain balancing
+		if (self == stemp.owner){
+			self.ammo_shells = self.ammo_shells + max(0, min(0, 5 - self.ammo_shells));
+		}else{
+			self.ammo_shells = self.ammo_shells + 5;
+		}
 	}
 	else if (stemp.classname == "weapon_rocketlauncher")
 	{
@@ -526,7 +544,13 @@ void() weapon_touch =
 		hadammo = self.ammo_rockets;			
 #endifdef
 		new = WEP_ROCKET_LAUNCHER;
-		self.ammo_rockets = self.ammo_rockets + 5;
+		
+		//tossWeapon ammo regain balancing
+		if (self == stemp.owner){
+			self.ammo_rockets = self.ammo_rockets + max(0, min(0, 5 - self.ammo_rockets));
+		}else{
+			self.ammo_rockets = self.ammo_rockets + 5;
+		}
 	}
 	else if (stemp.classname == "weapon_grenadelauncher")
 	{
@@ -536,7 +560,13 @@ void() weapon_touch =
 		hadammo = self.ammo_rockets;			
 #endifdef
 		new = WEP_GRENADE_LAUNCHER;
-		self.ammo_rockets = self.ammo_rockets + 5;
+		
+		//tossWeapon ammo regain balancing
+		if (self == stemp.owner){
+			self.ammo_rockets = self.ammo_rockets + max(0, min(0, 5 - self.ammo_rockets));
+		}else{
+			self.ammo_rockets = self.ammo_rockets + 5;
+		}
 	}
 	else if (stemp.classname == "weapon_hyperblaster")
 	{
@@ -546,7 +576,13 @@ void() weapon_touch =
 		hadammo = self.ammo_rockets;			
 #endifdef
 		new = WEP_HYPERBLASTER;
-		self.ammo_cells = self.ammo_cells + 15;
+		
+		//tossWeapon ammo regain balancing
+		if (self == stemp.owner){
+			self.ammo_cells = self.ammo_cells + max(0, min(0, 15 - self.ammo_cells));
+		}else{
+			self.ammo_cells = self.ammo_cells + 15;
+		}
 	}
 	else
 #ifdef noobjerr
@@ -1691,4 +1727,77 @@ void() DropBackpack =
 	item.think = SUB_Remove;
 
 #undef item
+};
+
+/*
+===============
+	Toss WEAPONS
+	EXT_Q2
+		In Q2, the player could toss any old weapon out onto the map for w/e reason.
+		
+		self == player
+===============
+*/
+void() q2_tossWeapon{
+	local entity newWeapon;
+	local entity this;
+	
+	this = self;
+	newWeapon = spawn();
+	self = newWeapon;
+	
+	makevectors(this.angles);
+	
+	if (this.weapon == WEP_SUPERSHOTGUN){
+		weapon_supershotgun();
+		self.classname = "weapon_supershotgun";
+		this.currentammo = this.ammo_shells = max(0, this.ammo_shells - 5, this.ammo_shells);
+	}
+	else if (this.weapon == WEP_MACHINEGUN){
+		weapon_machinegun();
+		self.classname = "weapon_machinegun";
+		this.currentammo = this.inv_ammo_bullets = max(0, this.inv_ammo_bullets - 30, this.inv_ammo_bullets);
+	}
+	else if (this.weapon == WEP_CHAINGUN){
+		weapon_chaingun();
+		self.classname = "weapon_chaingun";
+		this.currentammo = this.inv_ammo_bullets = max(0, this.inv_ammo_bullets - 30, this.inv_ammo_bullets);
+	}
+	else if (this.weapon == WEP_GRENADE_LAUNCHER){
+		weapon_grenadelauncher();
+		self.classname = "weapon_grenadelauncher";
+		this.currentammo = this.ammo_rockets = max(0, this.ammo_rockets - 5, this.ammo_rockets);
+	}
+	else if (this.weapon == WEP_ROCKET_LAUNCHER){
+		weapon_rocketlauncher();
+		self.classname = "weapon_rocketlauncher";
+		this.currentammo = this.ammo_rockets = max(0, this.ammo_rockets - 5, this.ammo_rockets);
+	}
+	else if (this.weapon == WEP_HYPERBLASTER){
+		weapon_hyperblaster();
+		self.classname = "weapon_hyperblaster";
+		this.currentammo = this.ammo_cells = max(0, this.ammo_cells - 15, this.ammo_cells);
+	}
+	else{
+		self = this;
+		remove(newWeapon);
+		return;
+	}
+	
+	setsize (self, '-16 -16 0', '16 16 56');
+	setorigin(self, this.origin + v_forward * 24);
+	
+	self.owner = this;
+	
+	self.velocity = normalize((this.origin + (v_forward * 1)) - this.origin) * 175;
+	self.velocity_z = 150;
+	
+	self.movetype = MOVETYPE_TOSS;
+	
+	self.think = PlaceItem;
+	self.nextthink = time + 1;
+	
+	self = this;
+	//remove weapon form player inventory
+	self.items = self.items - (self.items & self.weapon);	
 };
