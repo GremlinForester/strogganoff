@@ -591,6 +591,12 @@ ImpulseCommands
 
 void() ImpulseCommands =
 {
+	if (self.impulse == 13){
+		q2_tossWeapon();
+		self.weapon = W_BestWeapon();
+		W_SetCurrentAmmo();
+	}
+	
 	if (self.impulse >= 1 && self.impulse <= 8) // && self.weaponstate == WEAPON_READY)
 	{
 		if (self.weaponstate == WEAPON_SPINDOWN)
