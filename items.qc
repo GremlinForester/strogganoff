@@ -497,10 +497,8 @@ void() weapon_touch =
 #endifdef
 		new = WEP_MACHINEGUN;
 		
-		//tossWeapon ammo regain balancing
-		if (self == stemp.owner){
-			self.inv_ammo_bullets = self.inv_ammo_bullets + max(0, min(0, 30 - self.inv_ammo_bullets));
-		}else{
+		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
+		if (self != stemp.owner){
 			self.inv_ammo_bullets = self.inv_ammo_bullets + 30;
 		}
 	}
@@ -513,10 +511,8 @@ void() weapon_touch =
 #endifdef
 		new = WEP_CHAINGUN;
 		
-		//tossWeapon ammo regain balancing
-		if (self == stemp.owner){
-			self.inv_ammo_bullets = self.inv_ammo_bullets + max(0, min(0, 30 - self.inv_ammo_bullets));
-		}else{
+		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
+		if (self != stemp.owner){
 			self.inv_ammo_bullets = self.inv_ammo_bullets + 30;
 		}
 	}
@@ -529,10 +525,8 @@ void() weapon_touch =
 #endifdef
 		new = WEP_SUPERSHOTGUN;
 		
-		//tossWeapon ammo regain balancing
-		if (self == stemp.owner){
-			self.ammo_shells = self.ammo_shells + max(0, min(0, 5 - self.ammo_shells));
-		}else{
+		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
+		if (self != stemp.owner){
 			self.ammo_shells = self.ammo_shells + 5;
 		}
 	}
@@ -545,10 +539,8 @@ void() weapon_touch =
 #endifdef
 		new = WEP_ROCKET_LAUNCHER;
 		
-		//tossWeapon ammo regain balancing
-		if (self == stemp.owner){
-			self.ammo_rockets = self.ammo_rockets + max(0, min(0, 5 - self.ammo_rockets));
-		}else{
+		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
+		if (self != stemp.owner){
 			self.ammo_rockets = self.ammo_rockets + 5;
 		}
 	}
@@ -561,10 +553,8 @@ void() weapon_touch =
 #endifdef
 		new = WEP_GRENADE_LAUNCHER;
 		
-		//tossWeapon ammo regain balancing
-		if (self == stemp.owner){
-			self.ammo_rockets = self.ammo_rockets + max(0, min(0, 5 - self.ammo_rockets));
-		}else{
+		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
+		if (self != stemp.owner){
 			self.ammo_rockets = self.ammo_rockets + 5;
 		}
 	}
@@ -577,10 +567,8 @@ void() weapon_touch =
 #endifdef
 		new = WEP_HYPERBLASTER;
 		
-		//tossWeapon ammo regain balancing
-		if (self == stemp.owner){
-			self.ammo_cells = self.ammo_cells + max(0, min(0, 15 - self.ammo_cells));
-		}else{
+		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
+		if (self != stemp.owner){
 			self.ammo_cells = self.ammo_cells + 15;
 		}
 	}
