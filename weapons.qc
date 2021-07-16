@@ -821,7 +821,7 @@ void (float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRAME_IDLE_FIRST, 
 	dprint ("\n");
 */	
 	self.weaponframe++;
-
+	
 	self.nextframetime = time + 0.135;
 }
 
