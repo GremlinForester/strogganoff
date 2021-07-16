@@ -1282,7 +1282,6 @@ Called every frame after physics are run
 
 void() q2player_landframes;
 
-<<<<<<< HEAD
 void() W_surfaceSniffer =
 {
 	local	vector	source;
@@ -1317,8 +1316,6 @@ void() W_surfaceSniffer =
 
 var float autocvar_cl_surfacesniffer = 0;
 
-=======
->>>>>>> 63a51d438d0984d0a5d9bf4965c35c083860bfcb
 void() PlayerPostThink =
 {
 //	local	float	mspeed, aspeed;	// fx_warning
@@ -1384,7 +1381,6 @@ void() PlayerPostThink =
 	#endifdef
 
 	Q3Surface_FootStep();
-<<<<<<< HEAD
 
 	if (autocvar_cl_surfacesniffer >= 1)
 	{
@@ -1394,8 +1390,6 @@ void() PlayerPostThink =
 	bprint (ftos(trace_dphitcontents));
 	bprint ("\n");
 	}
-=======
->>>>>>> 63a51d438d0984d0a5d9bf4965c35c083860bfcb
 };
 
 
