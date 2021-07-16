@@ -700,8 +700,8 @@ void (float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRAME_IDLE_FIRST, 
 		if (self.weaponstate == WEAPON_SPINDOWN && self.weapon == WEP_HYPERBLASTER)
 		{
 			self.idletime = time;
-			bprint ("Running attacking HyperBlaster!");
-			bprint ("\n");
+//			bprint ("Running attacking HyperBlaster!");
+//			bprint ("\n");
 			
 			switch (self.weaponframe)
 			{
@@ -718,8 +718,8 @@ void (float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRAME_IDLE_FIRST, 
 		else if (self.weaponstate == WEAPON_SPINDOWN && self.weapon == WEP_CHAINGUN)
 		{
 			self.idletime = time;
-			bprint ("Running attacking Chaingun!");
-			bprint ("\n");
+//			bprint ("Running attacking Chaingun!");
+//			bprint ("\n");
 			
 			switch (self.weaponframe)
 			{
@@ -765,8 +765,8 @@ void (float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRAME_IDLE_FIRST, 
 		if (self.weaponstate == WEAPON_SPINDOWN && self.weapon == WEP_HYPERBLASTER)
 		{
 			self.idletime = time;
-			bprint ("Done attacking HyperBlaster!");
-			bprint ("\n");
+//			bprint ("Done attacking HyperBlaster!");
+//			bprint ("\n");
 						
 			switch (self.weaponframe)
 			{
@@ -782,8 +782,8 @@ void (float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRAME_IDLE_FIRST, 
 		else if (self.weaponstate == WEAPON_SPINDOWN && self.weapon == WEP_CHAINGUN)
 		{
 			self.idletime = time;
-			bprint ("Idle attacking Chaingun!");
-			bprint ("\n");
+//			bprint ("Idle attacking Chaingun!");
+//			bprint ("\n");
 
 			switch (self.weaponframe)
 			{
@@ -813,12 +813,13 @@ void (float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRAME_IDLE_FIRST, 
 		}
 		
 	}
-
+/*
 	dprint (ftos(self.nextframetime));
 	dprint ("\n");
 	dprint ("Idle Fidget Sequence: ");
 	dprint (ftos(self.animIdle));
 	dprint ("\n");
+*/	
 	self.weaponframe++;
 
 	self.nextframetime = time + 0.135;

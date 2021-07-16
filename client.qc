@@ -1287,9 +1287,6 @@ void() W_surfaceSniffer =
 	local	vector	source;
 	local	vector	org;
 
-//	if (time < self.nextframetime)
-//		return;
-	
 	makevectors (self.v_angle);
 	source = self.origin + '0 0 -16';
 	traceline (source, source + v_forward*32, FALSE, self);
@@ -1300,20 +1297,13 @@ void() W_surfaceSniffer =
 	
 	if (self.movetype == MOVETYPE_NOCLIP)
 		return;
-	
-//	if (trace_dphitcontents == 0)
-//	{
-//		self.movetype = MOVETYPE_WALK;
-//		return;
-//	}
-	
-	if (trace_dphitcontents == 4864)
+
+/*	
+	if (trace_dphitcontents == 4097)
 	{
-		bprint ("Ladder");
+		bprint ("Ladder?");
 		bprint ("\n");
 		self.movetype = MOVETYPE_FLY;
-	//	Q3Surface_FootStep();
-		//Generic_FootStep();
 	}
 	else if (!trace_dphitcontents)
 	{
@@ -1321,10 +1311,10 @@ void() W_surfaceSniffer =
 		bprint ("\n");
 		self.movetype = MOVETYPE_WALK;
 	}
-
-//	self.nextframetime = time + 0.1;
-			
+*/	
 };
+
+var float autocvar_cl_surfacesniffer = 0;
 
 void() PlayerPostThink =
 {
@@ -1391,12 +1381,15 @@ void() PlayerPostThink =
 	#endifdef
 
 	Q3Surface_FootStep();
-	
+
+	if (autocvar_cl_surfacesniffer >= 1)
+	{
 	W_surfaceSniffer();
 	
 	bprint ("Contents flag: ");
 	bprint (ftos(trace_dphitcontents));
 	bprint ("\n");
+	}
 };
 
 
