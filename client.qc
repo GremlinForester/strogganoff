@@ -1282,6 +1282,50 @@ Called every frame after physics are run
 
 void() q2player_landframes;
 
+void() W_surfaceSniffer =
+{
+	local	vector	source;
+	local	vector	org;
+
+//	if (time < self.nextframetime)
+//		return;
+	
+	makevectors (self.v_angle);
+	source = self.origin + '0 0 -16';
+	traceline (source, source + v_forward*32, FALSE, self);
+//	if (trace_fraction == 1.0)
+//		return;
+	
+	org = trace_endpos - v_forward*4;
+	
+	if (self.movetype == MOVETYPE_NOCLIP)
+		return;
+	
+//	if (trace_dphitcontents == 0)
+//	{
+//		self.movetype = MOVETYPE_WALK;
+//		return;
+//	}
+	
+	if (trace_dphitcontents == 4864)
+	{
+		bprint ("Ladder");
+		bprint ("\n");
+		self.movetype = MOVETYPE_FLY;
+	//	Q3Surface_FootStep();
+		//Generic_FootStep();
+	}
+	else if (!trace_dphitcontents)
+	{
+		bprint ("No surface!");
+		bprint ("\n");
+		self.movetype = MOVETYPE_WALK;
+	}
+
+//	self.nextframetime = time + 0.1;
+			
+};
+
 void() PlayerPostThink =
 {
 //	local	float	mspeed, aspeed;	// fx_warning
@@ -1347,6 +1391,12 @@ void() PlayerPostThink =
 	#endifdef
 
 	Q3Surface_FootStep();
+	
+	W_surfaceSniffer();
+	
+	bprint ("Contents flag: ");
+	bprint (ftos(trace_dphitcontents));
+	bprint ("\n");
 };
 
 

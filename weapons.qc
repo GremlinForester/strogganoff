@@ -820,7 +820,7 @@ void (float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRAME_IDLE_FIRST, 
 	dprint (ftos(self.animIdle));
 	dprint ("\n");
 	self.weaponframe++;
-	
+
 	self.nextframetime = time + 0.135;
 }
 
