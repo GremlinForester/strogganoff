@@ -121,8 +121,6 @@ void play_step_sound () =
 			sound(self, CHAN_FOOT, "player/foot4.wav", 0.35, ATTN_IDLE);
 		}
 	}
-	
-	
 }
 
 void() Q3Surface_FootStep =
