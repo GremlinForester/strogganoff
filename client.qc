@@ -3,7 +3,7 @@
 void () W_WeaponFrame;
 void() W_SetCurrentAmmo;
 void() player_pain;
-void() q2player_stand1;
+//void() q2player_stand1;
 void (vector org) spawn_tfog;
 void (vector org, entity death_owner) spawn_tdeath;
 
@@ -606,8 +606,7 @@ called each time a player is spawned
 */
 void() DecodeLevelParms;
 void() q2PlayerDie;
-void() q2Player_selectIdle;
-void() q2Player_stand_still;
+void() q2Player_stand;
 
 void() PutClientInServer =
 {
@@ -631,6 +630,7 @@ void() PutClientInServer =
 	self.invincible_finished = 0;
 	self.effects = 0;
 	self.invincible_time = 0;
+	self.onladder = 0;
 	#ifdef q2model_lighting
 	self.effects = EF_FULLBRIGHT; //MrC Lightgrid workaround
 	#endifdef
@@ -676,8 +676,7 @@ void() PutClientInServer =
 #endifdef
 
 
-	q2Player_stand_still();
-	//q2player_stand1 (); //so weapons don't automatically idle anim on spawn
+	q2Player_stand();
 	
 	AttachTPWeapon();
 	
@@ -1049,6 +1048,73 @@ void() CheckWaterJump =
 		}
 	}
 };
+/*
+
+LADDER STUFF from Quake 1.5
+
+
+*/
+
+void() LadderSound =
+{
+	if (self.timeladder < time) 
+	{
+	// Reset timer for next sound to play
+	self.timeladder = time + self.entladder.waitmin;
+	// Check for any sounds and query if footsteps are active
+		if (self.entladder.sounds != 4) 
+		{
+			self.lip = random();
+			if (self.lip < 0.25 && self.entladder.noise1) 
+				sound (self, CHAN_BODY, self.entladder.noise1, 1, ATTN_NORM);
+			else if (self.lip < 0.5 && self.entladder.noise2) 
+				sound (self, CHAN_BODY, self.entladder.noise2, 1, ATTN_NORM);
+			else if (self.lip < 0.75 && self.entladder.noise3) 
+				sound (self, CHAN_BODY, self.entladder.noise3, 1, ATTN_NORM);
+			else if (self.entladder.noise4) 
+				sound (self, CHAN_BODY, self.entladder.noise4, 1, ATTN_NORM);
+		}
+	}
+}
+
+void() Ladder_ClimbJump =
+{
+	// Reset velocity upwards and all sideways movement
+	// so that the player stays on the ladder and climbs
+	// straight up with very little sidways movement
+	self.velocity = '0 0 0';
+	
+	//Updated ladder movement - look in the direction you want to move and hold jump
+	
+	if (self.v_angle_x < -25) //-25
+		self.velocity_z = self.entladder.speed; //climb up with the ladder speed when player is looking up
+	else if (self.v_angle_x > 25) //25
+		self.velocity_z = -self.entladder.speed; //negate ladder speed when player looks down, was not possible to descend before
+	else 
+		self.velocity = v_forward*215; //holding jump while looking straight on will dismount the player
+	//self.velocity_z = self.entladder.speed;
+	LadderSound();
+}
+
+void() Ladder_ClimbMove =
+{
+	//Use Dot products to determine if user is trying to move up or down
+	
+	if (Dot(v_forward,self.velocity) > 2 || Dot(v_up,self.velocity) < -20 || Dot(v_up,self.velocity) > 20) //-20 20
+	{
+		//self.velocity = v_forward*self.entladder.speed;
+		if (self.v_angle_x < -25) //-25
+			self.velocity_z = self.entladder.speed; //climb up with the ladder speed when player is looking up
+		else if (self.v_angle_x > 25) //25
+		{
+			self.velocity = v_forward*self.entladder.speed;
+			self.velocity_z = -self.entladder.speed; //negate ladder speed when player looks down, was not possible to descend before
+		}
+		else 
+		//	self.velocity = '0 0 0'; //let the player hover on ladder when not moving forward
+		LadderSound();		
+	}
+}
 
 
 /*
@@ -1113,6 +1179,45 @@ void() PlayerPreThink =
 	{
 		self.weapon = W_BestWeapon ();
 		W_SetCurrentAmmo ();
+	}
+	
+	//----------------------------------------------------------------------
+	// Rubicon Ladder Code - johnfitz
+	// Modified by me to support diff climb sounds and on/off/toggle states
+	//----------------------------------------------------------------------
+	
+	if (self.onladder) {
+		self.onladder = 0;		// Reset ladder touch function
+		if (self.button2) {		// Is jump key being pressed?
+			
+			//Climb Ladder with jump key
+			Ladder_ClimbJump();
+			
+			if (self.health > 0)
+				self.gravity = 0.0000001;
+			
+		}
+		else {
+			
+			// Jump key released, stay floating on the ladder
+			self.flags = self.flags | FL_JUMPRELEASED;
+			self.velocity = 0.7 * self.velocity;
+			self.velocity_z = 0;
+
+			//climb ladder with forward key
+			Ladder_ClimbMove();
+			if (self.health > 0)
+				self.gravity = 0.0000001;
+			
+			
+		}
+	}
+	else {
+		// Reset any ladder gravity settings
+		self.gravity = 1;
+		// Original jump conditions
+		//if (self.button2) PlayerJump ();
+		//else self.flags = self.flags | FL_JUMPRELEASED;
 	}
 };
 	
@@ -1281,7 +1386,27 @@ Called every frame after physics are run
 */
 
 void() q2player_landframes;
-
+/*
+void() CheckLadder =
+{
+	if (self.movetype == MOVETYPE_NOCLIP)
+		return;
+	
+	if (self.onladder == 1)
+	{
+		bprint ("Ladder Touch");
+		bprint ("\n");
+		self.movetype = MOVETYPE_FLY;
+	}
+	else
+	{
+		bprint ("No Ladder");
+		bprint ("\n");
+		self.onladder = 0;
+		self.movetype = MOVETYPE_WALK;
+	}
+}
+*/
 void() W_surfaceSniffer =
 {
 	local	vector	source;
@@ -1290,15 +1415,12 @@ void() W_surfaceSniffer =
 	makevectors (self.v_angle);
 	source = self.origin + '0 0 -16';
 	traceline (source, source + v_forward*32, FALSE, self);
-//	if (trace_fraction == 1.0)
-//		return;
 	
 	org = trace_endpos - v_forward*4;
 	
 	if (self.movetype == MOVETYPE_NOCLIP)
 		return;
-
-/*	
+	/*
 	if (trace_dphitcontents == 4097)
 	{
 		bprint ("Ladder?");
@@ -1307,14 +1429,10 @@ void() W_surfaceSniffer =
 	}
 	else if (!trace_dphitcontents)
 	{
-		bprint ("No surface!");
-		bprint ("\n");
 		self.movetype = MOVETYPE_WALK;
 	}
-*/	
+	*/
 };
-
-var float autocvar_cl_surfacesniffer = 0;
 
 void() PlayerPostThink =
 {
@@ -1388,6 +1506,25 @@ void() PlayerPostThink =
 	
 	bprint ("Contents flag: ");
 	bprint (ftos(trace_dphitcontents));
+	bprint ("\n");
+	bprint ("Surface flag: ");
+	bprint (ftos(trace_dphitq3surfaceflags));
+	bprint ("\n");
+	bprint ("Surface name: ");
+	bprint (trace_dphittexturename);
+	bprint ("\n");
+	bprint ("Surface start: ");
+	bprint (ftos(trace_dpstartcontents));
+	bprint ("\n");
+	}
+	
+	if (autocvar_cl_printpos>= 1)
+	{
+	bprint ("Position: ");
+	bprint (vtos(self.origin));
+	bprint ("\n");
+	bprint ("Angle: ");
+	bprint (vtos(self.angles));
 	bprint ("\n");
 	}
 };

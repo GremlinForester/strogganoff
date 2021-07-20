@@ -299,5 +299,7 @@ void() monster_brain =
 	self.th_pain = brain_pain;
 	self.th_die = brain_die;
 
+	self.sightSound = BRAIN_SIGHT;
+
 	walkmonster_start;
 };

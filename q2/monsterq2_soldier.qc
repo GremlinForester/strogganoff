@@ -7,9 +7,11 @@ monster_soldier_light
 monster_soldier
 monster_soldier_ss
 
-TODO: Machine gun attack is currently only a single frame and not a multi-shot attack.
-
-Corpse stuff.
+TODO: 
+Fix q2monster classname and deathfire stuff.
+Machine gun attack is currently only a single frame and not a multi-shot attack.
+Corpse stuff and death.
+Wow this needs work!
 
 ==============================================================================
 */
@@ -349,13 +351,13 @@ void() q2soldier_death1fire =
 
 	org = self.origin + v_forward * 30 + v_right * 4 + '0 0 8';
 
-	if (self.skin == 5)
+	if (self.classname == "monster_soldier_ss")
 	{
 		FireBullets (4, dir, '0.1 0.1 0');
 		sound (self, CHAN_WEAPON, "soldier/solatck3.wav", 1, ATTN_NORM);
 
 	}
-	else if (self.skin == 3)
+	else if (self.classname == "monster_soldier")
 	{
 		FireBullets (4, dir, '0.1 0.1 0');
 		sound (self, CHAN_WEAPON, "soldier/Solatck1.wav", 1, ATTN_NORM);
@@ -568,6 +570,8 @@ void () monster_soldier_light =
 	self.th_pain = q2soldier_pain;
 	self.th_die = q2soldier_die;
 
+	self.sightSound = "soldier/solsght1.wav";
+
 	walkmonster_start;
 
 	precache_sound ("soldier/solpain2.wav");
@@ -617,6 +621,8 @@ void () monster_soldier =
 	self.th_missile = q2soldier_atk1;
 	self.th_pain = q2soldier_pain;
 	self.th_die = q2soldier_die;
+
+	self.sightSound = "soldier/solsght1.wav";
 
 	walkmonster_start;
 
@@ -669,6 +675,8 @@ void () monster_soldier_ss =
 	self.th_missile = q2soldier_atk1;
 	self.th_pain = q2soldier_pain;
 	self.th_die = q2soldier_die;
+
+	self.sightSound = "soldier/solsght1.wav";
 
 	walkmonster_start;
 

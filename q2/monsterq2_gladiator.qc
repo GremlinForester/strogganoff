@@ -56,7 +56,7 @@ MELEE
 
 */
 
-void(float damage) glatiator_melee =
+void(float damage) gladiator_melee =
 {
 	if (!self.enemy)
 		return;
@@ -90,7 +90,7 @@ framer($FRAME_melee1, $FRAME_melee9, q2gladiator_melee_attack1, q2gladiator_run,
 
 	frame_arb($FRAME_melee5,sound(self, CHAN_WEAPON, GLADIATOR_SOUND_CLEAVER_SWING, 1, ATTN_NORM););
 	
-	frame_arb($FRAME_melee7, glatiator_melee(20); ai_charge(25););
+	frame_arb($FRAME_melee7, gladiator_melee(20); ai_charge(25););
 );
 
 // MELEE ATTACK 2
@@ -99,7 +99,7 @@ framer($FRAME_melee10, $FRAME_melee17, q2gladiator_melee_attack2, q2gladiator_ru
 
 	frame_arb($FRAME_melee11,sound(self, CHAN_WEAPON, GLADIATOR_SOUND_CLEAVER_SWING, 1, ATTN_NORM););
 	
-	frame_arb($FRAME_melee14, glatiator_melee(20); ai_charge(25););
+	frame_arb($FRAME_melee14, gladiator_melee(20); ai_charge(25););
 );
 
 // Select Attack
@@ -321,6 +321,8 @@ void () monster_gladiator =
 	self.th_die = q2gladiator_die;
 	self.th_missile = q2gladiator_attack;
 	self.th_melee = q2gladiator_melee_select;
+	
+	self.sightSound = GLADIATOR_SOUND_SIGHT;
 	
 	walkmonster_start;
 }

@@ -257,6 +257,8 @@ void() monster_mutant =
 //	self.th_missile = SUB_Null;			// jump attack
 	self.th_pain = q2mutant_pain;
 
+	self.sightSound = MUTANT_SOUND_SIGHT;
+
 	walkmonster_start;
 };
 

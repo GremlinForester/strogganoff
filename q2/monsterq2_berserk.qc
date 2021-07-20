@@ -323,5 +323,7 @@ void () monster_berserk =
 	self.th_die = q2berserk_die;
 	self.th_melee = q2berserk_melee;
 	
+	self.sightSound = BERSERK_SOUND_SIGHT;
+	
 	walkmonster_start;
 }

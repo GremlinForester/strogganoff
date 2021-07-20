@@ -32,7 +32,7 @@ fight.qc
 ai.qc
 combat.qc
 items.qc
-weaponsys_anim.qc
+//weaponsys_anim.qc
 weapons_projectiles.qc
 weapons.qc
 world.qc
@@ -54,6 +54,9 @@ q2/monsterq2_mutant.qc
 q2/monsterq2_brain.qc
 q2/monsterq2_infantry.qc
 q2/monsterq2_gladiator.qc
+q2/monsterq2_chick.qc
+q2/monsterq2_parasite.qc
+q2/monsterq2_gunner.qc
 
 q1/ogre.qc
 q1/demon.qc

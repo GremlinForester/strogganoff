@@ -7,6 +7,49 @@ void() monster_death_use;
 
 //============================================================================
 
+// Thanks Preach from func_messageboard
+
+//.float nexttalktime;
+
+void(entity player, entity monster) PlayerRemarkOnKill =
+{
+	local float r;
+
+	//self.nexttalktime = time + 5 + random() * 0.1;
+
+	if (time < player.nextsmacktalktime)
+	return;
+
+		if (monster.classname == "monster_soldier_light" && monster.health < -20 
+		|| monster.classname == "monster_soldier_ss" && monster.health < -10
+		|| monster.classname == "monster_soldier" && monster.health < -10
+		|| monster.classname == "monster_infantry" && monster.health < -10)
+		{
+			player.nextsmacktalktime = time + 2;
+			r = random() * 10;
+			if (r < 1) sound(player, CHAN_SPEECH, PLAYER_KILLCOMMENT_1, 0.5, ATTN_IDLE);
+			else if (r < 2) sound(player, CHAN_SPEECH, PLAYER_KILLCOMMENT_2, 0.5, ATTN_IDLE);
+			else if (r < 3) sound(player, CHAN_SPEECH, PLAYER_KILLCOMMENT_3, 0.5, ATTN_IDLE);
+			else if (r < 7) sound(player, CHAN_SPEECH, PLAYER_KILLCOMMENT_4, 0.5, ATTN_IDLE);
+			else if (r < 9) sound(player, CHAN_SPEECH, PLAYER_KILLCOMMENT_5, 0.5, ATTN_IDLE);
+			else if (r < 10) sound(player, CHAN_SPEECH, PLAYER_KILLCOMMENT_6, 0.5, ATTN_IDLE);
+			else sound(player, CHAN_SPEECH, "", 0.5, ATTN_IDLE);
+		}
+		
+		if (monster.classname == "misc_explobox")
+		{
+			sound(player, CHAN_SPEECH, "player/Duke_Allday.wav", 0.5, ATTN_IDLE);
+		}
+		
+		if (monster.classname == "explo_box")
+		{
+			sound(player, CHAN_SPEECH, "player/Duke_Allday.wav", 0.5, ATTN_IDLE);
+		}
+
+		player.nextsmacktalktime = time + 5;
+		return;
+};
+
 /*
 ============
 CanDamage
@@ -79,6 +122,14 @@ void(entity targ, entity attacker) Killed =
 	{
 		killed_monsters = killed_monsters + 1;
 		WriteByte (MSG_ALL, SVC_KILLEDMONSTER);
+	}
+	
+	if (autocvar_cl_smacktalk >= 1)
+	{
+		if (attacker.classname == "player")
+		{
+			PlayerRemarkOnKill(attacker, self);
+		}
 	}
 
 	ClientObituary(self, attacker);

@@ -3,13 +3,72 @@
 The largest change is the weapons code, which is handled in a similar fashion to Quake 2. Weapon_Generic is a function that will check the state of all weapons 
 and switch or loop frames based on player and weapons states. Firing, switching, idle animation loops and spin downs for the chaingun and hyperblaster.
 
-Making a note of it here to help make sense of it for myself or anyone else who might use this, may also do a tutorial.
-
-
+Making a note of it here to help make sense of it for myself or anyone else who might use this.
 
 */
 
+/*
+============
+PROGS DUMP / QUAKE 1.5 STUFF
+============
+*/
+
+.float onladder;
+.float		onladder;			// Update state from ladder entity to client
+.entity		entladder;			// Ladder entity for reference (time, sounds etc)
+.float		timeladder;			// Amount of time before playing climb sound
+
+float ENT_STARTOFF = 64;	// Global spawnflags setting
+float ESTATE_BLOCK = 6;		// Blocked OFF+DISABLE
+float ESTATE_LOWER = 7;		// ON+OFF+DISABLE
+float ESTATE_ON = 1;		// Switch ON
+float ESTATE_OFF = 2;		// Switch OFF
+float ESTATE_DISABLE = 4;	// Disabled (blocks toggle)
+float ESTATE_RESET = 8;		// Reset parameters
+
+// Entity state system
+.float		estate_trigger;		// Entity state to be applied to target
+.float		estate;				// Entity state (off,on and disable)
+.void()		estate_on;			// Entity state ON  function
+.void()		estate_off;			// Entity state OFF function
+.void()		estate_disable;		// Entity state DISABLE function
+.void()		estate_use;			// Entity state USE function
+.void()		estate_fire;		// Entity state USE++ function
+.void()		estate_reset;		// Entity state RESET function
+
+float (vector from, vector to) Dot =
+{
+	return from_x * to_x + from_y * to_y + from_z * to_z;
+};
+
+/*
+============
+ADDITIONAL CONSOLE COMMANDS
+============
+*/
+
+var float autocvar_cl_surfacesniffer = 0;
+var float autocvar_cl_smacktalk = 0;
+var float autocvar_cl_printpos = 0;
+
+/*
+============
+SMACK TALK LINES
+============
+*/
+#define PLAYER_KILLCOMMENT_1 "player/killcomment1.wav"
+#define PLAYER_KILLCOMMENT_2 "player/killcomment2.wav"
+#define PLAYER_KILLCOMMENT_3 "player/killcomment3.wav"
+#define PLAYER_KILLCOMMENT_4 "player/killcomment4.wav"
+#define PLAYER_KILLCOMMENT_5 "player/killcomment5.wav"
+#define PLAYER_KILLCOMMENT_6 "player/killcomment6.wav"
+
+.float nexttalktime;
+.float nextsmacktalktime;
+
 float START_ON = 1;
+
+.string sightSound;
 
 .float weaponstate;
 .float state;

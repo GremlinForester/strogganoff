@@ -417,5 +417,7 @@ void() monster_infantry =
 	self.th_die = infantry_die;
 	self.th_melee = q2infantry_melee;
 
+	self.sightSound = "infantry/INFSGHT1.wav";
+
 	walkmonster_start;
 };

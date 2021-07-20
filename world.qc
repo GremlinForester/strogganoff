@@ -206,6 +206,8 @@ void() main =
 
 entity	lastspawn;
 
+void(vector org, float height, vector rot) make_ladderVolume;
+
 //=======================
 /*QUAKED worldspawn (0 0 0) ?
 Only used for the world entity.
@@ -313,8 +315,18 @@ void() worldspawn =
 		cvar_set ("sv_gravity", "100");
 	else
 		cvar_set ("sv_gravity", "800");
+/*
 
-// the area based ambient sounds MUST be the first precache_sounds
+Quake 2 MP Map ladder volumes
+
+*/	
+	if (self.model == "maps/q2dm3.bsp")
+		make_ladderVolume('-226 202 -15', 130, '0 -30 0');
+	
+	if (self.model == "maps/base1.bsp")
+		make_ladderVolume('389 47 -220', 128, '0 -30 0');
+
+	// the area based ambient sounds MUST be the first precache_sounds
 
 // player precaches	
 	W_Precache ();			// get weapon precaches

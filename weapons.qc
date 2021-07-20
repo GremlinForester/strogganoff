@@ -398,7 +398,7 @@ void() CheatCommand =
 
 	self.ammo_rockets = 100;
 	self.inv_ammo_bullets = 200;
-	self.ammo_shells = 10;
+	self.ammo_shells = 100;
 	self.items = self.items | 
 		WEP_BLASTER |
 		WEP_SHOTGUN |

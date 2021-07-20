@@ -106,7 +106,7 @@ void()	doQ2PlayerModelStandframes =
 	self.walkframe++;
 }
 
-void()	q2Player_stand_still =[	$FRAME_stand01,	q2Player_stand_still	] //hold still dammit!
+void()	q2Player_stand =[	$FRAME_stand01,	q2Player_stand	] //hold still dammit!
 {
 	self.state = STATE_IDLE;
 	doQ2PlayerModelStandframes();
@@ -121,8 +121,7 @@ void()	q2player_run =[	$FRAME_run1,	q2player_run	]
 	if (!self.velocity_x && !self.velocity_y)
 	{
 		self.walkframe=0;
-		//q2player_stand1();
-		q2Player_stand_still();
+		q2Player_stand();
 		return;
 	}
 	
