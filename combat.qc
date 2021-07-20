@@ -36,16 +36,6 @@ void(entity player, entity monster) PlayerRemarkOnKill =
 			else sound(player, CHAN_SPEECH, "", 0.5, ATTN_IDLE);
 		}
 		
-		if (monster.classname == "misc_explobox")
-		{
-			sound(player, CHAN_SPEECH, "player/Duke_Allday.wav", 0.5, ATTN_IDLE);
-		}
-		
-		if (monster.classname == "explo_box")
-		{
-			sound(player, CHAN_SPEECH, "player/Duke_Allday.wav", 0.5, ATTN_IDLE);
-		}
-
 		player.nextsmacktalktime = time + 5;
 		return;
 };
