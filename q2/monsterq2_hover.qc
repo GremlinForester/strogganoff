@@ -60,7 +60,11 @@ framer($FRAME_pain201, $FRAME_pain212, hover_move_pain2_, hover_run, 0.1, ai_cha
 //PAIN1
 framer($FRAME_pain101, $FRAME_pain128, hover_move_pain1, hover_run, 0.1, ai_charge(0);
 	//todo - frame values
-	frame_arb($FRAME_pain128, hover_run(););
+	ai_rep($FRAME_pain101, ai_charge, 0, 0, 2, -8, -4, -6, -4, -3);
+	ai_rep($FRAME_pain109, ai_charge, 1, 0, 0, 0, 3, 1, 0, 0);
+	ai_rep($FRAME_pain117, ai_charge, 2, 3, 2, 7, 1, 0, 0, 2);
+	ai_rep($FRAME_pain125, ai_charge, 0, 0, 5, 3, 4, -6, -6, -6);
+	
 );
 
 //LAND
@@ -77,8 +81,8 @@ framerloop($FRAME_forwrd01, $FRAME_forwrd35, hover_move_run, 0.1, ai_run(10););
 
 //DEATH
 framer($FRAME_death101, $FRAME_death111, hover_move_death, hover_dead, 0.1,
-	//todo - frame values
-	ai_run(10);
+	ai_rep($FRAME_death101, ai_charge, 0,0,0,0,0,0,-10,3);
+	ai_rep($FRAME_death109, ai_charge, 5,4,7,-6,-6,-6,-6,-6);
 );
 
 //BACKWARD
@@ -97,9 +101,7 @@ framer($FRAME_attak104, $FRAME_attak106, hover_move_attack, hover_reattack, 0.1,
 );
 
 //END ATTACK
-framer($FRAME_attak107, $FRAME_attak108, hover_move_end_attack, hover_run, 0.1, ai_charge(1);
-	frame_arb($FRAME_attak108, hover_run(););
-);
+framer($FRAME_attak107, $FRAME_attak108, hover_move_end_attack, hover_run, 0.1, ai_charge(1););
 
 void() hover_reattack={
 	if(self.enemy.health > 0)
