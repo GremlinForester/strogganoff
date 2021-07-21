@@ -1,0 +1,36 @@
+Args: win64-fteqcc.exe -srcfile menu.src
+FTEQCC: 5595 (2019-12-17T19:21:29.947488Z)
+Source file: menu.src
+Outputfile: ../../menu.dat
+including fteextensions.qc
+including menusys/mitems.qc
+including menusys/mitems_common.qc
+including menusys/mitem_desktop.qc
+including menusys/mitem_exmenu.qc
+including menusys/mitem_edittext.qc
+including menusys/mitem_tabs.qc
+including menusys/mitem_colours.qc
+including menusys/mitem_checkbox.qc
+including menusys/mitem_slider.qc
+including menusys/mitem_combo.qc
+including menusys/mitem_bind.qc
+including menusys/mitem_spinnymodel.qc
+including menu/main.qc
+including menu/options.qc
+in function M_Options (line 6),
+menu/options.qc:24: warning: Implicit cast from class mitem_text to class mitem_pic
+including menu/options_keys.qc
+including menu/options_basic.qc
+including menu/options_video.qc
+including menu/options_effects.qc
+including menu/options_audio.qc
+including menu/options_particles.qc
+including menu/options_hud.qc
+including menu/loadsave.qc
+including menu/quit.qc
+including menu/newgame.qc
+including menu/servers.qc
+including menu/options_configs.qc
+including menu/presets.qc
+Compile finished: ../../menu.dat (id format)
+Done. 1 warnings
