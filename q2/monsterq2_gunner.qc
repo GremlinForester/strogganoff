@@ -27,14 +27,8 @@ STAND1
 
 */
 
-framerloop($FRAME_stand01, $FRAME_stand30, q2gunner_frames_stand, 0.135,
-
-	frame_arb($FRAME_stand30, q2gunner_select_stand(););
-
-	ai_rep($FRAME_stand01, ai_stand, 0, 0, 0, 0, 0, 0, 0, 0);
-	ai_rep($FRAME_stand09, ai_stand, 0, 0, 0, 0, 0, 0, 0, 0);
-	ai_rep($FRAME_stand17, ai_stand, 0, 0, 0, 0, 0, 0, 0, 0);
-	ai_rep($FRAME_stand25, ai_stand, 0, 0, 0, 0, 0, 0, 0, 0);
+framer($FRAME_stand01, $FRAME_stand30, q2gunner_frames_stand, q2gunner_select_stand, 0.1,
+	ai_stand();
 );
 
 /*
@@ -43,17 +37,9 @@ STAND FIDGET
 
 */
 
-framerloop($FRAME_stand31, $FRAME_stand70, q2gunner_frames_fidget, 0.1,
-
-	frame_arb($FRAME_stand70, q2gunner_select_stand(););
-
+framer($FRAME_stand31, $FRAME_stand70, q2gunner_frames_fidget, q2gunner_select_stand, 0.1,
 	frame_arb($FRAME_stand38, sound(self, CHAN_WEAPON, GUNNER_SOUND_IDLE, 1, ATTN_NORM););
-
-	ai_rep($FRAME_stand31, ai_stand, 0, 0, 0, 0, 0, 0, 0, 0);
-	ai_rep($FRAME_stand39, ai_stand, 0, 0, 0, 0, 0, 0, 0, 0);
-	ai_rep($FRAME_stand47, ai_stand, 0, 0, 0, 0, 0, 0, 0, 0);
-	ai_rep($FRAME_stand55, ai_stand, 0, 0, 0, 0, 0, 0, 0, 0);
-	ai_rep($FRAME_stand63, ai_stand, 0, 0, 0, 0, 0, 0, 0, 0);
+	ai_stand();
 );
 
 /*
@@ -271,6 +257,17 @@ void(entity attacker, float damage)	q2gunner_pain =
 	}
 };
 
+
+void() q2gunner_fire_grenade =
+{
+	local vector org;
+
+	org = self.origin + (v_forward * 8) + (v_right * -8) + (v_up * 16);
+//	org = '20 8 17';
+//	makevectors(self.angles);	
+	monster_fire_grenade (org, '300 300 300', 40, 600);
+};
+
 /*
 
 GRENADE ATTACK
@@ -279,10 +276,10 @@ GRENADE ATTACK
 
 framer($FRAME_attak101, $FRAME_attak121, q2gunner_attack_grenade, q2gunner_frames_run, 0.1,
 
-	frame_arb($FRAME_attak105,W_FireGrenade());
-	frame_arb($FRAME_attak108,W_FireGrenade());
-	frame_arb($FRAME_attak111,W_FireGrenade());
-	frame_arb($FRAME_attak114,W_FireGrenade());
+	frame_arb($FRAME_attak105,q2gunner_fire_grenade());
+	frame_arb($FRAME_attak108,q2gunner_fire_grenade());
+	frame_arb($FRAME_attak111,q2gunner_fire_grenade());
+	frame_arb($FRAME_attak114,q2gunner_fire_grenade());
 	ai_face();
 );
 
@@ -296,14 +293,16 @@ void() gunner_fire_bullet =
 {
 	local	vector	dir;
 	local	entity	en;
+	local	vector	org;
 
 	sound (self, CHAN_AUTO, GUNNER_SOUND_ATTACK2, 1, ATTN_NORM);
 
 	en = self.enemy;
 	dir = en.origin - en.velocity*0.1;
-	dir = normalize (dir - self.origin);
-
-	FireBullets (1, dir, '0.05 0.05 0');
+	dir = normalize (en.origin - self.origin);
+	org = self.origin + (v_forward * 30) + (v_right * 16) + (v_up * 36);
+	
+	monster_fire_bullet(self.origin, dir, '0.01 0.01 0', 3);
 };
 
 framer($FRAME_attak209, $FRAME_attak230, q2gunner_attack_chain, q2gunner_frames_run, 0.1,
@@ -378,6 +377,7 @@ void() monster_gunner =
 	self.th_pain = q2gunner_pain;
 	self.th_die = q2gunner_die;
 	self.th_missile = q2gunner_select_attack;
+	self.th_melee = q2gunner_attack_chain;
 
 	self.sightSound = GUNNER_SOUND_SIGHT;
 

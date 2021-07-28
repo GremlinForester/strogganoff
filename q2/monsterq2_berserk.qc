@@ -23,12 +23,18 @@ void() q2berserk_select_stand;
 STAND1
 
 */
-
+/*
 framerloop($FRAME_stand1, $FRAME_stand5, q2berserk_stand_idle, 0.1,
 
 	frame_arb($FRAME_stand5, q2berserk_select_stand(););
 
 	ai_rep($FRAME_stand1, ai_stand, 0, 0, 0, 0, 0, 0, 0, 0);
+);
+*/
+
+//STAND1
+framer($FRAME_stand1, $FRAME_stand5, q2berserk_stand_idle, q2berserk_select_stand, 0.1,
+	ai_stand();
 );
 
 /*
@@ -36,7 +42,7 @@ framerloop($FRAME_stand1, $FRAME_stand5, q2berserk_stand_idle, 0.1,
 STAND FIDGET
 
 */
-
+/*
 framerloop($FRAME_standb1, $FRAME_standb20, q2berserk_stand_fidget, 0.1,
 
 	frame_arb($FRAME_standb20, q2berserk_select_stand(););
@@ -47,6 +53,15 @@ framerloop($FRAME_standb1, $FRAME_standb20, q2berserk_stand_fidget, 0.1,
 
 	ai_rep($FRAME_standb9, ai_stand, 0, 0, 0, 0, 0, 0, 0, 0);
 	ai_rep($FRAME_standb17, ai_stand, 0, 0, 0, 0, 0, 0, 0, 0);
+);
+*/
+
+//STAND1
+framer($FRAME_standb1, $FRAME_standb20, q2berserk_stand_fidget, q2berserk_select_stand, 0.1,
+
+frame_arb($FRAME_standb2, sound (self, CHAN_VOICE, BERSERK_SOUND_IDLE, 1, ATTN_NORM););
+
+	ai_stand();
 );
 
 /*

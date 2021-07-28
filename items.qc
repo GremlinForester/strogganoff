@@ -406,7 +406,7 @@ void() bound_other_ammo =
 		self.ammo_cells = 100;		
 };
 
-
+//MrC: TODO, compare these to Q2 or give this a going over.
 float(float w) RankForWeapon =
 {
 	if (w == WEP_HYPERBLASTER)
@@ -421,7 +421,11 @@ float(float w) RankForWeapon =
 		return 5;
 	if (w == WEP_MACHINEGUN)
 		return 6;
-	return 7;
+	if (w == WEP_RAILGUN)
+		return 7;
+	if (w == WEP_BFG)
+		return 8;
+	return 9;
 };
 
 /*
@@ -459,14 +463,10 @@ weapon_touch
 =============
 */
 float() W_BestWeapon;
+void() W_Draw;
 
 void() weapon_touch =
 {
-#ifdef unused
-// what was hadammo's intended purpose?
-	local	float	hadammo;
-	local	float old;
-#endifdef
 	local	float	best, new;
 //	local	entity	stemp;
 #define stemp 	newmis
@@ -492,9 +492,7 @@ void() weapon_touch =
 	{
 		if (leave && (self.items & WEP_MACHINEGUN) )
 			return;
-#ifdef unused
-		hadammo = self.inv_ammo_bullets;			
-#endifdef
+
 		new = WEP_MACHINEGUN;
 		
 		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
@@ -506,9 +504,7 @@ void() weapon_touch =
 	{
 		if (leave && (self.items & WEP_CHAINGUN) )
 			return;
-#ifdef unused
-		hadammo = self.ammo_rockets;			
-#endifdef
+
 		new = WEP_CHAINGUN;
 		
 		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
@@ -520,9 +516,7 @@ void() weapon_touch =
 	{
 		if (leave && (self.items & WEP_SUPERSHOTGUN) )
 			return;
-#ifdef unused
-		hadammo = self.ammo_rockets;
-#endifdef
+
 		new = WEP_SUPERSHOTGUN;
 		
 		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
@@ -534,9 +528,7 @@ void() weapon_touch =
 	{
 		if (leave && (self.items & WEP_SHOTGUN) )
 			return;
-#ifdef unused
-		hadammo = self.ammo_rockets;
-#endifdef
+
 		new = WEP_SHOTGUN;
 		
 		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
@@ -548,9 +540,7 @@ void() weapon_touch =
 	{
 		if (leave && (self.items & WEP_ROCKET_LAUNCHER) )
 			return;
-#ifdef unused
-		hadammo = self.ammo_rockets;			
-#endifdef
+
 		new = WEP_ROCKET_LAUNCHER;
 		
 		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
@@ -562,9 +552,7 @@ void() weapon_touch =
 	{
 		if (leave && (self.items & WEP_GRENADE_LAUNCHER) )
 			return;
-#ifdef unused
-		hadammo = self.ammo_rockets;			
-#endifdef
+
 		new = WEP_GRENADE_LAUNCHER;
 		
 		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
@@ -576,10 +564,32 @@ void() weapon_touch =
 	{
 		if (leave && (self.items & WEP_HYPERBLASTER) )
 			return;
-#ifdef unused
-		hadammo = self.ammo_rockets;			
-#endifdef
+
 		new = WEP_HYPERBLASTER;
+		
+		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
+		if (self != stemp.owner){
+			self.ammo_cells = self.ammo_cells + 15;
+		}
+	}
+	else if (stemp.classname == "weapon_railgun")
+	{
+		if (leave && (self.items & WEP_RAILGUN) )
+			return;
+
+		new = WEP_BLASTER;
+		
+		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
+		if (self != stemp.owner){
+			self.ammo_cells = self.ammo_cells + 15;
+		}
+	}
+	else if (stemp.classname == "weapon_bfg")
+	{
+		if (leave && (self.items & WEP_BFG) )
+			return;
+
+		new = WEP_BLASTER;
 		
 		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
 		if (self != stemp.owner){
@@ -606,9 +616,6 @@ void() weapon_touch =
 	bound_other_ammo ();
 
 // change to the weapon
-#ifdef unused
-	old = self.items;
-#endifdef
 	self.items = self.items | new;
 
 // logic change eliminates
@@ -618,16 +625,10 @@ void() weapon_touch =
 	if (!deathmatch)
 		self.weapon = new;
 	else
-		Deathmatch_Weapon(
-#ifdef unused
-														old, 
-#endifdef
-																new);
-//
-
+		Deathmatch_Weapon(new);
 
 	W_SetCurrentAmmo();
-
+	W_Draw();
 	self = stemp;
 
 	if (leave)
@@ -786,6 +787,40 @@ void() weapon_hyperblaster =
 	setmodel (self, "models/weapons/g_hyperb/tris.md2");
 	self.weapon = 3;
 	self.netname = "Hyperblaster";
+	weapon_supershotgun();
+/*
+	self.touch = weapon_touch;
+	setsize (self, '-16 -16 0', '16 16 56');
+	StartItem ();
+*/
+};
+
+/*QUAKED weapon_railgun (0 .5 .8) (-16 -16 0) (16 16 32)
+*/
+
+void() weapon_railgun =
+{
+	precache_model ("models/weapons/g_rail/tris.md2");
+	setmodel (self, "models/weapons/g_rail/tris.md2");
+	self.weapon = 3;
+	self.netname = "Railgun";
+	weapon_supershotgun();
+/*
+	self.touch = weapon_touch;
+	setsize (self, '-16 -16 0', '16 16 56');
+	StartItem ();
+*/
+};
+
+/*QUAKED weapon_bfg (0 .5 .8) (-16 -16 0) (16 16 32)
+*/
+
+void() weapon_bfg =
+{
+	precache_model ("models/weapons/g_bfg/tris.md2");
+	setmodel (self, "models/weapons/g_bfg/tris.md2");
+	self.weapon = 3;
+	self.netname = "BFG";
 	weapon_supershotgun();
 /*
 	self.touch = weapon_touch;
@@ -1723,6 +1758,10 @@ void() DropBackpack =
 		item.netname = "Rocket Launcher";
 	else if (item.items == WEP_HYPERBLASTER)
 		item.netname = "Hyperblaster";
+	else if (item.items == WEP_RAILGUN)
+		item.netname = "Railgun";
+	else if (item.items == WEP_BFG)
+		item.netname = "BFG";
 	else
 		item.netname = string_null;
 
@@ -1794,6 +1833,14 @@ void() q2_tossWeapon{
 	else if (this.weapon == WEP_HYPERBLASTER){
 		weapon_hyperblaster();
 		self.classname = "weapon_hyperblaster";
+	}
+	else if (this.weapon == WEP_RAILGUN){
+		weapon_railgun();
+		self.classname = "weapon_railgun";
+	}
+	else if (this.weapon == WEP_BFG){
+		weapon_bfg();
+		self.classname = "weapon_bfg";
 	}
 	else{
 		self = this;

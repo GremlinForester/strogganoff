@@ -250,6 +250,10 @@ vector(float wep) weapon_range =
 		return '180 48 3000';
 	else if (wep == 64) // WEP_HYPERBLASTER
 		return '350 0 512';
+	else if (wep == 128) // WEP_RAILGUN
+		return '180 48 3000';
+	else if (wep == 256) // WEP_BFG
+		return '180 48 3000';
 };
 /*
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

@@ -48,15 +48,10 @@ STAND1
 
 */
 
-framerloop($FRAME_stand101, $FRAME_stand130, q2chick_frames_stand, 0.135,
-
-	frame_arb($FRAME_stand130, q2chick_select_stand(););
-
-	ai_rep($FRAME_stand101, ai_stand, 0, 0, 0, 0, 0, 0, 0, 0);
-	ai_rep($FRAME_stand109, ai_stand, 0, 0, 0, 0, 0, 0, 0, 0);
-	ai_rep($FRAME_stand117, ai_stand, 0, 0, 0, 0, 0, 0, 0, 0);
-	ai_rep($FRAME_stand125, ai_stand, 0, 0, 0, 0, 0, 0, 0, 0);
+framer($FRAME_stand101, $FRAME_stand130, q2chick_frames_stand, q2chick_select_stand, 0.1,
+	ai_stand();
 );
+
 
 /*
 
@@ -64,16 +59,9 @@ STAND FIDGET
 
 */
 
-framerloop($FRAME_stand201, $FRAME_stand230, q2chick_stand_fidget, 0.1,
-
-	frame_arb($FRAME_stand230, q2chick_select_stand(););
-
+framer($FRAME_stand201, $FRAME_stand230, q2chick_stand_fidget, q2chick_select_stand, 0.1,
 	frame_arb($FRAME_stand209, q2chick_moan_sounds(););
-
-	ai_rep($FRAME_stand201, ai_stand, 0, 0, 0, 0, 0, 0, 0, 0);
-	ai_rep($FRAME_stand209, ai_stand, 0, 0, 0, 0, 0, 0, 0, 0);
-	ai_rep($FRAME_stand217, ai_stand, 0, 0, 0, 0, 0, 0, 0, 0);
-	ai_rep($FRAME_stand225, ai_stand, 0, 0, 0, 0, 0, 0, 0, 0);
+	ai_stand();
 );
 
 /*
@@ -228,102 +216,23 @@ MISSILE
 
 */
 
-void() q2chick_missileTouch =
-{
-	local float	damg;
-
-	if (other == self.owner)
-		return;		// don't explode on owner
-	
-	if (pointcontents(self.origin) == CONTENT_SKY)
-	{
-		remove(self);
-		return;
-	}
-	
-	if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
-	{
-		remove(self);
-		return;
-	}	
-
-	damg = 20 + random()*20;
-	
-	if (other.health)
-	{
-		T_Damage (other, self, self.owner, damg );
-	}
-
-#ifdef opgrade
-
-	self.origin = self.origin - 8*normalize(self.velocity);
-
-	if (!self.dmg) self.dmg = 120;
-
-// same explode code except for 8 q-unit reposition				- note: other adjust in fn call
-	GrenadeExplode();
-
-#else
-	// don't do radius damage to the other, because all the damage
-	// was done in the impact
-	T_RadiusDamage (self, self.owner, 80, other);
-
-//	sound (self, CHAN_WEAPON, "weapons/r_exp3.wav", 1, ATTN_NORM);
-	self.origin = self.origin - 8*normalize(self.velocity);
-
-	WriteByte (MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte (MSG_BROADCAST, TE_EXPLOSION);
-	WriteCoord (MSG_BROADCAST, self.origin_x);
-	WriteCoord (MSG_BROADCAST, self.origin_y);
-	WriteCoord (MSG_BROADCAST, self.origin_z);
-
-	BecomeExplosion ();
-#endifdef
-};
-
-void(vector org, vector vec) q2chick_launchMissile =
-{
-	//local	vector	vec;
-
-	vec = normalize(vec);
-
-	newmis = spawn();
-	newmis.owner = self;
-	newmis.movetype = MOVETYPE_FLYMISSILE;
-	newmis.solid = SOLID_BBOX;
-	setmodel (newmis, "progs/missile.mdl");
-	setsize (newmis, '0 0 0', '0 0 0');
-
-	setorigin (newmis, org);
-
-	newmis.velocity = vec * 800;
-	newmis.angles = vectoangles(newmis.velocity);
-
-	newmis.nextthink = time + 5;
-	newmis.think = SUB_Remove;
-	newmis.touch = q2chick_missileTouch;
-};
-
 void() q2chick_fire =
 {
-	local	vector	dir;
-	local	entity	en;
 	local vector org;
-	local vector source;
-
-//	ai_face();
-
-// fire somewhat behind the player, so a dodging player is harder to hit
-	en = self.enemy;
-
-	dir = en.origin + en.view_ofs - en.velocity*0.1;
-	dir = normalize (dir - self.origin);
-
-	source = G_ProjectSource (self.origin, '30 8 28', v_forward, v_right, '0 0 0');
-
-//	org = self.origin + v_forward * 30 + v_right * 8 + '0 0 28';
+	local vector end;
+	local vector dir;
 	
-	q2chick_launchMissile(source, self.enemy.origin - self.origin);
+	makevectors(self.angles);
+	
+	org = self.origin + (v_forward * 30) + (v_right * -16) + (v_up * 36);
+	
+	end = self.enemy.origin;
+	end_z = end_z + self.enemy.view_ofs_z;
+	
+	dir = normalize(end - org);
+	
+	monster_fire_rocket(org, dir, 50);
+	sound(self, CHAN_WEAPON, CHICK_SOUND_MISSILE_LAUNCH, 1, ATTN_NORM);
 };
 
 /*

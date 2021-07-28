@@ -1739,6 +1739,16 @@ void(entity targ, entity attacker) ClientObituary =
 					deathstring = " was melted by ";
 					deathstring2 = "'s hyperblaster\n";
 				}
+				if (rnum == WEP_RAILGUN)
+				{
+					deathstring = " was railed by ";
+					deathstring2 = "'s railgun\n";
+				}
+				if (rnum == WEP_BFG)
+				{
+					deathstring = " was obliterated by ";
+					deathstring2 = "'s bfg\n";
+				}
 				bprint (targ.netname);
 				bprint (deathstring);
 				bprint (attacker.netname);

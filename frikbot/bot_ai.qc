@@ -637,35 +637,50 @@ float(entity thing) priority_for_thing =
 					thisp = thisp + 25;
 			}
 		}
+		else if (thing.classname == "weapon_shotgun")
+		{
+			if (!(self.items & WEP_SHOTGUN)) // WEP_SHOTGUN  
+				thisp = 20;
+		}
 		else if (thing.classname == "weapon_supershotgun")
 		{
-			if (!(self.items & 2)) // WEP_SUPERSHOTGUN  
+			if (!(self.items & WEP_SUPERSHOTGUN)) // WEP_SUPERSHOTGUN  
 				thisp = 25;
 		}
 		else if (thing.classname == "weapon_machinegun")
 		{
-			if (!(self.items & 4)) // WEP_MACHINEGUN 
+			if (!(self.items & WEP_MACHINEGUN)) // WEP_MACHINEGUN 
 				thisp = 30;
 		}
 		else if (thing.classname == "weapon_chaingun")
 		{
-			if (!(self.items & 8)) // WEP_CHAINGUN
+			if (!(self.items & WEP_CHAINGUN)) // WEP_CHAINGUN
 				thisp = 35;
 		}
 		else if (thing.classname == "weapon_grenadelauncher")
 		{
-			if (!(self.items & 16)) // WEP_GRENADE_LAUNCHER
+			if (!(self.items & WEP_GRENADE_LAUNCHER)) // WEP_GRENADE_LAUNCHER
 				thisp = 45;
 		}
 		else if (thing.classname == "weapon_rocketlauncher")
 		{
-			if (!(self.items & 32)) // WEP_ROCKET_LAUNCHER
+			if (!(self.items & WEP_ROCKET_LAUNCHER)) // WEP_ROCKET_LAUNCHER
 				thisp = 60;
 		}
 		else if (thing.classname == "weapon_hyperblaster")
 		{
-			if (!(self.items & 64)) // WEP_HYPERBLASTER
+			if (!(self.items & WEP_HYPERBLASTER)) // WEP_HYPERBLASTER
 				thisp = 50;
+		}
+		else if (thing.classname == "weapon_railgun")
+		{
+			if (!(self.items & WEP_RAILGUN)) // WEP_RAILGUN
+				thisp = 60;
+		}
+		else if (thing.classname == "weapon_bfg")
+		{
+			if (!(self.items & WEP_BFG)) // WEP_BFG
+				thisp = 70;
 		}
 	}
 	else if ((thing.flags & FL_MONSTER) && thing.health > 0)

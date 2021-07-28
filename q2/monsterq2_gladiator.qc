@@ -122,61 +122,30 @@ ATTACK
 
 */
 
-/* void(vector org) GladiatorRailgunFlash =
-{
-	newmis = spawn();
-	newmis.owner = self;
-	newmis.movetype = MOVETYPE_NONE;
-	newmis.solid = SOLID_NOT;
-	//newmis.effects = EF_DIMLIGHT;
-	newmis.modelflags = MF_TRACER2;
-	newmis.glow_color = '200 0 0';
-	newmis.glow_size = 100;
-	newmis.light_lev = 200;
-	newmis.color = '1 0 0'; // color (does not affect radius), typical value '1 1 1' (bright white), can be up to '255 255 255' (nuclear blast)
-	newmis.style = 6; // light style (like normal light entities, flickering torches or switchable, etc)
-	newmis.pflags = PFLAGS_FULLDYNAMIC; // flags (see PFLAGS_ constants)
-	newmis.angles = '0 0 0'; // orientation of the light
-
-	setmodel (newmis, "progs/laser.mdl");
-	setsize (newmis, '0 0 0', '0 0 0');
-
-	setorigin (newmis, org);
-
-	newmis.nextthink = time + 1;
-	newmis.think = SUB_Remove;
-}; */
-
 void() q2gladiator_fire =
 {
-	local vector dir;
-		local vector dir_lightning;
-	local vector source;
 	local vector org;
-	local vector start;
+	local vector end;
+	local vector dir;
 
-	dir = self.enemy.origin - self.enemy.velocity*0.05;
-	dir = normalize (dir - self.origin);
+	makevectors(self.angles);
 	
-//	makevectors (self.v_angle);
+	org = self.origin + (v_forward * 30) + (v_right * 16) + (v_up * 30);
 	
-	source = G_ProjectSource (self.origin, '24 -18 22', v_forward, v_right, start);
+	end = self.enemy.origin - self.enemy.velocity*0.05;
+	end_z = end_z + self.enemy.view_ofs_z - self.enemy.velocity*0.05;
 	
-	bprint("Gladiator offset: ");
-	bprint (vtos (source));
-	dir_lightning = self.enemy.origin - self.enemy.velocity*0.2;
-	self.v__ = self.enemy.origin - self.enemy.velocity*0.2;
-	self.effects = self.effects | EF_MUZZLEFLASH;
-		
-	trailparticles(self, particleeffectnum("TR_KNIGHTSPIKE"), source, self.v__);
-	trailparticles(self, particleeffectnum("TR_AFRITSPIKE_RED"), source, self.v__);
-
-//	GladiatorRailgunFlash(source);
+	dir = normalize(end - org);
 	
-	FireBullets (8, dir, '0.05 0.05 0');
+	monster_fire_railgun(org, end, 20);
 };
 
+
 framer($FRAME_attack1, $FRAME_attack9, q2gladiator_attack, q2gladiator_run, 0.1, ai_face();
+	
+	frame_arb($FRAME_attack1,
+		sound(self, CHAN_WEAPON, GLADIATOR_SOUND_GUN, 1, ATTN_NORM);
+	);
 	
 	frame_arb($FRAME_attack4,
 		q2gladiator_fire();

@@ -73,6 +73,20 @@ void() W_SetCurrentAmmo =
 //		self.weaponframe = 0;
 		self.items = self.items | IT_CELLS;
 	}
+	else if (self.weapon == WEP_RAILGUN)
+	{
+		self.currentammo = self.ammo_cells;
+		self.weaponmodel = "models/weapons/v_rail/tris.md2";
+//		self.weaponframe = 0;
+		self.items = self.items | IT_CELLS;
+	}
+	else if (self.weapon == WEP_BFG)
+	{
+		self.currentammo = self.ammo_cells;
+		self.weaponmodel = "models/weapons/v_bfg/tris.md2";
+//		self.weaponframe = 0;
+		self.items = self.items | IT_CELLS;
+	}
 	else
 	{
 		self.currentammo = 0;
@@ -89,6 +103,10 @@ float() W_BestWeapon =
 	
 	it = self.items;
 
+	if (self.ammo_cells >= 1 && (it & WEP_BFG) )
+			return WEP_BFG;
+	if (self.ammo_cells >= 1 && (it & WEP_RAILGUN) )
+			return WEP_RAILGUN;
 	if (self.ammo_cells >= 1 && (it & WEP_HYPERBLASTER) )
 			return WEP_HYPERBLASTER;
 	if(self.inv_ammo_bullets >= 2 && (it & WEP_CHAINGUN) )
@@ -207,6 +225,18 @@ void() W_Draw =
 		q2player_4drawframes ();
 	//	self.attack_finished = time + 0.9;
 	}
+	else if (self.weapon == WEP_RAILGUN)
+	{
+		sound(self, CHAN_WEAPON, "weapons/HGRENT1A.WAV", 0.5, ATTN_IDLE);	
+		q2player_4drawframes ();
+	//	self.attack_finished = time + 0.9;
+	}
+	else if (self.weapon == WEP_BFG)
+	{
+		sound(self, CHAN_WEAPON, "weapons/HGRENT1A.WAV", 0.5, ATTN_IDLE);	
+		q2player_4drawframes ();
+	//	self.attack_finished = time + 0.9;
+	}
 };
 
 void() W_Attack =
@@ -256,6 +286,9 @@ void() W_Attack =
 			self.attack_finished = time + 0.8;
 			break;
 		case WEP_RAILGUN:
+			q2player_8attackframes ();
+			FireBullet();
+			self.attack_finished = time + 2.0;
 			break;
 		case WEP_HYPERBLASTER:
 			W_FireBlaster();
@@ -263,6 +296,9 @@ void() W_Attack =
 			self.attack_finished = time + 0.135;
 			break;
 		case WEP_BFG:
+			q2player_8attackframes ();
+			W_FireRocket();
+			self.attack_finished = time + 0.8;
 			break;
 	}
 };
@@ -342,6 +378,20 @@ void() W_ChangeWeapon =
 			}
 			self.weapon = WEP_HYPERBLASTER;
 			break;
+		case 20:
+			if (self.weapon == WEP_RAILGUN)
+			{ 
+				return;
+			}
+			self.weapon = WEP_RAILGUN;
+			break;
+		case 21:
+			if (self.weapon == WEP_BFG)
+			{ 
+				return;
+			}
+			self.weapon = WEP_BFG;
+			break;
 	}
 
 
@@ -356,9 +406,18 @@ void() W_ChangeWeapon =
 	if (self.impulse == 7) self.weapon = WEP_ROCKET_LAUNCHER;
 	if (self.impulse == 8) self.weapon = WEP_HYPERBLASTER;
 */
+
+
+
+
+
 	self.f__ = 1; // so logic doesnt change weapon
 // use logic test here
 	CycleWeaponCommand();
+
+
+
+
 
 // failed
 	if (self.impulse)
@@ -407,14 +466,17 @@ void() CheatCommand =
 		WEP_CHAINGUN |
 		WEP_GRENADE_LAUNCHER |
 		WEP_ROCKET_LAUNCHER |
+		WEP_RAILGUN |
+		WEP_BFG |
 		IT_KEY1 | IT_KEY2;
 
 	self.ammo_cells = 200;
 	self.items = self.items | WEP_HYPERBLASTER;
 
-	self.weapon = WEP_ROCKET_LAUNCHER;
+	self.weapon = WEP_BFG;
 	self.impulse = 0;
 	W_SetCurrentAmmo ();
+	W_Draw();
 };
 
 // debug qual
@@ -427,6 +489,7 @@ CycleWeaponCommand
 Go to the next weapon with ammo
 ============
 */
+
 void() CycleWeaponCommand =
 {
 	local	float	am;
@@ -437,15 +500,17 @@ void() CycleWeaponCommand =
 		am = 0;
 
 // since these are bit flags, * 2 selects next and * 0.5 selects previous - for single select set this to 1
-		self.weapon = self.weapon * self.f__;
-
+//		self.weapon = self.weapon * self.f__;
+/*
 // coming from axe on this system - arg!  why couldnt the axe have been 1?
 		if (self.weapon == 8192 ) self.weapon = WEP_SHOTGUN;
 		if (self.weapon == 2048 ) self.weapon = WEP_HYPERBLASTER;
 // going to the axe
 		if (!(self.weapon & 127)) self.weapon = WEP_BLASTER;
-
+*/
 // weapon select logic
+		if (self.weapon == WEP_BFG && self.ammo_cells < 1) am = 1;
+		if (self.weapon == WEP_RAILGUN && self.ammo_cells < 1) am = 1;
 		if (self.weapon == WEP_HYPERBLASTER && self.ammo_cells < 1) am = 1;
 		if (self.weapon == WEP_ROCKET_LAUNCHER && self.ammo_rockets < 1) am = 1;
 		if (self.weapon == WEP_GRENADE_LAUNCHER && self.ammo_rockets < 1) am = 1;
@@ -471,12 +536,12 @@ void() CycleWeaponCommand =
 
 /*
 ============
-CycleWeaponReverseCommand
+CycleWeaponNext
 
-Go to the prev weapon with ammo
+Go to the next weapon with ammo
 ============
-*
-void() CycleWeaponReverseCommand =
+*/
+void() CycleWeaponNext =
 {
 //	local	float	it, am;
 	local	float	am;
@@ -488,6 +553,106 @@ void() CycleWeaponReverseCommand =
 	{
 		am = 0;
 
+		if (self.weapon == WEP_BFG)
+		{
+			self.weapon = WEP_BLASTER;
+		}
+		else if (self.weapon == WEP_BLASTER)
+		{
+			self.weapon = WEP_SHOTGUN;
+			if (self.ammo_shells < 1)
+				am = 1;
+		}
+		else if (self.weapon == WEP_SHOTGUN)
+		{
+			self.weapon = WEP_SUPERSHOTGUN;
+			if (self.ammo_shells < 2)
+				am = 1;
+		}               
+		else if (self.weapon == WEP_SUPERSHOTGUN)
+		{
+			self.weapon = WEP_MACHINEGUN;
+			if (self.inv_ammo_bullets < 1)
+				am = 1;
+		}
+		else if (self.weapon == WEP_MACHINEGUN)
+		{
+			self.weapon = WEP_CHAINGUN;
+			if (self.inv_ammo_bullets < 1)
+				am = 1;
+		}
+		else if (self.weapon == WEP_CHAINGUN)
+		{
+			self.weapon = WEP_GRENADE_LAUNCHER;
+			if (self.ammo_rockets < 1)
+				am = 1;
+		}
+		else if (self.weapon == WEP_GRENADE_LAUNCHER)
+		{
+			self.weapon = WEP_ROCKET_LAUNCHER;
+			if (self.ammo_rockets < 1)
+				am = 1;
+		}
+		else if (self.weapon == WEP_ROCKET_LAUNCHER)
+		{
+			self.weapon = WEP_HYPERBLASTER;
+			if (self.ammo_cells < 1)
+				am = 1;
+		}
+		else if (self.weapon == WEP_HYPERBLASTER)
+		{
+			self.weapon = WEP_RAILGUN;
+			if (self.ammo_cells < 1)
+				am = 1;
+		}
+		else if (self.weapon == WEP_RAILGUN)
+		{
+			self.weapon = WEP_BFG;
+			if (self.ammo_cells < 1)
+				am = 1;
+		}
+	
+		if ( (self.items & self.weapon) && am == 0)
+		{
+			W_SetCurrentAmmo ();
+			W_Draw();
+			return;
+		}
+	}
+
+};
+
+/*
+============
+CycleWeaponPrev
+
+Go to the previous weapon with ammo
+============
+*/
+void() CycleWeaponPrev =
+{
+//	local	float	it, am;
+	local	float	am;
+	
+//	it = self.items;
+	self.impulse = 0;
+
+	while (1)
+	{
+		am = 0;
+		
+		if (self.weapon == WEP_BFG)
+		{
+			self.weapon = WEP_RAILGUN;
+			if (self.ammo_cells < 1)
+				am = 1;
+		}
+		if (self.weapon == WEP_RAILGUN)
+		{
+			self.weapon = WEP_HYPERBLASTER;
+			if (self.ammo_cells < 1)
+				am = 1;
+		}
 		if (self.weapon == WEP_HYPERBLASTER)
 		{
 			self.weapon = WEP_ROCKET_LAUNCHER;
@@ -503,13 +668,13 @@ void() CycleWeaponReverseCommand =
 		else if (self.weapon == WEP_GRENADE_LAUNCHER)
 		{
 			self.weapon = WEP_CHAINGUN;
-			if (self.ammo_nails < 2)
+			if (self.inv_ammo_bullets < 1)
 				am = 1;
 		}
 		else if (self.weapon == WEP_CHAINGUN)
 		{
 			self.weapon = WEP_MACHINEGUN;
-			if (self.ammo_nails < 1)
+			if (self.inv_ammo_bullets < 1)
 				am = 1;
 		}
 		else if (self.weapon == WEP_MACHINEGUN)
@@ -526,11 +691,11 @@ void() CycleWeaponReverseCommand =
 		}
 		else if (self.weapon == WEP_SHOTGUN)
 		{
-			self.weapon = IT_AXE;
+			self.weapon = WEP_BLASTER;
 		}
-		else if (self.weapon == IT_AXE)
+		else if (self.weapon == WEP_BLASTER)
 		{
-			self.weapon = WEP_HYPERBLASTER;
+			self.weapon = WEP_BFG;
 			if (self.ammo_cells < 1)
 				am = 1;
 		}
@@ -538,12 +703,13 @@ void() CycleWeaponReverseCommand =
 		if ( (self.items & self.weapon) && am == 0)
 		{
 			W_SetCurrentAmmo ();
+			W_Draw();
 			return;
 		}
 	}
 
 };
-*/
+
 /*
 ============
 ServerflagsCommand
@@ -614,18 +780,21 @@ void() ImpulseCommands =
 
 	if (self.impulse == 10)
 	{
-		self.f__ = 2;
-		CycleWeaponCommand();
+	//	self.f__ = 2;
+	//	CycleWeaponCommand();
+	CycleWeaponNext();
+	
 	}
 	if (self.impulse == 12)
 	{
-		self.f__ = 0.5;
-		CycleWeaponCommand();
+		CycleWeaponPrev();
+	//	self.f__ = 0.5;
+	//	CycleWeaponCommand();
 	}
 //		CycleWeaponReverseCommand();
 
 #ifdef debug
-// cheat impulses are only active in debug mode - which should never be on in live server / released game code
+// cheat impulses are only active in debug mode - which should never be on in live server / released game code. MrC: But where's the fun in that!?
 	if (self.impulse == 9)
 		CheatCommand ();
 	if (self.impulse == 11)

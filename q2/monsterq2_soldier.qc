@@ -233,72 +233,6 @@ void(entity attacker, float damage)	q2soldier_pain =
 	self.bleedcount = 1;
 };
 
-void() Q2Laser_Touch =
-{
-	local vector org;
-
-	if (other == self.owner)
-		return;		// don't explode on owner
-
-	if (pointcontents(self.origin) == CONTENT_SKY)
-	{
-		remove(self);
-		return;
-	}
-
-	sound (self, CHAN_WEAPON, "enforcer/enfstop.wav", 1, ATTN_STATIC);
-	org = self.origin - 8*normalize(self.velocity);
-
-	if (other.health)
-	{
-		SpawnBlood (org, self.velocity*0.2, 15);
-		T_Damage (other, self, self.owner, 15);
-	}
-	else
-	{
-		WriteByte (MSG_BROADCAST, SVC_TEMPENTITY);
-		WriteByte (MSG_BROADCAST, TE_GUNSHOT);
-		WriteCoord (MSG_BROADCAST, org_x);
-		WriteCoord (MSG_BROADCAST, org_y);
-		WriteCoord (MSG_BROADCAST, org_z);
-	}
-
-	remove(self);
-};
-
-void(vector org, vector vec) LaunchQ2Laser =
-{
-	//local	vector	vec;
-
-	vec = normalize(vec);
-
-	newmis = spawn();
-	newmis.owner = self;
-	newmis.movetype = MOVETYPE_FLY;
-	newmis.solid = SOLID_BBOX;
-	//newmis.effects = EF_DIMLIGHT;
-	newmis.modelflags = MF_TRACER2;
-	newmis.glow_color = '200 0 0';
-	newmis.glow_size = 100;
-	newmis.light_lev = 200;
-	newmis.color = '1 0 0'; // color (does not affect radius), typical value '1 1 1' (bright white), can be up to '255 255 255' (nuclear blast)
-	newmis.style = 6; // light style (like normal light entities, flickering torches or switchable, etc)
-	newmis.pflags = PFLAGS_FULLDYNAMIC; // flags (see PFLAGS_ constants)
-	newmis.angles = '0 0 0'; // orientation of the light
-
-	setmodel (newmis, "progs/laser.mdl");
-	setsize (newmis, '0 0 0', '0 0 0');
-
-	setorigin (newmis, org);
-
-	newmis.velocity = vec * 600;
-	newmis.angles = vectoangles(newmis.velocity);
-
-	newmis.nextthink = time + 5;
-	newmis.think = SUB_Remove;
-	newmis.touch = Q2Laser_Touch;
-};
-
 void() q2soldier_fire =
 {
 	local	vector	dir;
@@ -317,18 +251,18 @@ void() q2soldier_fire =
 
 	if (self.classname == "monster_soldier")
 	{
-		FireBullets (4, dir, '0.1 0.1 0');
+		monster_fire_shotgun(8, org, dir, '0.1 0.1 0', WEAPON_DEFAULT_DAMAGE);
 		sound (self, CHAN_WEAPON, "soldier/solatck3.wav", 1, ATTN_NORM);
 
 	}
 	else if (self.classname == "monster_soldier_ss")
 	{
-		FireBullets (1, dir, '0.1 0.1 0');
+		monster_fire_shotgun(8, org, dir, '0.1 0.1 0', WEAPON_DEFAULT_DAMAGE);
 		sound (self, CHAN_WEAPON, "soldier/Solatck1.wav", 1, ATTN_NORM);
 	}
 	else
 	{
-		LaunchQ2Laser(org, self.enemy.origin - self.origin);
+		monster_fire_blaster(org, self.enemy.origin - self.origin, 5);
 	}
 };
 
@@ -353,18 +287,18 @@ void() q2soldier_death1fire =
 
 	if (self.classname == "monster_soldier_ss")
 	{
-		FireBullets (4, dir, '0.1 0.1 0');
+		monster_fire_shotgun(8, org, dir, '0.1 0.1 0', WEAPON_DEFAULT_DAMAGE);
 		sound (self, CHAN_WEAPON, "soldier/solatck3.wav", 1, ATTN_NORM);
 
 	}
 	else if (self.classname == "monster_soldier")
 	{
-		FireBullets (4, dir, '0.1 0.1 0');
+		monster_fire_shotgun(8, org, dir, '0.1 0.1 0', WEAPON_DEFAULT_DAMAGE);
 		sound (self, CHAN_WEAPON, "soldier/Solatck1.wav", 1, ATTN_NORM);
 	}
 	else
 	{
-		LaunchQ2Laser(org, self.enemy.origin - self.origin);
+		monster_fire_blaster(org, self.enemy.origin - self.origin, 300);
 		sound (self, CHAN_WEAPON, "soldier/Solatck2.wav", 1, ATTN_NORM);
 	}
 };

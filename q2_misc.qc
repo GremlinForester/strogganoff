@@ -1,4 +1,8 @@
 /*======================================================================
+MrC: This ladder code is from the Quake 1.5 codebase. Left any comments as-is.
+/*======================================================================
+
+/*======================================================================
  Player ladder (originally from Rubicon2 codebase by JohnFitz)
  - This is a very simple system, jump to attach to the ladder brush
  - move up down via jumpping (hook in preplayer code)

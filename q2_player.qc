@@ -181,7 +181,7 @@ framer($FRAME_attack1, $FRAME_attack2, q2player_HBattackframes, q2player_run, 0.
 framer($FRAME_attack1, $FRAME_attack2, q2player_MGattackframes, q2player_run, 0.1,
 
 	frame_arb($FRAME_attack1,
-	FireBullet();
+	FireBullet(WEAPON_MACHINEGUN_DAMAGE);
 	self.punchangle_x = -4;
 	self.effects = self.effects | EF_MUZZLEFLASH;
 	
@@ -200,7 +200,7 @@ framer($FRAME_attack1, $FRAME_attack2, q2player_CGattackframes, q2player_run, 0.
 	if (self.weaponframe >= 21 || self.weaponframe <= 4)
 		self.weaponframe = 15;
 	
-	FireBullet();
+	FireBullet(WEAPON_CHAINGUN_DAMAGE);
 	self.punchangle_x = -4;
 	self.effects = self.effects | EF_MUZZLEFLASH;
 	);

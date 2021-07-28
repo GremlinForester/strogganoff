@@ -190,6 +190,163 @@ void(entity hit, float damage) AddMultiDamage =
 /*
 ==============================================================================
 
+PROJECTILE TOUCH FUNCTIONS
+
+==============================================================================
+*/
+
+void() blasterTouch =
+{
+	local vector org;
+
+	if (other == self.owner)
+		return;		// don't explode on owner
+
+	if (pointcontents(self.origin) == CONTENT_SKY)
+	{
+		remove(self);
+		return;
+	}
+
+	sound (self, CHAN_WEAPON, "enforcer/enfstop.wav", 1, ATTN_STATIC);
+	org = self.origin - 8*normalize(self.velocity);
+
+	if (other.health)
+	{
+		SpawnBlood (org, self.velocity*0.2, self.damage);
+		T_Damage (other, self, self.owner, self.damage);
+	}
+	else
+	{
+		WriteByte (MSG_BROADCAST, SVC_TEMPENTITY);
+		WriteByte (MSG_BROADCAST, TE_GUNSHOT);
+		WriteCoord (MSG_BROADCAST, org_x);
+		WriteCoord (MSG_BROADCAST, org_y);
+		WriteCoord (MSG_BROADCAST, org_z);
+	}
+
+	remove(self);
+};
+
+
+/*
+=================
+fire_rail
+=================
+
+void fire_rail (vector start, vector aimdir, int damage)
+{
+	vector		from;
+	vector		end;
+	trace_t		tr;
+	edict_t		*ignore;
+	float			mask;
+	qboolean	water;
+
+	VectorMA (start, 8192, aimdir, end);
+	VectorCopy (start, from);
+	ignore = self;
+	water = false;
+	mask = MASK_SHOT|CONTENTS_SLIME|CONTENTS_LAVA;
+	while (ignore)
+	{
+		tr = gi.trace (from, NULL, NULL, end, ignore, mask);
+
+		if (tr.contents & (CONTENTS_SLIME|CONTENTS_LAVA))
+		{
+			mask &= ~(CONTENTS_SLIME|CONTENTS_LAVA);
+			water = true;
+		}
+		else
+		{
+			//ZOID--added so rail goes through SOLID_BBOX entities (gibs, etc)
+			if ((tr.ent->svflags & SVF_MONSTER) || (tr.ent->client) ||
+				(tr.ent->solid == SOLID_BBOX))
+				ignore = tr.ent;
+			else
+				ignore = NULL;
+
+			if ((tr.ent != self) && (tr.ent->takedamage))
+				T_Damage (tr.ent, self, self, aimdir, tr.endpos, tr.plane.normal, damage, kick, 0, MOD_RAILGUN);
+		}
+
+		VectorCopy (tr.endpos, from);
+	}
+
+	// send gun puff / flash
+	gi.WriteByte (svc_temp_entity);
+	gi.WriteByte (TE_RAILTRAIL);
+	gi.WritePosition (start);
+	gi.WritePosition (tr.endpos);
+	gi.multicast (self->s.origin, MULTICAST_PHS);
+//	gi.multicast (start, MULTICAST_PHS);
+	if (water)
+	{
+		gi.WriteByte (svc_temp_entity);
+		gi.WriteByte (TE_RAILTRAIL);
+		gi.WritePosition (start);
+		gi.WritePosition (tr.endpos);
+		gi.multicast (tr.endpos, MULTICAST_PHS);
+	}
+
+	if (self->client)
+		PlayerNoise(self, tr.endpos, PNOISE_IMPACT);
+}
+*/
+/*
+================
+Fire Rilgun
+================
+*/
+void(vector start, vector aimdir, float damage) fireRail =
+{
+	local	vector	org;
+	local	entity	impact_point;
+
+ 	nep_traceline (start, aimdir, FALSE, self);
+//	if (trace_fraction == 1.0)
+//		return;
+
+	org = trace_endpos - aimdir*4;
+
+	if (self.classname == "player"){
+//	self.currentammo = self.inv_ammo_bullets = self.inv_ammo_bullets - 1;
+	}
+
+	trailparticles(self, particleeffectnum("TR_KNIGHTSPIKE"), start, aimdir);
+	trailparticles(self, particleeffectnum("TR_AFRITSPIKE_RED"), start, aimdir);
+
+	impact_point = spawn();
+	impact_point.origin = org;
+	impact_point.solid = SOLID_NOT;
+	impact_point.movetype = MOVETYPE_NONE;
+	impact_point.effects = self.effects | EF_LOWPRECISION;
+	impact_point.nextthink = time + 0.01;
+	setmodel (impact_point, "models/objects/flash/tris.md2");
+	impact_point.think = SUB_Remove;
+	
+	if (trace_ent.takedamage)
+	{
+		T_Damage (trace_ent, self, self, damage);
+	}
+	else
+	{	// hit wall
+		Q3Surface_Impact_Ent(impact_point);
+		//sound (impact_sound, CHAN_WEAPON, "player/axhit2.wav", 1, ATTN_NORM);
+		/*
+		WriteByte (MSG_BROADCAST, SVC_TEMPENTITY);
+		WriteByte (MSG_BROADCAST, TE_GUNSHOT);
+		WriteCoord (MSG_BROADCAST, org_x);
+		WriteCoord (MSG_BROADCAST, org_y);
+		WriteCoord (MSG_BROADCAST, org_z);
+		*/
+		//T_Damage (trace_ent, self, self, WEAPON_DEFAULT_DAMAGE);
+	}
+};
+
+/*
+==============================================================================
+
 BULLETS
 
 ==============================================================================
@@ -201,10 +358,12 @@ void(float damage, vector dir) TraceAttack;
 ================
 FireBullet
 
-Generic hitscan selector for single bullet based weapons etc... And railgun.
+Generic hitscan selector for player use single bullet based weapons etc... And railgun!
+
+This will be renamed at some point!
 ================
 */
-void() FireBullet =
+void(float damage) FireBullet =
 {
 	local	vector	source;
 	local	vector	org;
@@ -230,27 +389,13 @@ void() FireBullet =
 	setmodel (impact_point, "models/objects/flash/tris.md2");
 	impact_point.think = SUB_Remove;
 	
-	if (trace_ent.takedamage && self.weapon == WEP_CHAINGUN)
+	if (trace_ent.takedamage)
 	{
-		T_Damage (trace_ent, self, self, WEAPON_CHAINGUN_DAMAGE);
-	//	self.weaponstate = WEAPON_SPINDOWN;
-	}
-	else if (trace_ent.takedamage && self.weapon == WEP_MACHINEGUN)
-	{
-		T_Damage (trace_ent, self, self, WEAPON_MACHINEGUN_DAMAGE);
+		T_Damage (trace_ent, self, self, damage);
 	}
 	else
 	{	// hit wall
 		Q3Surface_Impact_Ent(impact_point);
-		//sound (impact_sound, CHAN_WEAPON, "player/axhit2.wav", 1, ATTN_NORM);
-		/*
-		WriteByte (MSG_BROADCAST, SVC_TEMPENTITY);
-		WriteByte (MSG_BROADCAST, TE_GUNSHOT);
-		WriteCoord (MSG_BROADCAST, org_x);
-		WriteCoord (MSG_BROADCAST, org_y);
-		WriteCoord (MSG_BROADCAST, org_z);
-		*/
-		//T_Damage (trace_ent, self, self, WEAPON_DEFAULT_DAMAGE);
 	}
 	
 	local float	r = random() * 4;
@@ -258,6 +403,12 @@ void() FireBullet =
 	else if (r < 2) sound(self, CHAN_WEAPON, "weapons/Machgf2b.wav", 0.5, ATTN_IDLE);
 	else if (r < 3) sound(self, CHAN_WEAPON, "weapons/Machgf3b.wav", 0.5, ATTN_IDLE);
 	else            sound(self, CHAN_WEAPON, "weapons/Machgf4b.wav", 0.5, ATTN_IDLE);
+	
+	
+	if (self.weapon == WEP_RAILGUN)
+	{
+		fireRail(self.origin + (v_forward * 70) + (v_right * 20) + (v_up * 15), org, WEAPON_RAILGUN_DAMAGE);
+	}
 	
 	if (self.weapon == WEP_MACHINEGUN)
 	{
@@ -313,28 +464,55 @@ void(float damage, vector dir) Q3SurfaceTraceAttack =
 
 /*
 ================
+Fire_Lead
+================
+*/
+void(vector org, vector dir, vector spread, float damage) fire_lead =
+{
+	local	vector direction;
+	local	vector	src;
+
+	direction = dir + crandom()*spread_x*v_right + crandom()*spread_y*v_up;
+
+	traceline (org, org + direction*2048, FALSE, self);
+		
+	if (trace_fraction != 1.0)
+	{
+		if (self.weapon == WEP_SHOTGUN)
+		{
+			Q3SurfaceTraceAttack(WEAPON_SHOTGUN_DAMAGE, direction);
+		}
+		else
+		{
+			Q3SurfaceTraceAttack(damage, direction);				
+		}	
+	}	
+};
+
+/*
+================
 FireBullets
 
 Used by shotgun, super shotgun, and enemy soldier firing
 Go to the trouble of combining multiple pellets into a single damage call.
 ================
 */
-void(float shotcount, vector dir, vector spread) FireBullets =
+void(float shotcount, vector org, vector dir, vector spread, float damage) FireBullets =
 {
 	local	vector direction;
 	local	vector	src;
 	
-	makevectors(self.v_angle);
+//	makevectors(self.v_angle);
 
-	src = self.origin + v_forward*10;
-	src_z = self.absmin_z + self.size_z * 0.7;
+//	src = self.origin + v_forward*10;
+//	src_z = self.absmin_z + self.size_z * 0.7;
 
 	ClearMultiDamage ();
 	while (shotcount > 0)
 	{
 		direction = dir + crandom()*spread_x*v_right + crandom()*spread_y*v_up;
 
-		traceline (src, src + direction*2048, FALSE, self);
+		traceline (org, org + direction*2048, FALSE, self);
 		
 		if (trace_fraction != 1.0)
 		{
@@ -344,7 +522,7 @@ void(float shotcount, vector dir, vector spread) FireBullets =
 			}
 			else
 			{
-				Q3SurfaceTraceAttack(4, direction);	
+				Q3SurfaceTraceAttack(damage, direction);				
 			}	
 		}	
 		//	TraceAttack (4, direction);
@@ -393,7 +571,13 @@ W_FireShotgun
 void() W_FireShotgun =
 {
 	local vector dir;
+	local vector src;
 	
+	makevectors(self.v_angle);
+
+	src = self.origin + v_forward*10;
+	src_z = self.absmin_z + self.size_z * 0.7;	
+
 	//MrC: fixes a sound bug where one shell left on supershotgun makes normal shotgun sound	
 	if (self.weapon == WEP_SUPERSHOTGUN)
 	{
@@ -409,8 +593,7 @@ void() W_FireShotgun =
 	self.currentammo = self.ammo_shells = self.ammo_shells - 1;
 	dir = aim (self, 100000);
 	self.solid = SOLID_BBOX;
-	FireBullets (6, dir, '0.04 0.04 0');
-	//FireBullet();
+	FireBullets (6, src, dir, '0.04 0.04 0', WEAPON_SHOTGUN_DAMAGE);
 	self.solid = SOLID_SLIDEBOX;
 };
 
@@ -423,7 +606,13 @@ W_FireSuperShotgun
 void() W_FireSuperShotgun =
 {
 	local vector dir;
+	local vector src;
+	
+	makevectors(self.v_angle);
 
+	src = self.origin + v_forward*10;
+	src_z = self.absmin_z + self.size_z * 0.7;	
+	
 	if (self.currentammo == 1)
 	{
 		W_FireShotgun ();
@@ -436,49 +625,8 @@ void() W_FireSuperShotgun =
 	
 	self.currentammo = self.ammo_shells = self.ammo_shells - 2;
 	dir = aim (self, 100000);
-	FireBullets (14, dir, '0.14 0.08 0');
-};
 
-void() T_BlasterTouch =
-{
-	local float	damg;
-
-	if (other == self.owner)
-		return;		// don't explode on owner
-
-	if (pointcontents(self.origin) == CONTENT_SKY)
-	{
-		remove(self);
-		return;
-	}
-	
-	if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
-	{
-		remove(self);
-		return;
-	}
-	
-	damg = 10 + random()*2;
-
-	if (other.health)
-	{
-		if (other.classname == "monster_shambler")
-			damg = damg * 0.5;	// mostly immune
-		T_Damage (other, self, self.owner, damg );
-	}
-
-	sound (self, CHAN_WEAPON, "weapons/lashit.wav", 1, ATTN_NORM);
-	self.origin = self.origin - 8*normalize(self.velocity);
-
-	WriteByte (MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte (MSG_BROADCAST, TE_GUNSHOT);
-	WriteCoord (MSG_BROADCAST, self.origin_x);
-	WriteCoord (MSG_BROADCAST, self.origin_y);
-	WriteCoord (MSG_BROADCAST, self.origin_z);
-
-	remove(self);
-
-	//BecomeExplosion ();
+	FireBullets (14, src, dir, '0.14 0.08 0', WEAPON_SUPERSHOTGUN_DAMAGE);
 };
 
 /*
@@ -486,6 +634,9 @@ void() T_BlasterTouch =
 W_FireBlaster
 ================
 */
+
+void()blasterTouch;
+
 void() W_FireBlaster =
 {
 	local vector source;
@@ -495,6 +646,7 @@ void() W_FireBlaster =
 	self.punchangle_x = -3;
 	newmis = spawn ();
 	newmis.owner = self;
+	newmis.damage = WEAPON_BLASTER_DAMAGE;
 	newmis.movetype = MOVETYPE_FLYMISSILE;
 	newmis.solid = SOLID_BBOX;
 	newmis.classname = "blasterbolt";
@@ -513,7 +665,7 @@ void() W_FireBlaster =
 	newmis.velocity = newmis.velocity * PLAYER_ROCKET_SPEED;
 	newmis.angles = vectoangles(newmis.velocity);
 
-	newmis.touch = T_BlasterTouch;
+	newmis.touch = blasterTouch;
 
 // set missile duration
 
@@ -550,76 +702,6 @@ void() W_FireBlaster =
 		sound (self, CHAN_WEAPON, "weapons/BLASTF1A.WAV", 1, ATTN_NORM);
 	}
 };
-/*
-void () Weapon_HyperBlaster_Fire =
-{
-	local float	rotation;
-	local vector offset;
-	local float	effect;
-	local float	damage;
-
-	ent->client->weapon_sound = gi.soundindex("weapons/hyprbl1a.wav");
-
-	if (!(ent->client->buttons & BUTTON_ATTACK))
-	{
-		ent->client->ps.gunframe++;
-	}
-	else
-	{
-		if (! ent->client->pers.inventory[ent->client->ammo_index] )
-		{
-			if (level.time >= ent->pain_debounce_time)
-			{
-				gi.sound(ent, CHAN_VOICE, gi.soundindex("weapons/noammo.wav"), 1, ATTN_NORM, 0);
-				ent->pain_debounce_time = level.time + 1;
-			}
-			NoAmmoWeaponChange (ent);
-		}
-		else
-		{
-			rotation = (ent->client->ps.gunframe - 5) * 2*M_PI/6;
-			offset[0] = -4 * sin(rotation);
-			offset[1] = 0;
-			offset[2] = 4 * cos(rotation);
-
-			if ((ent->client->ps.gunframe == 6) || (ent->client->ps.gunframe == 9))
-				effect = EF_HYPERBLASTER;
-			else
-				effect = 0;
-			if (deathmatch->value)
-				damage = 15;
-			else
-				damage = 20;
-			Blaster_Fire (ent, offset, damage, true, effect);
-			if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
-				ent->client->pers.inventory[ent->client->ammo_index]--;
-
-			ent->client->anim_priority = ANIM_ATTACK;
-			if (ent->client->ps.pmove.pm_flags & PMF_DUCKED)
-			{
-				ent->s.frame = FRAME_crattak1 - 1;
-				ent->client->anim_end = FRAME_crattak9;
-			}
-			else
-			{
-				ent->s.frame = FRAME_attack1 - 1;
-				ent->client->anim_end = FRAME_attack8;
-			}
-		}
-
-		ent->client->ps.gunframe++;
-		if (ent->client->ps.gunframe == 12 && ent->client->pers.inventory[ent->client->ammo_index])
-			ent->client->ps.gunframe = 6;
-	}
-
-	if (ent->client->ps.gunframe == 12)
-	{
-		gi.sound(ent, CHAN_AUTO, gi.soundindex("weapons/hyprbd1a.wav"), 1, ATTN_NORM, 0);
-		ent->client->weapon_sound = 0;
-	}
-
-}
-*/
 
 /*
 ==============================================================================
@@ -671,13 +753,13 @@ void() T_MissileTouch =
 		return;
 	}	
 
-	damg = 100 + random()*20;
+	damg = self.damage;
 	
 	if (other.health)
 	{
 		if (other.classname == "monster_shambler")
 			damg = damg * 0.5;	// mostly immune
-		T_Damage (other, self, self.owner, damg );
+		T_Damage (other, self, self.owner, self.damage );
 	}
 
 #ifdef opgrade
@@ -729,6 +811,8 @@ void() W_FireRocket =
 	newmis.owner = self;
 	newmis.movetype = MOVETYPE_FLYMISSILE;
 	newmis.solid = SOLID_BBOX;
+	newmis.damage = WEAPON_ROCKET_DAMAGE;
+	newmis.modelflags = MF_ROCKET;
 
 	newmis.classname = "missile";
 		
@@ -748,7 +832,7 @@ void() W_FireRocket =
 
 	source = G_ProjectSource (self.origin, '20 8 17', v_forward, v_right, '0 0 0');
 
-	setmodel (newmis, "progs/missile.mdl");
+	setmodel (newmis, "models/objects/rocket/tris.md2");
 	setsize (newmis, '0 0 0', '0 0 0');
 	setorigin (newmis, source);	
 //	setorigin (newmis, self.origin + v_forward*8 + '0 0 16');
@@ -972,8 +1056,11 @@ void() W_FireGrenade =
 	setorigin (newmis, source);
 };
 
+/*
 
-//=============================================================================
+MrC: Spikes left in mostly for Q1 monster support. Can probbaly be cleaned up to remove player specific stuff.
+
+*/
 
 void() spike_touch;
 

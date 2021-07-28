@@ -91,7 +91,7 @@ void() floater_fire_blaster={
 	dir = en.origin + en.velocity*0.2;
 	dir = normalize (dir - org);
 	
-	LaunchQ2Laser(org, self.enemy.origin - self.origin);
+	monster_fire_blaster(org, dir, 10);
 	sound (self, CHAN_WEAPON, "weapons/BLASTF1A.WAV", 1, ATTN_NORM);
 };
 

@@ -69,7 +69,7 @@ void() Gib_Touch =
 		remove(self);
 	}
 	
-	if (self.velocity <= 10){
+	if (self.velocity < 10){
 		self.avelocity = '0 0 0';
 		self.angles = '0 90 0';
 	}

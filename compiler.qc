@@ -32,7 +32,7 @@
 
 #message			-- version 1.06 RECODED -- compile with fteqcc 
 #message			-- (c) 1996 iD software,(c) 2014 Number Six
-#message			-- Quake 2 additions by Gremlin 'MrC' Forester  
+#message			-- Quake 2 additions by MrC and Subject9x  
 #message			-- GPL - see license.txt for rights and details 
 #message 
 
@@ -167,7 +167,7 @@ this is fixed with
 // these are bits of quake-c that are:
 //		- vars never referenced - not even in the engine
 //		- code that serves no purpose
-#define unused
+//#define unused
 
 
 // end not using qc++

@@ -17,7 +17,7 @@ float sb_align;
 float cl_items;
 
 // for weapon icon blink
-float sg, ssg, ng, sng, gl, rl, lg;
+float shotgun, supershotgun, machinegun, chaingun, grenadelauncher, rocketlauncher, hyperblaster, railgun, bfg;
 
 float items, items2, currentweap;
 
@@ -58,7 +58,7 @@ void() Sbar_Init =
 
 	cvar_set("vid_conheight", ftos(cvar("vid_conwidth")*cvar("vid_height")/cvar("vid_width")));
 	
-	sg = 0; ssg = 0; ng = 0; sng = 0; gl = 0; rl = 0; lg = 0;
+	shotgun = 0; supershotgun = 0; machinegun = 0; chaingun = 0; grenadelauncher = 0; rocketlauncher = 0; hyperblaster = 0; railgun = 0; bfg = 0;
 };
 
 void() Sbar_Shutdown =
@@ -336,21 +336,25 @@ void() Sbar_DrawInventory =
 	currentweap = GetStat_FLOAT_TRUNCATED(STAT_ACTIVEWEAPON);
 
 	// weapon icons blink
-	if ((items & WEP_SHOTGUN          ) && sg  == 0) sg = time;
-	if ((items & WEP_SUPERSHOTGUN    ) && ssg == 0) ssg = time;
-	if ((items & WEP_MACHINEGUN          ) && ng  == 0) ng = time;
-	if ((items & WEP_CHAINGUN	 ) && sng == 0) sng = time;
-	if ((items & WEP_GRENADE_LAUNCHER ) && gl  == 0) gl = time;
-	if ((items & WEP_ROCKET_LAUNCHER  ) && rl  == 0) rl = time;
-	if ((items & WEP_HYPERBLASTER        ) && lg  == 0) lg = time;
+	if ((items & WEP_SHOTGUN          ) && shotgun  == 0) shotgun = time;
+	if ((items & WEP_SUPERSHOTGUN    ) && supershotgun == 0) supershotgun = time;
+	if ((items & WEP_MACHINEGUN          ) && machinegun  == 0) machinegun = time;
+	if ((items & WEP_CHAINGUN	 ) && chaingun == 0) chaingun = time;
+	if ((items & WEP_GRENADE_LAUNCHER ) && grenadelauncher  == 0) grenadelauncher = time;
+	if ((items & WEP_ROCKET_LAUNCHER  ) && rocketlauncher  == 0) rocketlauncher = time;
+	if ((items & WEP_HYPERBLASTER        ) && hyperblaster  == 0) hyperblaster = time;
+	if ((items & WEP_RAILGUN        ) && railgun  == 0) railgun = time;
+	if ((items & WEP_BFG        ) && bfg  == 0) bfg = time;
 	
-	if (sg > 0 && (time - sg ) >= 1) sg  = -1;
-	if (ssg> 0 && (time - ssg) >= 1) ssg = -1;
-	if (ng > 0 && (time - ng ) >= 1) ng  = -1;
-	if (sng> 0 && (time - sng) >= 1) sng = -1;
-	if (gl > 0 && (time - gl ) >= 1) gl  = -1;
-	if (rl > 0 && (time - rl ) >= 1) rl  = -1;
-	if (lg > 0 && (time - lg ) >= 1) lg  = -1;
+	if (shotgun > 0 && (time - shotgun ) >= 1) shotgun  = -1;
+	if (supershotgun> 0 && (time - supershotgun) >= 1) supershotgun = -1;
+	if (machinegun > 0 && (time - machinegun ) >= 1) machinegun  = -1;
+	if (chaingun> 0 && (time - chaingun) >= 1) chaingun = -1;
+	if (grenadelauncher > 0 && (time - grenadelauncher ) >= 1) grenadelauncher  = -1;
+	if (rocketlauncher > 0 && (time - rocketlauncher ) >= 1) rocketlauncher  = -1;
+	if (hyperblaster > 0 && (time - hyperblaster ) >= 1) hyperblaster  = -1;
+	if (railgun > 0 && (time - railgun ) >= 1) railgun  = -1;
+	if (bfg > 0 && (time - bfg ) >= 1) bfg  = -1;
 
 	if( ibar_flag == 1)		// Smith's inventory layout 
 	{
@@ -378,13 +382,15 @@ void() Sbar_DrawInventory =
 		sb_align = SB_BOTTOM_RIGHT;
 		
 		//position and size of ibar items
-		DrawInventoryWeapon('272 40', "gfx/inv_shotgun",  "gfx/inv2_shotgun", WEP_SHOTGUN, sg);
-		DrawInventoryWeapon('296 40', "gfx/inv_sshotgun", "gfx/inv2_sshotgun", WEP_SUPERSHOTGUN, ssg);
-		DrawInventoryWeapon('272 68', "gfx/inv_nailgun",  "gfx/inv2_nailgun",  WEP_MACHINEGUN, ng);
-		DrawInventoryWeapon('296 68', "gfx/inv_snailgun", "gfx/inv2_snailgun", WEP_CHAINGUN, sng);
-		DrawInventoryWeapon('272 96', "gfx/inv_rlaunch",  "gfx/inv2_rlaunch",  WEP_GRENADE_LAUNCHER, gl);
-		DrawInventoryWeapon('296 96', "gfx/inv_srlaunch", "gfx/inv2_srlaunch", WEP_ROCKET_LAUNCHER, rl);
-		DrawInventoryWeapon('272 124',"gfx/inv_lightng",  "gfx/inv2_lightng",  WEP_HYPERBLASTER, lg);
+		DrawInventoryWeapon('272 40', "gfx/inv_shotgun",  "gfx/inv2_shotgun", WEP_SHOTGUN, shotgun);
+		DrawInventoryWeapon('296 40', "gfx/inv_sshotgun", "gfx/inv2_sshotgun", WEP_SUPERSHOTGUN, supershotgun);
+		DrawInventoryWeapon('272 68', "gfx/inv_nailgun",  "gfx/inv2_nailgun",  WEP_MACHINEGUN, machinegun);
+		DrawInventoryWeapon('296 68', "gfx/inv_snailgun", "gfx/inv2_snailgun", WEP_CHAINGUN, chaingun);
+		DrawInventoryWeapon('272 96', "gfx/inv_rlaunch",  "gfx/inv2_rlaunch",  WEP_GRENADE_LAUNCHER, grenadelauncher);
+		DrawInventoryWeapon('296 96', "gfx/inv_srlaunch", "gfx/inv2_srlaunch", WEP_ROCKET_LAUNCHER, rocketlauncher);
+		DrawInventoryWeapon('272 124',"gfx/inv_lightng",  "gfx/inv2_lightng",  WEP_HYPERBLASTER, hyperblaster);
+		DrawInventoryWeapon('272 124',"gfx/inv_lightng",  "gfx/inv2_lightng",  WEP_RAILGUN, railgun);
+		DrawInventoryWeapon('272 124',"gfx/inv_lightng",  "gfx/inv2_lightng",  WEP_BFG, bfg);
 	
 	
 		// for 4 small ammo icon positions
@@ -454,13 +460,15 @@ void() Sbar_DrawInventory =
 		sb_align = SB_BOTTOM_RIGHT;
 	
 		//position and size of ibar items
-		DrawInventoryWeapon('290 140', "gfx/inv_shotgun",  "gfx/inv2_shotgun",  WEP_SHOTGUN, sg);
-		DrawInventoryWeapon('290 160', "gfx/inv_sshotgun", "gfx/inv2_sshotgun", WEP_SUPERSHOTGUN, ssg);
-		DrawInventoryWeapon('290 180', "gfx/inv_nailgun",  "gfx/inv2_nailgun",  WEP_MACHINEGUN, ng);
-		DrawInventoryWeapon('290 200', "gfx/inv_snailgun", "gfx/inv2_snailgun", WEP_CHAINGUN, sng);
-		DrawInventoryWeapon('290 220', "gfx/inv_rlaunch",  "gfx/inv2_rlaunch",  WEP_GRENADE_LAUNCHER, gl);
-		DrawInventoryWeapon('290 240', "gfx/inv_srlaunch", "gfx/inv2_srlaunch", WEP_ROCKET_LAUNCHER, rl);
-		DrawInventoryWeapon('290 260', "gfx/inv_lightng",  "gfx/inv2_lightng",  WEP_HYPERBLASTER, lg);
+		DrawInventoryWeapon('290 140', "gfx/inv_shotgun",  "gfx/inv2_shotgun",  WEP_SHOTGUN, shotgun);
+		DrawInventoryWeapon('290 160', "gfx/inv_sshotgun", "gfx/inv2_sshotgun", WEP_SUPERSHOTGUN, supershotgun);
+		DrawInventoryWeapon('290 180', "gfx/inv_nailgun",  "gfx/inv2_nailgun",  WEP_MACHINEGUN, machinegun);
+		DrawInventoryWeapon('290 200', "gfx/inv_snailgun", "gfx/inv2_snailgun", WEP_CHAINGUN, chaingun);
+		DrawInventoryWeapon('290 220', "gfx/inv_rlaunch",  "gfx/inv2_rlaunch",  WEP_GRENADE_LAUNCHER, grenadelauncher);
+		DrawInventoryWeapon('290 240', "gfx/inv_srlaunch", "gfx/inv2_srlaunch", WEP_ROCKET_LAUNCHER, rocketlauncher);
+		DrawInventoryWeapon('290 260', "gfx/inv_lightng",  "gfx/inv2_lightng",  WEP_HYPERBLASTER, hyperblaster);
+		DrawInventoryWeapon('290 260', "gfx/inv_lightng",  "gfx/inv2_lightng",  WEP_RAILGUN, railgun);
+		DrawInventoryWeapon('290 260', "gfx/inv_lightng",  "gfx/inv2_lightng",  WEP_BFG, bfg);
 	
 	
 		// for 4 small ammo icon positions
@@ -511,4 +519,3 @@ void() Sbar_DrawInventory =
 		}
 	}
 };
- 

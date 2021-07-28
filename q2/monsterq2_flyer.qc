@@ -59,33 +59,8 @@ void(float side) flyer_blaster_fire={
 	end_z = end_z + self.enemy.view_ofs_z;
 	
 	dir = normalize(end - org);
-	
-	newmis = spawn();
-	newmis.owner = self;
-	newmis.movetype = MOVETYPE_FLY;
-	newmis.solid = SOLID_BBOX;
-	//newmis.effects = EF_DIMLIGHT;
-	newmis.modelflags = MF_TRACER2;
-	//newmis.glow_color = '200 0 0';
-	newmis.glow_size = 100;
-	newmis.light_lev = 200;
-	newmis.color = '1 0 0'; // color (does not affect radius), typical value '1 1 1' (bright white), can be up to '255 255 255' (nuclear blast)
-	newmis.style = 6; // light style (like normal light entities, flickering torches or switchable, etc)
-	newmis.pflags = PFLAGS_FULLDYNAMIC; // flags (see PFLAGS_ constants)
-	newmis.angles = '0 0 0'; // orientation of the light
 
-	setmodel (newmis, "progs/laser.mdl");
-	setsize (newmis, '0 0 0', '0 0 0');
-
-	setorigin (newmis, org);
-
-	newmis.velocity = dir * 1000;
-	newmis.angles = vectoangles(newmis.velocity);
-
-	newmis.nextthink = time + 5;
-	newmis.think = SUB_Remove;
-	newmis.touch = Q2Laser_Touch;
-	
+	monster_fire_blaster(org, dir, 10);
 	sound(self, CHAN_WEAPON, FLYER_SOUND_BLASTER, 1, ATTN_NORM);
 };
 

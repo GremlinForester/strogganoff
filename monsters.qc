@@ -12,6 +12,134 @@
 
 
 /*
+monster_ projectile stuff, ala Quake 2. These essentially wrap as many shared general weapon projectile functions as possible, also used by the player.
+
+For now they mostly just pass parameters but down the road can be used for more monster specific stuff. Quake 2 used this for muzzle flashes for example.
+*/
+
+//MrC: Unless there's a performance hit with ApplyMultiDamage, this should work fine. 
+//This defaults FireBullets to 1 bullet of configurable damage and spread.
+
+void (vector start, vector aim, vector spread, float dmg) monster_fire_bullet =
+{
+	FireBullets(1, start, aim, spread, dmg);
+}
+
+void (float shotcount, vector start, vector aim, vector spread, float dmg) monster_fire_shotgun =
+{
+	FireBullets(shotcount, start, aim, spread, dmg);
+
+/* Quake 2 uses a for loop and a single shot fire_lead function to simulate shotguns. Leaving this here to experiment with later. 
+	local float i;
+	
+	for (i = 0; i < shotcount; i++)
+		fire_lead(start, aim, spread, dmg);
+*/
+}
+
+// Blaster and rocket spawns a new entity for monsters for now, can expose more parms if needed, like speed etc...
+void(vector org, vector vec, float dmg) monster_fire_blaster =
+{
+	newmis = spawn();
+	newmis.owner = self;
+	newmis.damage = dmg;
+	newmis.movetype = MOVETYPE_FLY;
+	newmis.solid = SOLID_BBOX;
+	newmis.modelflags = MF_TRACER2;
+	newmis.glow_color = '200 0 0';
+	newmis.glow_size = 100;
+	newmis.light_lev = 200;
+	newmis.color = '1 0 0'; // color (does not affect radius), typical value '1 1 1' (bright white), can be up to '255 255 255' (nuclear blast)
+	newmis.style = 6; // light style (like normal light entities, flickering torches or switchable, etc)
+	newmis.pflags = PFLAGS_FULLDYNAMIC; // flags (see PFLAGS_ constants)
+	newmis.angles = '0 0 0'; // orientation of the light
+
+	setmodel (newmis, "progs/laser.mdl");
+	setsize (newmis, '0 0 0', '0 0 0');
+
+	setorigin (newmis, org);
+
+	newmis.velocity = vec * 600;
+	newmis.angles = vectoangles(newmis.velocity);
+
+	newmis.nextthink = time + 5;
+	newmis.think = SUB_Remove;
+	newmis.touch = blasterTouch;
+};
+
+void(vector org, vector vec, float dmg) monster_fire_rocket =
+{
+	newmis = spawn();
+	newmis.owner = self;
+	newmis.damage = dmg;
+	newmis.movetype = MOVETYPE_FLY;
+	newmis.solid = SOLID_BBOX;
+	newmis.modelflags = MF_ROCKET;
+
+	setmodel (newmis, "models/objects/rocket/tris.md2");
+	setsize (newmis, '0 0 0', '0 0 0');
+
+	setorigin (newmis, org);
+
+	newmis.velocity = vec * 600;
+	newmis.angles = vectoangles(newmis.velocity);
+
+	newmis.nextthink = time + 5;
+	newmis.think = SUB_Remove;
+	newmis.touch = T_MissileTouch;
+};
+
+void monster_fire_grenade (vector start, vector rotation, float damage, float speed)
+{
+	local vector source;
+	local entity grenade;
+	
+	sound (self, CHAN_AUTO, "weapons/GRENLF1A.WAV", 1, ATTN_NORM);	
+
+	grenade = spawn ();
+	grenade.owner = self;
+	grenade.movetype = MOVETYPE_BOUNCE;
+	grenade.solid = SOLID_BBOX;
+	grenade.classname = "grenade";
+
+	makevectors (self.angles);
+
+	grenade.velocity = normalize(self.enemy.origin - self.origin);
+	grenade.velocity = grenade.velocity * speed;
+	grenade.velocity_z = speed / 3;
+
+	grenade.dmg = damage;
+
+	grenade.avelocity = rotation;
+	grenade.angles = vectoangles(grenade.velocity);
+	grenade.touch = GrenadeTouch;
+
+	grenade.nextthink = time + 2.5;
+	grenade.think = GrenadeExplode;
+
+	setmodel (grenade, "progs/grenade.mdl");
+	setsize (grenade, '0 0 0', '0 0 0');		
+	setorigin (grenade, start);
+}
+
+void monster_fire_railgun (vector start, vector aimdir, float damage) =
+{
+	fireRail(start, aimdir, damage);
+}
+
+/*
+void monster_fire_bfg (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, int kick, float damage_radius, int flashtype)
+{
+	fire_bfg (self, start, aimdir, damage, speed, damage_radius);
+
+	gi.WriteByte (svc_muzzleflash2);
+	gi.WriteShort (self - g_edicts);
+	gi.WriteByte (flashtype);
+	gi.multicast (start, MULTICAST_PVS);
+}
+*/
+
+/*
 ================
 monster_use
 
