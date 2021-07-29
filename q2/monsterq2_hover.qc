@@ -127,7 +127,7 @@ void() hover_fire_blaster={
 	
 	dir = normalize(end - org);
 	
-	//TODO monster_fire_blaster(org, dir, 1, 1000, '32.5 -0.8 10.0', effect)
+	monster_fire_blaster(org, dir, 1);
 };
 
 void() hover_stand={
@@ -251,7 +251,6 @@ void() monster_hover=
 	self.th_walk = hover_walk;
 	self.th_run = hover_run;
 	self.th_missile = hover_start_attack;
-	//self.th_melee = floater_melee_select;
 	self.th_pain = hover_pain;
 	self.th_die = hover_die;
 
