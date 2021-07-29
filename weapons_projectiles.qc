@@ -697,9 +697,13 @@ void() W_FireBlaster =
 		source = G_ProjectSource (self.origin, '20 6 10' + rotation_offset, v_forward, v_right, '0 0 0'); //24 -18 22
 		setorigin (newmis, source);
 	}
-	else
+	else if (self.weapon == WEP_BLASTER)
 	{
 		sound (self, CHAN_WEAPON, "weapons/BLASTF1A.WAV", 1, ATTN_NORM);
+	}
+	else
+	{
+		self.currentammo = self.ammo_cells = self.ammo_cells - 5; //ammo cost for testing BFG and Railgun
 	}
 };
 

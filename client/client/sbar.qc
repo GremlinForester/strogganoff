@@ -331,7 +331,6 @@ void() Sbar_DrawInventory =
 
 	cl_items = GetStat_FLOAT_TRUNCATED(STAT_ITEMS);
 
-//	inv_weapons = GetStat_BITS(STAT_ITEMS, 0, 23);
 	items = GetStat_BITS(STAT_ITEMS, 0, 23);
 	items2 = GetStat_BITS(STAT_ITEMS, 23, 9);
 	currentweap = GetStat_FLOAT_TRUNCATED(STAT_ACTIVEWEAPON);

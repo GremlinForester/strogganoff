@@ -287,7 +287,9 @@ void() W_Attack =
 			break;
 		case WEP_RAILGUN:
 			q2player_8attackframes ();
-			FireBullet();
+		//	FireBullet();
+			W_FireBlaster();
+			q2player_HBattackframes ();
 			self.attack_finished = time + 2.0;
 			break;
 		case WEP_HYPERBLASTER:
@@ -297,7 +299,9 @@ void() W_Attack =
 			break;
 		case WEP_BFG:
 			q2player_8attackframes ();
-			W_FireRocket();
+		//	W_FireRocket();
+			W_FireBlaster();
+			q2player_HBattackframes ();
 			self.attack_finished = time + 0.8;
 			break;
 	}
@@ -468,7 +472,7 @@ void() CheatCommand =
 		WEP_ROCKET_LAUNCHER |
 		WEP_HYPERBLASTER |
 		WEP_RAILGUN |
-		WEP_BFG |
+		WEP_BFG;
 	self.items = self.items | 
 		IT_KEY1 | IT_KEY2;
 
