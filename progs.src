@@ -59,6 +59,7 @@ q2/monsterq2_parasite.qc
 q2/monsterq2_gunner.qc
 q2/monsterq2_floater.qc
 q2/monsterq2_flyer.qc
+q2/monsterq2_tank.qc
 
 q1/ogre.qc
 q1/demon.qc
