@@ -101,7 +101,7 @@ float() W_BestWeapon =
 {
 	local	float	it;
 	
-	it = self.items;
+	it = self.inv_weapons;
 
 	if (self.ammo_cells >= 1 && (it & WEP_BFG) )
 			return WEP_BFG;
@@ -378,14 +378,14 @@ void() W_ChangeWeapon =
 			}
 			self.weapon = WEP_HYPERBLASTER;
 			break;
-		case 20:
+		case 9:
 			if (self.weapon == WEP_RAILGUN)
 			{ 
 				return;
 			}
 			self.weapon = WEP_RAILGUN;
 			break;
-		case 21:
+		case 10:
 			if (self.weapon == WEP_BFG)
 			{ 
 				return;
@@ -458,7 +458,7 @@ void() CheatCommand =
 	self.ammo_rockets = 100;
 	self.inv_ammo_bullets = 200;
 	self.ammo_shells = 100;
-	self.items = self.items | 
+	self.inv_weapons = self.inv_weapons | 
 		WEP_BLASTER |
 		WEP_SHOTGUN |
 		WEP_SUPERSHOTGUN |
@@ -466,12 +466,13 @@ void() CheatCommand =
 		WEP_CHAINGUN |
 		WEP_GRENADE_LAUNCHER |
 		WEP_ROCKET_LAUNCHER |
+		WEP_HYPERBLASTER |
 		WEP_RAILGUN |
 		WEP_BFG |
+	self.items = self.items | 
 		IT_KEY1 | IT_KEY2;
 
 	self.ammo_cells = 200;
-	self.items = self.items | WEP_HYPERBLASTER;
 
 	self.weapon = WEP_BFG;
 	self.impulse = 0;
@@ -519,7 +520,7 @@ void() CycleWeaponCommand =
 		if (self.weapon == WEP_SUPERSHOTGUN && self.ammo_shells < 2) am = 1;
 		if (self.weapon == WEP_SHOTGUN && self.ammo_shells < 1) am = 1;
 	
-		if ( (self.items & self.weapon) && ! am)
+		if ( (self.inv_weapons & self.weapon) && ! am)
 		{
 			W_SetCurrentAmmo ();
 			self.impulse = 0;
@@ -527,7 +528,7 @@ void() CycleWeaponCommand =
 			return;
 		}
 // dont cycle single select
-		if (self.impulse < 10) return;
+		if (self.impulse <= 10) return;
 		
 	}
 		
@@ -612,7 +613,7 @@ void() CycleWeaponNext =
 				am = 1;
 		}
 	
-		if ( (self.items & self.weapon) && am == 0)
+		if ( (self.inv_weapons & self.weapon) && am == 0)
 		{
 			W_SetCurrentAmmo ();
 			W_Draw();
@@ -647,13 +648,13 @@ void() CycleWeaponPrev =
 			if (self.ammo_cells < 1)
 				am = 1;
 		}
-		if (self.weapon == WEP_RAILGUN)
+		else if (self.weapon == WEP_RAILGUN)
 		{
 			self.weapon = WEP_HYPERBLASTER;
 			if (self.ammo_cells < 1)
 				am = 1;
 		}
-		if (self.weapon == WEP_HYPERBLASTER)
+		else if (self.weapon == WEP_HYPERBLASTER)
 		{
 			self.weapon = WEP_ROCKET_LAUNCHER;
 			if (self.ammo_rockets < 1)
@@ -700,7 +701,7 @@ void() CycleWeaponPrev =
 				am = 1;
 		}
 	
-		if ( (self.items & self.weapon) && am == 0)
+		if ( (self.inv_weapons & self.weapon) && am == 0)
 		{
 			W_SetCurrentAmmo ();
 			W_Draw();
@@ -763,7 +764,7 @@ void() ImpulseCommands =
 		W_SetCurrentAmmo();
 	}
 	
-	if (self.impulse >= 1 && self.impulse <= 8) // && self.weaponstate == WEAPON_READY)
+	if (self.impulse >= 1 && self.impulse <= 10) // && self.weaponstate == WEAPON_READY)
 	{
 		if (self.weaponstate == WEAPON_SPINDOWN)
 		{
@@ -778,14 +779,14 @@ void() ImpulseCommands =
 		}
 	}
 
-	if (self.impulse == 10)
+	if (self.impulse == 30)
 	{
 	//	self.f__ = 2;
 	//	CycleWeaponCommand();
 	CycleWeaponNext();
 	
 	}
-	if (self.impulse == 12)
+	if (self.impulse == 31)
 	{
 		CycleWeaponPrev();
 	//	self.f__ = 0.5;
@@ -795,11 +796,11 @@ void() ImpulseCommands =
 
 #ifdef debug
 // cheat impulses are only active in debug mode - which should never be on in live server / released game code. MrC: But where's the fun in that!?
-	if (self.impulse == 9)
+	if (self.impulse == 99)
 		CheatCommand ();
 	if (self.impulse == 11)
 		ServerflagsCommand ();
-	if (self.impulse == 99){
+	if (self.impulse == 999){
 		bprint ("Current camera position: ");
 		bprint (vtos (self.origin));
 		bprint ("\n");

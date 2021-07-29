@@ -1,4 +1,4 @@
-/* Weapons State machine
+/*
 
 The largest change is the weapons code, which is handled in a similar fashion to Quake 2. Weapon_Generic is a function that will check the state of all weapons 
 and switch or loop frames based on player and weapons states. Firing, switching, idle animation loops and spin downs for the chaingun and hyperblaster.
@@ -6,6 +6,8 @@ and switch or loop frames based on player and weapons states. Firing, switching,
 Making a note of it here to help make sense of it for myself or anyone else who might use this.
 
 */
+
+.float inv_weapons;
 
 /*
 ============
@@ -255,17 +257,18 @@ WEP_GRENADE
 
 // items
 
-#define	WEP_BLASTER				4096
-#define	WEP_SHOTGUN				1
-#define	WEP_SUPERSHOTGUN		2
-#define	WEP_MACHINEGUN			4
-#define	WEP_CHAINGUN			8
-#define	WEP_GRENADE_LAUNCHER	16
-#define	WEP_ROCKET_LAUNCHER		32
-#define	WEP_HYPERBLASTER		64
-#define	WEP_RAILGUN				128
-//#define WEP_BFG 				65536
-#define WEP_BFG 				256
+
+
+#define	WEP_BLASTER				1
+#define	WEP_SHOTGUN				2
+#define	WEP_SUPERSHOTGUN		4
+#define	WEP_MACHINEGUN			8
+#define	WEP_CHAINGUN			16
+#define	WEP_GRENADE_LAUNCHER	32
+#define	WEP_ROCKET_LAUNCHER		64
+#define	WEP_HYPERBLASTER		128
+#define	WEP_RAILGUN				256
+#define WEP_BFG 				512
 //#define WEP_GRENADE 			512
 
 #define	WEP_SHOTGUN_ATTACKTIME 0.9

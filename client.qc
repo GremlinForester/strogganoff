@@ -59,11 +59,12 @@ void() SetChangeParms =
 	parm7 = self.ammo_cells;
 	parm8 = self.weapon;
 	parm9 = self.armortype * 100;
+	parm10 = self.inv_weapons;
 };
 
 void() SetNewParms =
 {
-	parm1 = WEP_BLASTER;
+	parm1 = 0; //WEP_BLASTER;
 	parm2 = 100;
 	parm3 = 0;
 	parm4 = 0;
@@ -72,6 +73,7 @@ void() SetNewParms =
 	parm7 = 0;
 	parm8 = WEP_BLASTER;
 	parm9 = 0;
+	parm10 = WEP_BLASTER;
 };
 
 void() DecodeLevelParms =
@@ -95,6 +97,7 @@ void() DecodeLevelParms =
 	self.ammo_cells = parm7;
 	self.weapon = parm8;
 	self.armortype = parm9 * 0.01;
+	self.inv_weapons = parm10;
 };
 
 /*

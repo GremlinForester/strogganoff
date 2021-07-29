@@ -490,7 +490,7 @@ void() weapon_touch =
 	
 	if (stemp.classname == "weapon_machinegun")
 	{
-		if (leave && (self.items & WEP_MACHINEGUN) )
+		if (leave && (self.inv_weapons & WEP_MACHINEGUN) )
 			return;
 
 		new = WEP_MACHINEGUN;
@@ -502,7 +502,7 @@ void() weapon_touch =
 	}
 	else if (stemp.classname == "weapon_chaingun")
 	{
-		if (leave && (self.items & WEP_CHAINGUN) )
+		if (leave && (self.inv_weapons & WEP_CHAINGUN) )
 			return;
 
 		new = WEP_CHAINGUN;
@@ -514,7 +514,7 @@ void() weapon_touch =
 	}
 	else if (stemp.classname == "weapon_supershotgun")
 	{
-		if (leave && (self.items & WEP_SUPERSHOTGUN) )
+		if (leave && (self.inv_weapons & WEP_SUPERSHOTGUN) )
 			return;
 
 		new = WEP_SUPERSHOTGUN;
@@ -526,7 +526,7 @@ void() weapon_touch =
 	}
 	else if (stemp.classname == "weapon_shotgun")
 	{
-		if (leave && (self.items & WEP_SHOTGUN) )
+		if (leave && (self.inv_weapons & WEP_SHOTGUN) )
 			return;
 
 		new = WEP_SHOTGUN;
@@ -538,7 +538,7 @@ void() weapon_touch =
 	}
 	else if (stemp.classname == "weapon_rocketlauncher")
 	{
-		if (leave && (self.items & WEP_ROCKET_LAUNCHER) )
+		if (leave && (self.inv_weapons & WEP_ROCKET_LAUNCHER) )
 			return;
 
 		new = WEP_ROCKET_LAUNCHER;
@@ -550,7 +550,7 @@ void() weapon_touch =
 	}
 	else if (stemp.classname == "weapon_grenadelauncher")
 	{
-		if (leave && (self.items & WEP_GRENADE_LAUNCHER) )
+		if (leave && (self.inv_weapons & WEP_GRENADE_LAUNCHER) )
 			return;
 
 		new = WEP_GRENADE_LAUNCHER;
@@ -562,7 +562,7 @@ void() weapon_touch =
 	}
 	else if (stemp.classname == "weapon_hyperblaster")
 	{
-		if (leave && (self.items & WEP_HYPERBLASTER) )
+		if (leave && (self.inv_weapons & WEP_HYPERBLASTER) )
 			return;
 
 		new = WEP_HYPERBLASTER;
@@ -574,10 +574,10 @@ void() weapon_touch =
 	}
 	else if (stemp.classname == "weapon_railgun")
 	{
-		if (leave && (self.items & WEP_RAILGUN) )
+		if (leave && (self.inv_weapons & WEP_RAILGUN) )
 			return;
 
-		new = WEP_BLASTER;
+		new = WEP_RAILGUN;
 		
 		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
 		if (self != stemp.owner){
@@ -586,10 +586,10 @@ void() weapon_touch =
 	}
 	else if (stemp.classname == "weapon_bfg")
 	{
-		if (leave && (self.items & WEP_BFG) )
+		if (leave && (self.inv_weapons & WEP_BFG) )
 			return;
 
-		new = WEP_BLASTER;
+		new = WEP_BFG;
 		
 		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
 		if (self != stemp.owner){
@@ -616,7 +616,7 @@ void() weapon_touch =
 	bound_other_ammo ();
 
 // change to the weapon
-	self.items = self.items | new;
+	self.inv_weapons = self.inv_weapons | new;
 
 // logic change eliminates
 //	stemp = self;
@@ -728,6 +728,7 @@ void() weapon_chaingun =
 	setmodel (self, "models/weapons/g_chain/tris.md2");
 	self.weapon = WEP_CHAINGUN;
 	self.netname = "Chaingun";
+	self.classname = "weapon_chaingun";
 	weapon_supershotgun();
 /*
 	self.touch = weapon_touch;
@@ -753,6 +754,7 @@ void() weapon_grenadelauncher =
 	setmodel (self, "models/weapons/g_launch/tris.md2");
 	self.weapon = 3;
 	self.netname = "Grenade Launcher";
+	self.classname = "weapon_grenadelauncher";
 	weapon_supershotgun();
 /*
 	self.touch = weapon_touch;
@@ -770,6 +772,7 @@ void() weapon_rocketlauncher =
 	setmodel (self, "models/weapons/g_rocket/tris.md2");
 	self.weapon = 3;
 	self.netname = "Rocket Launcher";
+	self.classname = "weapon_rocketlauncher";
 	weapon_supershotgun();
 /*
 	self.touch = weapon_touch;
@@ -787,6 +790,7 @@ void() weapon_hyperblaster =
 	setmodel (self, "models/weapons/g_hyperb/tris.md2");
 	self.weapon = 3;
 	self.netname = "Hyperblaster";
+	self.classname = "weapon_hyperblaster";
 	weapon_supershotgun();
 /*
 	self.touch = weapon_touch;
@@ -804,6 +808,7 @@ void() weapon_railgun =
 	setmodel (self, "models/weapons/g_rail/tris.md2");
 	self.weapon = 3;
 	self.netname = "Railgun";
+	self.classname = "weapon_railgun";
 	weapon_supershotgun();
 /*
 	self.touch = weapon_touch;
@@ -821,6 +826,7 @@ void() weapon_bfg =
 	setmodel (self, "models/weapons/g_bfg/tris.md2");
 	self.weapon = 3;
 	self.netname = "BFG";
+	self.classname = "weapon_bfg";
 	weapon_supershotgun();
 /*
 	self.touch = weapon_touch;
@@ -1863,5 +1869,5 @@ void() q2_tossWeapon{
 	
 	self = this;
 	//remove weapon form player inventory
-	self.items = self.items - (self.items & self.weapon);	
+	self.inv_weapons = self.inv_weapons - (self.inv_weapons & self.weapon);	
 };
