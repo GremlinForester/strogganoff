@@ -48,7 +48,7 @@ void() W_SetDefaultFrames =
 			self.weaponframe=13;
 			break;
 		case WEP_RAILGUN:
-			self.weaponframe=9;
+			self.weaponframe=19;
 			break;
 		case WEP_HYPERBLASTER:
 			if (self.weaponstate == WEAPON_SPINDOWN){
@@ -59,7 +59,7 @@ void() W_SetDefaultFrames =
 			}
 			break;
 		case WEP_BFG:
-			self.weaponframe=9;
+			self.weaponframe=32;
 			break;
 	}
 }
@@ -229,6 +229,9 @@ framer($FRAME_attack1, $FRAME_attack8, q2player_8attackframes, q2player_run, 0.1
 		case WEP_GRENADE_LAUNCHER:
 		self.weaponframe=8; 
 			break;
+		case WEP_BFG:
+		self.weaponframe=9; 
+			break;
 	}
 	self.effects = self.effects | EF_MUZZLEFLASH;
 	);
@@ -236,7 +239,27 @@ framer($FRAME_attack1, $FRAME_attack8, q2player_8attackframes, q2player_run, 0.1
 	W_SetDefaultFrames();
 	self.weaponstate = WEAPON_READY;
 	);
+	if (self.weapon == WEP_BFG)
+	{
+	self.weaponframe+3;
+	}
+	else
+	{
 	self.weaponframe++;
+	}
+);
+
+framer($FRAME_attack1, $FRAME_attack4, q2playeronly_4attackframes, q2player_run, 0.1,
+
+	frame_arb($FRAME_attack1,
+	);
+
+);
+
+framer($FRAME_attack1, $FRAME_attack8, q2playeronly_8attackframes, q2player_run, 0.1,
+
+	frame_arb($FRAME_attack1,
+	);
 );
 
 //============================================================================

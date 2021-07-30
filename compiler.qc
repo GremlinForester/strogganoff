@@ -459,6 +459,7 @@ void() t_on
 #define spot2__z		dest2_z
 
 //#define q2model_lighting
+#define new_weapon_generic
 
 #define q2monster_replace_soldier
 //#define q2monster_replace_demon

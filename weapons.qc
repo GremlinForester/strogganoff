@@ -149,6 +149,8 @@ void()	q2player_MGattackframes;
 void()	q2player_CGattackframes;
 void()	q2player_4attackframes;
 void()	q2player_8attackframes;
+void()	q2playeronly_8attackframes;
+void()	q2playeronly_4attackframes;
 void()	q2player_HBattackframes;
 void()	q2player_4drawframes;
 
@@ -248,13 +250,14 @@ void() W_Attack =
 
 	makevectors	(self.v_angle);			// calculate forward angle for velocity
 	self.show_hostile = time + 1;	// wake monsters up
-
+	self.weaponstate = WEAPON_FIRING;
+	
 	switch (self.weapon)
-	{
+	{		
 		case WEP_BLASTER:
 			q2player_4attackframes ();
 			W_FireBlaster();
-			self.attack_finished = time + 0.4;
+			self.attack_finished = time + WEP_BLASTER_ATTACKTIME;
 			break;
 		case WEP_SHOTGUN:
 			q2player_8attackframes ();
@@ -264,46 +267,113 @@ void() W_Attack =
 		case WEP_SUPERSHOTGUN:
 			q2player_8attackframes ();
 			W_FireSuperShotgun ();
-			self.attack_finished = time + 0.9;
+			self.attack_finished = time + WEP_SUPERSHOTGUN_ATTACKTIME;
 			break;
 		case WEP_MACHINEGUN:
 			q2player_MGattackframes();
-			self.attack_finished = time + 0.15;
+			self.attack_finished = time + WEP_MACHINEGUN_ATTACKTIME;
 			break;
 		case WEP_CHAINGUN:
 			self.state = STATE_ATTACKING;
 			q2player_CGattackframes();
-			self.attack_finished = time + 0.05;
+			self.attack_finished = time + WEP_CHAINGUN_ATTACKTIME;
 			break;
 		case WEP_GRENADE_LAUNCHER:
 			q2player_8attackframes ();
 			W_FireGrenade();
-			self.attack_finished = time + 0.8;
+			self.attack_finished = time + WEP_GRENADE_LAUNCHER_ATTACKTIME;
 			break;
 		case WEP_ROCKET_LAUNCHER:
 			q2player_8attackframes ();
 			W_FireRocket();
-			self.attack_finished = time + 0.8;
-			break;
-		case WEP_RAILGUN:
-			q2player_8attackframes ();
-		//	FireBullet();
-			W_FireBlaster();
-			q2player_HBattackframes ();
-			self.attack_finished = time + 2.0;
+			self.attack_finished = time + WEP_ROCKET_LAUNCHER_ATTACKTIME;
 			break;
 		case WEP_HYPERBLASTER:
 			W_FireBlaster();
 			q2player_HBattackframes ();
-			self.attack_finished = time + 0.135;
+			self.attack_finished = time + WEP_HYPERBLASTER_ATTACKTIME;
+			break;
+		case WEP_RAILGUN:
+			q2player_8attackframes ();
+			FireBullet();
+			self.attack_finished = time + WEP_RAILGUN_ATTACKTIME;
 			break;
 		case WEP_BFG:
+			self.weaponframe = 9;
+			q2playeronly_8attackframes ();
+			self.attack_finished = time + WEP_BFG_ATTACKTIME;
+			break;
+
+	}
+};
+
+void() W_Attack2 =
+{
+	local	float	r;
+
+	if (!W_CheckNoAmmo ())
+		return;
+
+	makevectors	(self.v_angle);			// calculate forward angle for velocity
+	self.show_hostile = time + 1;	// wake monsters up
+	self.weaponstate = WEAPON_FIRING;
+	
+	switch (self.weapon)
+	{
+/*		
+		case WEP_BLASTER:
+			q2player_4attackframes ();
+			W_FireBlaster();
+			self.attack_finished = time + WEP_BLASTER_ATTACKTIME;
+			break;
+*/
+		case WEP_SHOTGUN:
 			q2player_8attackframes ();
-		//	W_FireRocket();
+			W_FireShotgun ();
+			self.attack_finished = time + WEP_SHOTGUN_ATTACKTIME;
+			break;
+		case WEP_SUPERSHOTGUN:
+			q2player_8attackframes ();
+			W_FireSuperShotgun ();
+			self.attack_finished = time + WEP_SUPERSHOTGUN_ATTACKTIME;
+			break;
+/*
+		case WEP_MACHINEGUN:
+			q2player_MGattackframes();
+			self.attack_finished = time + WEP_MACHINEGUN_ATTACKTIME;
+			break;
+		case WEP_CHAINGUN:
+			self.state = STATE_ATTACKING;
+			q2player_CGattackframes();
+			self.attack_finished = time + WEP_CHAINGUN_ATTACKTIME;
+			break;
+*/
+		case WEP_GRENADE_LAUNCHER:
+			q2player_8attackframes ();
+			W_FireGrenade();
+			self.attack_finished = time + WEP_GRENADE_LAUNCHER_ATTACKTIME;
+			break;
+		case WEP_ROCKET_LAUNCHER:
+			q2player_8attackframes ();
+			W_FireRocket();
+			self.attack_finished = time + WEP_ROCKET_LAUNCHER_ATTACKTIME;
+			break;
+		case WEP_HYPERBLASTER:
 			W_FireBlaster();
 			q2player_HBattackframes ();
-			self.attack_finished = time + 0.8;
+			self.attack_finished = time + WEP_HYPERBLASTER_ATTACKTIME;
 			break;
+/*		case WEP_RAILGUN:
+			q2player_8attackframes ();
+			FireBullet();
+			self.attack_finished = time + WEP_RAILGUN_ATTACKTIME;
+			break;
+		case WEP_BFG:
+			self.weaponframe = 9;
+			q2playeronly_8attackframes ();
+			self.attack_finished = time + WEP_BFG_ATTACKTIME;
+			break;
+*/
 	}
 };
 
@@ -766,6 +836,7 @@ void() ImpulseCommands =
 		q2_tossWeapon();
 		self.weapon = W_BestWeapon();
 		W_SetCurrentAmmo();
+		W_Draw();
 	}
 	
 	if (self.impulse >= 1 && self.impulse <= 10) // && self.weaponstate == WEAPON_READY)
@@ -817,14 +888,51 @@ void() ImpulseCommands =
 };
 
 // "Inspired" by Quake 2 ;D ... Semi-ported version below.
+// MrC: I also come here too and ponder what the hell I'm thinking!?
 
 void (float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRAME_IDLE_FIRST, float FRAME_IDLE_LAST) Weapon_Generic_Idle =
 {
 	local float r = random();
-	
+
 	if (time < self.nextframetime)
 		return;
 	
+	if (self.state == STATE_ATTACKING)
+	{
+		if (self.weaponstate == WEAPON_SPINDOWN || WEAPON_FIRING)
+		{
+			self.idletime = time;
+			return;
+		}
+		else
+		{
+			self.idletime = time + 5 + random() * 2;
+			return;
+		}
+		/*
+		if (self.weaponstate == WEAPON_FIRING)
+		{
+			if (self.weapon == WEP_BFG){		
+				switch (self.weaponframe)
+				{
+				case 18:
+					W_fireBFG();
+					sound (self, CHAN_WEAPON, "weapons/hyprbd1a.wav", 1, ATTN_NORM);
+				break;
+				case FRAME_FIRE_LAST:
+					self.weaponstate = WEAPON_READY;
+					self.weaponframe = FRAME_IDLE_FIRST;
+					self.idletime = time + 5 + random() * 2;
+				break;
+				}
+			}
+		}
+		*/
+		return;
+	}
+	
+
+/*	
 	if (self.state == STATE_ATTACKING)
 	{
 		//Stuff in W_Attack can probably go here.
@@ -840,7 +948,7 @@ void (float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRAME_IDLE_FIRST, 
 			return;
 		}
 	}
-
+*/
 	
 	if (self.weaponstate == WEAPON_ACTIVATING)
 	{
@@ -906,8 +1014,36 @@ void (float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRAME_IDLE_FIRST, 
 				break;
 			}
 		}
+		else if (self.state == STATE_ATTACKING)
+		{
+			return;
+		}
 		else
 		{
+			if (self.weaponstate == WEAPON_FIRING)
+			{
+	
+				if (self.weapon == WEP_BFG)
+				{		
+					switch (self.weaponframe)
+					{
+					case 9:
+						sound (self, CHAN_WEAPON, "weapons/Bfg__f1y.wav", 1, ATTN_NORM);
+					break;
+					case 18:
+						W_fireBFG();
+					break;
+					case FRAME_FIRE_LAST:
+						self.weaponstate = WEAPON_READY;
+						self.weaponframe = FRAME_IDLE_FIRST;
+						self.idletime = time + 5 + random() * 2;
+					break;
+					}
+				}
+			self.weaponframe++;
+			self.nextframetime = time + 0.135;
+			return;
+			}
 		self.weaponframe = FRAME_IDLE_FIRST;
 		self.idletime = time + 10 + random() * 5;
 		/*
@@ -971,6 +1107,26 @@ void (float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRAME_IDLE_FIRST, 
 			}
 		}
 		
+		if (self.weaponstate == WEAPON_FIRING)
+		{
+			if (self.weapon == WEP_BFG){		
+				switch (self.weaponframe)
+				{
+				case 9:
+					sound (self, CHAN_WEAPON, "weapons/Bfg__f1y.wav", 1, ATTN_NORM);
+				break;
+				case 18:
+					W_fireBFG();
+				break;
+				case FRAME_FIRE_LAST:
+					self.weaponstate = WEAPON_READY;
+					self.weaponframe = FRAME_IDLE_FIRST;
+					self.idletime = time + 5 + random() * 2;
+				break;
+				}
+			}
+		}
+		
 		if (self.weaponframe >= FRAME_IDLE_LAST)
 		{
 			local float r = random();
@@ -993,13 +1149,147 @@ void (float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRAME_IDLE_FIRST, 
 	dprint ("Idle Fidget Sequence: ");
 	dprint (ftos(self.animIdle));
 	dprint ("\n");
-*/	
+*/
+
 	self.weaponframe++;
-	
 	self.nextframetime = time + 0.135;
 }
 
 // Ported from Quake 2
+
+void() doWeaponFrames =
+{
+		if (self.weapon == WEP_BFG)
+		{		
+			switch (self.weaponframe)
+			{
+				case 9:
+					sound (self, CHAN_WEAPON, "weapons/Bfg__f1y.wav", 1, ATTN_NORM);
+				break;
+				case 18:
+				q2playeronly_8attackframes ();
+				W_fireBFG();
+				break;
+			}
+		}
+		
+		if (self.weapon == WEP_RAILGUN)
+		{		
+			switch (self.weaponframe)
+			{
+				case 5:
+					sound (self, CHAN_WEAPON, "weapons/RAILGF1A.WAV", 1, ATTN_NORM);
+					q2playeronly_8attackframes ();
+					FireBullet();
+				break;
+			}
+		}
+		
+		if (self.weapon == WEP_HYPERBLASTER)
+		{	
+			switch (self.weaponframe)
+			{
+				case 6:
+					q2playeronly_4attackframes ();
+					W_FireBlaster();
+				break;
+				case 7:
+					W_FireBlaster();
+				break;
+				case 8:
+					W_FireBlaster();
+				break;
+				case 9:
+					W_FireBlaster();
+				break;
+				case 10:
+					W_FireBlaster();
+				break;
+				
+				case 11:
+					W_FireBlaster();
+					sound (self, CHAN_WEAPON2, "weapons/Hyprbd1a.wav", 1, ATTN_NORM);
+				break;
+			}
+		}
+		
+		if (self.weapon == WEP_ROCKET_LAUNCHER)
+		{		
+			switch (self.weaponframe)
+			{
+				case 5:
+					q2playeronly_8attackframes ();
+					W_FireRocket();
+				break;
+			}
+		}
+		
+		if (self.weapon == WEP_GRENADE_LAUNCHER)
+		{		
+			switch (self.weaponframe)
+			{
+				case 7:
+					q2playeronly_8attackframes ();
+					W_FireGrenade();
+				break;
+			}
+		}
+		
+		if (self.weapon == WEP_CHAINGUN)
+		{		
+			switch (self.weaponframe)
+			{
+				case 7:
+					q2playeronly_4attackframes ();
+					FireBullet(WEAPON_CHAINGUN_DAMAGE);
+				break;
+			}
+		}
+		
+		if (self.weapon == WEP_MACHINEGUN)
+		{		
+			switch (self.weaponframe)
+			{
+				case 7:
+					q2playeronly_4attackframes ();
+					FireBullet(WEAPON_CHAINGUN_DAMAGE);
+				break;
+			}
+		}
+		
+		if (self.weapon == WEP_SUPERSHOTGUN)
+		{		
+			switch (self.weaponframe)
+			{
+				case 7:
+					q2playeronly_8attackframes ();
+					W_FireSuperShotgun();
+				break;
+			}
+		}
+		
+		if (self.weapon == WEP_SHOTGUN)
+		{		
+			switch (self.weaponframe)
+			{
+				case 8:
+					q2playeronly_8attackframes ();
+					W_FireShotgun();
+				break;
+			}
+		}
+		
+		if (self.weapon == WEP_BLASTER)
+		{		
+			switch (self.weaponframe)
+			{
+				case 5:
+					q2playeronly_4attackframes();
+					W_FireBlaster();
+				break;
+			}
+		}
+}
 
 void Weapon_Generic (float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRAME_IDLE_LAST, float FRAME_DEACTIVATE_LAST)
 {
@@ -1055,7 +1345,7 @@ void Weapon_Generic (float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRA
 	}
 
 	//if ((newweapon()) && (self.weaponstate != WEAPON_FIRING)) //MrC: float check new weapon?
-	if (self.weaponstate != WEAPON_FIRING)
+/*	if (self.weaponstate != WEAPON_FIRING)
 	{
 		self.weaponstate = WEAPON_DROPPING;
 		self.weaponframe = FRAME_DEACTIVATE_FIRST;
@@ -1076,7 +1366,7 @@ void Weapon_Generic (float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRA
 		}
 		return;
 	}
-
+*/
 	if (self.weaponstate == WEAPON_READY)
 	{
 		//if ( ((ent->client->latched_buttons|ent->client->buttons) & BUTTON_ATTACK) )
@@ -1088,7 +1378,7 @@ void Weapon_Generic (float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRA
 			{
 				self.weaponframe = FRAME_FIRE_FIRST;
 				self.weaponstate = WEAPON_FIRING;
-
+				
 				// start the animation
 				self.anim_priority = ANIM_ATTACK;
 				if (self.flags & FL_DUCKED)
@@ -1115,12 +1405,20 @@ void Weapon_Generic (float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRA
 		}
 		else
 		{
-			if (self.weaponframe == FRAME_IDLE_LAST)
+			if (self.weaponframe >= FRAME_IDLE_LAST)
 			{
+				local float r = random();
+				if (r < 0.5){
+					self.animIdle = 1;
+				}
+				else{
+					self.animIdle = 0;
+				}
+			
 				self.weaponframe = FRAME_IDLE_FIRST;
 				return;
 			}
-			self.nextframetime = time + 0.135;
+			self.nextframetime = time + 0.1;
 			self.weaponframe++;
 			return;
 		}
@@ -1138,18 +1436,20 @@ void Weapon_Generic (float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRA
 				break;
 			}
 		}
-
+	
 		if (!fire_frames[n])
 			self.weaponframe++;
-	*/
-
+		*/
+		
+		doWeaponFrames();
+		
 		if (self.weaponframe == FRAME_IDLE_FIRST+1)
 			self.weaponstate = WEAPON_READY;
+		self.weaponframe++;
 	}
-	
-	self.nextframetime = time + 0.135;
+//	self.nextframetime = time + 0.135;
+	self.nextframetime = time + 0.1;
 }
-
 
 /*
 ============
@@ -1169,10 +1469,11 @@ void() W_WeaponFrame =
 		ImpulseCommands ();
 	
 	// check for attack
+	#ifndef new_weapon_generic
 	if (self.button0)
 	{
-//		if (self.weaponstate != WEAPON_READY)
-//			return;
+	//	if (self.weaponstate == WEAPON_FIRING)
+	//		return;
 		
 		self.state = STATE_ATTACKING;
 		SuperDamageSound ();
@@ -1202,7 +1503,6 @@ void() W_WeaponFrame =
 			else{
 				Weapon_Generic_Idle (3, 5, 23, 45);
 			}
-			Weapon_Generic_Idle (3, 5, 6, 45);
 			break;
 		case WEP_CHAINGUN:
 			Weapon_Generic_Idle (4, 31, 32, 61);
@@ -1223,6 +1523,53 @@ void() W_WeaponFrame =
 			Weapon_Generic_Idle (8, 31, 32, 54);
 			break;
 	}
+	#endifdef
+	
+	#ifdef new_weapon_generic
+	switch (self.weapon)
+	{
+		case WEP_BLASTER:
+			if (self.animIdle == 0){				
+				Weapon_Generic (WEP_BLASTER_ACTIVE_LASTFRAME, WEP_BLASTER_FIRE_LASTFRAME, WEP_BLASTER_IDLE1_FIRSTFRAME, WEP_BLASTER_IDLE1_LASTFRAME);
+			}
+			else{
+				Weapon_Generic (WEP_BLASTER_ACTIVE_LASTFRAME, WEP_BLASTER_FIRE_LASTFRAME, WEP_BLASTER_IDLE2_FIRSTFRAME, WEP_BLASTER_IDLE2_LASTFRAME);
+			}
+			break;
+		case WEP_SHOTGUN:
+			Weapon_Generic (7, 18, 19, 36);
+			break;
+		case WEP_SUPERSHOTGUN:
+			Weapon_Generic (6, 17, 18, 57);
+			break;
+		case WEP_MACHINEGUN:
+			if (self.animIdle == 1){				
+				Weapon_Generic (3, 5, 6, 23);
+			}
+			else{
+				Weapon_Generic (3, 5, 23, 45);
+			}
+			break;
+		case WEP_CHAINGUN:
+			Weapon_Generic (4, 31, 32, 61);
+			break;
+		case WEP_GRENADE_LAUNCHER:
+			Weapon_Generic (6, 17, 18, 60);
+			break;
+		case WEP_ROCKET_LAUNCHER:
+			 Weapon_Generic (4, 12, 13, 50);
+			break;
+		case WEP_RAILGUN:
+			Weapon_Generic (3, 18, 19, 56);
+			break;
+		case WEP_HYPERBLASTER:
+			Weapon_Generic (5, 20, 21, 49);
+			break;
+		case WEP_BFG:
+			Weapon_Generic (8, 31, 32, 54);
+			break;
+	}
+	#endifdef
 };
 
 /*

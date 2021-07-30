@@ -7,7 +7,7 @@ Making a note of it here to help make sense of it for myself or anyone else who 
 
 */
 
-.float inv_weapons;
+
 
 /*
 ============
@@ -52,6 +52,7 @@ ADDITIONAL CONSOLE COMMANDS
 var float autocvar_cl_surfacesniffer = 0;
 var float autocvar_cl_smacktalk = 0;
 var float autocvar_cl_printpos = 0;
+var float autocvar_cl_printstate = 0;
 
 /*
 ============
@@ -96,6 +97,9 @@ inv_ammo_ instead of ammo_.
 
 Find/Replace, it's time to work!
 */
+
+.float inv_weapons;
+
 .float inv_ammo_bullets;
 .float inv_ammo_shells;
 .float inv_ammo_cells;
@@ -216,7 +220,7 @@ float CHAN_WEAPON2            = 7;
 
 /*
 ============
-PLAYER STARTING VALUES
+WEAPONS
 ============
 */
 
@@ -233,32 +237,6 @@ PLAYER STARTING VALUES
 #define WEAPON_HUPERBLASTER_DAMAGE 	200
 #define WEAPON_BFG_DAMAGE 		200
 
-/*
-============
-WEAPONS
-============
-*/
-/*
-enum
-{
-WEP_BLASTER,
-WEP_SHOTGUN,
-WEP_SUPERSHOTGUN,
-WEP_MACHINEGUN,
-WEP_CHAINGUN,
-WEP_GRENADE_LAUNCHER,
-WEP_ROCKET_LAUNCHER,
-WEP_HYPERBLASTER,
-WEP_RAILGUN,
-WEP_BFG,
-WEP_GRENADE
-};
-*/
-
-// items
-
-
-
 #define	WEP_BLASTER				1
 #define	WEP_SHOTGUN				2
 #define	WEP_SUPERSHOTGUN		4
@@ -271,7 +249,16 @@ WEP_GRENADE
 #define WEP_BFG 				512
 //#define WEP_GRENADE 			512
 
+#define	WEP_BLASTER_ATTACKTIME 0.4
 #define	WEP_SHOTGUN_ATTACKTIME 0.9
+#define	WEP_SUPERSHOTGUN_ATTACKTIME 0.9
+#define	WEP_MACHINEGUN_ATTACKTIME 0.15
+#define	WEP_CHAINGUN_ATTACKTIME 0.05
+#define	WEP_GRENADE_LAUNCHER_ATTACKTIME 0.8
+#define	WEP_ROCKET_LAUNCHER_ATTACKTIME 0.8
+#define	WEP_HYPERBLASTER_ATTACKTIME 0.135
+#define	WEP_RAILGUN_ATTACKTIME 2.0
+#define	WEP_BFG_ATTACKTIME 0 //3.105
 
 #define	WEP_BLASTER_MFLASH_OFFSET_FP '74 -18 -10'
 #define	WEP_BLASTER_MFLASH_OFFSET_TP '40 -18 -10'

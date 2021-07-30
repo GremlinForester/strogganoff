@@ -60,6 +60,7 @@ void() SetChangeParms =
 	parm8 = self.weapon;
 	parm9 = self.armortype * 100;
 	parm10 = self.inv_weapons;
+	parm11 = self.inv_ammo_slugs;
 };
 
 void() SetNewParms =
@@ -74,6 +75,7 @@ void() SetNewParms =
 	parm8 = WEP_BLASTER;
 	parm9 = 0;
 	parm10 = WEP_BLASTER;
+	parm11 = 0;
 };
 
 void() DecodeLevelParms =
@@ -98,6 +100,7 @@ void() DecodeLevelParms =
 	self.weapon = parm8;
 	self.armortype = parm9 * 0.01;
 	self.inv_weapons = parm10;
+	self.inv_ammo_slugs = parm11;
 };
 
 /*
@@ -544,6 +547,7 @@ void() UpdateTPWeaponFrames =
 			setmodel (self, "players/male/w_rlauncher.md2");
 			break;
 		case WEP_RAILGUN:
+			
 			setmodel (self, "players/male/w_railgun.md2");
 			break;
 		case WEP_HYPERBLASTER:
@@ -573,6 +577,8 @@ void() UpdateTPWeaponFrames =
 	#ifdef q2model_lighting
 	self.colormod = getlight(self.owner.origin); //MrC Lightgrid workaround
 	#endifdef
+//	sound (self.owner, CHAN_BODY, "weapons/bfg_hum.wav", 1, ATTN_NORM);
+	//ambientsound (self.origin, "ambience/fl_hum1.wav", 0.5, ATTN_STATIC);
 	self.frame = self.owner.frame;
 	self.think = UpdateTPWeaponFrames;
 	self.nextthink = time;	
@@ -1528,6 +1534,81 @@ void() PlayerPostThink =
 	bprint ("\n");
 	bprint ("Angle: ");
 	bprint (vtos(self.angles));
+	bprint ("\n");
+	}
+	
+	if (autocvar_cl_printstate >= 1)	
+	{
+		switch (self.weapon)
+		{
+		case 1:
+			bprint ("BLASTER");
+			break;
+		case 2:
+			bprint ("SHOTGUN");
+			break;
+		case 4:
+			bprint ("SUPER SHOTGUN");
+			break;
+		case 8:
+			bprint ("MACHINEGUN");
+			break;
+		case 16:
+			bprint ("CHAINGUN");
+			break;
+		case 32:
+			bprint ("GRENADE LAUNCHER");
+			break;
+		case 64:
+			bprint ("ROCKET LAUNCHER");
+			break;
+		case 128:
+			bprint ("HYPERBLASTER");
+			break;
+		case 256:
+			bprint ("RAILGUN");
+			break;
+		case 512:
+			bprint ("BFG");
+			break;
+		}
+	bprint ("\n");
+	bprint (" Weaponstate: ");
+		switch (self.weaponstate)
+		{
+		case 0:
+			bprint ("WEAPON_READY");
+			break;
+		case 1:
+			bprint ("WEAPON_ACTIVATING");
+			break;
+		case 2:
+			bprint ("WEAPON_DROPPING");
+			break;
+		case 3:
+			bprint ("WEAPON_SPINDOWN");
+			break;
+		case 4:
+			bprint ("WEAPON_FIRING");
+			break;
+		}
+	bprint ("\n");
+	bprint ("State: ");
+		switch (self.state)
+		{
+		case 0:
+			bprint ("STATE_IDLE");
+			break;
+		case 1:
+			bprint ("STATE_RUNNING");
+			break;
+		case 2:
+			bprint ("STATE_ATTACKING");
+			break;
+		case 3:
+			bprint ("STATE_NONE");
+			break;
+		}
 	bprint ("\n");
 	}
 };
