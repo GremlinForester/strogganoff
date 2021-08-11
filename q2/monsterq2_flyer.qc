@@ -60,7 +60,7 @@ void(float side) flyer_blaster_fire={
 	
 	dir = normalize(end - org);
 
-	monster_fire_blaster(org, dir, 10);
+	monster_fire_blaster(org, dir, 10, '0.1 0.1 2', MF_TRACER3);
 	sound(self, CHAN_WEAPON, FLYER_SOUND_BLASTER, 1, ATTN_NORM);
 };
 

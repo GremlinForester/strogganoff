@@ -182,10 +182,6 @@ framer($FRAME_pain101, $FRAME_pain118, q2gunner_pain1, q2gunner_frames_run, 0.13
 		org = self.origin + '0 0 24';
 		SpawnBlood (org, '0 0 0', 20);
 	);
-	
-	frame_arb($FRAME_pain118,
-		ai_pain(1);
-	);
 );
 
 // PAIN2
@@ -197,10 +193,6 @@ framer($FRAME_pain201, $FRAME_pain208, q2gunner_pain2, q2gunner_frames_run, 0.13
 		org = self.origin + '0 0 24';
 		SpawnBlood (org, '0 0 0', 20);
 	);
-	
-	frame_arb($FRAME_pain208,
-		ai_pain(1);
-	);
 );
 
 // PAIN3
@@ -211,10 +203,6 @@ framer($FRAME_pain301, $FRAME_pain305, q2gunner_pain3, q2gunner_frames_run, 0.13
 		local	vector	org;
 		org = self.origin + '0 0 24';
 		SpawnBlood (org, '0 0 0', 20);
-	);
-	
-	frame_arb($FRAME_pain305,
-		ai_pain(1);
 	);
 );
 

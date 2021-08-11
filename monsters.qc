@@ -38,33 +38,39 @@ void (float shotcount, vector start, vector aim, vector spread, float dmg) monst
 }
 
 // Blaster and rocket spawns a new entity for monsters for now, can expose more parms if needed, like speed etc...
-void(vector org, vector vec, float dmg) monster_fire_blaster =
+void(vector org, vector vec, float dmg, vector colortint, float mflags) monster_fire_blaster =
 {
-	newmis = spawn();
-	newmis.owner = self;
-	newmis.damage = dmg;
-	newmis.movetype = MOVETYPE_FLY;
-	newmis.solid = SOLID_BBOX;
-	newmis.modelflags = MF_TRACER2;
-	newmis.glow_color = '200 0 0';
-	newmis.glow_size = 100;
-	newmis.light_lev = 200;
-	newmis.color = '1 0 0'; // color (does not affect radius), typical value '1 1 1' (bright white), can be up to '255 255 255' (nuclear blast)
-	newmis.style = 6; // light style (like normal light entities, flickering torches or switchable, etc)
-	newmis.pflags = PFLAGS_FULLDYNAMIC; // flags (see PFLAGS_ constants)
-	newmis.angles = '0 0 0'; // orientation of the light
+	local entity mlaser;
+	
+	mlaser = spawn();
+	mlaser.owner = self;
+	mlaser.damage = dmg;
+	mlaser.movetype = MOVETYPE_FLY;
+	mlaser.solid = SOLID_BBOX;
+	mlaser.modelflags = mflags; //MF_TRACER2;
+	mlaser.effects = EF_FULLBRIGHT;
+	mlaser.colormod = colortint;
+	mlaser.glow_color = colortint;
+	mlaser.glow_size = 100;
+	mlaser.light_lev = 200;
+	mlaser.color = colortint; // color (does not affect radius), typical value '1 1 1' (bright white), can be up to '255 255 255' (nuclear blast)
+	mlaser.style = 6; // light style (like normal light entities, flickering torches or switchable, etc)
+	mlaser.pflags = PFLAGS_FULLDYNAMIC; // flags (see PFLAGS_ constants)
+	
+	mlaser.angles = '0 0 0'; // orientation of the light
 
-	setmodel (newmis, "progs/laser.mdl");
-	setsize (newmis, '0 0 0', '0 0 0');
+	setmodel (mlaser, "models/objects/flash/tris.md2");
+//	setmodel (mlaser, "models/objects/laser/tris.md2");
+	setsize (mlaser, '0 0 0', '0 0 0');
 
-	setorigin (newmis, org);
+	setorigin (mlaser, org);
 
-	newmis.velocity = vec * 600;
-	newmis.angles = vectoangles(newmis.velocity);
+	mlaser.velocity = vec * 600;
+	mlaser.angles = vectoangles(mlaser.velocity);
 
-	newmis.nextthink = time + 5;
-	newmis.think = SUB_Remove;
-	newmis.touch = blasterTouch;
+	mlaser.nextthink = time + 5;
+	mlaser.think = SUB_Remove;
+	mlaser.touch = blasterTouch;
 };
 
 void(vector org, vector vec, float dmg) monster_fire_rocket =
@@ -127,17 +133,26 @@ void monster_fire_railgun (vector start, vector aimdir, float damage) =
 	fireRail(start, aimdir, damage);
 }
 
-/*
-void monster_fire_bfg (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, int kick, float damage_radius, int flashtype)
+void(vector org, vector vec, float dmg) monster_fire_bfg =
 {
-	fire_bfg (self, start, aimdir, damage, speed, damage_radius);
+	newmis = spawn();
+	newmis.owner = self;
+	newmis.damage = dmg;
+	newmis.movetype = MOVETYPE_FLY;
+	newmis.solid = SOLID_BBOX;
 
-	gi.WriteByte (svc_muzzleflash2);
-	gi.WriteShort (self - g_edicts);
-	gi.WriteByte (flashtype);
-	gi.multicast (start, MULTICAST_PVS);
-}
-*/
+	setmodel (newmis, "sprites/s_bfg1.sp2");
+	setsize (newmis, '0 0 0', '0 0 0');
+
+	setorigin (newmis, org);
+
+	newmis.velocity = vec * 600;
+	newmis.angles = vectoangles(newmis.velocity);
+
+	newmis.nextthink = time + 0.1;
+	newmis.think = m_BFGthink;
+	newmis.touch = T_BFGTouch;
+};
 
 /*
 ================

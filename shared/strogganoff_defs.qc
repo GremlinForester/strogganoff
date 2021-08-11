@@ -7,7 +7,34 @@ Making a note of it here to help make sense of it for myself or anyone else who 
 
 */
 
+/*
+============
+MONSTER MUZZLE FLASH OFFSETS 
 
+NOTE: This (and friends) should eventually go into its own file (possible TODO: port m_flash and choose from positions in a giant array of vectors like Q2
+or put each one in it's own?).
+============
+*/
+
+vector MZ2_MAKRON_BLASTER[] = {
+'-3.6 -24.1 59.5',
+'-1.6 -19.3	59.5',
+'-0.1 -14.4 59.5',
+'2.0 -7.6 59.5',
+'3.4 1.3 59.5',
+'3.7 11.1 59.5',
+'-0.3 22.3 59.5',
+'-6	33 59.5',
+'-9.3 36.4 59.5',
+'-7	35 59.5',
+'-2.1 29 59.5',
+'3.9 17.3 59.5',
+'6.1 5.8 59.5',
+'5.9 -4.4 59.5',
+'4.2 -14.1 59.5',
+'2.4 -18.8 59.5',
+'-1.8 -25.5 59.5'
+};
 
 /*
 ============

@@ -298,6 +298,50 @@ void(entity inflictor, entity attacker, float damage, entity ignore) T_RadiusDam
 
 /*
 ============
+T_RadiusDamage with radius 
+
+MrC: this is just to test something first, will extend this to regular function later
+============
+*/
+void(entity inflictor, entity attacker, float damage, entity ignore, float rad) T_RadiusDamageRad =
+{
+	local	float 	points;
+	local	entity	head;
+	local	vector	org;
+
+	head = findradius(inflictor.origin, rad);
+	
+	while (head)
+	{
+		if (head != ignore)
+		{
+			if (head.takedamage)
+			{
+				org = head.origin + (head.mins + head.maxs)*0.5;
+				points = 0.5*vlen (inflictor.origin - org);
+				if (points < 0)
+					points = 0;
+				points = damage - points;
+				if (head == attacker)
+					points = points * 0.5;
+				if (points > 0)
+				{
+					if (CanDamage (head, inflictor))
+					{	// shambler takes half damage from all explosions
+						if (head.classname == "monster_shambler")						
+							T_Damage (head, inflictor, attacker, points*0.5);
+						else
+							T_Damage (head, inflictor, attacker, points);
+					}
+				}
+			}
+		}
+		head = head.chain;
+	}
+};
+
+/*
+============
 T_BeamDamage
 ============
 */

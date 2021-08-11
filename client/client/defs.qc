@@ -17,12 +17,6 @@
 //
 // system globals
 //
-entity		self;
-entity		other;
-entity		world;
-float		time;
-float		frametime;
-
 float 		player_localentnum;	//the entnum
 float 		player_localnum;	//the playernum
 float		maxclients;	//a constant filled in by the engine. gah, portability eh?
@@ -31,24 +25,6 @@ float		clientcommandframe;	//player movement
 float		servercommandframe;	//clientframe echoed off the server
 
 float		intermission;
-
-string		mapname;
-
-//
-// global variables set by built in functions
-//
-vector		v_forward, v_up, v_right;	// set by makevectors()
-
-// set by traceline / tracebox
-float		trace_allsolid;
-float		trace_startsolid;
-float		trace_fraction;
-vector		trace_endpos;
-vector		trace_plane_normal;
-float		trace_plane_dist;
-entity		trace_ent;
-float		trace_inopen;
-float		trace_inwater;
 
 //
 // required prog functions
@@ -59,32 +35,6 @@ float(float f, float t)	CSQC_InputEvent;
 void()		CSQC_UpdateView;
 float(string s)	CSQC_ConsoleCommand;
 
-
-//these fields are read and set by the default player physics
-vector		pmove_org;
-vector		pmove_vel;
-vector		pmove_mins;
-vector		pmove_maxs;
-//retrieved from the current movement commands (read by player physics)
-float		input_timelength;
-vector		input_angles;
-vector		input_movevalues;	//forwards, right, up.
-float		input_buttons;		//attack, use, jump (default physics only uses jump)
-
-float		movevar_gravity;
-float		movevar_stopspeed;
-float		movevar_maxspeed;
-float		movevar_spectatormaxspeed;	//used by NOCLIP movetypes.
-float		movevar_accelerate;
-float		movevar_airaccelerate;
-float		movevar_wateraccelerate;
-float		movevar_friction;
-float		movevar_waterfriction;
-float		movevar_entgravity;	//the local player's gravity field. Is a multiple (1 is the normal value)
-
-//================================================
-void		end_sys_globals;		// flag for structure dumping
-//================================================
 
 /*
 ==============================================================================
@@ -97,139 +47,14 @@ void		end_sys_globals;		// flag for structure dumping
 //
 // system fields (*** = do not set in prog code, maintained by C code)
 //
-.float		modelindex;		// *** model index in the precached list
-.vector		absmin, absmax;	// *** origin + mins / maxs
-
 .float		entnum;	// *** the ent number as on the server
 .float		drawmask;
 .void()		predraw;
 
-.float		movetype;
-.float		solid;
-
-.vector		origin;			// ***
-.vector		oldorigin;		// ***
-.vector		velocity;
-.vector		angles;
-.vector		avelocity;
-
-.string		classname;		// spawn function
-.string		model;
-.float		frame;
-.float		skin;
-.float		effects;
-
-.vector		mins, maxs;		// bounding box extents reletive to origin
-.vector		size;			// maxs - mins
-
-.void()		touch;
-.void()		use;
-.void()		think;
-.void()		blocked;		// for doors or plats, called when can't push other
-
-.float		nextthink;
-
-.entity		chain;
-
-.string		netname;
-
-.entity 	enemy;
-
-.float		flags;
-
-.float		colormap;
-
-.entity		owner;		// who launched a missile
-
-//================================================
-void		end_sys_fields;			// flag for structure dumping
-//================================================
 
 //-----------------------------------------------------------------------------
 // BUILTINS
 //-----------------------------------------------------------------------------
-
-// 'core' - standard qc minus the funcs that are server specific
-// We do not have the server specific ones - they are commented out.
-
-void(vector ang)	makevectors		= #1;		// sets v_forward, etc globals
-void(entity e, vector o) setorigin	= #2;
-void(entity e, string m) setmodel	= #3;		// set movetype and solid first
-void(entity e, vector min, vector max) setsize = #4;
-// #5 was removed
-void() break						= #6;
-float() random						= #7;		// returns 0 - 1
-
-void (entity e, float chan, string samp, float vol, float atten)	sound = #8;
-
-vector(vector v) normalize			= #9;
-void(string e) error				= #10;
-void(string e) objerror				= #11;
-float(vector v) vlen				= #12;
-float(vector v) vectoyaw			= #13;
-entity() spawn						= #14;
-void(entity e) remove				= #15;
-
-void(vector v1, vector v2, float nomonsters, entity forent) traceline = #16;
-
-//entity() checkclient				= #17;	// returns a client to look for
-entity(entity start, .string fld, string match) find = #18;
-string(string s) precache_sound		= #19;
-string(string s) precache_model		= #20;
-//void(entity client, string s)stuffcmd = #21;
-entity(vector org, float rad) findradius = #22;
-//void(string s) bprint				= #23;
-//void(entity client, string s) sprint = #24;
-//void(string s) dprint				= #25;
-string(float f) ftos				= #26;
-string(vector v) vtos				= #27;
-void() coredump						= #28;		// prints all edicts
-void() traceon						= #29;		// turns statment trace on
-void() traceoff						= #30;
-void(entity e) eprint				= #31;		// prints an entire edict
-float(float yaw, float dist) walkmove	= #32;	// returns TRUE or FALSE
-// #33 was removed
-float() droptofloor= #34;	// TRUE if landed on floor
-void(float style, string value) lightstyle = #35;
-float(float v) rint					= #36;		// round to nearest int
-float(float v) floor				= #37;		// largest integer <= v
-float(float v) ceil					= #38;		// smallest integer >= v
-// #39 was removed
-float(entity e) checkbottom			= #40;		// true if self is on ground
-float(vector v) pointcontents		= #41;		// returns a CONTENT_*
-// #42 was removed
-float(float f) fabs = #43;
-//vector(entity e, float speed) aim = #44;		// returns the shooting vector
-float(string s) cvar = #45;						// return cvar.value
-void(string s) localcmd = #46;					// put string into local que
-entity(entity e) nextent = #47;					// for looping through all ents
-void(vector o, vector d, float color, float count) particle = #48;// start a particle effect
-void() ChangeYaw = #49;						// turn towards self.ideal_yaw
-											// at self.yaw_speed
-// #50 was removed
-vector(vector v) vectoangles			= #51;
-
-void(float step) movetogoal				= #67;
-
-string(string s) precache_file		= #68;	// no effect except for -copy
-//void(entity e) makestatic		= #69;
-//void(string s) changelevel = #70;
-
-//#71 was removed
-
-void(string var, string val) cvar_set = #72;	// sets cvar.value
-
-//void(entity client, string s) centerprint = #73;	// sprint, but in middle
-
-void(vector pos, string samp, float vol, float atten) ambientsound = #74;
-
-string(string s) precache_model2	= #75;		// registered version only
-string(string s) precache_sound2	= #76;		// registered version only
-string(string s) precache_file2		= #77;		// registered version only
-
-//void(entity e) setspawnparms		= #78;		// set parm1... to the
-												// values at level start
-												// for coop respawn
 
 // 'csqc'
 float(string name, string value) registercvar = #93;

@@ -41,7 +41,7 @@ void() breakable_glass_die =
 		pointparticles(particleeffectnum("TE_GLASS_SHATTER"), (self.origin + '0 32 -32'), '0 32 0', 1);
 		pointparticles(particleeffectnum("TE_GLASS_SHATTER"), (self.origin + '0 -32 20'), '0 -32 0', 1);			
 	}
-	
+	SUB_UseTargets();
 	bprint (ftos(self.health));
 	bprint ("\n");
 }
@@ -101,6 +101,28 @@ void() misc_breakable_glass =
 	
 	self.th_die = breakable_glass_die;
 	self.th_pain = breakable_glass_pain;
+};
+
+
+void() func_explosive =
+{
+	self.solid = SOLID_BSP;
+	self.movetype = MOVETYPE_NONE;
+	setorigin (self, self.origin);
+	setmodel (self, self.model);
+	
+	if (!self.health)
+	{
+		self.health = 20;
+	}
+	
+	self.max_health = self.health;
+	self.takedamage = DAMAGE_YES;
+	self.classname = "func_explosive";
+	
+	self.touch = breakable_glass_touch;
+	
+	self.th_die = breakable_glass_die;
 };
 
 //********************************************

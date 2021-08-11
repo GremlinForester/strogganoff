@@ -1,7 +1,6 @@
 /*
 */
 void (entity targ, entity inflictor, entity attacker, float damage) T_Damage;
-void () q2player_run;
 void(entity bomb, entity attacker, float rad, entity ignore) T_RadiusDamage;
 void(vector org, vector vel, float damage) SpawnBlood;
 void() SuperDamageSound;
@@ -374,6 +373,8 @@ This will be renamed at some point!
 */
 void(float damage) FireBullet =
 {
+	
+	local 	vector 	vel; 
 	local	vector	source;
 	local	vector	org;
 	local	entity	impact_point;
@@ -392,13 +393,31 @@ void(float damage) FireBullet =
 	impact_point.solid = SOLID_NOT;
 	impact_point.movetype = MOVETYPE_NONE;
 	impact_point.effects = self.effects | EF_LOWPRECISION;
-	impact_point.nextthink = time + 0.01;
+	impact_point.nextthink = time + 0.1;
 	setmodel (impact_point, "models/objects/flash/tris.md2");
 	impact_point.think = SUB_Remove;
 	
 	if (trace_ent.takedamage)
 	{
-		T_Damage (trace_ent, self, self, damage);
+		if (trace_ent.classname == "monster_tank" || trace_ent.classname == "monster_tank_commander")
+		{
+			if (self.weapon == WEP_SHOTGUN || self.weapon == WEP_SUPERSHOTGUN || self.weapon == WEP_MACHINEGUN || self.weapon == WEP_CHAINGUN)
+			{
+				damage = damage * 0.1;
+			}
+			else if (self.weapon == WEP_RAILGUN)
+			{
+				damage = damage * 20.0; //goes through armor like a hot knife through butter
+				SpawnBlood (org, org*0.2, damage);
+			}
+			
+			T_Damage (trace_ent, self, self, damage);
+			Q3Surface_Impact_Ent(impact_point);
+		}
+		else
+		{
+			T_Damage (trace_ent, self, self, damage);
+		}
 	}
 	else
 	{	// hit wall
@@ -458,7 +477,15 @@ void(float damage, vector dir) Q3SurfaceTraceAttack =
 	
 	if (trace_ent.takedamage && trace_ent.flags & FL_MONSTER || trace_ent.classname == "player")
 	{
-		SpawnBlood (org, vel*0.2, damage);
+		if (trace_ent.classname == "monster_tank" || trace_ent.classname == "monster_tank_commander")
+		{
+			damage = damage * 0.1;
+			Q3Surface_Impact_Ent(impact_point);
+		}	
+		else
+		{
+			SpawnBlood (org, vel*0.2, damage);
+		}
 		AddMultiDamage (trace_ent, damage);
 	//	Q3Surface_Impact_Ent(impact_point);
 	}
@@ -909,6 +936,212 @@ void() T_BFGTouch =
 #endifdef
 };
 
+void(vector org, vector vec, float dmg, vector colortint, float mflags) monster_fire_blaster;
+/*
+void() bfg_think =
+{
+	local entity ent;
+	local entity ignore;
+	local vector point;
+	local vector dir;
+	local vector start;
+	local vector end;
+	local float	dmg;
+
+	if (deathmatch)
+		dmg = sk_bfg_damage2_dm->value; //was 5
+	else
+		dmg = sk_bfg_damage2->value; //was 10
+
+	ent = 0;
+	while ((ent = findradius(ent, self.origin, 500)) != NULL)
+	{
+		if (ent == self)
+			continue;
+
+		if (ent == self.owner)
+			continue;
+
+		if (!ent.takedamage)
+			continue;
+
+		if (!(ent.flags & FL_MONSTER) && (!ent.client) && (strcmp(ent.classname, "misc_explobox") != 0))
+			continue;
+
+
+	//ZOID
+		//don't target friendly players in CTF
+		if (ctf->value && ent->client &&
+			self->owner->client &&
+			ent->client->resp.ctf_team == self->owner->client->resp.ctf_team)
+			continue;
+	//ZOID
+
+		VectorMA (ent->absmin, 0.5, ent->size, point);
+
+		VectorSubtract (point, self->s.origin, dir);
+		VectorNormalize (dir);
+
+		ignore = self;
+		VectorCopy (self->s.origin, start);
+		VectorMA (start, 2048, dir, end);
+		while(1)
+		{
+			tr = gi.trace (start, NULL, NULL, end, ignore, CONTENTS_SOLID|CONTENTS_MONSTER|CONTENTS_DEADMONSTER);
+
+			if (!tr.ent)
+				break;
+
+			// hurt it if we can
+			if ((tr.ent->takedamage) && !(tr.ent->flags & FL_IMMUNE_LASER) && (tr.ent != self->owner))
+				T_Damage (tr.ent, self, self->owner, dir, tr.endpos, vec3_origin, dmg, 1, DAMAGE_ENERGY, MOD_BFG_LASER);
+
+			// if we hit something that's not a monster or player we're done
+			if (!(tr.ent->svflags & SVF_MONSTER) && (!tr.ent->client))
+			{
+				gi.WriteByte (svc_temp_entity);
+				gi.WriteByte (TE_LASER_SPARKS);
+				gi.WriteByte (4);
+				gi.WritePosition (tr.endpos);
+				gi.WriteDir (tr.plane.normal);
+				gi.WriteByte (self->s.skinnum);
+				gi.multicast (tr.endpos, MULTICAST_PVS);
+				break;
+			}
+
+			ignore = tr.ent;
+			VectorCopy (tr.endpos, start);
+		}
+
+		gi.WriteByte (svc_temp_entity);
+		gi.WriteByte (TE_BFG_LASER);
+		gi.WritePosition (self->s.origin);
+		gi.WritePosition (tr.endpos);
+		gi.multicast (self->s.origin, MULTICAST_PHS);
+
+		if(level.num_reflectors)
+			ReflectTrail(TE_BFG_LASER,self->s.origin,tr.endpos);
+	}
+
+	self->nextthink = level.time + FRAMETIME;
+}
+*/
+
+void(vector start, vector aimdir, float damage) fireBFGtrail =
+{
+	local	vector	org;
+	local	entity	impact_point;
+
+ 	nep_traceline (start, aimdir, FALSE, self);
+	if (trace_fraction == 1.0)
+		return;
+
+	org = trace_endpos - aimdir*4;
+
+	trailparticles(self, particleeffectnum("TR_WIZSPIKE_2"), start, aimdir);
+	
+	if (trace_ent.takedamage)
+	{
+		T_Damage (trace_ent, self, self.owner, damage);
+		
+		WriteByte (MSG_BROADCAST, SVC_TEMPENTITY);
+		WriteByte (MSG_BROADCAST, TE_EXPLOSION);
+		WriteCoord (MSG_BROADCAST, org_x);
+		WriteCoord (MSG_BROADCAST, org_y);
+		WriteCoord (MSG_BROADCAST, org_z);
+	}
+};
+
+//MrC: Idea, use this as a base for a tesla ball, target points and hit them with beams. Points could follow a path or just randomize directions. 
+//A future weapon could use this as a recharge, something like in Prey. Get in range with the weapon selected and leech energy.
+
+void() m_BFGthink =
+{
+	local entity BFGtarget;
+	local vector dir;
+	local float BFGdist;
+	BFGdist = 500;
+	local float BFGTargetCount, BFGFireCount;
+
+	dir = normalize(self.origin - BFGtarget.origin);
+	
+	BFGtarget = findradius(self.origin, BFGdist);
+	BFGTargetCount = 0;
+	BFGFireCount = 0;
+	while(BFGtarget)
+	{
+		if(BFGtarget.flags & FL_CLIENT)
+		{
+			if(BFGtarget.health > 0)
+			{
+				BFGTargetCount++;
+				bprint("BFG targets: ");
+				bprint (ftos(BFGTargetCount));
+				bprint("\n");
+				if (vlen(BFGtarget.origin - self.origin) < BFGdist)
+				{
+					if (visible(BFGtarget) ){
+						fireBFGtrail(self.origin, BFGtarget.origin, 20);
+						BFGFireCount++;
+						bprint("BFG Fire count: ");
+						bprint (ftos(BFGFireCount));
+						bprint("\n");
+					}					
+				}
+			}
+		}
+	BFGtarget = BFGtarget.chain;
+	}
+	
+	self.nextthink = time + 1;
+	self.think = m_BFGthink;
+}
+
+void() BFGthink =
+{
+	local entity BFGtarget;
+	local vector dir;
+	local float BFGdist;
+	BFGdist = 500;
+	local float BFGTargetCount, BFGFireCount;
+
+	dir = normalize(self.origin - BFGtarget.origin);
+	
+	BFGtarget = findradius(self.origin, BFGdist);
+	BFGTargetCount = 0;
+	BFGFireCount = 0;
+	while(BFGtarget)
+	{
+		if(BFGtarget.flags & FL_MONSTER)
+		{
+			if(BFGtarget.health > 0)
+			{
+				BFGTargetCount++;
+				bprint("BFG targets: ");
+				bprint (ftos(BFGTargetCount));
+				bprint("\n");
+				if (vlen(BFGtarget.origin - self.origin) < BFGdist)
+				{
+					if (visible(BFGtarget) ){
+						fireBFGtrail(self.origin, BFGtarget.origin, 20);
+						BFGFireCount++;
+						bprint("BFG Fire count: ");
+						bprint (ftos(BFGFireCount));
+						bprint("\n");
+					}
+				
+				}
+				
+			}
+			
+		}
+	BFGtarget = BFGtarget.chain;
+	}
+	
+	self.nextthink = time + 1;
+	self.think = BFGthink;
+}
+
 /*
 ================
 W_fireBFG
@@ -927,16 +1160,22 @@ void() W_fireBFG =
 	newmis.damage = WEAPON_ROCKET_DAMAGE;
 	newmis.effects = EF_ADDITIVE;
 	newmis.classname = "BFG Projectile";
-	newmis.velocity = aim(self, PLAYER_ROCKET_SPEED);
-	newmis.velocity = newmis.velocity * PLAYER_ROCKET_SPEED;
+	newmis.velocity = aim(self, 600);
+	newmis.velocity = newmis.velocity * 600;
+	newmis.avelocity_x = random()*900;
+	newmis.avelocity_y = random()*800;
+	newmis.avelocity_z = random()*700;
 	newmis.angles = vectoangles(newmis.velocity);
 	newmis.touch = T_BFGTouch;
-	newmis.nextthink = time + 10;
-	newmis.think = SUB_Remove;
-
+	newmis.nextthink = time + 0.1;
+	newmis.think = BFGthink;
+	newmis.colormod = '0 4 0';
+	newmis.scale = 40;
+	newmis.alpha = .2;
+	
 	source = G_ProjectSource (self.origin, '20 8 17', v_forward, v_right, '0 0 0');
 
-	setmodel (newmis, "sprites/s_bfg1.sp2");
+	setmodel (newmis, "models/objects/flash/tris.md2");
 	setsize (newmis, '0 0 0', '0 0 0');
 	setorigin (newmis, source);
 //	setorigin (newmis, self.origin + v_forward*8 + '0 0 16');

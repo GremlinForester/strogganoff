@@ -86,18 +86,6 @@ void()		SetNewParms;			// called when a client first connects to
 void()		SetChangeParms;			// call to set parms for self so they can
 									// be saved for a level transition
 
-
-
-//
-// required client prog functions
-//
-void()		CSQC_Init;
-void()		CSQC_Shutdown;
-float(float f, float t)	CSQC_InputEvent;
-void()		CSQC_UpdateView;
-float(string s)	CSQC_ConsoleCommand;
-
-
 //these fields are read and set by the default player physics
 vector		pmove_org;
 vector		pmove_vel;

@@ -262,7 +262,7 @@ void() q2soldier_fire =
 	}
 	else
 	{
-		monster_fire_blaster(org, self.enemy.origin - self.origin, 5);
+		monster_fire_blaster(org, self.enemy.origin - self.origin, 5, '2 0.2 0.2', MF_TRACER2);
 	}
 };
 
@@ -298,7 +298,7 @@ void() q2soldier_death1fire =
 	}
 	else
 	{
-		monster_fire_blaster(org, self.enemy.origin - self.origin, 300);
+		monster_fire_blaster(org, self.enemy.origin - self.origin, 3, '2 0.2 0.2', MF_TRACER2);
 		sound (self, CHAN_WEAPON, "soldier/Solatck2.wav", 1, ATTN_NORM);
 	}
 };
@@ -420,13 +420,13 @@ void() q2soldier_die =
 	if (self.health < -35)
 	{
 		sound (self, CHAN_VOICE, "misc/udeath.wav", 1, ATTN_NORM);
-/* 		ThrowGib ("models/objects/gibs/arm/tris.md2", self.health);
+ 		ThrowGib ("models/objects/gibs/arm/tris.md2", self.health);
 		ThrowGib ("models/objects/gibs/chest/tris.md2", self.health);
 		ThrowGib ("models/objects/gibs/head/tris.md2", self.health);
 		ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health);
-		ThrowHead ("progs/h_player.mdl", self.health); */
-		q2soldier_explode();
-		remove(self);
+		ThrowHead ("progs/h_player.mdl", self.health); 
+	//	q2soldier_explode();
+	//	remove(self);
 		return;
 	}
 

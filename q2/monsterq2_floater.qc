@@ -91,7 +91,7 @@ void() floater_fire_blaster={
 	dir = en.origin + en.velocity*0.2;
 	dir = normalize (dir - org);
 	
-	monster_fire_blaster(org, dir, 10);
+	monster_fire_blaster(org, dir, 10, '2 0.5 0.5', MF_TRACER2);
 	sound (self, CHAN_WEAPON, "weapons/BLASTF1A.WAV", 1, ATTN_NORM);
 };
 

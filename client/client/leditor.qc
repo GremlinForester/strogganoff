@@ -1,9 +1,6 @@
 // lighteditor variables
-float increment, scale_cache, help,
-radius, coronasize, diffuse, specular, ambient, style,
-grey, red, green, blue, movex, movey, movez, angx, angy, angz;
+float increment, scale_cache, help, radius, coronasize, diffuse, specular, ambient, lstyle, grey, red, green, blue, movex, movey, movez, angx, angy, angz;
 vector color_cache;
-
 
 void() rt_lights_editor_help =
 {
@@ -240,8 +237,8 @@ float(float event, float parama) rt_lights_editor =
 	if (key == "k")				// style
 	{
 		if (event == INPUT_KEYDOWN)
-			style = 1;
-		else	style = 0;
+			lstyle = 1;
+		else	lstyle = 0;
 		return 1;
 	}	
 	
@@ -406,12 +403,12 @@ float(float event, float parama) rt_lights_editor =
 			}
 		}
 		
-		else if (style)
+		else if (lstyle)
 		{
 			if (inc > 0) inc = 1;
 			else inc = -1;
 			inc = cvar("r_editlights_current_style") + inc;
-			if (inc < 12 && inc >= 0) localcmd(strcat("r_editlights_edit style ", ftos(inc), "\n"));
+			if (inc < 12 && inc >= 0) localcmd(strcat("r_editlights_edit lstyle ", ftos(inc), "\n"));
 		}
 		
 		else

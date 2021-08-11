@@ -157,6 +157,10 @@ framer($FRAME_pain301, $FRAME_pain316, tank_move_pain3_, tank_run, 0.1, ai_walk(
 	frame_arb($FRAME_pain316, tank_footstep(););
 );
 
+//MrC: Commented out pain_finished stuff becuase pain_finished is 
+//currently hard set to 5 in combat.qc but this should be set per monster
+//will add to TODO, not sure what might break etc...
+
 void(entity attacker, float damage) tank_pain={
 	if(self.health < (self.max_health / 2))
 		self.skin = 1;
@@ -164,8 +168,8 @@ void(entity attacker, float damage) tank_pain={
 	if (damage <= 10)
 		return;
 
-	if(self.pain_finished < time)
-		return;
+//	if(self.pain_finished < time)
+//		return;
 
 	if (damage <= 30)
 		if (random() > 0.2)
@@ -180,7 +184,7 @@ void(entity attacker, float damage) tank_pain={
 			return;
 	}
 
-	self.pain_finished = time + 3;
+//	self.pain_finished = time + 3;
 	sound(self, CHAN_VOICE, TANK_SOUND_PAIN, 1, ATTN_NORM);
 	
 	if (skill == 3)
@@ -219,7 +223,7 @@ void() TankBlaster ={
 	
 	dir = normalize(end - start);
 	
-	monster_fire_blaster (start, dir, 30);
+	monster_fire_blaster (start, dir, 30, '2 0.5 0.5', MF_TRACER2);
 };
 
 void() TankStrike ={

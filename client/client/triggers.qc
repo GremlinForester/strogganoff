@@ -1,3 +1,4 @@
+/*
 void() splashzone_on =
 {
 	self.solid = SOLID_TRIGGER;
@@ -17,12 +18,14 @@ void() splashzone_touch =
 	}
 	return;
 };
-
+*/
 /*QUAKED trigger_splashzone (.5 .5 .5) ?
 Just a simple trigger that cuases a water dripping lens effect. Can be expanded to indicate whether to put out objects that are on fire.
 */
+/*
 void() trigger_splashzone =
 {
 	InitTrigger ();
 	self.touch = splashzone_touch;
 };
+*/

@@ -11,6 +11,7 @@ shared/nepdefs.qc
 //dpext.qc
 
 shared/dpextensions.qc
+//shared/m_flash.qc
 shared/strogganoff_defs.qc
 
 //material crap went here before frik
@@ -61,6 +62,12 @@ q2/monsterq2_floater.qc
 q2/monsterq2_flyer.qc
 q2/monsterq2_tank.qc
 q2/monsterq2_hover.qc
+
+//q2/monsterq2_boss2.qc
+//q2/monsterq2_boss3.qc //more of a prop than a monster
+q2/monsterq2_boss32.qc //do this first so jorg can spawn makron
+q2/monsterq2_boss31.qc
+
 
 q1/ogre.qc
 q1/demon.qc

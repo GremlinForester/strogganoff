@@ -1,13 +1,17 @@
 ../../csprogs.dat
 
+../shared/defs.qc
+//../shared/dpextensions.qc
+
 client/defs.qc
-//../shared/defs.qc
 
 client/constants.qc
-common/constants.qc
+//common/constants.qc
 client/extensions.qc
 
 ../shared/strogganoff_defs.qc
+
+../subs.qc
 
 client/vars.qc
 client/kleshikstuff.qc
@@ -16,3 +20,5 @@ client/leditor.qc
 
 client/sbar.qc
 client/main.qc
+
+//client/triggers.qc

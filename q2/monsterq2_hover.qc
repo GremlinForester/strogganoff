@@ -127,7 +127,7 @@ void() hover_fire_blaster={
 	
 	dir = normalize(end - org);
 	
-	monster_fire_blaster(org, dir, 1);
+	monster_fire_blaster(org, dir, 1, '0.1 2 0.1', MF_TRACER);
 };
 
 void() hover_stand={

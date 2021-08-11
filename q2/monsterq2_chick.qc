@@ -156,10 +156,6 @@ framer($FRAME_pain101, $FRAME_pain105, q2chick_pain1, q2chick_frames_run, 0.135,
 		org = self.origin + '0 0 24';
 		SpawnBlood (org, '0 0 0', 20);
 	);
-	
-	frame_arb($FRAME_pain105,
-		ai_pain(1);
-	);
 );
 
 // PAIN2
@@ -170,10 +166,6 @@ framer($FRAME_pain201, $FRAME_pain205, q2chick_pain2, q2chick_frames_run, 0.135,
 		local	vector	org;
 		org = self.origin + '0 0 24';
 		SpawnBlood (org, '0 0 0', 20);
-	);
-	
-	frame_arb($FRAME_pain205,
-		ai_pain(1);
 	);
 );
 

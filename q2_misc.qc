@@ -189,8 +189,6 @@ void() misc_deadsoldier_die =
 		
 		TossGibs ("models/objects/gibs/bone/tris.md2", self.health, 8, GIB_FLESH);
 		
-		ThrowHead ("models/objects/gibs/head2/tris.md2", self.health);
-		
 		remove(self);
 		return;
 	} 
@@ -378,9 +376,6 @@ void() func_timer =
 /*QUAKED target_speaker (1 0 0) (-8 -8 -8) (8 8 8) looped-on looped-off reliable changelevel
 "noise"		wav file to play
 "attenuation"
-DWH
--2 = only played (full volume) for player who triggered the target_speaker
-end DWH
 
 -1 = none, send to whole level
  1 = normal fighting sounds
@@ -392,75 +387,105 @@ Normal sounds play each time the target is used.  The reliable flag can be set f
 
 Looped sounds are always atten 3 / vol 1, and the use function toggles it on/off.
 Multiple identical looping sounds will just increase volume without any speed cost.
-
-Changelevel spawnflag added for Lazarus. This should ONLY be applied in the code,
-and is an indication that the "message" key contains the noise.
 */
 
-void() target_speaker =
-{
-	precache_sound (self.noise);
-	ambientsound (self.origin, self.noise, 1, ATTN_STATIC);
-};
-/*
-void Use_Target_Speaker (edict_t *ent, edict_t *other, edict_t *activator)
-{
-	int		chan;
+.float volume;
+.float attenuation;
 
-	if (ent->spawnflags & 3)
+void() target_speaker_think =
+{
+	local float chan;
+	
+	if (self.spawnflags & 1)
 	{	// looping sound toggles
-		if (ent->s.sound) {
-			ent->s.sound = 0;	// turn it off
-			ent->nextthink = 0;
+		if (self.noise) 
+		{
+			sound7(self, CHAN_VOICE, self.noise, self.volume, self.attenuation, self.speed, self.flags);
+			self.nextthink = time + soundlength(self.noise);
 		}
-		else {
-			ent->s.sound = ent->noise_index;	// start it
-#ifdef LOOP_SOUND_ATTENUATION
-			ent->s.attenuation = ent->attenuation;
-#endif
+		else 
+		{
+			self.nextthink = -1;
+		}
+	}
+	/*
+	bprint("\n"); 
+	bprint("target_speaker at "); 
+	bprint(vtos(self.origin));
+	bprint(", CHAN:"); 
+	bprint(ftos(chan));
+	bprint(", SOUND:"); 
+	bprint(self.noise);
+	bprint(", VOL:"); 
+	bprint(ftos(self.volume));
+	bprint(", ATT:"); 
+	bprint(ftos(self.attenuation));
+	bprint(", SPEED:"); 
+	bprint(ftos(self.speed));
+	bprint(", FLG:"); 
+	bprint(ftos(self.flags));
+	bprint("\n");
+	*/	
+	self.think = target_speaker_think;
+}
+
+void target_speaker_use ()
+{
+	local float	chan;
+
+	if (self.spawnflags & 3)
+	{	// looping sound toggles
+		if (self.noise) 
+		{
+			self.noise = "";	// turn it off
+			self.nextthink = -1;
+		}
+		else 
+		{
+			self.nextthink = time + soundlength(self.noise);
+			self.think = target_speaker_think;
+			//self.noise = self.noise;	// start it
 		}
 	}
 	else
 	{
-		if (ent->attenuation == -2) {
-			if(ent->spawnflags & 4)
-				chan = CHAN_VOICE|CHAN_RELIABLE;
+		if (self.attenuation == -2) 
+		{
+			if(self.spawnflags & 4)
+				chan = CHAN_VOICE|SOUNDFLAG_RELIABLE;
 			else
 				chan = CHAN_VOICE;
-			gi.sound (activator, chan, ent->noise_index, 1, ATTN_NORM, 0);
+			//gi.sound (activator, chan, ent->noise_index, 1, ATTN_NORM, 0);
+			sound7(self, chan, self.noise, self.volume, self.attenuation, 0, 0);
 		}
 		else
 		{	// normal sound
-			if (ent->spawnflags & 4)
-				chan = CHAN_VOICE|CHAN_RELIABLE;
+			if (self.spawnflags & 4)
+				chan = CHAN_VOICE|SOUNDFLAG_RELIABLE;
 			else
 				chan = CHAN_VOICE;
 			// use a positioned_sound, because this entity won't normally be
 			// sent to any clients because it is invisible
-			gi.positioned_sound (ent->s.origin, ent, chan, ent->noise_index, ent->volume, ent->attenuation, 0);
+			//gi.positioned_sound (ent->s.origin, ent, chan, ent->noise_index, ent->volume, ent->attenuation, 0);
+			sound7(self, CHAN_VOICE, self.noise, self.volume, self.attenuation, 100, self.flags);
 		}
-
-		ent->count--;
-		if(!ent->count) {
-			ent->think = G_FreeEdict;
-			ent->nextthink = level.time + 1;
-		}
+		self.nextthink = time + soundlength(self.noise);
 	}
 }
 
-void SP_target_speaker (edict_t *ent)
+void() target_speaker =
 {
-	if(!(ent->spawnflags & 8))
+	if(!(self.spawnflags & 8))
 	{
-		if(!st.noise)
+		if(!self.noise)
 		{
-			gi.dprintf("target_speaker with no noise set at %s\n", vtos(ent->s.origin));
-			G_FreeEdict(ent);
+			dprint("target_speaker with no noise set at "); 
+			dprint(vtos(self.origin));
 			return;
 		}
 		// DWH: Use "message" key to store noise for speakers that change levels
 		//      via trigger_transition
-		if (!strstr (st.noise, ".wav"))
+		/*if (!strstr (st.noise, ".wav"))
 		{
 			ent->message = gi.TagMalloc(strlen(st.noise)+5,TAG_LEVEL);
 			sprintf(ent->message, "%s.wav", st.noise);
@@ -469,29 +494,28 @@ void SP_target_speaker (edict_t *ent)
 		{
 			ent->message = gi.TagMalloc(strlen(st.noise)+1,TAG_LEVEL);
 			strcpy(ent->message, st.noise);
-		}
+		}*/
 	}
-	ent->class_id = ENTITY_TARGET_SPEAKER;
 
-	ent->noise_index = gi.soundindex (ent->message);
-	ent->spawnflags &= ~8;
+	if (!self.volume)
+		self.volume = 1.0;
 
-	if (!ent->volume)
-		ent->volume = 1.0;
-
-	if (!ent->attenuation)
-		ent->attenuation = (ent->spawnflags & 1) ? 3.0 : 1.0;
-	else if (ent->attenuation == -1)	// use -1 so 0 defaults to 1
-		ent->attenuation = 0;
+	if (!self.attenuation)
+		self.attenuation = (self.spawnflags & 1) ? 3.0 : 1.0;
+	else if (self.attenuation == -1)	// use -1 so 0 defaults to 1
+		self.attenuation = 0;
 
 	// check for prestarted looping sound
-	if (ent->spawnflags & 1) {
-		ent->s.sound = ent->noise_index;
-#ifdef LOOP_SOUND_ATTENUATION
-		ent->s.attenuation = ent->attenuation;
-#endif
-	}
-/*
+/*	if (self.spawnflags & 1) {
+		self.noise = self.noise;
+		self.attenuation = self.attenuation;
+	}*/
+	
+	precache_sound (self.noise);
+	self.use = target_speaker_use;
+	self.think = target_speaker_think;
+	self.nextthink = time + soundlength(self.noise);
+}
 
 /*QUAKED func_rotating (0 .5 .8) ? START_ON REVERSE X_AXIS Y_AXIS TOUCH_PAIN STOP ANIMATED ANIMATED_FAST
 You need to have an origin brush as part of this entity.  The center of that brush will be
@@ -614,13 +638,13 @@ void() func_rotating =
 	if (self.speed)
 		self.speed = 100;
 
-	if (!self.dmg)
-		self.dmg = 2;
+//	if (!self.dmg)
+		self.dmg = 200;
 	
 	self.nextthink = 99999999;
 
 	if (self.dmg)
-		self.blocked = plat_crush;
+		self.blocked = rotating_blocked;
 	
 	/*
 	ent->use = rotating_use;

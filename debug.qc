@@ -220,14 +220,3 @@ void() item_deathball =
 	self.touch = deathball_touch;
 };
 */
-
-//-----------------------------------------------------------------------------
-// This is dumb. 
-// Empty functions that are used by the client but duplicated and voided here so their prototyes can be merged into the shared defs without compile errors on the server.
-// This should be done with #ifdef/#endifdef and #define CSQC and #define SSQC.
-//-----------------------------------------------------------------------------
-void() CSQC_Init ={};
-void() CSQC_Shutdown ={};
-float(string s) CSQC_ConsoleCommand ={};
-void() CSQC_UpdateView ={};
-float(float event, float parama) CSQC_InputEvent ={};

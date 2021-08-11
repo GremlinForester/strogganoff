@@ -7,8 +7,8 @@ PLAYER WEAPON USE
 */
 
 void() W_SetDefaultFrames;
-
 void() W_Draw;
+void() q2player_run;
 
 void() W_SetCurrentAmmo =
 {
@@ -94,7 +94,7 @@ void() W_SetCurrentAmmo =
 //		self.weaponframe = 0;
 	}
 	
-	W_SetDefaultFrames();
+//	W_SetDefaultFrames();
 };
 
 float() W_BestWeapon =
@@ -1180,7 +1180,8 @@ void() doWeaponFrames =
 				case 5:
 					sound (self, CHAN_WEAPON, "weapons/RAILGF1A.WAV", 1, ATTN_NORM);
 					q2playeronly_8attackframes ();
-					FireBullet();
+					FireBullet(WEAPON_RAILGUN_DAMAGE);
+					//fireRail(WEAPON_RAILGUN_DAMAGE);
 				break;
 			}
 		}
@@ -1205,7 +1206,6 @@ void() doWeaponFrames =
 				case 10:
 					W_FireBlaster();
 				break;
-				
 				case 11:
 					W_FireBlaster();
 					sound (self, CHAN_WEAPON2, "weapons/Hyprbd1a.wav", 1, ATTN_NORM);
@@ -1290,6 +1290,8 @@ void() doWeaponFrames =
 			}
 		}
 }
+
+float hyperblaster_fire_frames[] = {6, 7, 8, 9, 10, 11};
 
 void Weapon_Generic (float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRAME_IDLE_LAST, float FRAME_DEACTIVATE_LAST)
 {
@@ -1440,11 +1442,12 @@ void Weapon_Generic (float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRA
 		if (!fire_frames[n])
 			self.weaponframe++;
 		*/
-		
-		doWeaponFrames();
-		
+		//	self.weaponframe++;
+			doWeaponFrames();
+
 		if (self.weaponframe == FRAME_IDLE_FIRST+1)
 			self.weaponstate = WEAPON_READY;
+
 		self.weaponframe++;
 	}
 //	self.nextframetime = time + 0.135;

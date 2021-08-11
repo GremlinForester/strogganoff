@@ -78,10 +78,30 @@ float STAT_ITEMS			= 15;
 // player flags, calculated in 
 float PFL_DEAD     = 4;
 float PFL_GIBBED   = 8;
-const float		CONTENT_EMPTY					= -1;
-const float		CONTENT_SOLID					= -2;
-const float		CONTENT_WATER					= -3;
-const float		CONTENT_SLIME					= -4;
-const float		CONTENT_LAVA					= -5;
-const float		CONTENT_SKY						= -6;
+
 float		STAT_VIEWHEIGHT					= 16;
+
+/*
+
+common/constants.qc
+
+Constants which are present on both client and server.
+
+*/
+
+// helpful things
+
+float EXTRA_LOW = -99999999;
+float EXTRA_HIGH = 99999999;
+
+vector VEC_1  = '1 1 1';
+vector VEC_0  = '0 0 0';
+vector VEC_M1 = '-1 -1 -1';
+
+float M_PI = 3.14159265358979323846;
+
+// network update types
+float NT_PLAYER = 2;
+
+// mod stats
+//float STAT_COMPASS_NORTH = 34;

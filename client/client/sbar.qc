@@ -19,7 +19,7 @@ float cl_items;
 // for weapon icon blink
 float shotgun, supershotgun, machinegun, chaingun, grenadelauncher, rocketlauncher, hyperblaster, railgun, bfg;
 
-float items, items2, currentweap;
+float inv_items, inv_items2, currentweap;
 
 //-----------------------------------------------------------------------------
 // Custom hud config init / shutdown
@@ -263,7 +263,7 @@ void(vector valor, string pic, float itemnum, float item2num, float transparenci
 {
 	vector v;
 	v = valor;
-	if (items & itemnum || items2 & item2num)
+	if (inv_items & itemnum || inv_items2 & item2num)
 	{
 		Sbar_DrawPic(v, pic, transparencia, scale);
 	}
@@ -293,7 +293,7 @@ void(vector valor, string pic1, string pic2, float itemnum, float blink) DrawInv
 		Sbar_DrawPic(v, pic, ibar_alpha, 1);
 		strunzone(pic);
 	}
-	else if (items & itemnum)
+	else if (inv_items & itemnum)
 	{
 		if (currentweap == itemnum)
 			pic = pic2;
@@ -331,20 +331,20 @@ void() Sbar_DrawInventory =
 
 	cl_items = GetStat_FLOAT_TRUNCATED(STAT_ITEMS);
 
-	items = GetStat_BITS(STAT_ITEMS, 0, 23);
-	items2 = GetStat_BITS(STAT_ITEMS, 23, 9);
+	inv_items = GetStat_BITS(STAT_ITEMS, 0, 23);
+	inv_items2 = GetStat_BITS(STAT_ITEMS, 23, 9);
 	currentweap = GetStat_FLOAT_TRUNCATED(STAT_ACTIVEWEAPON);
 
 	// weapon icons blink
-	if ((items & WEP_SHOTGUN          ) && shotgun  == 0) shotgun = time;
-	if ((items & WEP_SUPERSHOTGUN    ) && supershotgun == 0) supershotgun = time;
-	if ((items & WEP_MACHINEGUN          ) && machinegun  == 0) machinegun = time;
-	if ((items & WEP_CHAINGUN	 ) && chaingun == 0) chaingun = time;
-	if ((items & WEP_GRENADE_LAUNCHER ) && grenadelauncher  == 0) grenadelauncher = time;
-	if ((items & WEP_ROCKET_LAUNCHER  ) && rocketlauncher  == 0) rocketlauncher = time;
-	if ((items & WEP_HYPERBLASTER        ) && hyperblaster  == 0) hyperblaster = time;
-	if ((items & WEP_RAILGUN        ) && railgun  == 0) railgun = time;
-	if ((items & WEP_BFG        ) && bfg  == 0) bfg = time;
+	if ((inv_items & WEP_SHOTGUN          ) && shotgun  == 0) shotgun = time;
+	if ((inv_items & WEP_SUPERSHOTGUN    ) && supershotgun == 0) supershotgun = time;
+	if ((inv_items & WEP_MACHINEGUN          ) && machinegun  == 0) machinegun = time;
+	if ((inv_items & WEP_CHAINGUN	 ) && chaingun == 0) chaingun = time;
+	if ((inv_items & WEP_GRENADE_LAUNCHER ) && grenadelauncher  == 0) grenadelauncher = time;
+	if ((inv_items & WEP_ROCKET_LAUNCHER  ) && rocketlauncher  == 0) rocketlauncher = time;
+	if ((inv_items & WEP_HYPERBLASTER        ) && hyperblaster  == 0) hyperblaster = time;
+	if ((inv_items & WEP_RAILGUN        ) && railgun  == 0) railgun = time;
+	if ((inv_items & WEP_BFG        ) && bfg  == 0) bfg = time;
 	
 	if (shotgun > 0 && (time - shotgun ) >= 1) shotgun  = -1;
 	if (supershotgun> 0 && (time - supershotgun) >= 1) supershotgun = -1;

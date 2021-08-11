@@ -6,6 +6,16 @@ Code entry points for CSQC
 
 */
 
+void()main={};
+void()StartFrame={};
+void()PlayerPreThink={};
+void()PlayerPostThink={};
+void()ClientKill={};
+void()ClientConnect={};
+void()PutClientInServer={};
+void()ClientDisconnect={};
+void()SetNewParms={};
+void()SetChangeParms={};
 
 //-----------------------------------------------------------------------------
 // Init
@@ -218,4 +228,4 @@ float(float event, float parama) CSQC_InputEvent =
 		}
 	}
 	else return FALSE; 
-}; 
+};
