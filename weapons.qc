@@ -21,77 +21,58 @@ void() W_SetCurrentAmmo =
 	if (self.weapon == WEP_BLASTER)
 	{
 		self.currentammo = 0;
-		self.weaponmodel = "models/weapons/v_blast/tris.md2";
-//		self.weaponframe = 0;
 	}
 	else if (self.weapon == WEP_SHOTGUN)
 	{
 		self.currentammo = self.ammo_shells;
-		self.weaponmodel = "models/weapons/v_shotg/tris.md2";
-//		self.weaponframe = 9;
+
 		self.items = self.items | IT_SHELLS;
 	}
 	else if (self.weapon == WEP_SUPERSHOTGUN)
 	{
 		self.currentammo = self.ammo_shells;
-		self.weaponmodel = "models/weapons/v_shotg2/tris.md2";
-//		self.weaponframe = 0;
+
 		self.items = self.items | IT_SHELLS;
 	}
 	else if (self.weapon == WEP_MACHINEGUN)
 	{
 		self.currentammo = self.inv_ammo_bullets;
-		self.weaponmodel = "models/weapons/v_machn/tris.md2";
-//		self.weaponframe = 0;
+
 		self.items = self.items | IT_BULLETS;
 	}
 	else if (self.weapon == WEP_CHAINGUN)
 	{
 		self.currentammo = self.inv_ammo_bullets;
-		self.weaponmodel = "models/weapons/v_chain/tris.md2";
-//		self.weaponframe = 0;
 		self.items = self.items | IT_BULLETS;
 	}
 	else if (self.weapon == WEP_GRENADE_LAUNCHER)
 	{
 		self.currentammo = self.ammo_rockets;
-		self.weaponmodel = "models/weapons/v_launch/tris.md2";
-//		self.weaponframe = 0;
 		self.items = self.items | IT_ROCKETS;
 	}
 	else if (self.weapon == WEP_ROCKET_LAUNCHER)
 	{
 		self.currentammo = self.ammo_rockets;
-		self.weaponmodel = "models/weapons/v_rocket/tris.md2";
-//		self.weaponframe = 0;
 		self.items = self.items | IT_ROCKETS;
 	}
 	else if (self.weapon == WEP_HYPERBLASTER)
 	{
 		self.currentammo = self.ammo_cells;
-		self.weaponmodel = "models/weapons/v_hyperb/tris.md2";
-//		self.weaponframe = 0;
 		self.items = self.items | IT_CELLS;
 	}
 	else if (self.weapon == WEP_RAILGUN)
 	{
 		self.currentammo = self.ammo_cells;
-		self.weaponmodel = "models/weapons/v_rail/tris.md2";
-//		self.weaponframe = 0;
 		self.items = self.items | IT_CELLS;
 	}
 	else if (self.weapon == WEP_BFG)
 	{
 		self.currentammo = self.ammo_cells;
-		self.weaponmodel = "models/weapons/v_bfg/tris.md2";
-//		self.weaponframe = 0;
 		self.items = self.items | IT_CELLS;
 	}
 	else
 	{
 		self.currentammo = 0;
-		self.weaponmodel = string_null;
-//		self.weaponframe = 0;
 	}
 	
 //	W_SetDefaultFrames();
@@ -128,8 +109,8 @@ float() W_CheckNoAmmo =
 	if (self.weapon == WEP_BLASTER)
 		return TRUE;
 	
-	self.weapon = W_BestWeapon ();
-
+	self.weapon_next = W_BestWeapon ();
+  self.weaponstate_next = WEAPON_DROPPING;
 	W_SetCurrentAmmo ();
 	
 // drop the weapon down
@@ -247,63 +228,56 @@ void() W_Attack =
 
 	if (!W_CheckNoAmmo ())
 		return;
-
+  
+  if(self.weaponstate == WEAPON_FIRING){
+    return;
+  }
 	makevectors	(self.v_angle);			// calculate forward angle for velocity
 	self.show_hostile = time + 1;	// wake monsters up
-	self.weaponstate = WEAPON_FIRING;
 	
+  self.weaponstate_next = WEAPON_FIRING;
+  
 	switch (self.weapon)
 	{		
 		case WEP_BLASTER:
-			q2player_4attackframes ();
 			W_FireBlaster();
 			self.attack_finished = time + WEP_BLASTER_ATTACKTIME;
 			break;
 		case WEP_SHOTGUN:
-			q2player_8attackframes ();
 			W_FireShotgun ();
 			self.attack_finished = time + WEP_SHOTGUN_ATTACKTIME;
 			break;
 		case WEP_SUPERSHOTGUN:
-			q2player_8attackframes ();
 			W_FireSuperShotgun ();
 			self.attack_finished = time + WEP_SUPERSHOTGUN_ATTACKTIME;
 			break;
 		case WEP_MACHINEGUN:
-			q2player_MGattackframes();
 			self.attack_finished = time + WEP_MACHINEGUN_ATTACKTIME;
 			break;
 		case WEP_CHAINGUN:
 			self.state = STATE_ATTACKING;
-			q2player_CGattackframes();
 			self.attack_finished = time + WEP_CHAINGUN_ATTACKTIME;
 			break;
 		case WEP_GRENADE_LAUNCHER:
-			q2player_8attackframes ();
 			W_FireGrenade();
 			self.attack_finished = time + WEP_GRENADE_LAUNCHER_ATTACKTIME;
 			break;
 		case WEP_ROCKET_LAUNCHER:
-			q2player_8attackframes ();
 			W_FireRocket();
 			self.attack_finished = time + WEP_ROCKET_LAUNCHER_ATTACKTIME;
 			break;
 		case WEP_HYPERBLASTER:
 			W_FireBlaster();
-			q2player_HBattackframes ();
 			self.attack_finished = time + WEP_HYPERBLASTER_ATTACKTIME;
 			break;
 		case WEP_RAILGUN:
-			q2player_8attackframes ();
 			FireBullet();
 			self.attack_finished = time + WEP_RAILGUN_ATTACKTIME;
 			break;
 		case WEP_BFG:
 			self.weaponframe = 9;
-			q2playeronly_8attackframes ();
 			self.attack_finished = time + WEP_BFG_ATTACKTIME;
 			break;
-
 	}
 };
 
@@ -387,118 +361,61 @@ void() CycleWeaponCommand;
 
 void() W_ChangeWeapon =
 {
-	local	float	was;
-	
-	was = self.weapon;
-
-//MrC: select a new wep or don't do anything if it's already selected
-//There's for sure a better way of doing THIS!
-
 	switch (self.impulse)
 	{
-		case 1:
-			if (self.weapon == WEP_BLASTER)
-			{ 
-				return;
-			}
-			self.weapon = WEP_BLASTER;
+		case IMPULSE_USE_WEAPON1:
+			self.weapon_next = WEP_BLASTER;
 			break;
-		case 2:
-			if (self.weapon == WEP_SHOTGUN)
-			{ 
-				return;
-			}
-			self.weapon = WEP_SHOTGUN;
+		case IMPULSE_USE_WEAPON2:
+			self.weapon_next = WEP_SHOTGUN;
 			break;
-		case 3:
-			if (self.weapon == WEP_SUPERSHOTGUN)
-			{ 
-				return;
-			}
-			self.weapon = WEP_SUPERSHOTGUN;
+		case IMPULSE_USE_WEAPON3:
+			self.weapon_next = WEP_SUPERSHOTGUN;
 			break;
-		case 4:
-			if (self.weapon == WEP_MACHINEGUN)
-			{ 
-				return;
-			}
-			self.weapon = WEP_MACHINEGUN;
+		case IMPULSE_USE_WEAPON4:
+			self.weapon_next = WEP_MACHINEGUN;
 			break;
-		case 5:
-			if (self.weapon == WEP_CHAINGUN)
-			{ 
-				return;
-			}
-			self.weapon = WEP_CHAINGUN;
+		case IMPULSE_USE_WEAPON5:
+			self.weapon_next = WEP_CHAINGUN;
 			break;
-		case 6:
-			if (self.weapon == WEP_GRENADE_LAUNCHER)
-			{ 
-				return;
-			}
-			self.weapon = WEP_GRENADE_LAUNCHER;
+		case IMPULSE_USE_WEAPON6:
+			self.weapon_next = WEP_GRENADE_LAUNCHER;
 			break;
-		case 7:
-			if (self.weapon == WEP_ROCKET_LAUNCHER)
-			{ 
-				return;
-			}
-			self.weapon = WEP_ROCKET_LAUNCHER;
+		case IMPULSE_USE_WEAPON7:
+			self.weapon_next = WEP_ROCKET_LAUNCHER;
 			break;
-		case 8:
-			if (self.weapon == WEP_HYPERBLASTER)
-			{ 
-				return;
-			}
-			self.weapon = WEP_HYPERBLASTER;
+		case IMPULSE_USE_WEAPON8:
+			self.weapon_next = WEP_HYPERBLASTER;
 			break;
-		case 9:
-			if (self.weapon == WEP_RAILGUN)
-			{ 
-				return;
-			}
-			self.weapon = WEP_RAILGUN;
+		case IMPULSE_USE_WEAPON9:
+			self.weapon_next = WEP_RAILGUN;
 			break;
-		case 10:
-			if (self.weapon == WEP_BFG)
-			{ 
-				return;
-			}
-			self.weapon = WEP_BFG;
+		case IMPULSE_USE_WEAPON10:
+			self.weapon_next = WEP_BFG;
 			break;
 	}
-
-
-
-/*
-	if (self.impulse == 1) self.weapon = WEP_BLASTER;
-	if (self.impulse == 2) self.weapon = WEP_SHOTGUN;
-	if (self.impulse == 3) self.weapon = WEP_SUPERSHOTGUN;
-	if (self.impulse == 4) self.weapon = WEP_MACHINEGUN;
-	if (self.impulse == 5) self.weapon = WEP_CHAINGUN;
-	if (self.impulse == 6) self.weapon = WEP_GRENADE_LAUNCHER;
-	if (self.impulse == 7) self.weapon = WEP_ROCKET_LAUNCHER;
-	if (self.impulse == 8) self.weapon = WEP_HYPERBLASTER;
-*/
-
-
-
-
+  
+  if(self.weapon == self.weapon_next){
+    //same weapon pressed, do nothing.
+    return;
+  }
 
 	self.f__ = 1; // so logic doesnt change weapon
 // use logic test here
-	CycleWeaponCommand();
-
-
-
-
+  //only need a cycle check for ammo-using weapons.
+	if(self.weapon_next == WEP_BLASTER){
+    self.impulse = 0; //auto-success because blaster is always on-hand, and has infinite ammo.
+  }
+  else{
+    CycleWeaponCommand();
+  }
 
 // failed
 	if (self.impulse)
 	{
 		self.impulse = 0;
 
-		if (!(self.items & self.weapon))
+		if (!(self.items & self.weapon_next))
 // don't have the weapon
 			sprint (self, "no weapon.\n");
 		else
@@ -506,11 +423,12 @@ void() W_ChangeWeapon =
 			sprint (self, "not enough ammo.\n");
 
 // we were here
-		self.weapon = was;
 		return;	
 	}
 	
-	W_Draw();
+  if(self.weaponstate != WEAPON_SPINDOWN){
+    self.weaponstate_next = WEAPON_DROPPING;
+  }
 };
 
 /*
@@ -551,7 +469,6 @@ void() CheatCommand =
 	self.weapon = WEP_BFG;
 	self.impulse = 0;
 	W_SetCurrentAmmo ();
-	W_Draw();
 };
 
 // debug qual
@@ -569,6 +486,7 @@ void() CycleWeaponCommand =
 {
 	local	float	am;
 
+
 // note: no loop protection! - this code assumes the player _always_ has an axe
 	while (1)
 	{
@@ -576,37 +494,28 @@ void() CycleWeaponCommand =
 
 // since these are bit flags, * 2 selects next and * 0.5 selects previous - for single select set this to 1
 //		self.weapon = self.weapon * self.f__;
-/*
-// coming from axe on this system - arg!  why couldnt the axe have been 1?
-		if (self.weapon == 8192 ) self.weapon = WEP_SHOTGUN;
-		if (self.weapon == 2048 ) self.weapon = WEP_HYPERBLASTER;
-// going to the axe
-		if (!(self.weapon & 127)) self.weapon = WEP_BLASTER;
-*/
 // weapon select logic
-		if (self.weapon == WEP_BFG && self.ammo_cells < 1) am = 1;
-		if (self.weapon == WEP_RAILGUN && self.ammo_cells < 1) am = 1;
-		if (self.weapon == WEP_HYPERBLASTER && self.ammo_cells < 1) am = 1;
-		if (self.weapon == WEP_ROCKET_LAUNCHER && self.ammo_rockets < 1) am = 1;
-		if (self.weapon == WEP_GRENADE_LAUNCHER && self.ammo_rockets < 1) am = 1;
-		if (self.weapon == WEP_CHAINGUN && self.inv_ammo_bullets < 2) am = 1;
-		if (self.weapon == WEP_MACHINEGUN && self.inv_ammo_bullets < 1) am = 1;
-		if (self.weapon == WEP_SUPERSHOTGUN && self.ammo_shells < 2) am = 1;
-		if (self.weapon == WEP_SHOTGUN && self.ammo_shells < 1) am = 1;
+		if (self.weapon_next == WEP_BFG && self.ammo_cells < 1) am = 1;
+		if (self.weapon_next == WEP_RAILGUN && self.ammo_cells < 1) am = 1;
+		if (self.weapon_next == WEP_HYPERBLASTER && self.ammo_cells < 1) am = 1;
+		if (self.weapon_next == WEP_ROCKET_LAUNCHER && self.ammo_rockets < 1) am = 1;
+		if (self.weapon_next == WEP_GRENADE_LAUNCHER && self.ammo_rockets < 1) am = 1;
+		if (self.weapon_next == WEP_CHAINGUN && self.inv_ammo_bullets < 2) am = 1;
+		if (self.weapon_next == WEP_MACHINEGUN && self.inv_ammo_bullets < 1) am = 1;
+		if (self.weapon_next == WEP_SUPERSHOTGUN && self.ammo_shells < 2) am = 1;
+		if (self.weapon_next == WEP_SHOTGUN && self.ammo_shells < 1) am = 1;
 	
-		if ( (self.inv_weapons & self.weapon) && ! am)
+		if ( (self.inv_weapons & self.weapon_next) && ! am)
 		{
 			W_SetCurrentAmmo ();
 			self.impulse = 0;
-			W_Draw();
+			self.weaponstate_next = WEAPON_DROPPING;
 			return;
 		}
 // dont cycle single select
-		if (self.impulse <= 10) return;
-		
+		if (self.impulse <= IMPULSE_USE_WEAPON10) 
+			return;
 	}
-		
-
 };
 
 /*
@@ -630,67 +539,66 @@ void() CycleWeaponNext =
 
 		if (self.weapon == WEP_BFG)
 		{
-			self.weapon = WEP_BLASTER;
+			self.weapon_next = WEP_BLASTER;
 		}
 		else if (self.weapon == WEP_BLASTER)
 		{
-			self.weapon = WEP_SHOTGUN;
+			self.weapon_next = WEP_SHOTGUN;
 			if (self.ammo_shells < 1)
 				am = 1;
 		}
 		else if (self.weapon == WEP_SHOTGUN)
 		{
-			self.weapon = WEP_SUPERSHOTGUN;
+			self.weapon_next = WEP_SUPERSHOTGUN;
 			if (self.ammo_shells < 2)
 				am = 1;
 		}               
 		else if (self.weapon == WEP_SUPERSHOTGUN)
 		{
-			self.weapon = WEP_MACHINEGUN;
+			self.weapon_next = WEP_MACHINEGUN;
 			if (self.inv_ammo_bullets < 1)
 				am = 1;
 		}
 		else if (self.weapon == WEP_MACHINEGUN)
 		{
-			self.weapon = WEP_CHAINGUN;
+			self.weapon_next = WEP_CHAINGUN;
 			if (self.inv_ammo_bullets < 1)
 				am = 1;
 		}
 		else if (self.weapon == WEP_CHAINGUN)
 		{
-			self.weapon = WEP_GRENADE_LAUNCHER;
+			self.weapon_next = WEP_GRENADE_LAUNCHER;
 			if (self.ammo_rockets < 1)
 				am = 1;
 		}
 		else if (self.weapon == WEP_GRENADE_LAUNCHER)
 		{
-			self.weapon = WEP_ROCKET_LAUNCHER;
+			self.weapon_next = WEP_ROCKET_LAUNCHER;
 			if (self.ammo_rockets < 1)
 				am = 1;
 		}
 		else if (self.weapon == WEP_ROCKET_LAUNCHER)
 		{
-			self.weapon = WEP_HYPERBLASTER;
+			self.weapon_next = WEP_HYPERBLASTER;
 			if (self.ammo_cells < 1)
 				am = 1;
 		}
 		else if (self.weapon == WEP_HYPERBLASTER)
 		{
-			self.weapon = WEP_RAILGUN;
+			self.weapon_next = WEP_RAILGUN;
 			if (self.ammo_cells < 1)
 				am = 1;
 		}
 		else if (self.weapon == WEP_RAILGUN)
 		{
-			self.weapon = WEP_BFG;
+			self.weapon_next = WEP_BFG;
 			if (self.ammo_cells < 1)
 				am = 1;
 		}
 	
-		if ( (self.inv_weapons & self.weapon) && am == 0)
+		if ( (self.inv_weapons & self.weapon_next) && am == 0)
 		{
 			W_SetCurrentAmmo ();
-			W_Draw();
 			return;
 		}
 	}
@@ -718,67 +626,66 @@ void() CycleWeaponPrev =
 		
 		if (self.weapon == WEP_BFG)
 		{
-			self.weapon = WEP_RAILGUN;
+			self.weapon_next = WEP_RAILGUN;
 			if (self.ammo_cells < 1)
 				am = 1;
 		}
 		else if (self.weapon == WEP_RAILGUN)
 		{
-			self.weapon = WEP_HYPERBLASTER;
+			self.weapon_next = WEP_HYPERBLASTER;
 			if (self.ammo_cells < 1)
 				am = 1;
 		}
 		else if (self.weapon == WEP_HYPERBLASTER)
 		{
-			self.weapon = WEP_ROCKET_LAUNCHER;
+			self.weapon_next = WEP_ROCKET_LAUNCHER;
 			if (self.ammo_rockets < 1)
 				am = 1;
 		}
 		else if (self.weapon == WEP_ROCKET_LAUNCHER)
 		{
-			self.weapon = WEP_GRENADE_LAUNCHER;
+			self.weapon_next = WEP_GRENADE_LAUNCHER;
 			if (self.ammo_rockets < 1)
 				am = 1;
 		}
 		else if (self.weapon == WEP_GRENADE_LAUNCHER)
 		{
-			self.weapon = WEP_CHAINGUN;
+			self.weapon_next = WEP_CHAINGUN;
 			if (self.inv_ammo_bullets < 1)
 				am = 1;
 		}
 		else if (self.weapon == WEP_CHAINGUN)
 		{
-			self.weapon = WEP_MACHINEGUN;
+			self.weapon_next = WEP_MACHINEGUN;
 			if (self.inv_ammo_bullets < 1)
 				am = 1;
 		}
 		else if (self.weapon == WEP_MACHINEGUN)
 		{
-			self.weapon = WEP_SUPERSHOTGUN;
+			self.weapon_next = WEP_SUPERSHOTGUN;
 			if (self.ammo_shells < 2)
 				am = 1;
 		}		
 		else if (self.weapon == WEP_SUPERSHOTGUN)
 		{
-			self.weapon = WEP_SHOTGUN;
+			self.weapon_next = WEP_SHOTGUN;
 			if (self.ammo_shells < 1)
 				am = 1;
 		}
 		else if (self.weapon == WEP_SHOTGUN)
 		{
-			self.weapon = WEP_BLASTER;
+			self.weapon_next = WEP_BLASTER;
 		}
 		else if (self.weapon == WEP_BLASTER)
 		{
-			self.weapon = WEP_BFG;
+			self.weapon_next = WEP_BFG;
 			if (self.ammo_cells < 1)
 				am = 1;
 		}
 	
-		if ( (self.inv_weapons & self.weapon) && am == 0)
+		if ( (self.inv_weapons & self.weapon_next) && am == 0)
 		{
 			W_SetCurrentAmmo ();
-			W_Draw();
 			return;
 		}
 	}
@@ -832,21 +739,21 @@ ImpulseCommands
 
 void() ImpulseCommands =
 {
-	if (self.impulse == 13){
+	if (self.impulse == IMPULSE_TOSS_WEAPON){
 		q2_tossWeapon();
-		self.weapon = W_BestWeapon();
 		W_SetCurrentAmmo();
-		W_Draw();
+    self.weapon_next = W_BestWeapon();
+    self.weapon_anim_start = WEAPON_ACTIVATING;
 	}
 	
-	if (self.impulse >= 1 && self.impulse <= 10) // && self.weaponstate == WEAPON_READY)
+	if (self.impulse >= IMPULSE_USE_WEAPON1 && self.impulse <= IMPULSE_USE_WEAPON10)
 	{
 		if (self.weaponstate == WEAPON_SPINDOWN)
 		{
 			self.weaponstate = WEAPON_READY;
 			sound (self, CHAN_WEAPON, "weapons/noammo.wav", 0.1, ATTN_NORM);
 			sound (self, CHAN_WEAPON2, "weapons/noammo.wav", 0.1, ATTN_NORM);
-			W_ChangeWeapon ();	
+			W_ChangeWeapon ();
 		}
 		else
 		{
@@ -854,33 +761,28 @@ void() ImpulseCommands =
 		}
 	}
 
-	if (self.impulse == 30)
+	if (self.impulse == IMPULSE_WEAPON_NEXT)
 	{
-	//	self.f__ = 2;
-	//	CycleWeaponCommand();
-	CycleWeaponNext();
+    CycleWeaponNext();
 	
 	}
-	if (self.impulse == 31)
+	if (self.impulse == IMPULSE_WEAPON_PREV)
 	{
 		CycleWeaponPrev();
-	//	self.f__ = 0.5;
-	//	CycleWeaponCommand();
 	}
-//		CycleWeaponReverseCommand();
 
 #ifdef debug
 // cheat impulses are only active in debug mode - which should never be on in live server / released game code. MrC: But where's the fun in that!?
-	if (self.impulse == 99)
+	if (self.impulse == IMPULSE_CHEAT_CMD)
 		CheatCommand ();
-	if (self.impulse == 11)
+	if (self.impulse == IMPULSE_SVFLAGS_CMD)
 		ServerflagsCommand ();
 	if (self.impulse == 999){
 		bprint ("Current camera position: ");
 		bprint (vtos (self.origin));
 		bprint ("\n");
 	}
-	if (self.impulse == 255)
+	if (self.impulse == IMPULSE_CHEAT_QUAD)
 		QuadCheat ();
 #endifdef
 
@@ -1480,99 +1382,22 @@ void() W_WeaponFrame =
 		
 		self.state = STATE_ATTACKING;
 		SuperDamageSound ();
-		W_Attack ();
-	}
-
-	switch (self.weapon)
-	{
-		case WEP_BLASTER:
-			if (self.animIdle == 1){				
-				Weapon_Generic_Idle (WEP_BLASTER_ACTIVE_LASTFRAME, WEP_BLASTER_FIRE_LASTFRAME, WEP_BLASTER_IDLE1_FIRSTFRAME, WEP_BLASTER_IDLE1_LASTFRAME);
-			}
-			else{
-				Weapon_Generic_Idle (WEP_BLASTER_ACTIVE_LASTFRAME, WEP_BLASTER_FIRE_LASTFRAME, WEP_BLASTER_IDLE2_FIRSTFRAME, WEP_BLASTER_IDLE2_LASTFRAME);
-			}
-			break;
-		case WEP_SHOTGUN:
-			Weapon_Generic_Idle (7, 18, 19, 36);
-			break;
-		case WEP_SUPERSHOTGUN:
-			Weapon_Generic_Idle (6, 17, 18, 57);
-			break;
-		case WEP_MACHINEGUN:
-			if (self.animIdle == 1){				
-				Weapon_Generic_Idle (3, 5, 6, 23);
-			}
-			else{
-				Weapon_Generic_Idle (3, 5, 23, 45);
-			}
-			break;
-		case WEP_CHAINGUN:
-			Weapon_Generic_Idle (4, 31, 32, 61);
-			break;
-		case WEP_GRENADE_LAUNCHER:
-			Weapon_Generic_Idle (6, 17, 18, 60);
-			break;
-		case WEP_ROCKET_LAUNCHER:
-			 Weapon_Generic_Idle (4, 12, 13, 50);
-			break;
-		case WEP_RAILGUN:
-			Weapon_Generic_Idle (3, 18, 19, 56);
-			break;
-		case WEP_HYPERBLASTER:
-			Weapon_Generic_Idle (5, 20, 21, 49);
-			break;
-		case WEP_BFG:
-			Weapon_Generic_Idle (8, 31, 32, 54);
-			break;
+		//W_Attack ();
 	}
 	#endifdef
 	
 	#ifdef new_weapon_generic
-	switch (self.weapon)
-	{
-		case WEP_BLASTER:
-			if (self.animIdle == 0){				
-				Weapon_Generic (WEP_BLASTER_ACTIVE_LASTFRAME, WEP_BLASTER_FIRE_LASTFRAME, WEP_BLASTER_IDLE1_FIRSTFRAME, WEP_BLASTER_IDLE1_LASTFRAME);
-			}
-			else{
-				Weapon_Generic (WEP_BLASTER_ACTIVE_LASTFRAME, WEP_BLASTER_FIRE_LASTFRAME, WEP_BLASTER_IDLE2_FIRSTFRAME, WEP_BLASTER_IDLE2_LASTFRAME);
-			}
-			break;
-		case WEP_SHOTGUN:
-			Weapon_Generic (7, 18, 19, 36);
-			break;
-		case WEP_SUPERSHOTGUN:
-			Weapon_Generic (6, 17, 18, 57);
-			break;
-		case WEP_MACHINEGUN:
-			if (self.animIdle == 1){				
-				Weapon_Generic (3, 5, 6, 23);
-			}
-			else{
-				Weapon_Generic (3, 5, 23, 45);
-			}
-			break;
-		case WEP_CHAINGUN:
-			Weapon_Generic (4, 31, 32, 61);
-			break;
-		case WEP_GRENADE_LAUNCHER:
-			Weapon_Generic (6, 17, 18, 60);
-			break;
-		case WEP_ROCKET_LAUNCHER:
-			 Weapon_Generic (4, 12, 13, 50);
-			break;
-		case WEP_RAILGUN:
-			Weapon_Generic (3, 18, 19, 56);
-			break;
-		case WEP_HYPERBLASTER:
-			Weapon_Generic (5, 20, 21, 49);
-			break;
-		case WEP_BFG:
-			Weapon_Generic (8, 31, 32, 54);
-			break;
-	}
+  
 	#endifdef
+  if (self.button0)
+	{
+    if(time > self.attack_finished ){
+      self.state = STATE_ATTACKING;
+      SuperDamageSound ();
+      W_Attack ();
+    }
+		
+	}
 };
 
 /*

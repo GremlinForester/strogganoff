@@ -622,13 +622,15 @@ void() weapon_touch =
 //	stemp = self;
 //	self = other;
 
-	if (!deathmatch)
+  //todo - fixme
+	/*if (!deathmatch)
 		self.weapon = new;
 	else
-		Deathmatch_Weapon(new);
+		Deathmatch_Weapon(new);*/
 
 	W_SetCurrentAmmo();
-	W_Draw();
+  self.weaponstate_next = WEAPON_DROPPING;
+  self.weapon_next = new;
 	self = stemp;
 
 	if (leave)

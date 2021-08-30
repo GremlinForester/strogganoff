@@ -34,6 +34,7 @@ ai.qc
 combat.qc
 items.qc
 //weaponsys_anim.qc
+q2/player_weapons.qc
 weapons_projectiles.qc
 weapons.qc
 world.qc

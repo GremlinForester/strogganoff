@@ -643,7 +643,6 @@ void() PutClientInServer =
 	#ifdef q2model_lighting
 	self.effects = EF_FULLBRIGHT; //MrC Lightgrid workaround
 	#endifdef
-	self.weaponstate = WEAPON_READY;
 	
 	DecodeLevelParms ();
 	
@@ -689,12 +688,18 @@ void() PutClientInServer =
 	
 	AttachTPWeapon();
 	
+  
+	self.weaponstate = WEAPON_ACTIVATING;
+  self.weapon = 0;
+  self.items = self.items | WEP_BLASTER;
+  self.weapon_next = parm8;
+  self.weapon_anim_start = TRUE;
+  
 	if (deathmatch || coop)
 	{
 		makevectors(self.angles);
 		spawn_tfog (self.origin + v_forward*20);
 	}
-	W_Draw();
 	spawn_tdeath (self.origin, self);
 };
 
@@ -1466,6 +1471,7 @@ void() PlayerPostThink =
 // do weapon stuff
 
 	W_WeaponFrame ();
+  W_WeaponAnimate();
 
 // check to see if player landed and play landing sound
 	if ((self.jump_flag < -100) && (self.flags & FL_ONGROUND) && (self.health > 0))
