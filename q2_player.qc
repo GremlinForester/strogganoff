@@ -151,14 +151,14 @@ framer($FRAME_pain301, $FRAME_pain304, q2player_4drawframes, q2player_run, 0.1,
 framer($FRAME_attack1, $FRAME_attack4, q2player_4attackframes, q2player_run, 0.1,
 
 	frame_arb($FRAME_attack1,
-	self.weaponframe=5;
+	//self.weaponframe=5;
 	self.state = STATE_ATTACKING;
 	);
 	frame_arb($FRAME_attack4,
 	W_SetDefaultFrames();
-	self.weaponstate = WEAPON_READY;	
+	//self.weaponstate = WEAPON_READY;	
 	);
-	self.weaponframe++;
+	//self.weaponframe++;
 );
 
 framer($FRAME_attack1, $FRAME_attack2, q2player_HBattackframes, q2player_run, 0.1,
@@ -166,16 +166,16 @@ framer($FRAME_attack1, $FRAME_attack2, q2player_HBattackframes, q2player_run, 0.
 	frame_arb($FRAME_attack1,
 	if (self.weaponframe>11)
 	{
-		self.weaponframe=6;
+		//self.weaponframe=6;
 	}
 	);
 	frame_arb($FRAME_attack2,
 	if (self.weaponframe>11)
 	{
-		self.weaponframe=6;
+		//self.weaponframe=6;
 	}
 	);
-	self.weaponframe++;
+	//self.weaponframe++;
 );
 
 framer($FRAME_attack1, $FRAME_attack2, q2player_MGattackframes, q2player_run, 0.1,

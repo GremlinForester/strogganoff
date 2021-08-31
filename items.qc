@@ -1,4 +1,5 @@
 void() W_SetCurrentAmmo;
+float() W_CheckNoAmmo;
 /* ALL LIGHTS SHOULD BE 0 1 0 IN COLOR ALL OTHER ITEMS SHOULD
 BE .8 .3 .4 IN COLOR */
 
@@ -478,158 +479,158 @@ void() weapon_touch =
 // if the player was using his best weapon, change up to the new one if better		
 	stemp = self;
 	self = other;
-	best = W_BestWeapon();
 
-// logic change to eliminate extra statements
-//	self = stemp;
+	// logic change to eliminate extra statements
+	//	self = stemp;
 
-	if (deathmatch == 2 || coop)
-		leave = 1;
-	else
-		leave = 0;
-	
-	if (stemp.classname == "weapon_machinegun")
-	{
-		if (leave && (self.inv_weapons & WEP_MACHINEGUN) )
-			return;
-
-		new = WEP_MACHINEGUN;
-		
-		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
-		if (self != stemp.owner){
-			self.inv_ammo_bullets = self.inv_ammo_bullets + 30;
+		if (deathmatch == 2 || coop){
+			leave = 1;
+		}else{
+			leave = 0;
 		}
-	}
-	else if (stemp.classname == "weapon_chaingun")
-	{
-		if (leave && (self.inv_weapons & WEP_CHAINGUN) )
-			return;
-
-		new = WEP_CHAINGUN;
-		
-		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
-		if (self != stemp.owner){
-			self.inv_ammo_bullets = self.inv_ammo_bullets + 30;
+		if (stemp.classname == "weapon_machinegun")
+		{
+			if (leave && (self.inv_weapons & WEP_MACHINEGUN) ){
+				return;
+			}
+			new = WEP_MACHINEGUN;
+			
+			//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
+			if (self != stemp.owner){
+				self.inv_ammo_bullets = self.inv_ammo_bullets + 30;
+			}
 		}
-	}
-	else if (stemp.classname == "weapon_supershotgun")
-	{
-		if (leave && (self.inv_weapons & WEP_SUPERSHOTGUN) )
-			return;
-
-		new = WEP_SUPERSHOTGUN;
-		
-		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
-		if (self != stemp.owner){
-			self.ammo_shells = self.ammo_shells + 5;
+		else if (stemp.classname == "weapon_chaingun")
+		{
+			if (leave && (self.inv_weapons & WEP_CHAINGUN) ){
+				return;
+			}
+			new = WEP_CHAINGUN;
+			
+			//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
+			if (self != stemp.owner){
+				self.inv_ammo_bullets = self.inv_ammo_bullets + 30;
+			}
 		}
-	}
-	else if (stemp.classname == "weapon_shotgun")
-	{
-		if (leave && (self.inv_weapons & WEP_SHOTGUN) )
-			return;
-
-		new = WEP_SHOTGUN;
-		
-		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
-		if (self != stemp.owner){
-			self.ammo_shells = self.ammo_shells + 5;
+		else if (stemp.classname == "weapon_supershotgun")
+		{
+			if (leave && (self.inv_weapons & WEP_SUPERSHOTGUN) ){
+				return;
+			}
+			new = WEP_SUPERSHOTGUN;
+			
+			//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
+			if (self != stemp.owner){
+				self.ammo_shells = self.ammo_shells + 5;
+			}
 		}
-	}
-	else if (stemp.classname == "weapon_rocketlauncher")
-	{
-		if (leave && (self.inv_weapons & WEP_ROCKET_LAUNCHER) )
-			return;
-
-		new = WEP_ROCKET_LAUNCHER;
-		
-		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
-		if (self != stemp.owner){
-			self.ammo_rockets = self.ammo_rockets + 5;
+		else if (stemp.classname == "weapon_shotgun")
+		{
+			if (leave && (self.inv_weapons & WEP_SHOTGUN) ){
+				return;
+			}
+			new = WEP_SHOTGUN;
+			
+			//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
+			if (self != stemp.owner){
+				self.ammo_shells = self.ammo_shells + 5;
+			}
 		}
-	}
-	else if (stemp.classname == "weapon_grenadelauncher")
-	{
-		if (leave && (self.inv_weapons & WEP_GRENADE_LAUNCHER) )
-			return;
-
-		new = WEP_GRENADE_LAUNCHER;
-		
-		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
-		if (self != stemp.owner){
-			self.ammo_rockets = self.ammo_rockets + 5;
+		else if (stemp.classname == "weapon_rocketlauncher")
+		{
+			if (leave && (self.inv_weapons & WEP_ROCKET_LAUNCHER) ){
+				return;
+			}
+			new = WEP_ROCKET_LAUNCHER;
+			
+			//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
+			if (self != stemp.owner){
+				self.ammo_rockets = self.ammo_rockets + 5;
+			}
 		}
-	}
-	else if (stemp.classname == "weapon_hyperblaster")
-	{
-		if (leave && (self.inv_weapons & WEP_HYPERBLASTER) )
-			return;
-
-		new = WEP_HYPERBLASTER;
-		
-		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
-		if (self != stemp.owner){
-			self.ammo_cells = self.ammo_cells + 15;
+		else if (stemp.classname == "weapon_grenadelauncher")
+		{
+			if (leave && (self.inv_weapons & WEP_GRENADE_LAUNCHER) ){
+				return;
+			}
+			new = WEP_GRENADE_LAUNCHER;
+			
+			//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
+			if (self != stemp.owner){
+				self.ammo_rockets = self.ammo_rockets + 5;
+			}
 		}
-	}
-	else if (stemp.classname == "weapon_railgun")
-	{
-		if (leave && (self.inv_weapons & WEP_RAILGUN) )
-			return;
-
-		new = WEP_RAILGUN;
-		
-		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
-		if (self != stemp.owner){
-			self.ammo_cells = self.ammo_cells + 15;
+		else if (stemp.classname == "weapon_hyperblaster")
+		{
+			if (leave && (self.inv_weapons & WEP_HYPERBLASTER) ){
+				return;
+			}
+			new = WEP_HYPERBLASTER;
+			
+			//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
+			if (self != stemp.owner){
+				self.ammo_cells = self.ammo_cells + 15;
+			}
 		}
-	}
-	else if (stemp.classname == "weapon_bfg")
-	{
-		if (leave && (self.inv_weapons & WEP_BFG) )
-			return;
+		else if (stemp.classname == "weapon_railgun")
+		{
+			if (leave && (self.inv_weapons & WEP_RAILGUN) )
+				return;
 
-		new = WEP_BFG;
-		
-		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
-		if (self != stemp.owner){
-			self.ammo_cells = self.ammo_cells + 15;
+			new = WEP_RAILGUN;
+			
+			//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
+			if (self != stemp.owner){
+				self.ammo_cells = self.ammo_cells + 15;
+			}
 		}
-	}
-	else
-#ifdef noobjerr
-	{
-		remove(stemp);
-		return;
-	}
-#else
-		objerror ("weapon_touch: unknown classname");					//opgrade protected
-#endifdef
+		else if (stemp.classname == "weapon_bfg")
+		{
+			if (leave && (self.inv_weapons & WEP_BFG) )
+				return;
 
-	sprint (self, "You got the ");
-	sprint (self, stemp.netname);
-	sprint (self, "\n");
-// weapon touch sound
-	sound (self, CHAN_ITEM, "weapons/pkup.wav", 1, ATTN_NORM);
-	stuffcmd (self, "bf\n");
+			new = WEP_BFG;
+			
+			//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
+			if (self != stemp.owner){
+				self.ammo_cells = self.ammo_cells + 15;
+			}
+		}
+		else
+	#ifdef noobjerr
+		{
+			remove(stemp);
+			return;
+		}
+	#else
+			objerror ("weapon_touch: unknown classname");					//opgrade protected
+	#endifdef
 
-	bound_other_ammo ();
+		
+		best = W_BestWeapon();
 
-// change to the weapon
-	self.inv_weapons = self.inv_weapons | new;
+		sprint (self, "You got the ");
+		sprint (self, stemp.netname);
+		sprint (self, "\n");
+	// weapon touch sound
+		sound (self, CHAN_ITEM, "weapons/pkup.wav", 1, ATTN_NORM);
+		stuffcmd (self, "bf\n");
 
-// logic change eliminates
-//	stemp = self;
-//	self = other;
+		bound_other_ammo ();
 
-  //todo - fixme
-	/*if (!deathmatch)
-		self.weapon = new;
-	else
-		Deathmatch_Weapon(new);*/
-  
-  self.weaponstate_next = WEAPON_DROPPING;
-  self.weapon_next = new;
+	// change to the weapon
+		self.inv_weapons = self.inv_weapons | new;
+
+		//todo - fixme
+		/*if (!deathmatch)
+			self.weapon = new;
+		else
+			Deathmatch_Weapon(new);*/
+		
+		if(self.weaponstate == WEAPON_READY && best == new){
+			self.weaponstate_next = WEAPON_DROPPING;
+			self.weapon_next = new;
+		}
 	self = stemp;
 
 	if (leave)

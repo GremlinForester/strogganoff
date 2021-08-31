@@ -442,7 +442,7 @@ void(float damage) FireBullet =
 		fireBulletSound();
 		self.currentammo = self.inv_ammo_bullets = self.inv_ammo_bullets - 1;
 		#ifndef new_weapon_generic
-		self.weaponstate = WEAPON_SPINDOWN;
+		//self.weaponstate = WEAPON_SPINDOWN;
 		#endifdef
 		SpawnMuzzleFlash(WEP_MACHINEGUN_MFLASH_OFFSET_FP, 2, 0.5);
 		sound (self, CHAN_WEAPON2, "weapons/chngnl1a.wav", 0.5, ATTN_NORM); //spinning
@@ -721,7 +721,7 @@ void() W_FireBlaster =
 	{
 		self.currentammo = self.ammo_cells = self.ammo_cells - 1;
 		#ifndef new_weapon_generic
-		self.weaponstate = WEAPON_SPINDOWN;
+		//self.weaponstate = WEAPON_SPINDOWN;
 		#endifdef
 		sound (self, CHAN_WEAPON2, "weapons/hyprbl1a.wav", 0.7, ATTN_NORM);
 		sound (self, CHAN_WEAPON, "weapons/Hyprbf1a.wav", 1, ATTN_NORM);
