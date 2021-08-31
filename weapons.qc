@@ -25,19 +25,16 @@ void() W_SetCurrentAmmo =
 	else if (self.weapon == WEP_SHOTGUN)
 	{
 		self.currentammo = self.ammo_shells;
-
 		self.items = self.items | IT_SHELLS;
 	}
 	else if (self.weapon == WEP_SUPERSHOTGUN)
 	{
 		self.currentammo = self.ammo_shells;
-
 		self.items = self.items | IT_SHELLS;
 	}
 	else if (self.weapon == WEP_MACHINEGUN)
 	{
 		self.currentammo = self.inv_ammo_bullets;
-
 		self.items = self.items | IT_BULLETS;
 	}
 	else if (self.weapon == WEP_CHAINGUN)
@@ -74,8 +71,6 @@ void() W_SetCurrentAmmo =
 	{
 		self.currentammo = 0;
 	}
-	
-//	W_SetDefaultFrames();
 };
 
 float() W_BestWeapon =
@@ -103,16 +98,16 @@ float() W_BestWeapon =
 
 float() W_CheckNoAmmo =
 {
-	if (self.currentammo > 0)
-		return TRUE;
-
+  //lead with this
 	if (self.weapon == WEP_BLASTER)
+		return TRUE;
+  
+	if (self.currentammo > 0)
 		return TRUE;
 	
 	self.weapon_next = W_BestWeapon ();
   self.weaponstate_next = WEAPON_DROPPING;
-	W_SetCurrentAmmo ();
-	
+  
 // drop the weapon down
 #ifdef pointless_warning
 	return FALSE;
@@ -235,7 +230,9 @@ void() W_Attack =
 	makevectors	(self.v_angle);			// calculate forward angle for velocity
 	self.show_hostile = time + 1;	// wake monsters up
 	
-  self.weaponstate_next = WEAPON_FIRING;
+  //immediate interrupt
+  self.weaponstate =  self.weaponstate_next = WEAPON_FIRING;
+  self.weapon_anim_start = TRUE;
   
 	switch (self.weapon)
 	{		
@@ -468,7 +465,6 @@ void() CheatCommand =
 
 	self.weapon = WEP_BFG;
 	self.impulse = 0;
-	W_SetCurrentAmmo ();
 };
 
 // debug qual
@@ -507,7 +503,6 @@ void() CycleWeaponCommand =
 	
 		if ( (self.inv_weapons & self.weapon_next) && ! am)
 		{
-			W_SetCurrentAmmo ();
 			self.impulse = 0;
 			self.weaponstate_next = WEAPON_DROPPING;
 			return;
@@ -598,7 +593,7 @@ void() CycleWeaponNext =
 	
 		if ( (self.inv_weapons & self.weapon_next) && am == 0)
 		{
-			W_SetCurrentAmmo ();
+			//W_SetCurrentAmmo ();
 			return;
 		}
 	}
@@ -685,7 +680,7 @@ void() CycleWeaponPrev =
 	
 		if ( (self.inv_weapons & self.weapon_next) && am == 0)
 		{
-			W_SetCurrentAmmo ();
+			//W_SetCurrentAmmo ();
 			return;
 		}
 	}
@@ -741,9 +736,9 @@ void() ImpulseCommands =
 {
 	if (self.impulse == IMPULSE_TOSS_WEAPON){
 		q2_tossWeapon();
-		W_SetCurrentAmmo();
+    self.weaponstate = 0;
+    self.weaponstate_next = WEAPON_ACTIVATING;
     self.weapon_next = W_BestWeapon();
-    self.weapon_anim_start = WEAPON_ACTIVATING;
 	}
 	
 	if (self.impulse >= IMPULSE_USE_WEAPON1 && self.impulse <= IMPULSE_USE_WEAPON10)

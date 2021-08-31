@@ -627,8 +627,7 @@ void() weapon_touch =
 		self.weapon = new;
 	else
 		Deathmatch_Weapon(new);*/
-
-	W_SetCurrentAmmo();
+  
   self.weaponstate_next = WEAPON_DROPPING;
   self.weapon_next = new;
 	self = stemp;
@@ -915,21 +914,21 @@ local float		best;
 
 // change to a better weapon if appropriate
 
-	if ( self.weapon == best )
-	{
+	//if ( self.weapon == best )
+	//{
 // logic change eliminates
 //		stemp = self;
 //		self = other;
-		self.weapon = W_BestWeapon();
-		W_SetCurrentAmmo ();
+		//self.weapon = W_BestWeapon();
+		//W_SetCurrentAmmo ();
 //		self = stemp;
-	}
+	//}
 
 // if changed current ammo, update it
 // logic change eliminates
 //	stemp = self;
 //	self = other;
-	W_SetCurrentAmmo();
+	//W_SetCurrentAmmo();
 	self = stemp;
 
 	touched(30);
@@ -1727,7 +1726,7 @@ void() BackpackTouch =
 #endifdef
 																new);
 //
-	W_SetCurrentAmmo ();
+	//W_SetCurrentAmmo ();
 
 #undef stemp
 #undef acount

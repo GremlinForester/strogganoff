@@ -73,9 +73,9 @@ void() weapon_state_idle={
   if( time > self.weapon_think){
     self.weaponframe++;
     self.weapon_think = time + 0.1;
-  }
-  if(self.weaponframe == self.weapon_frame_end){
-    self.weapon_anim_start = TRUE;
+    if(self.weaponframe == self.weapon_frame_end){
+      self.weapon_anim_start = TRUE;
+    }
   }
 };
 
@@ -138,15 +138,12 @@ void() weapon_state_putaway={
     return;
   }
   
-  
   if( time > self.weapon_think){
     self.weaponframe++;
     self.weapon_think = time + 0.1;
-  }
-  
-  if(self.weaponframe == self.weapon_frame_end){
-    self.weaponstate_next = WEAPON_ACTIVATING;
-    self.weapon = self.weapon_next;
+    if(self.weaponframe == self.weapon_frame_end){
+      self.weaponstate_next = WEAPON_ACTIVATING;
+    }
   }
 
 };
@@ -158,83 +155,91 @@ void() weapon_state_putaway={
 */
 void() weapon_state_activate={
   local string readySfx;
-  local string gunModel;
   
   //detect initial state change
   if(self.weapon_anim_start == TRUE){
     self.weapon_anim_start = FALSE;
+    self.weapon = self.weapon_next;
     switch(self.weapon){
       case WEP_BLASTER:
         readySfx = "weapons/HGRENT1A.WAV";
-        gunModel = "models/weapons/v_blast/tris.md2";
+        self.weaponmodel = "models/weapons/v_blast/tris.md2";
         self.weaponframe = WEP_BLASTER_ACTIVE_FIRSTFRAME;
         self.weapon_frame_end = WEP_BLASTER_ACTIVE_LASTFRAME;
         break;
       
      case WEP_SHOTGUN:
         readySfx = "weapons/Shotgr1b.wav";
-        gunModel = "models/weapons/v_shotg/tris.md2";
+        self.weaponmodel = "models/weapons/v_shotg/tris.md2";
         self.weaponframe = WEP_SHOTGUN_ACTIVE_FIRSTFRAME;
         self.weapon_frame_end = WEP_SHOTGUN_ACTIVE_LASTFRAME;
+        self.currentammo = self.ammo_shells;
         break;
     
      case WEP_SUPERSHOTGUN:
         readySfx = "weapons/HGRENT1A.WAV";
-        gunModel = "models/weapons/v_shotg2/tris.md2";
+        self.weaponmodel = "models/weapons/v_shotg2/tris.md2";
         self.weaponframe = WEP_SUPERSHOTGUN_ACTIVE_FIRSTFRAME;
         self.weapon_frame_end = WEP_SUPERSHOTGUN_ACTIVE_LASTFRAME;
+        self.currentammo = self.ammo_shells;
         break;
         
      case WEP_MACHINEGUN:
         readySfx = "weapons/HGRENT1A.WAV";
-        gunModel = "models/weapons/v_machn/tris.md2";
+        self.weaponmodel = "models/weapons/v_machn/tris.md2";
         self.weaponframe = WEP_MACHINEGUN_ACTIVE_FIRSTFRAME;
         self.weapon_frame_end = WEP_MACHINEGUN_ACTIVE_LASTFRAME;
+        self.currentammo = self.inv_ammo_bullets;
         break;
         
      case WEP_CHAINGUN:
        readySfx = "weapons/HGRENT1A.WAV";
-        gunModel = "models/weapons/v_chain/tris.md2";
+        self.weaponmodel = "models/weapons/v_chain/tris.md2";
         self.weaponframe = WEP_CHAINGUN_ACTIVE_FIRSTFRAME;
         self.weapon_frame_end = WEP_CHAINGUN_ACTIVE_LASTFRAME;
+        self.currentammo = self.inv_ammo_bullets;
         break;
         
      case WEP_GRENADE_LAUNCHER:
         readySfx = "weapons/HGRENT1A.WAV";
-        gunModel = "models/weapons/v_launch/tris.md2";
+        self.weaponmodel = "models/weapons/v_launch/tris.md2";
         self.weaponframe = WEP_NADELAUNCH_ACTIVE_FIRSTFRAME;
         self.weapon_frame_end = WEP_NADELAUNCH_ACTIVE_LASTFRAME;
+        self.currentammo = self.ammo_rockets;
         break;
         
      case WEP_ROCKET_LAUNCHER:
         readySfx = "weapons/HGRENT1A.WAV";
-        gunModel = "models/weapons/v_rocket/tris.md2";
+        self.weaponmodel = "models/weapons/v_rocket/tris.md2";
         self.weaponframe = WEP_ROCKETLAUNCH_ACTIVE_FIRSTFRAME;
         self.weapon_frame_end = WEP_ROCKETLAUNCH_ACTIVE_LASTFRAME;
+        self.currentammo = self.ammo_rockets;
         break;
         
      case WEP_HYPERBLASTER:
         readySfx = "weapons/HGRENT1A.WAV";
-        gunModel = "models/weapons/v_hyperb/tris.md2";
+        self.weaponmodel = "models/weapons/v_hyperb/tris.md2";
         self.weaponframe = WEP_HYPERBLAST_ACTIVE_FIRSTFRAME;
         self.weapon_frame_end = WEP_HYPERBLAST_ACTIVE_LASTFRAME;
+        self.currentammo = self.ammo_cells;
         break;
         
      case WEP_RAILGUN:
         readySfx = "weapons/HGRENT1A.WAV";
-        gunModel = "models/weapons/v_rail/tris.md2";
+        self.weaponmodel = "models/weapons/v_rail/tris.md2";
         self.weaponframe = WEP_RAILGUN_ACTIVE_FIRSTFRAME;
         self.weapon_frame_end = WEP_RAILGUN_ACTIVE_LASTFRAME;
+        self.currentammo = self.ammo_cells;
         break;
         
      case WEP_BFG:
         readySfx = "weapons/HGRENT1A.WAV";
-        gunModel = "models/weapons/v_bfg/tris.md2";
+        self.weaponmodel = "models/weapons/v_bfg/tris.md2";
         self.weaponframe = WEP_BFG_ACTIVE_FIRSTFRAME;
         self.weapon_frame_end = WEP_BFG_ACTIVE_LASTFRAME;
+        self.currentammo = self.ammo_cells;
         break;
     }
-    self.weaponmodel = gunModel;
     sound(self, CHAN_WEAPON, readySfx, 0.5, ATTN_IDLE);
     return;
   }
@@ -243,10 +248,10 @@ void() weapon_state_activate={
   if( time > self.weapon_think){
     self.weaponframe++;
     self.weapon_think = time + 0.1;
+    if(self.weaponframe == self.weapon_frame_end){
+      self.weaponstate_next = WEAPON_READY;
+    }
   }  
-  if(self.weaponframe == self.weapon_frame_end){
-    self.weaponstate_next = WEAPON_READY;
-  }
 };
 
 
@@ -331,7 +336,9 @@ void() weapon_state_spin={
   Quake2 style weapons really want to be a lean state-machine, so here goes.
 */
 void() W_WeaponAnimate={
+  
   if(self.weaponstate != self.weaponstate_next){
+    bprint(sprintf("W_WeaponAnimate()-> weaponstate_next = %s\n", ftos(self.weaponstate_next)));// debug
     self.weaponstate = self.weaponstate_next;
     self.weapon_anim_start = TRUE;
   }

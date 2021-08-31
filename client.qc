@@ -645,8 +645,6 @@ void() PutClientInServer =
 	#endifdef
 	
 	DecodeLevelParms ();
-	
-	W_SetCurrentAmmo ();
 
 	self.attack_finished = time;
 	self.th_pain = player_pain;
@@ -688,12 +686,10 @@ void() PutClientInServer =
 	
 	AttachTPWeapon();
 	
-  
-	self.weaponstate = WEAPON_ACTIVATING;
-  self.weapon = 0;
-  self.items = self.items | WEP_BLASTER;
+  self.weaponstate = 0;
+	self.weaponstate_next = WEAPON_ACTIVATING;
   self.weapon_next = parm8;
-  self.weapon_anim_start = TRUE;
+  self.items = self.items | WEP_BLASTER;
   
 	if (deathmatch || coop)
 	{
@@ -1191,8 +1187,9 @@ void() PlayerPreThink =
 
 	if(time > self.attack_finished && ! self.currentammo /* == 0 */ && self.weapon != WEP_BLASTER)
 	{
-		self.weapon = W_BestWeapon ();
-		W_SetCurrentAmmo ();
+    self.weapon_next = W_BestWeapon ();
+    self.weaponstate_next = WEAPON_DROPPING;
+		//W_SetCurrentAmmo ();
 	}
 	
 	//----------------------------------------------------------------------
