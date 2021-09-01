@@ -292,76 +292,6 @@ void() W_Attack =
 	}
 };
 
-void() W_Attack2 =
-{
-	local	float	r;
-
-	if (!W_CheckNoAmmo ())
-		return;
-
-	makevectors	(self.v_angle);			// calculate forward angle for velocity
-	self.show_hostile = time + 1;	// wake monsters up
-	self.weaponstate = WEAPON_FIRING;
-	
-	switch (self.weapon)
-	{
-/*		
-		case WEP_BLASTER:
-			q2player_4attackframes ();
-			W_FireBlaster();
-			self.attack_finished = time + WEP_BLASTER_ATTACKTIME;
-			break;
-*/
-		case WEP_SHOTGUN:
-			q2player_8attackframes ();
-			W_FireShotgun ();
-			self.attack_finished = time + WEP_SHOTGUN_ATTACKTIME;
-			break;
-		case WEP_SUPERSHOTGUN:
-			q2player_8attackframes ();
-			W_FireSuperShotgun ();
-			self.attack_finished = time + WEP_SUPERSHOTGUN_ATTACKTIME;
-			break;
-/*
-		case WEP_MACHINEGUN:
-			q2player_MGattackframes();
-			self.attack_finished = time + WEP_MACHINEGUN_ATTACKTIME;
-			break;
-		case WEP_CHAINGUN:
-			self.state = STATE_ATTACKING;
-			q2player_CGattackframes();
-			self.attack_finished = time + WEP_CHAINGUN_ATTACKTIME;
-			break;
-*/
-		case WEP_GRENADE_LAUNCHER:
-			q2player_8attackframes ();
-			W_FireGrenade();
-			self.attack_finished = time + WEP_GRENADE_LAUNCHER_ATTACKTIME;
-			break;
-		case WEP_ROCKET_LAUNCHER:
-			q2player_8attackframes ();
-			W_FireRocket();
-			self.attack_finished = time + WEP_ROCKET_LAUNCHER_ATTACKTIME;
-			break;
-		case WEP_HYPERBLASTER:
-			W_FireBlaster();
-			q2player_HBattackframes ();
-			self.attack_finished = time + WEP_HYPERBLASTER_ATTACKTIME;
-			break;
-/*		case WEP_RAILGUN:
-			q2player_8attackframes ();
-			FireBullet();
-			self.attack_finished = time + WEP_RAILGUN_ATTACKTIME;
-			break;
-		case WEP_BFG:
-			self.weaponframe = 9;
-			q2playeronly_8attackframes ();
-			self.attack_finished = time + WEP_BFG_ATTACKTIME;
-			break;
-*/
-	}
-};
-
 /*
 ============
 W_ChangeWeapon
@@ -790,6 +720,7 @@ void() ImpulseCommands =
 		if( self.weaponstate == WEAPON_READY){
 			q2_tossWeapon();
 		}
+		self.impulse = 0;
 	}
 	
 	if (self.impulse >= IMPULSE_USE_WEAPON1 && self.impulse <= IMPULSE_USE_WEAPON10)
@@ -811,7 +742,6 @@ void() ImpulseCommands =
 	{
 		if(self.weaponstate == WEAPON_READY)
 			CycleWeaponNext();
-	
 	}
 	if (self.impulse == IMPULSE_WEAPON_PREV)
 	{
@@ -855,13 +785,7 @@ void() W_WeaponFrame =
 		ImpulseCommands ();
 	
 	// check for attack
-	#ifndef new_weapon_generic
-	#endifdef
-	
-	#ifdef new_weapon_generic
-  
-	#endifdef
-	if(self.weaponstate == WEAPON_READY || self.weaponstate == WEAPON_FIRING){
+	if(self.weaponstate == WEAPON_READY){
 		if (self.button0)
 		{
 			if(time > self.attack_finished){
