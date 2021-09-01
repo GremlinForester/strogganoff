@@ -247,7 +247,6 @@ void() weapon_state_fire={
 	if(self.weapon_anim_start == TRUE){
 		self.weapon_anim_start = FALSE;
 		self.weapon_state_attack_frames = SUB_Null;
-		self.weapon_frame_end = 0;
 		switch(self.weapon){
 			case WEP_BLASTER:
 				self.weaponframe = WEP_BLASTER_FIRE_FIRSTFRAME;
@@ -304,15 +303,15 @@ void() weapon_state_fire={
 	
 	if( time > self.weapon_think){
 		self.weapon_think = time + 0.1;
+		if(self.weapon_state_attack_frames != SUB_Null){
+			self.weapon_state_attack_frames();
+		}
 		if(self.weaponframe == self.weapon_frame_end){
-			if(W_CheckNoAmmo()){
+			if(!W_CheckNoAmmo()){
 				return;
 			}
 			self.weaponstate_next = WEAPON_READY;
 			return;
-		}
-		if(self.weapon_state_attack_frames != SUB_Null){
-			self.weapon_state_attack_frames();
 		}
 		self.weaponframe++;
 	}
