@@ -789,9 +789,6 @@ void() ImpulseCommands =
 	if (self.impulse == IMPULSE_TOSS_WEAPON){
 		if( self.weaponstate == WEAPON_READY){
 			q2_tossWeapon();
-			self.weaponstate = 0;
-			self.weaponstate_next = WEAPON_ACTIVATING;
-			self.weapon_next = W_BestWeapon();
 		}
 	}
 	

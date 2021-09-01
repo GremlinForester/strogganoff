@@ -1804,9 +1804,17 @@ void() DropBackpack =
 		self == player
 ===============
 */
-void() q2_tossWeapon{
+void() q2_tossWeapon={
 	local entity newWeapon;
 	local entity this;
+	
+	if(self.weapon == WEP_BLASTER){
+		return;
+	}
+	
+	self.weaponstate = 0;
+	self.weaponstate_next = WEAPON_ACTIVATING;
+	self.weapon_next = W_BestWeapon();
 	
 	this = self;
 	newWeapon = spawn();
