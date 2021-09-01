@@ -691,7 +691,6 @@ void() PutClientInServer =
 	self.weaponstate_next = WEAPON_ACTIVATING;
   self.weapon_next = self.weapon;
   self.weapon = 0;
-  self.items = self.items | WEP_BLASTER;
   self.inv_weapons = self.inv_weapons | WEP_BLASTER;
   self.weapon_state_attack_frames = SUB_Null; //ini
   

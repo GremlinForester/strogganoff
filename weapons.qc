@@ -569,78 +569,80 @@ Go to the next weapon with ammo
 */
 void() CycleWeaponNext =
 {
-//	local	float	it, am;
-	local	float	am;
+	local	float	am, checkWep;
 	
-//	it = self.items;
 	self.impulse = 0;
-
+	checkWep = self.weapon;
+	
 	while (1)
 	{
 		am = 0;
 
-		if (self.weapon == WEP_BFG)
+		if (checkWep == WEP_BFG)
 		{
-			self.weapon_next = WEP_BLASTER;
+			checkWep = WEP_BLASTER;
 		}
-		else if (self.weapon == WEP_BLASTER)
+		else if (checkWep == WEP_BLASTER)
 		{
-			self.weapon_next = WEP_SHOTGUN;
+			checkWep = WEP_SHOTGUN;
 			if (self.ammo_shells < 1)
 				am = 1;
 		}
-		else if (self.weapon == WEP_SHOTGUN)
+		else if (checkWep == WEP_SHOTGUN)
 		{
-			self.weapon_next = WEP_SUPERSHOTGUN;
+			checkWep = WEP_SUPERSHOTGUN;
 			if (self.ammo_shells < 2)
 				am = 1;
 		}               
-		else if (self.weapon == WEP_SUPERSHOTGUN)
+		else if (checkWep == WEP_SUPERSHOTGUN)
 		{
-			self.weapon_next = WEP_MACHINEGUN;
+			checkWep = WEP_MACHINEGUN;
 			if (self.inv_ammo_bullets < 1)
 				am = 1;
 		}
-		else if (self.weapon == WEP_MACHINEGUN)
+		else if (checkWep == WEP_MACHINEGUN)
 		{
-			self.weapon_next = WEP_CHAINGUN;
+			checkWep = WEP_CHAINGUN;
 			if (self.inv_ammo_bullets < 1)
 				am = 1;
 		}
-		else if (self.weapon == WEP_CHAINGUN)
+		else if (checkWep == WEP_CHAINGUN)
 		{
-			self.weapon_next = WEP_GRENADE_LAUNCHER;
+			checkWep = WEP_GRENADE_LAUNCHER;
 			if (self.ammo_rockets < 1)
 				am = 1;
 		}
-		else if (self.weapon == WEP_GRENADE_LAUNCHER)
+		else if (checkWep == WEP_GRENADE_LAUNCHER)
 		{
-			self.weapon_next = WEP_ROCKET_LAUNCHER;
+			checkWep = WEP_ROCKET_LAUNCHER;
 			if (self.ammo_rockets < 1)
 				am = 1;
 		}
-		else if (self.weapon == WEP_ROCKET_LAUNCHER)
+		else if (checkWep == WEP_ROCKET_LAUNCHER)
 		{
-			self.weapon_next = WEP_HYPERBLASTER;
+			checkWep = WEP_HYPERBLASTER;
 			if (self.ammo_cells < 1)
 				am = 1;
 		}
-		else if (self.weapon == WEP_HYPERBLASTER)
+		else if (checkWep == WEP_HYPERBLASTER)
 		{
-			self.weapon_next = WEP_RAILGUN;
+			checkWep = WEP_RAILGUN;
 			if (self.ammo_cells < 1)
 				am = 1;
 		}
-		else if (self.weapon == WEP_RAILGUN)
+		else if (checkWep == WEP_RAILGUN)
 		{
-			self.weapon_next = WEP_BFG;
+			checkWep = WEP_BFG;
 			if (self.ammo_cells < 1)
 				am = 1;
 		}
 	
-		if ( (self.inv_weapons & self.weapon_next) && am == 0)
+		if ( (self.inv_weapons & checkWep) && am == 0 )
 		{
-			W_SetCurrentAmmo ();
+			if(checkWep != self.weapon){
+				self.weapon_next = checkWep;
+				self.weaponstate_next = WEAPON_DROPPING;
+			}
 			return;
 		}
 	}
@@ -656,78 +658,81 @@ Go to the previous weapon with ammo
 */
 void() CycleWeaponPrev =
 {
-//	local	float	it, am;
-	local	float	am;
+	local	float	am, checkWep;
 	
-//	it = self.items;
 	self.impulse = 0;
+	//cache this here, I think the loop only works when using specifically 1 var
+	checkWep = self.weapon;
 
 	while (1)
 	{
 		am = 0;
-		
-		if (self.weapon == WEP_BFG)
+		if (checkWep == WEP_BFG)
 		{
-			self.weapon_next = WEP_RAILGUN;
+			checkWep = WEP_RAILGUN;
+			if (self.inv_ammo_slugs < 1)
+				am = 1;
+		}
+		else if (checkWep == WEP_RAILGUN)
+		{
+			checkWep = WEP_HYPERBLASTER;
 			if (self.ammo_cells < 1)
 				am = 1;
 		}
-		else if (self.weapon == WEP_RAILGUN)
+		else if (checkWep == WEP_HYPERBLASTER)
 		{
-			self.weapon_next = WEP_HYPERBLASTER;
-			if (self.ammo_cells < 1)
-				am = 1;
-		}
-		else if (self.weapon == WEP_HYPERBLASTER)
-		{
-			self.weapon_next = WEP_ROCKET_LAUNCHER;
+			checkWep = WEP_ROCKET_LAUNCHER;
 			if (self.ammo_rockets < 1)
 				am = 1;
 		}
-		else if (self.weapon == WEP_ROCKET_LAUNCHER)
+		else if (checkWep == WEP_ROCKET_LAUNCHER)
 		{
-			self.weapon_next = WEP_GRENADE_LAUNCHER;
+			checkWep = WEP_GRENADE_LAUNCHER;
 			if (self.ammo_rockets < 1)
 				am = 1;
 		}
-		else if (self.weapon == WEP_GRENADE_LAUNCHER)
+		else if (checkWep == WEP_GRENADE_LAUNCHER)
 		{
-			self.weapon_next = WEP_CHAINGUN;
+			checkWep = WEP_CHAINGUN;
+			if (self.inv_ammo_bullets < 2)
+				am = 1;
+		}
+		else if (checkWep == WEP_CHAINGUN)
+		{
+			checkWep = WEP_MACHINEGUN;
 			if (self.inv_ammo_bullets < 1)
 				am = 1;
 		}
-		else if (self.weapon == WEP_CHAINGUN)
+		else if (checkWep == WEP_MACHINEGUN)
 		{
-			self.weapon_next = WEP_MACHINEGUN;
-			if (self.inv_ammo_bullets < 1)
-				am = 1;
-		}
-		else if (self.weapon == WEP_MACHINEGUN)
-		{
-			self.weapon_next = WEP_SUPERSHOTGUN;
+			checkWep = WEP_SUPERSHOTGUN;
 			if (self.ammo_shells < 2)
 				am = 1;
-		}		
-		else if (self.weapon == WEP_SUPERSHOTGUN)
+		}
+		else if (checkWep == WEP_SUPERSHOTGUN)
 		{
-			self.weapon_next = WEP_SHOTGUN;
+			checkWep = WEP_SHOTGUN;
 			if (self.ammo_shells < 1)
 				am = 1;
 		}
-		else if (self.weapon == WEP_SHOTGUN)
+		else if (checkWep == WEP_SHOTGUN)
 		{
-			self.weapon_next = WEP_BLASTER;
+			checkWep = WEP_BLASTER;
+			am = 0;
 		}
-		else if (self.weapon == WEP_BLASTER)
+		else if (checkWep == WEP_BLASTER)
 		{
-			self.weapon_next = WEP_BFG;
+			checkWep = WEP_BFG;
 			if (self.ammo_cells < 1)
 				am = 1;
 		}
-	
-		if ( (self.inv_weapons & self.weapon_next) && am == 0)
+		
+		if ( (self.inv_weapons & checkWep) && am == 0 )
 		{
-			W_SetCurrentAmmo ();
+			if(checkWep != self.weapon){
+				self.weapon_next = checkWep;
+				self.weaponstate_next = WEAPON_DROPPING;
+			}
 			return;
 		}
 	}
@@ -807,12 +812,14 @@ void() ImpulseCommands =
 
 	if (self.impulse == IMPULSE_WEAPON_NEXT)
 	{
-    CycleWeaponNext();
+		if(self.weaponstate == WEAPON_READY)
+			CycleWeaponNext();
 	
 	}
 	if (self.impulse == IMPULSE_WEAPON_PREV)
 	{
-		CycleWeaponPrev();
+		if(self.weaponstate == WEAPON_READY)
+			CycleWeaponPrev();
 	}
 
 #ifdef debug
