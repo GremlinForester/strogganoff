@@ -481,7 +481,6 @@ weapon_touch
 =============
 */
 float() W_BestWeapon;
-void() W_Draw;
 
 void() weapon_touch =
 {

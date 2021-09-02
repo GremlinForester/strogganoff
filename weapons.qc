@@ -261,15 +261,16 @@ void() CycleWeaponCommand;
 void() W_ImpulseChangeWeapon =
 {
 
-  local float wep, am;
+  local float wep;
+	
 	
 	if(self.weaponstate != WEAPON_READY){
-		self.impulse = 0;	//consume and leave
+		self.impulse = 0;	//consume events
 		return;
 	}
-		bprint("W_ChangeWeapon state = ");	//debug
-		bprint(ftos(self.weaponstate));	//debug
-		bprint("\n");	//debug
+	bprint("W_ChangeWeapon state = ");	//debug
+	bprint(ftos(self.weaponstate));	//debug
+	bprint("\n");	//debug
 		
 	switch (self.impulse){
 		case IMPULSE_USE_WEAPON1:
@@ -277,65 +278,40 @@ void() W_ImpulseChangeWeapon =
 			break;
 		case IMPULSE_USE_WEAPON2:
 			wep = WEP_SHOTGUN;
-			if (self.inv_ammo_shells < 1){
-				am = 1;
-			}
 			break;
 		case IMPULSE_USE_WEAPON3:
 			wep = WEP_SUPERSHOTGUN;
-			if (self.inv_ammo_shells < 1){
-				am = 1;
-			}
 			break;
 		case IMPULSE_USE_WEAPON4:
 			wep = WEP_MACHINEGUN;
-			if (self.inv_ammo_bullets < 1){
-				am = 1;
-			}
 			break;
 		case IMPULSE_USE_WEAPON5:
 			wep = WEP_CHAINGUN;
-			if (self.inv_ammo_bullets < 1){
-				am = 1;
-			}
 			break;
 		case IMPULSE_USE_WEAPON6:
 			wep = WEP_GRENADE_LAUNCHER;
-			if (self.inv_ammo_rockets < 1){
-				am = 1;
-			}
 			break;
 		case IMPULSE_USE_WEAPON7:
 			wep = WEP_ROCKET_LAUNCHER;
-			if (self.inv_ammo_rockets < 1){
-				am = 1;
-			}
 			break;
 		case IMPULSE_USE_WEAPON8:
 			wep = WEP_HYPERBLASTER;
-			if (self.inv_ammo_cells < 1){
-				am = 1;
-			}
 			break;
 		case IMPULSE_USE_WEAPON9:
 			wep = WEP_RAILGUN;
-			if (self.inv_ammo_shells < 1){
-				am = 1;
-			}
 			break;
 		case IMPULSE_USE_WEAPON10:
 			wep = WEP_BFG;
-			if (self.inv_ammo_cells < 1){
-				am = 1;
-			}
 			break;
 	}
 
+	self.impulse = 0;	//consume events
+	bprint("\n W_ImpulseChangeWeapon()->wep = ");	//debug
+	bprint(ftos(wep));
+	bprint("\n");
+
 	//reverting W_ChangeWeapon back to mostly quake standard,
 		//this is a different case from 'running out of ammo'
-		
-	self.impulse = 0; //consume impulse here, I guess
-
 	W_Use_Weapon(wep);
 };
 
@@ -449,13 +425,13 @@ void() CycleWeaponNext =
 		else if (checkWep == WEP_BLASTER)
 		{
 			checkWep = WEP_SHOTGUN;
-			if (self.ammo_shells < 1)
+			if (self.inv_ammo_shells < 1)
 				am = 1;
 		}
 		else if (checkWep == WEP_SHOTGUN)
 		{
 			checkWep = WEP_SUPERSHOTGUN;
-			if (self.ammo_shells < 2)
+			if (self.inv_ammo_shells < 2)
 				am = 1;
 		}               
 		else if (checkWep == WEP_SUPERSHOTGUN)
@@ -473,40 +449,37 @@ void() CycleWeaponNext =
 		else if (checkWep == WEP_CHAINGUN)
 		{
 			checkWep = WEP_GRENADE_LAUNCHER;
-			if (self.ammo_rockets < 1)
+			if (self.inv_ammo_rockets < 1)
 				am = 1;
 		}
 		else if (checkWep == WEP_GRENADE_LAUNCHER)
 		{
 			checkWep = WEP_ROCKET_LAUNCHER;
-			if (self.ammo_rockets < 1)
+			if (self.inv_ammo_rockets < 1)
 				am = 1;
 		}
 		else if (checkWep == WEP_ROCKET_LAUNCHER)
 		{
 			checkWep = WEP_HYPERBLASTER;
-			if (self.ammo_cells < 1)
+			if (self.inv_ammo_cells < 1)
 				am = 1;
 		}
 		else if (checkWep == WEP_HYPERBLASTER)
 		{
 			checkWep = WEP_RAILGUN;
-			if (self.ammo_cells < 1)
+			if (self.inv_ammo_slugs < 1)
 				am = 1;
 		}
 		else if (checkWep == WEP_RAILGUN)
 		{
 			checkWep = WEP_BFG;
-			if (self.ammo_cells < 1)
+			if (self.inv_ammo_cells < 1)
 				am = 1;
 		}
 	
 		if ( (self.inv_weapons & checkWep) && am == 0 )
 		{
-			if(checkWep != self.weapon){
-				self.weapon_next = checkWep;
-				self.weaponstate_next = WEAPON_DROPPING;
-			}
+			self.weapon_next = checkWep;
 			return;
 		}
 	}
@@ -540,19 +513,19 @@ void() CycleWeaponPrev =
 		else if (checkWep == WEP_RAILGUN)
 		{
 			checkWep = WEP_HYPERBLASTER;
-			if (self.ammo_cells < 1)
+			if (self.inv_ammo_cells < 1)
 				am = 1;
 		}
 		else if (checkWep == WEP_HYPERBLASTER)
 		{
 			checkWep = WEP_ROCKET_LAUNCHER;
-			if (self.ammo_rockets < 1)
+			if (self.inv_ammo_rockets < 1)
 				am = 1;
 		}
 		else if (checkWep == WEP_ROCKET_LAUNCHER)
 		{
 			checkWep = WEP_GRENADE_LAUNCHER;
-			if (self.ammo_rockets < 1)
+			if (self.inv_ammo_rockets < 1)
 				am = 1;
 		}
 		else if (checkWep == WEP_GRENADE_LAUNCHER)
@@ -570,13 +543,13 @@ void() CycleWeaponPrev =
 		else if (checkWep == WEP_MACHINEGUN)
 		{
 			checkWep = WEP_SUPERSHOTGUN;
-			if (self.ammo_shells < 2)
+			if (self.inv_ammo_shells < 2)
 				am = 1;
 		}
 		else if (checkWep == WEP_SUPERSHOTGUN)
 		{
 			checkWep = WEP_SHOTGUN;
-			if (self.ammo_shells < 1)
+			if (self.inv_ammo_shells < 1)
 				am = 1;
 		}
 		else if (checkWep == WEP_SHOTGUN)
@@ -587,16 +560,13 @@ void() CycleWeaponPrev =
 		else if (checkWep == WEP_BLASTER)
 		{
 			checkWep = WEP_BFG;
-			if (self.ammo_cells < 1)
+			if (self.inv_ammo_cells < 1)
 				am = 1;
 		}
 		
 		if ( (self.inv_weapons & checkWep) && am == 0 )
 		{
-			if(checkWep != self.weapon){
-				self.weapon_next = checkWep;
-				self.weaponstate_next = WEAPON_DROPPING;
-			}
+			self.weapon_next = checkWep;
 			return;
 		}
 	}

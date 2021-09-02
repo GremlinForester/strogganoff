@@ -611,17 +611,8 @@ void() W_FireShotgun =
 
 	src = self.origin + v_forward*10;
 	src_z = self.absmin_z + self.size_z * 0.7;	
-
-	//MrC: fixes a sound bug where one shell left on supershotgun makes normal shotgun sound	
-	if (self.weapon == WEP_SUPERSHOTGUN)
-	{
-		sound (self ,CHAN_WEAPON, "weapons/shotgn2.wav", 1, ATTN_NORM);
-	}
-	else
-	{
-		sound (self, CHAN_WEAPON, "weapons/guncock.wav", 1, ATTN_NORM);		
-	}
 	
+	sound (self, CHAN_WEAPON, "weapons/Shotgf1b.wav", 1, ATTN_NORM);		
 	self.punchangle_x = -2;
 	
 	self.currentammo = self.ammo_shells = self.ammo_shells - 1;
@@ -653,7 +644,7 @@ void() W_FireSuperShotgun =
 		return;
 	}
 		
-	sound (self ,CHAN_WEAPON, "weapons/shotgn2.wav", 1, ATTN_NORM);	
+	//sound (self ,CHAN_WEAPON, "weapons/shotgn2.wav", 1, ATTN_NORM);	
 
 	self.punchangle_x = -4;
 	

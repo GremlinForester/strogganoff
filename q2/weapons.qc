@@ -286,6 +286,36 @@ float(float ammoIdx) W_Ammo_Amount={
 };
 
 /*
+	vanilla Q1 uses self.items to determine which ammo icon to display for the active weapon.
+	This could be seen in the old W_SetCurrentAmmo() func in v1.06
+*/
+void(float ammoIdx) W_Ammo_toItems={
+	self.items = self.items - (self.items & (IT_SHELLS | IT_BULLETS | IT_CELLS | IT_ROCKETS));
+	switch(ammoIdx){
+		case AMMO_IDX_SHELLS:
+			self.items = self.items | IT_SHELLS;
+			return;
+			
+		case AMMO_IDX_BULLETS:
+			self.items = self.items | IT_BULLETS;
+			return;
+		
+		case AMMO_IDX_ROCKETS:
+			self.items = self.items | IT_ROCKETS;
+			return;
+		
+		case AMMO_IDX_SLUGS:
+			self.items = self.items | IT_BULLETS;
+			return;
+		
+		case AMMO_IDX_CELLS:
+			self.items = self.items | IT_CELLS;
+			return;
+	}
+	return;
+};
+
+/*
 ===============
 ChangeWeapon
 The old weapon has been dropped all the way, so make the new one
@@ -415,6 +445,7 @@ void() W_ChangeWeapon =
 
 	self.ammo_index = W_Ammo_Index(self.weapon);
 	self.currentammo = W_Ammo_Amount(self.ammo_index);
+	W_Ammo_toItems(self.ammo_index);
 	/*
 	TODO - sync player model
 	ent->client->anim_priority = ANIM_PAIN;
@@ -479,7 +510,12 @@ Make the weapon ready if there is ammo
 */
 void(float weaponId) W_Use_Weapon=
 {
-	local float ammoLeft;
+	
+	bprint("\n W_Use_Weapon()->weaponId = ");	//debug
+	bprint(ftos(weaponId));
+	bprint("\n");
+	
+	local float ammoIndex;
 	//int			ammo_index;
 	//gitem_t		*ammo_item;
 
@@ -500,9 +536,15 @@ void(float weaponId) W_Use_Weapon=
 		return;
 	}
 		
-	ammoLeft = W_Ammo_Index(weaponId);
-	ammoLeft = W_Ammo_Amount(ammoLeft);
-	if (!ammoLeft)
+	ammoIndex = W_Ammo_Index(weaponId);
+	
+	bprint("\n ammoIndex = ");	//debug
+	bprint(ftos(ammoIndex));
+	bprint("\n ammo amount = ");
+	bprint(ftos(W_Ammo_Amount(ammoIndex)));
+	bprint("\n");
+	
+	if (!W_Ammo_Amount(ammoIndex))
 	{	// don't have the ammo
 		sprint (self, "not enough ammo.\n");
 		self.weapon_next = 0;
@@ -635,6 +677,7 @@ void(float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRAME_IDLE_LAST, fl
 		if ( self.button0 )
 		{
 			//ent->client->latched_buttons &= ~BUTTON_ATTACK;
+			self.button0 = 0;
 			if ( !self.ammo_index || W_Ammo_Amount(self.ammo_index) >= 0)	//ent->client->pers.weapon->quantity
 			{
 				self.weaponframe = FRAME_FIRE_FIRST;
@@ -746,20 +789,21 @@ void() Weapon_Shotgun_Fire={
 		self.weaponframe++;
 		return;
 	}
-
-	//AngleVectors (ent->client->v_angle, forward, right, NULL);
+	
+	makevectors(self.v_angle);
 
 	//VectorScale (forward, -2, ent->client->kick_origin);
 	//ent->client->kick_angles[0] = -2;
+	
+	W_FireShotgun();
 
-	//VectorSet(offset, 0, 8,  ent->viewheight-8);
-	//P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
+	if (self.super_damage_finished > time)
+	{
+		damage *= 4;
+		kick *= 4;
+	}
 
-	//if (is_quad)
-	//{
-	//	damage *= 4;
-	//	kick *= 4;
-	//}
+	self.punchangle_x = random() * kick;
 
 	//if (deathmatch->value)
 	//	fire_shotgun (ent, start, forward, damage, kick, 500, 500, DEFAULT_DEATHMATCH_SHOTGUN_COUNT, MOD_SHOTGUN);
@@ -772,11 +816,15 @@ void() Weapon_Shotgun_Fire={
 	//gi.WriteByte (MZ_SHOTGUN | is_silenced);
 	//gi.multicast (ent->s.origin, MULTICAST_PVS);
 
+	if(self.weaponframe == 9){
+		sound(self, CHAN_AUTO, "weapons/Shotgr1b.wav", 1, ATTN_NORM);
+	}
+
 	self.weaponframe++;
-	//PlayerNoise(ent, start, PNOISE_WEAPON);
 
 	//if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
-	self.inv_ammo_shells = self.inv_ammo_shells - 1;
+	self.inv_ammo_shells = max(self.inv_ammo_shells - 1, 0);
+	self.currentammo = W_Ammo_Amount(self.ammo_index);
 };
 
 void() weapon_shotgun_update={
@@ -786,25 +834,23 @@ void() weapon_shotgun_update={
 
 void() Weapon_SuperShotgun={
 
-	local vector v, start;
+	local vector v, start, offset;
 	local float damage, kick;
 	damage = 6;
 	kick = 12;
 
-	//AngleVectors (ent->client->v_angle, forward, right, NULL);
+	makevectors(self.v_angle);
+	
+	self.punchangle_x = -2;
 
-	//VectorScale (forward, -2, ent->client->kick_origin);
-	//ent->client->kick_angles[0] = -2;
-
-	//VectorSet(offset, 0, 8,  ent->viewheight-8);
-	//P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
-
-	/*if (is_quad)
-	{
+	offset = G_ProjectSource(self.origin, VectorSet(0, self.view_ofs_z-8, 8), v_forward, v_right, '0 0 0'); 
+	
+	if (self.super_damage_finished > time){
 		damage *= 4;
 		kick *= 4;
-	}*/
+	}
 
+	//TODO - double barrel
 	/*v[PITCH] = ent->client->v_angle[PITCH];
 	v[YAW]   = ent->client->v_angle[YAW] - 5;
 	v[ROLL]  = ent->client->v_angle[ROLL];
@@ -814,17 +860,21 @@ void() Weapon_SuperShotgun={
 	AngleVectors (v, forward, NULL, NULL);
 	fire_shotgun (ent, start, forward, damage, kick, DEFAULT_SHOTGUN_HSPREAD, DEFAULT_SHOTGUN_VSPREAD, DEFAULT_SSHOTGUN_COUNT/2, MOD_SSHOTGUN);
 	*/
-	// send muzzle flash
-	/*gi.WriteByte (svc_muzzleflash);
-	gi.WriteShort (ent-g_edicts);
-	gi.WriteByte (MZ_SSHOTGUN | is_silenced);
-	gi.multicast (ent->s.origin, MULTICAST_PVS);*/
+	//TODO - muzzle flash
+	
+	
+	sound (self ,CHAN_WEAPON, "weapons/Sshotf1b.wav", 1, ATTN_NORM);
+	//TODO - weapon fire generics.
+	W_FireSuperShotgun();
 	
 	self.weaponframe++;
 	//PlayerNoise(ent, start, PNOISE_WEAPON);
 
+	//TODO - infinite ammo flag?
 	//if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
-	self.inv_ammo_shells = self.inv_ammo_shells - 2;
+	self.inv_ammo_shells = max(self.inv_ammo_shells - 2,0);
+	self.currentammo = self.inv_ammo_shells;
+	//TODO - ammo decrementing
 };
 void() weapon_supershotg_update={
 
@@ -863,20 +913,29 @@ void() Weapon_MachineGun_Fire={
 		return;
 	}
 
-	//if (is_quad)
-	//{
-	//	damage *= 4;
-	//	kick *= 4;
-	//}
-
-	/*for (i=1 ; i<3 ; i++)
+	if (self.super_damage_finished > time)
 	{
-		ent->client->kick_origin[i] = crandom() * 0.35;
-		ent->client->kick_angles[i] = crandom() * 0.7;
+		damage *= 4;
+		kick *= 4;
 	}
-	ent->client->kick_origin[0] = crandom() * 0.35;
-	ent->client->kick_angles[0] = ent->client->machinegun_shots * -1.5;*/
 
+	for (i=1 ; i<3 ; i++)
+	{
+		//ent->client->kick_origin[i] = crandom() * 0.35;
+		if(i==1){
+			self.punchangle_y = crandom() * 0.7;
+		}
+		else if(i==2){
+			self.punchangle_z = crandom() * 0.7;
+		}
+	}
+	//ent->client->kick_origin[0] = crandom() * 0.35;
+	
+	//note: this is "the" signature machine gun vertical kick...which is dumb in single player unless balance.
+		//for now, we ain't using it. - Subject9x
+	//self.punchangle_x = self.machinegun_shots * -1.5;
+	
+	
 	// raise the gun as it is firing
 	if (!deathmatch)
 	{
@@ -899,9 +958,16 @@ void() Weapon_MachineGun_Fire={
 
 	PlayerNoise(ent, start, PNOISE_WEAPON);
 */
-	//if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
-		self.inv_ammo_bullets = self.inv_ammo_bullets - 1;
 
+	makevectors(self.v_angle);
+	
+	offset = VectorSet(0, self.view_ofs_z-8, 8);
+	start = G_ProjectSource(self.origin, offset, v_forward, v_right, '0 0 0');
+
+	FireBullet(damage);
+	//if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
+	self.inv_ammo_bullets = max(self.inv_ammo_bullets - 1, 0);
+	self.currentammo = W_Ammo_Amount(self.ammo_index);
 	/*ent->client->anim_priority = ANIM_ATTACK;
 	if (ent->client->ps.pmove.pm_flags & PMF_DUCKED)
 	{
@@ -930,7 +996,7 @@ void() Weapon_Chaingun_Fire={
 		damage = 8;
 
 	if (self.weaponframe == 5)
-		sound(self, CHAN_AUTO, "weapons/chngnu1a.wav", 1, ATTN_IDLE);
+		sound(self, CHAN_WEAPON, "weapons/chngnu1a.wav", 0.5, ATTN_IDLE);
 
 	if ((self.weaponframe == 14) && !self.button0)
 	{
@@ -951,12 +1017,14 @@ void() Weapon_Chaingun_Fire={
 	if (self.weaponframe == 22)
 	{
 		//ent->client->weapon_sound = 0;
-		sound(self, CHAN_AUTO, "weapons/chngnd1a.wav", 1, ATTN_IDLE);
+		sound(self, CHAN_WEAPON, "", 1, ATTN_IDLE);
+		sound(self, CHAN_WEAPON, "weapons/chngnd1a.wav", 1, ATTN_IDLE);
 	}
 	else
 	{
 		//ent->client->weapon_sound = gi.soundindex("weapons/chngnl1a.wav");
-		sound(self, CHAN_AUTO, "weapons/chngnl1a.wav", 1, ATTN_IDLE);
+		sound(self, CHAN_WEAPON, "", 1, ATTN_IDLE);
+		sound(self, CHAN_WEAPON, "weapons/chngnl1a.wav", 1, ATTN_IDLE);
 	}
 
 	//ent->client->anim_priority = ANIM_ATTACK;
@@ -997,13 +1065,13 @@ void() Weapon_Chaingun_Fire={
 		return;
 	}
 
-	/*if (is_quad)
+	if (self.super_damage_finished > time)
 	{
 		damage *= 4;
 		kick *= 4;
-	}*/
+	}
 	
-		for (i=0 ; i<3 ; i++)
+	for (i=0 ; i<3 ; i = i + 1)
 	{
 		//ent->client->kick_origin[i] = crandom() * 0.35;
 		//ent->client->kick_angles[i] = crandom() * 0.7;
@@ -1018,7 +1086,7 @@ void() Weapon_Chaingun_Fire={
 		}
 	}
 
-	for (i=0 ; i<shots ; i++)
+	for (i=0 ; i < shots ; i=i+1)
 	{
 		// get start / end positions
 		//AngleVectors (ent->client->v_angle, forward, right, up);
@@ -1028,7 +1096,7 @@ void() Weapon_Chaingun_Fire={
 		//P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
 
 		//fire_bullet (ent, start, forward, damage, kick, DEFAULT_BULLET_HSPREAD, DEFAULT_BULLET_VSPREAD, MOD_CHAINGUN);
-		FireBullet(WEAPON_CHAINGUN_DAMAGE);
+		FireBullet(damage);
 	}
 
 	// send muzzle flash
@@ -1041,7 +1109,8 @@ void() Weapon_Chaingun_Fire={
 
 	//if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
 	//ent->client->pers.inventory[ent->client->ammo_index] -= shots;
-	self.inv_ammo_bullets -= shots;
+	self.inv_ammo_bullets = max(self.inv_ammo_bullets - shots, 0);
+	self.currentammo = W_Ammo_Amount(self.ammo_index);
 
 };
 
@@ -1080,7 +1149,8 @@ void() Weapon_GrenadeLauncher_Fire={
 	//PlayerNoise(ent, start, PNOISE_WEAPON);
 
 	//if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
-	self.inv_ammo_rockets = self.inv_ammo_rockets - 1;
+	self.inv_ammo_rockets = max(self.inv_ammo_rockets - 1, 0);;
+	self.currentammo = W_Ammo_Amount(self.ammo_index);
 
 };
 
@@ -1091,7 +1161,8 @@ void() weapon_nadelaunch_update={
 void() Weapon_RocketLauncher_Fire={
 	W_FireRocket();
 	
-	self.inv_ammo_rockets -= 1;
+	self.inv_ammo_rockets = max(self.inv_ammo_rockets - 1, 0);;
+	self.currentammo = W_Ammo_Amount(self.ammo_index);
 	self.weaponframe++;
 };
 
@@ -1106,6 +1177,7 @@ void() Weapon_Hyperblaster_Fire={
 	local vector offset;
 
 	//ent->client->weapon_sound = gi.soundindex("weapons/hyprbl1a.wav");
+	
 
 	if (!self.button0)
 	{
@@ -1139,8 +1211,10 @@ void() Weapon_Hyperblaster_Fire={
 			else
 				damage = 20;
 			//Blaster_Fire (ent, offset, damage, true, effect);
+			W_FireBlaster();
 			//if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
-			self.inv_ammo_cells = self.inv_ammo_cells - 1;
+			self.inv_ammo_cells = max(self.inv_ammo_cells - 1, 0);
+			self.currentammo = W_Ammo_Amount(self.ammo_index);
 
 			/*ent->client->anim_priority = ANIM_ATTACK;
 			if (ent->client->ps.pmove.pm_flags & PMF_DUCKED)
@@ -1211,7 +1285,8 @@ void() Weapon_Railgun_Fire={
 	//PlayerNoise(ent, start, PNOISE_WEAPON);
 
 	//if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
-	self.inv_ammo_slugs = self.inv_ammo_slugs - 1;
+	self.inv_ammo_slugs = max(self.inv_ammo_slugs - 1, 0);
+	self.currentammo = W_Ammo_Amount(self.ammo_index);
 };
 void() weapon_railgun_update={
 
@@ -1270,7 +1345,8 @@ void() Weapon_BFG_Fire={
 	//PlayerNoise(ent, start, PNOISE_WEAPON);
 
 	//if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
-	self.inv_ammo_cells = self.inv_ammo_cells - 50;
+	self.inv_ammo_cells = max(self.inv_ammo_cells - 50, 0);
+	self.currentammo = W_Ammo_Amount(self.ammo_index);
 };
 
 void() weapon_bfg_update={

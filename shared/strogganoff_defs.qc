@@ -200,6 +200,14 @@ Functions converted from Quake 2 to QC
 ============
 */
 
+vector (float vX, float vY, float vZ ) VectorSet={
+	local vector v;
+	v_x = vX;
+	v_y = vY;
+	v_z = vZ;
+	return v;
+};
+
 vector (vector point, vector distance, vector forward, vector right, vector result) G_ProjectSource =
 {
 	result_x = point_x + forward_x * distance_x + right_x * distance_y;
