@@ -101,13 +101,44 @@ float START_ON = 1;
 
 .string sightSound;
 
-.float weaponstate;
-.float weaponstate_next;
-.float weapon_next;
 .float weapon_anim_start;
 .float weapon_frame_end;
+
+//Q2 weapon impl flattened down to player
+//mimic ammo_index value in Q2
+enum
+{
+	AMMO_IDX_NONE,
+	AMMO_IDX_SHELLS,
+	AMMO_IDX_BULLETS,
+	AMMO_IDX_ROCKETS,
+	AMMO_IDX_SLUGS,
+	AMMO_IDX_CELLS
+};
+.float ammo_index;
+
+.float grenade_time;
+.float machinegun_shots;
+
+.float weapon_next;
+.float() weapon_update_func;
+.float lastweapon;
+.float weaponstate;
+.float weaponstate_next;
 .float weapon_think;
-.void() weapon_state_attack_frames;
+.float wpn_frame_active_last;
+.float wpn_frame_fire_last;
+.float wpn_frame_idle_last;
+.float wpn_frame_away_last;
+
+typedef struct
+{
+	float pause[16];
+	float fire[16];
+} frame_t;
+
+frame_t wpnFramesFire[10];
+frame_t wpnFamesPause[10];
 
 .float state;
 .float bCrouched;
@@ -287,8 +318,8 @@ WEAPONS
 #define	WEP_BLASTER_ATTACKTIME          0.5
 #define	WEP_SHOTGUN_ATTACKTIME          0.9
 #define	WEP_SUPERSHOTGUN_ATTACKTIME     0.9
-#define	WEP_MACHINEGUN_ATTACKTIME       0.15
-#define	WEP_CHAINGUN_ATTACKTIME         0.05
+#define	WEP_MACHINEGUN_ATTACKTIME       0.05
+#define	WEP_CHAINGUN_ATTACKTIME         0.01
 #define	WEP_GRENADE_LAUNCHER_ATTACKTIME 0.8
 #define	WEP_ROCKET_LAUNCHER_ATTACKTIME  0.8
 #define	WEP_HYPERBLASTER_ATTACKTIME     0.135

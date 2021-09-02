@@ -692,7 +692,6 @@ void() PutClientInServer =
   self.weapon_next = self.weapon;
   self.weapon = 0;
   self.inv_weapons = self.inv_weapons | WEP_BLASTER;
-  self.weapon_state_attack_frames = SUB_Null; //ini
   
 	if (deathmatch || coop)
 	{
@@ -1468,7 +1467,10 @@ void() PlayerPostThink =
 	
 // do weapon stuff
 	W_WeaponFrame ();
-	W_WeaponAnimate();
+	
+	if(self.weapon_update_func && self.weapon_update_func != SUB_Null){
+		W_WeaponAnimate();
+	}
 	
 // check to see if player landed and play landing sound
 	if ((self.jump_flag < -100) && (self.flags & FL_ONGROUND) && (self.health > 0))

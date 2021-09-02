@@ -35,7 +35,8 @@ combat.qc
 items.qc
 //weaponsys_anim.qc
 weapons_projectiles.qc
-q2/player_weapons.qc
+//q2/player_weapons.qc
+q2/weapons.qc
 weapons.qc
 world.qc
 client.qc

@@ -245,50 +245,8 @@ void() W_Attack =
 	self.show_hostile = time + 1;	// wake monsters up
 	
 	//immediate interrupt
-	self.weaponstate =  self.weaponstate_next = WEAPON_FIRING;
-	self.weapon_anim_start = TRUE;
-	
-	switch (self.weapon)
-	{		
-		case WEP_BLASTER:
-			//W_FireBlaster();
-			self.attack_finished = time + WEP_BLASTER_ATTACKTIME;
-			break;
-		case WEP_SHOTGUN:
-			//W_FireShotgun ();
-			self.attack_finished = time + WEP_SHOTGUN_ATTACKTIME;
-			break;
-		case WEP_SUPERSHOTGUN:
-			//W_FireSuperShotgun ();
-			self.attack_finished = time + WEP_SUPERSHOTGUN_ATTACKTIME;
-			break;
-		case WEP_MACHINEGUN:
-			self.attack_finished = time + WEP_MACHINEGUN_ATTACKTIME;
-			break;
-		case WEP_CHAINGUN:
-			self.state = STATE_ATTACKING;
-			self.attack_finished = time + WEP_CHAINGUN_ATTACKTIME;
-			break;
-		case WEP_GRENADE_LAUNCHER:
-			//W_FireGrenade();
-			self.attack_finished = time + WEP_GRENADE_LAUNCHER_ATTACKTIME;
-			break;
-		case WEP_ROCKET_LAUNCHER:
-			//W_FireRocket();
-			self.attack_finished = time + WEP_ROCKET_LAUNCHER_ATTACKTIME;
-			break;
-		case WEP_HYPERBLASTER:
-			//W_FireBlaster();
-			self.attack_finished = time + WEP_HYPERBLASTER_ATTACKTIME;
-			break;
-		case WEP_RAILGUN:
-			//FireBullet();
-			self.attack_finished = time + WEP_RAILGUN_ATTACKTIME;
-			break;
-		case WEP_BFG:
-			//self.weaponframe = 9;
-			self.attack_finished = time + WEP_BFG_ATTACKTIME;
-			break;
+	if(self.weaponstate != WEAPON_FIRING){
+		self.weaponstate_next = WEAPON_FIRING;
 	}
 };
 
@@ -300,7 +258,7 @@ W_ChangeWeapon
 */
 void() CycleWeaponCommand;
 
-void() W_ChangeWeapon =
+/*void() W_ChangeWeapon =
 {
 
   local float wep, am;
@@ -403,7 +361,7 @@ void() W_ChangeWeapon =
 	}
 	self.weapon_next = wep;
 	self.weaponstate_next = WEAPON_DROPPING;
-};
+};*/
 
 /*
 ============
@@ -730,11 +688,13 @@ void() ImpulseCommands =
 			self.weaponstate = WEAPON_READY;
 			sound (self, CHAN_WEAPON, "weapons/noammo.wav", 0.1, ATTN_NORM);
 			sound (self, CHAN_WEAPON2, "weapons/noammo.wav", 0.1, ATTN_NORM);
-			W_ChangeWeapon ();
+			//W_ChangeWeapon ();
+			W_Use_Weapon();
 		}
 		else
 		{
-			W_ChangeWeapon ();
+			//W_ChangeWeapon ();
+			W_Use_Weapon();
 		}
 	}
 
@@ -785,14 +745,12 @@ void() W_WeaponFrame =
 		ImpulseCommands ();
 	
 	// check for attack
-	if(self.weaponstate == WEAPON_READY){
+	if(self.weaponstate == WEAPON_READY || time > self.attack_finished){
 		if (self.button0)
 		{
-			if(time > self.attack_finished){
-				self.state = STATE_ATTACKING;
-				SuperDamageSound ();
-				W_Attack ();
-			}
+			self.state = STATE_ATTACKING;
+			SuperDamageSound ();
+			W_Attack ();
 		}
 	}
 };

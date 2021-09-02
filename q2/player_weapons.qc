@@ -4,16 +4,18 @@
 
 */
 
-void() weapon_frames_blaster_attack;
-void() weapon_frames_shotgun_attack;
-void() weapon_frames_supershot_attack;
-void() weapon_frames_machineg_attack;
-void() weapon_frames_chaingun_attack;
-void() weapon_frames_nadelaunch_attack;
-void() weapon_frames_rocketlaunch_attack;
-void() weapon_frames_hyperb_attack;
-void() weapon_frames_rail_attack;
-void() weapon_frames_bfg_attack;
+//attack funcs return bool TRUE/FALSE if thge attack funcs
+//	took control of the attack state.
+float() weapon_frames_blaster_attack;
+float() weapon_frames_shotgun_attack;
+float() weapon_frames_supershot_attack;
+float() weapon_frames_machineg_attack;
+float() weapon_frames_chaingun_attack;
+float() weapon_frames_nadelaunch_attack;
+float() weapon_frames_rocketlaunch_attack;
+float() weapon_frames_hyperb_attack;
+float() weapon_frames_rail_attack;
+float() weapon_frames_bfg_attack;
 
 
 void() weapon_state_idle={
@@ -243,60 +245,73 @@ void() weapon_state_activate={
 
 
 void() weapon_state_fire={
-  
+	local float override;
 	if(self.weapon_anim_start == TRUE){
 		self.weapon_anim_start = FALSE;
 		self.weapon_state_attack_frames = SUB_Null;
+		self.weapon_has_spin = FALSE;
 		switch(self.weapon){
 			case WEP_BLASTER:
 				self.weaponframe = WEP_BLASTER_FIRE_FIRSTFRAME;
 				self.weapon_frame_end = WEP_BLASTER_FIRE_LASTFRAME;
 				self.weapon_state_attack_frames = weapon_frames_blaster_attack;
+				self.attack_finished = time + WEP_BLASTER_ATTACKTIME;
 				break;
 			case WEP_SHOTGUN:
 				self.weaponframe = WEP_SHOTGUN_FIRE_FIRSTFRAME;
 				self.weapon_frame_end = WEP_SHOTGUN_FIRE_LASTFRAME;
 				self.weapon_state_attack_frames = weapon_frames_shotgun_attack;
+				self.attack_finished = time + WEP_SHOTGUN_ATTACKTIME;
 				break;
 			case WEP_SUPERSHOTGUN:
 				self.weaponframe = WEP_SUPERSHOTGUN_FIRE_FIRSTFRAME;
 				self.weapon_frame_end = WEP_SUPERSHOTGUN_FIRE_LASTFRAME;
 				self.weapon_state_attack_frames = weapon_frames_supershot_attack;
+				self.attack_finished = time + WEP_SUPERSHOTGUN_ATTACKTIME;
 				break;
 			case WEP_MACHINEGUN:
 				self.weaponframe = WEP_MACHINEGUN_FIRE_FIRSTFRAME;
 				self.weapon_frame_end = WEP_MACHINEGUN_FIRE_LASTFRAME;
 				self.weapon_state_attack_frames = weapon_frames_machineg_attack;
+				self.attack_finished = time + WEP_MACHINEGUN_ATTACKTIME;
 				break;
 			case WEP_CHAINGUN:
 				self.weaponframe = WEP_CHAINGUN_FIRE_FIRSTFRAME;
 				self.weapon_frame_end = WEP_CHAINGUN_FIRE_LASTFRAME;
 				self.weapon_state_attack_frames = weapon_frames_chaingun_attack;
+				self.weapon_has_spin = TRUE;
+				self.attack_finished = time + WEP_CHAINGUN_ATTACKTIME;
 				break;
 			case WEP_GRENADE_LAUNCHER:
 				self.weaponframe = WEP_NADELAUNCH_FIRE_FIRSTFRAME;
 				self.weapon_frame_end = WEP_NADELAUNCH_FIRE_LASTFRAME;
 				self.weapon_state_attack_frames = weapon_frames_nadelaunch_attack;
+				self.attack_finished = time + WEP_GRENADE_LAUNCHER_ATTACKTIME;
 				break;
 			case WEP_ROCKET_LAUNCHER:
 				self.weaponframe = WEP_ROCKETLAUNCH_FIRE_FIRSTFRAME;
 				self.weapon_frame_end = WEP_ROCKETLAUNCH_FIRE_LASTFRAME;
 				self.weapon_state_attack_frames = weapon_frames_rocketlaunch_attack;
+				self.attack_finished = time + WEP_ROCKET_LAUNCHER_ATTACKTIME;
 				break;
 			case WEP_HYPERBLASTER:
 				self.weaponframe = WEP_HYPERBLAST_FIRE_FIRSTFRAME;
 				self.weapon_frame_end = WEP_HYPERBLAST_FIRE_LASTFRAME;
 				self.weapon_state_attack_frames = weapon_frames_hyperb_attack;
+				self.weapon_has_spin = TRUE;
+				self.attack_finished = time + WEP_HYPERBLASTER_ATTACKTIME;
 				break;
 			case WEP_RAILGUN:
 				self.weaponframe = WEP_RAILGUN_FIRE_FIRSTFRAME;
 				self.weapon_frame_end = WEP_RAILGUN_FIRE_LASTFRAME;
 				self.weapon_state_attack_frames = weapon_frames_rail_attack;
+				self.attack_finished = time + WEP_RAILGUN_ATTACKTIME;
 				break;
 			case WEP_BFG:
 				self.weaponframe = WEP_BFG_FIRE_FIRSTFRAME;
 				self.weapon_frame_end = WEP_BFG_FIRE_LASTFRAME;
 				self.weapon_state_attack_frames = weapon_frames_bfg_attack;
+				self.attack_finished = time + WEP_BFG_ATTACKTIME;
 				break;
 		}
 	}
@@ -304,10 +319,18 @@ void() weapon_state_fire={
 	if( time > self.weapon_think){
 		self.weapon_think = time + 0.1;
 		if(self.weapon_state_attack_frames != SUB_Null){
-			self.weapon_state_attack_frames();
+			override = self.weapon_state_attack_frames();
+			if(override){
+				//attack frame should say what happens!
+				return;
+			}
 		}
 		if(self.weaponframe == self.weapon_frame_end){
 			if(!W_CheckNoAmmo()){
+				return;
+			}
+			if(self.weapon_has_spin ){
+				self.weaponstate_next = WEAPON_SPINDOWN;
 				return;
 			}
 			self.weaponstate_next = WEAPON_READY;
@@ -337,7 +360,8 @@ void() weapon_state_spin={
             
             directly to override the state transition
 */
-void() W_WeaponAnimate={
+/*void() W_WeaponAnimate={
+
 	if(self.weaponstate != self.weaponstate_next){
 		self.weaponstate = self.weaponstate_next;
 		self.weapon_anim_start = TRUE;
@@ -360,7 +384,7 @@ void() W_WeaponAnimate={
 			break;
 	}
 	
-};
+};*/
 
 /*
   Attack frames per weapon.
@@ -374,7 +398,7 @@ void() W_WeaponAnimate={
   to a single chunk of code at a time.
 */
 
-void() weapon_frames_blaster_attack={
+float() weapon_frames_blaster_attack={
 	switch (self.weaponframe)
 	{
 		case WEP_BLASTER_FIRE_FIRSTFRAME:
@@ -382,9 +406,10 @@ void() weapon_frames_blaster_attack={
 			W_FireBlaster();
 		break;
 	}
+	return FALSE;
 };
 
-void() weapon_frames_shotgun_attack={
+float() weapon_frames_shotgun_attack={
 	switch (self.weaponframe)
 	{
 		case WEP_SHOTGUN_FIRE_FIRSTFRAME:
@@ -392,9 +417,10 @@ void() weapon_frames_shotgun_attack={
 			W_FireShotgun();
 		break;
 	}
+	return FALSE;
 };
 
-void() weapon_frames_supershot_attack={
+float() weapon_frames_supershot_attack={
 	switch (self.weaponframe)
 	{
 		case WEP_SUPERSHOTGUN_FIRE_FIRSTFRAME:
@@ -402,9 +428,10 @@ void() weapon_frames_supershot_attack={
 			W_FireSuperShotgun();
 		break;
 	}
+	return FALSE;
 };
 
-void() weapon_frames_machineg_attack={
+float() weapon_frames_machineg_attack={
 	switch (self.weaponframe)
 	{
 		case WEP_MACHINEGUN_FIRE_FIRSTFRAME:
@@ -412,19 +439,132 @@ void() weapon_frames_machineg_attack={
 			FireBullet(WEAPON_CHAINGUN_DAMAGE);
 		break;
 	}
+	return FALSE;
 };
 
-void() weapon_frames_chaingun_attack={
-	switch (self.weaponframe)
-	{
-		case WEP_CHAINGUN_FIRE_FIRSTFRAME:
-			//q2playeronly_4attackframes ();
-			FireBullet(WEAPON_CHAINGUN_DAMAGE);
-		break;
+
+/*
+	frame activate last 4
+	frame fire last 31
+	frame idle last 61
+	frame putaway last 64
+*/
+float() weapon_frames_chaingun_attack={
+	
+	local float shots, i;
+	
+	bprint(ftos(self.weaponframe));
+	bprint("\n");	//debug
+	
+	if(self.weaponframe == WEP_CHAINGUN_FIRE_FIRSTFRAME){
+		sound(self, CHAN_WEAPON, "weapons/chngnu1a.wav", 0.5, ATTN_IDLE);
 	}
+	
+	if(self.weaponframe == 14 && !self.button0){
+		self.weaponframe = self.weapon_frame_end;
+		return FALSE;
+	}
+	else if(self.weaponframe == 21 && self.button0 && self.inv_ammo_bullets > 0){
+		self.weaponframe = 15;
+	}
+	else{
+		self.weaponframe++;
+	}
+	
+	if(self.weaponframe == 22){
+		FireBullet(WEAPON_CHAINGUN_DAMAGE);
+		sound(self, CHAN_WEAPON, "weapons/chngnd1a.wav", 0.5, ATTN_IDLE);
+	}
+	else{
+		sound(self, CHAN_WEAPON, "weapons/chngnl1a.wav", 0.5, ATTN_IDLE);
+	}
+	
+	/*
+		Q2 source for player animations.
+	ent->client->anim_priority = ANIM_ATTACK;
+	if (ent->client->ps.pmove.pm_flags & PMF_DUCKED)
+	{
+		ent->s.frame = FRAME_crattak1 - (ent->client->ps.gunframe & 1);
+		ent->client->anim_end = FRAME_crattak9;
+	}
+	else
+	{
+		ent->s.frame = FRAME_attack1 - (ent->client->ps.gunframe & 1);
+		ent->client->anim_end = FRAME_attack8;
+	}
+	*/
+	
+	if(self.weaponframe <= 9){
+		shots = 1;
+	}
+	else if(self.weaponframe <= 14){
+		if (self.button0)
+			shots = 2;
+		else
+			shots = 1;
+	}
+	else{
+		shots = 3;
+	}
+	
+	if(self.inv_ammo_bullets < shots){
+		shots = self.inv_ammo_bullets;
+	}
+	
+	if(!shots){
+		if(time > self.attack_finished){
+			sound(self, CHAN_BODY, "weapons/noammo.wav", 1.0, ATTN_NORM);
+			self.attack_finished = time + 1;
+		}
+		self.weaponframe = self.weapon_frame_end;
+		return FALSE;
+	}
+	/*
+		Q2 source - quad
+		if (is_quad)
+		{
+			damage *= 4;
+			kick *= 4;
+		}
+	*/
+	
+	for (i=0 ; i<3 ; i++)
+	{
+		//ent->client->kick_origin[i] = crandom() * 0.35;
+		//ent->client->kick_angles[i] = crandom() * 0.7;
+		if(i == 0){
+			self.punchangle_x = crandom() * 0.7;
+		}
+		else if(i == 1){
+			self.punchangle_y = crandom() * 0.7;
+		}
+		else{
+			self.punchangle_z = crandom() * 0.7;
+		}
+	}
+	
+	for (i=0 ; i<shots ; i++)
+	{
+		// get start / end positions
+		/*AngleVectors (ent->client->v_angle, forward, right, up);
+		r = 7 + crandom()*4;
+		u = crandom()*4;
+		VectorSet(offset, 0, r, u + ent->viewheight-8);
+		P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
+
+		fire_bullet (ent, start, forward, damage, kick, DEFAULT_BULLET_HSPREAD, DEFAULT_BULLET_VSPREAD, MOD_CHAINGUN);
+		*/
+		FireBullet(WEAPON_CHAINGUN_DAMAGE);
+	}
+	
+	self.weaponstate_next = WEAPON_FIRING;
+	if(self.weaponframe == self.weapon_frame_end){
+		self.weaponframe = WEP_CHAINGUN_FIRE_FIRSTFRAME;
+	}
+	return TRUE;
 };
 
-void() weapon_frames_nadelaunch_attack={
+float() weapon_frames_nadelaunch_attack={
 	switch (self.weaponframe)
 	{
 		case WEP_NADELAUNCH_FIRE_FIRSTFRAME:
@@ -432,9 +572,10 @@ void() weapon_frames_nadelaunch_attack={
 			W_FireGrenade();
 		break;
 	}
+	return FALSE;
 };
 
-void() weapon_frames_rocketlaunch_attack={
+float() weapon_frames_rocketlaunch_attack={
 	switch (self.weaponframe)
 	{
 		case WEP_ROCKETLAUNCH_FIRE_FIRSTFRAME:
@@ -442,9 +583,10 @@ void() weapon_frames_rocketlaunch_attack={
 			W_FireRocket();
 		break;
 	}
+	return FALSE;
 };
 
-void() weapon_frames_hyperb_attack={
+float() weapon_frames_hyperb_attack={
 	switch (self.weaponframe)
 	{
 		case 6:
@@ -468,9 +610,10 @@ void() weapon_frames_hyperb_attack={
 			sound (self, CHAN_WEAPON2, "weapons/Hyprbd1a.wav", 1, ATTN_NORM);
 		break;
 	}
+	return TRUE;
 };
 
-void() weapon_frames_rail_attack={
+float() weapon_frames_rail_attack={
 	switch (self.weaponframe)
 	{
 		case WEP_RAILGUN_FIRE_FIRSTFRAME:
@@ -480,9 +623,10 @@ void() weapon_frames_rail_attack={
 			//fireRail(WEAPON_RAILGUN_DAMAGE);
 		break;
 	}
+	return FALSE;
 };
 
-void() weapon_frames_bfg_attack={
+float() weapon_frames_bfg_attack={
 	switch (self.weaponframe)
 	{
 		case 9:
@@ -493,4 +637,5 @@ void() weapon_frames_bfg_attack={
 		W_fireBFG();
 		break;
 	}
+	return FALSE;
 };
