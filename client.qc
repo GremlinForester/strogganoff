@@ -2,6 +2,7 @@
 // prototypes
 void () W_WeaponFrame;
 void() W_SetCurrentAmmo;
+void() W_ChangeWeapon;
 void() player_pain;
 //void() q2player_stand1;
 void (vector org) spawn_tfog;
@@ -687,11 +688,9 @@ void() PutClientInServer =
 	AttachTPWeapon();
 	
   //setup player v_wep state machine
-  self.weaponstate = 0;
-	self.weaponstate_next = WEAPON_ACTIVATING;
   self.weapon_next = self.weapon;
-  self.weapon = 0;
   self.inv_weapons = self.inv_weapons | WEP_BLASTER;
+	W_ChangeWeapon();
   
 	if (deathmatch || coop)
 	{

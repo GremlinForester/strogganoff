@@ -235,8 +235,8 @@ void() W_Attack =
 {
 	local float r;
 	
-	if (!W_CheckNoAmmo ())
-		return;
+	//if (!W_CheckNoAmmo ())
+		//return;
 	
 	//if(self.weaponstate == WEAPON_FIRING){
 	///  return;
@@ -245,9 +245,9 @@ void() W_Attack =
 	self.show_hostile = time + 1;	// wake monsters up
 	
 	//immediate interrupt
-	if(self.weaponstate != WEAPON_FIRING){
-		self.weaponstate_next = WEAPON_FIRING;
-	}
+	//if(self.weaponstate != WEAPON_FIRING){
+	//	self.weaponstate_next = WEAPON_FIRING;
+	//}
 };
 
 /*
@@ -258,7 +258,7 @@ W_ChangeWeapon
 */
 void() CycleWeaponCommand;
 
-/*void() W_ChangeWeapon =
+void() W_ImpulseChangeWeapon =
 {
 
   local float wep, am;
@@ -277,13 +277,13 @@ void() CycleWeaponCommand;
 			break;
 		case IMPULSE_USE_WEAPON2:
 			wep = WEP_SHOTGUN;
-			if (self.ammo_shells < 1){
+			if (self.inv_ammo_shells < 1){
 				am = 1;
 			}
 			break;
 		case IMPULSE_USE_WEAPON3:
 			wep = WEP_SUPERSHOTGUN;
-			if (self.ammo_shells < 1){
+			if (self.inv_ammo_shells < 1){
 				am = 1;
 			}
 			break;
@@ -301,39 +301,34 @@ void() CycleWeaponCommand;
 			break;
 		case IMPULSE_USE_WEAPON6:
 			wep = WEP_GRENADE_LAUNCHER;
-			if (self.ammo_rockets < 1){
+			if (self.inv_ammo_rockets < 1){
 				am = 1;
 			}
 			break;
 		case IMPULSE_USE_WEAPON7:
 			wep = WEP_ROCKET_LAUNCHER;
-			if (self.ammo_rockets < 1){
+			if (self.inv_ammo_rockets < 1){
 				am = 1;
 			}
 			break;
 		case IMPULSE_USE_WEAPON8:
 			wep = WEP_HYPERBLASTER;
-			if (self.ammo_cells < 1){
+			if (self.inv_ammo_cells < 1){
 				am = 1;
 			}
 			break;
 		case IMPULSE_USE_WEAPON9:
 			wep = WEP_RAILGUN;
-			if (self.ammo_shells < 1){
+			if (self.inv_ammo_shells < 1){
 				am = 1;
 			}
 			break;
 		case IMPULSE_USE_WEAPON10:
 			wep = WEP_BFG;
-			if (self.ammo_cells < 1){
+			if (self.inv_ammo_cells < 1){
 				am = 1;
 			}
 			break;
-	}
-
-	if(self.weapon == wep){  
-		//same weapon pressed, do nothing.
-		return;
 	}
 
 	//reverting W_ChangeWeapon back to mostly quake standard,
@@ -341,27 +336,8 @@ void() CycleWeaponCommand;
 		
 	self.impulse = 0; //consume impulse here, I guess
 
-	if(wep == WEP_BLASTER){
-		//infinite ammo, so we can always switch to it.
-		self.weapon_next = wep;
-		self.weaponstate_next = WEAPON_DROPPING;
-		return;
-	}
-
-	if (!(self.inv_weapons & wep))
-	{	// don't have the weapon or the ammo
-		sprint (self, "no weapon.\n");
-		return;
-	}
-
-	if (am)
-	{	// don't have the ammo
-		sprint (self, "not enough ammo.\n");
-		return;
-	}
-	self.weapon_next = wep;
-	self.weaponstate_next = WEAPON_DROPPING;
-};*/
+	W_Use_Weapon(wep);
+};
 
 /*
 ============
@@ -683,19 +659,18 @@ void() ImpulseCommands =
 	
 	if (self.impulse >= IMPULSE_USE_WEAPON1 && self.impulse <= IMPULSE_USE_WEAPON10)
 	{
-		if (self.weaponstate == WEAPON_SPINDOWN)
+			W_ImpulseChangeWeapon();
+		/*if (self.weaponstate == WEAPON_SPINDOWN)
 		{
 			self.weaponstate = WEAPON_READY;
 			sound (self, CHAN_WEAPON, "weapons/noammo.wav", 0.1, ATTN_NORM);
 			sound (self, CHAN_WEAPON2, "weapons/noammo.wav", 0.1, ATTN_NORM);
-			//W_ChangeWeapon ();
-			W_Use_Weapon();
+			W_ImpulseChangeWeapon();
 		}
 		else
 		{
-			//W_ChangeWeapon ();
-			W_Use_Weapon();
-		}
+			W_ImpulseChangeWeapon();
+		}*/
 	}
 
 	if (self.impulse == IMPULSE_WEAPON_NEXT)

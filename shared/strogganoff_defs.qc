@@ -121,24 +121,17 @@ enum
 .float machinegun_shots;
 
 .float weapon_next;
-.float() weapon_update_func;
 .float lastweapon;
 .float weaponstate;
 .float weaponstate_next;
 .float weapon_think;
-.float wpn_frame_active_last;
-.float wpn_frame_fire_last;
-.float wpn_frame_idle_last;
-.float wpn_frame_away_last;
+.float() weapon_update_func;
+.float() weapon_pause_frames;	// these really need to be structs
+.float() weapon_fire_frames;
 
-typedef struct
-{
-	float pause[16];
-	float fire[16];
-} frame_t;
 
-frame_t wpnFramesFire[10];
-frame_t wpnFamesPause[10];
+//frame_t wpnFramesFire[10];
+//frame_t wpnFamesPause[10];
 
 .float state;
 .float bCrouched;

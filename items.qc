@@ -1,4 +1,5 @@
 void() W_SetCurrentAmmo;
+void() W_ChangeWeapon;
 float() W_CheckNoAmmo;
 /* ALL LIGHTS SHOULD BE 0 1 0 IN COLOR ALL OTHER ITEMS SHOULD
 BE .8 .3 .4 IN COLOR */
@@ -397,14 +398,14 @@ WEAPONS
 
 void() bound_other_ammo =
 {
-	if (self.ammo_shells > 100)
-		self.ammo_shells = 100;
+	if (self.inv_ammo_shells > 100)
+		self.inv_ammo_shells = 100;
 	if (self.inv_ammo_bullets > 200)
 		self.inv_ammo_bullets = 200;
-	if (self.ammo_rockets > 100)
-		self.ammo_rockets = 100;		
-	if (self.ammo_cells > 100)
-		self.ammo_cells = 100;		
+	if (self.inv_ammo_rockets > 100)
+		self.inv_ammo_rockets = 100;		
+	if (self.inv_ammo_cells > 100)
+		self.inv_ammo_cells = 100;		
 };
 
 //MrC: TODO, compare these to Q2 or give this a going over.
@@ -451,7 +452,7 @@ Deathmatch_Weapon
 
 Deathmatch weapon change rules for picking up a weapon
 
-.float		ammo_shells, inv_ammo_bullets, ammo_rockets, ammo_cells;
+.float		inv_ammo_shells, inv_ammo_bullets, inv_ammo_rockets, inv_ammo_cells;
 =============
 */
 #ifdef unused
@@ -535,7 +536,7 @@ void() weapon_touch =
 		
 		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
 		if (self != stemp.owner){
-			self.ammo_shells = self.ammo_shells + 5;
+			self.inv_ammo_shells = self.inv_ammo_shells + 5;
 		}
 	}
 	else if (stemp.classname == "weapon_shotgun")
@@ -547,7 +548,7 @@ void() weapon_touch =
 		
 		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
 		if (self != stemp.owner){
-			self.ammo_shells = self.ammo_shells + 5;
+			self.inv_ammo_shells = self.inv_ammo_shells + 5;
 		}
 	}
 	else if (stemp.classname == "weapon_rocketlauncher")
@@ -559,7 +560,7 @@ void() weapon_touch =
 		
 		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
 		if (self != stemp.owner){
-			self.ammo_rockets = self.ammo_rockets + 5;
+			self.inv_ammo_rockets = self.inv_ammo_rockets + 5;
 		}
 	}
 	else if (stemp.classname == "weapon_grenadelauncher")
@@ -571,7 +572,7 @@ void() weapon_touch =
 		
 		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
 		if (self != stemp.owner){
-			self.ammo_rockets = self.ammo_rockets + 5;
+			self.inv_ammo_rockets = self.inv_ammo_rockets + 5;
 		}
 	}
 	else if (stemp.classname == "weapon_hyperblaster")
@@ -583,7 +584,7 @@ void() weapon_touch =
 		
 		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
 		if (self != stemp.owner){
-			self.ammo_cells = self.ammo_cells + 15;
+			self.inv_ammo_cells = self.inv_ammo_cells + 15;
 		}
 	}
 	else if (stemp.classname == "weapon_railgun")
@@ -595,7 +596,7 @@ void() weapon_touch =
 		
 		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
 		if (self != stemp.owner){
-			self.ammo_cells = self.ammo_cells + 15;
+			self.inv_ammo_cells = self.inv_ammo_cells + 15;
 		}
 	}
 	else if (stemp.classname == "weapon_bfg")
@@ -607,7 +608,7 @@ void() weapon_touch =
 		
 		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
 		if (self != stemp.owner){
-			self.ammo_cells = self.ammo_cells + 15;
+			self.inv_ammo_cells = self.inv_ammo_cells + 15;
 		}
 	}
 	else
@@ -640,8 +641,8 @@ void() weapon_touch =
 	oldRank = RankForWeapon(self.weapon);
 	if( newRank > oldRank ){
 		if(self.weaponstate == WEAPON_READY){
-			self.weaponstate_next = WEAPON_DROPPING;
 			self.weapon_next = new;
+			W_ChangeWeapon();
 		}
 	}
 	self = stemp;
@@ -888,9 +889,9 @@ local float		best;
 // shotgun
 	if (stemp.weapon == 1)
 	{
-		if (self.ammo_shells >= 100)
+		if (self.inv_ammo_shells >= 100)
 			return;
-		self.ammo_shells = self.ammo_shells + stemp.aflag;
+		self.inv_ammo_shells = self.inv_ammo_shells + stemp.aflag;
 	}
 
 // bullets
@@ -904,17 +905,17 @@ local float		best;
 //	rockets
 	if (stemp.weapon == 3)
 	{
-		if (self.ammo_rockets >= 100)
+		if (self.inv_ammo_rockets >= 100)
 			return;
-		self.ammo_rockets = self.ammo_rockets + stemp.aflag;
+		self.inv_ammo_rockets = self.inv_ammo_rockets + stemp.aflag;
 	}
 
 //	cells
 	if (stemp.weapon == 4)
 	{
-		if (self.ammo_cells >= 100)
+		if (self.inv_ammo_cells >= 100)
 			return;
-		self.ammo_cells = self.ammo_cells + stemp.aflag;
+		self.inv_ammo_cells = self.inv_ammo_cells + stemp.aflag;
 	}
 
 	bound_other_ammo ();
@@ -1667,10 +1668,10 @@ void() BackpackTouch =
 //	self = stemp;
 
 // change weapons
-	self.ammo_shells = self.ammo_shells + stemp.ammo_shells;
+	self.inv_ammo_shells = self.inv_ammo_shells + stemp.inv_ammo_shells;
 	self.inv_ammo_bullets = self.inv_ammo_bullets + stemp.inv_ammo_bullets;
-	self.ammo_rockets = self.ammo_rockets + stemp.ammo_rockets;
-	self.ammo_cells = self.ammo_cells + stemp.ammo_cells;
+	self.inv_ammo_rockets = self.inv_ammo_rockets + stemp.inv_ammo_rockets;
+	self.inv_ammo_cells = self.inv_ammo_cells + stemp.inv_ammo_cells;
 
 	new = stemp.items;
 	if (!new)
@@ -1685,13 +1686,13 @@ void() BackpackTouch =
 // moved for logic change
 	self = stemp;
 
-	if (self.ammo_shells)
+	if (self.inv_ammo_shells)
 	{
 		if (acount)
 			sprint(other, ", ");
 		acount = 1;
-//		s = ftos(self.ammo_shells);
-		sprint (other, ftos(self.ammo_shells));
+//		s = ftos(self.inv_ammo_shells);
+		sprint (other, ftos(self.inv_ammo_shells));
 		sprint (other, " shells");
 	}
 	if (self.inv_ammo_bullets)
@@ -1702,22 +1703,22 @@ void() BackpackTouch =
 		sprint (other, ftos(self.inv_ammo_bullets));
 		sprint (other, " bullets");
 	}
-	if (self.ammo_rockets)
+	if (self.inv_ammo_rockets)
 	{
 		if (acount)
 			sprint(other, ", ");
 		acount = 1;
-//		s = ftos(self.ammo_rockets);
-		sprint (other, ftos(self.ammo_rockets));
+//		s = ftos(self.inv_ammo_rockets);
+		sprint (other, ftos(self.inv_ammo_rockets));
 		sprint (other, " rockets");
 	}
-	if (self.ammo_cells)
+	if (self.inv_ammo_cells)
 	{
 		if (acount)
 			sprint(other, ", ");
 		acount = 1;
-//		s = ftos(self.ammo_cells);
-		sprint (other, ftos(self.ammo_cells));
+//		s = ftos(self.inv_ammo_cells);
+		sprint (other, ftos(self.inv_ammo_cells));
 		sprint (other, " cells");
 	}
 	
@@ -1756,7 +1757,7 @@ void() DropBackpack =
 //	local entity	item;
 #define item 	newmis
 
-	if (!(self.ammo_shells + self.inv_ammo_bullets + self.ammo_rockets + self.ammo_cells))
+	if (!(self.inv_ammo_shells + self.inv_ammo_bullets + self.inv_ammo_rockets + self.inv_ammo_cells))
 		return;	// nothing in it
 
 	item = spawn();
@@ -1786,10 +1787,10 @@ void() DropBackpack =
 	else
 		item.netname = string_null;
 
-	item.ammo_shells = self.ammo_shells;
+	item.inv_ammo_shells = self.inv_ammo_shells;
 	item.inv_ammo_bullets = self.inv_ammo_bullets;
-	item.ammo_rockets = self.ammo_rockets;
-	item.ammo_cells = self.ammo_cells;
+	item.inv_ammo_rockets = self.inv_ammo_rockets;
+	item.inv_ammo_cells = self.inv_ammo_cells;
 
 	item.velocity_z = 300;
 	item.velocity_x = -100 + (random() * 200);
