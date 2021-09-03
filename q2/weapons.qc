@@ -180,12 +180,12 @@ float() weapon_chaingun_fire={
 	return FALSE;
 };
 float() weapon_nadelaunch_fire={
-	if(self.weaponframe == 6 || self.weaponframe == 0)
+	if(self.weaponframe == 6 || self.weaponframe == 0|| self.weaponframe == 9)
 		return TRUE;
 	return FALSE;
 };
 float() weapon_rocketlaunch_fire={
-	if(self.weaponframe == 5 || self.weaponframe == 0)
+	if(self.weaponframe == 5 || self.weaponframe == 0 || self.weaponframe == 9)
 		return TRUE;
 	return FALSE;
 };
@@ -376,6 +376,7 @@ void() W_ChangeWeapon =
 			self.weapon_update_func = weapon_blaster_update;
 			self.weapon_pause_frames = weapon_blaster_pause;
 			self.weapon_fire_frames = weapon_blaster_fire;
+			self.weapon_ammo_min = 0;	//unlimited ammo
 			break;
 		case WEP_SHOTGUN:
 			readySfx = "weapons/Shotgr1b.wav";
@@ -383,6 +384,7 @@ void() W_ChangeWeapon =
 			self.weapon_update_func = weapon_shotgun_update;
 			self.weapon_pause_frames = weapon_shotgun_pause;
 			self.weapon_fire_frames = weapon_shotgun_fire;
+			self.weapon_ammo_min = 1;
 			break;
 		case WEP_SUPERSHOTGUN:
 			readySfx = "weapons/HGRENT1A.WAV";
@@ -390,6 +392,7 @@ void() W_ChangeWeapon =
 			self.weapon_update_func = weapon_supershotg_update;
 			self.weapon_pause_frames = weapon_supershotg_pause;
 			self.weapon_fire_frames = weapon_supershotg_fire;
+			self.weapon_ammo_min = 2;
 			break;
 		case WEP_MACHINEGUN:
 			readySfx = "weapons/HGRENT1A.WAV";
@@ -397,6 +400,7 @@ void() W_ChangeWeapon =
 			self.weapon_update_func = weapon_machineg_update;
 			self.weapon_pause_frames = weapon_machineg_pause;
 			self.weapon_fire_frames = weapon_machineg_fire;
+			self.weapon_ammo_min = 1;
 			break;
 		case WEP_CHAINGUN:
 			readySfx = "weapons/HGRENT1A.WAV";
@@ -404,6 +408,7 @@ void() W_ChangeWeapon =
 			self.weapon_update_func = weapon_chaingun_update;
 			self.weapon_pause_frames = weapon_chaingun_pause;
 			self.weapon_fire_frames = weapon_chaingun_fire;
+			self.weapon_ammo_min = 1;
 			break;
 		case WEP_GRENADE_LAUNCHER:
 			readySfx = "weapons/HGRENT1A.WAV";
@@ -411,6 +416,7 @@ void() W_ChangeWeapon =
 			self.weapon_update_func = weapon_nadelaunch_update;
 			self.weapon_pause_frames = weapon_nadelaunch_pause;
 			self.weapon_fire_frames = weapon_nadelaunch_fire;
+			self.weapon_ammo_min = 1;
 			break;
 		case WEP_ROCKET_LAUNCHER:
 			readySfx = "weapons/HGRENT1A.WAV";
@@ -418,6 +424,7 @@ void() W_ChangeWeapon =
 			self.weapon_update_func = weapon_rocketlaunch_update;
 			self.weapon_pause_frames = weapon_rocketlaunch_pause;
 			self.weapon_fire_frames = weapon_rocketlaunch_fire;
+			self.weapon_ammo_min = 1;
 			break;
 		case WEP_HYPERBLASTER:
 			readySfx = "weapons/HGRENT1A.WAV";
@@ -425,6 +432,7 @@ void() W_ChangeWeapon =
 			self.weapon_update_func = weapon_hyperb_update;
 			self.weapon_pause_frames = weapon_hyperb_pause;
 			self.weapon_fire_frames = weapon_hyperb_fire;
+			self.weapon_ammo_min = 1;
 			break;
 		case WEP_RAILGUN:
 			readySfx = "weapons/HGRENT1A.WAV";
@@ -432,6 +440,7 @@ void() W_ChangeWeapon =
 			self.weapon_update_func = weapon_railgun_update;
 			self.weapon_pause_frames = weapon_railgun_pause;
 			self.weapon_fire_frames = weapon_railgun_fire;
+			self.weapon_ammo_min = 1;
 			break;
 		case WEP_BFG:
 			readySfx = "weapons/HGRENT1A.WAV";
@@ -439,6 +448,7 @@ void() W_ChangeWeapon =
 			self.weapon_update_func = weapon_bfg_update;
 			self.weapon_pause_frames = weapon_bfg_pause;
 			self.weapon_fire_frames = weapon_bfg_fire;
+			self.weapon_ammo_min = 50;
 			break;
 	}
 	sound(self, CHAN_WEAPON, readySfx, 0.5, ATTN_IDLE);
@@ -469,6 +479,7 @@ NoAmmoWeaponChange
 */
 void() W_NoAmmoWeaponChange =
 {
+	sound(self, CHAN_AUTO, "weapons/noammo.wav", 1.0, ATTN_NORM);
 	if(self.inv_ammo_slugs && (self.inv_weapons & WEP_RAILGUN)){
 		self.weapon_next = WEP_RAILGUN;
 		return;
@@ -498,7 +509,7 @@ void() W_NoAmmoWeaponChange =
 		self.weapon_next = WEP_SHOTGUN;
 		return;
 	}
-
+	
 	self.weapon_next = WEP_BLASTER;
 }
 
@@ -510,15 +521,8 @@ Make the weapon ready if there is ammo
 */
 void(float weaponId) W_Use_Weapon=
 {
-	
-	bprint("\n W_Use_Weapon()->weaponId = ");	//debug
-	bprint(ftos(weaponId));
-	bprint("\n");
-	
 	local float ammoIndex;
-	//int			ammo_index;
-	//gitem_t		*ammo_item;
-
+	
 	// see if we're already using it
 	if (weaponId == self.weapon)
 		return;
@@ -537,19 +541,14 @@ void(float weaponId) W_Use_Weapon=
 	}
 		
 	ammoIndex = W_Ammo_Index(weaponId);
-	
-	bprint("\n ammoIndex = ");	//debug
-	bprint(ftos(ammoIndex));
-	bprint("\n ammo amount = ");
-	bprint(ftos(W_Ammo_Amount(ammoIndex)));
-	bprint("\n");
-	
 	if (!W_Ammo_Amount(ammoIndex))
 	{	// don't have the ammo
 		sprint (self, "not enough ammo.\n");
 		self.weapon_next = 0;
 		return;
 	}
+	
+	
 	
 	/*if (item->ammo && !g_select_empty->value && !(item->flags & IT_AMMO))
 	{
@@ -573,11 +572,14 @@ void(float weaponId) W_Use_Weapon=
 	self.weapon_next = weaponId;
 }
 
-
+/*
+	Called in client.qc - PlayerPostThink();
+		run after impulse checks.
+		this is the per-frame update func for the weapon state machine.
+*/
 void() W_WeaponAnimate={
 	if( time > self.weapon_think ){
 		self.weapon_update_func();
-		
 		self.weapon_think = time + 0.1;
 	}
 };
@@ -588,10 +590,6 @@ Weapon_Generic
 A generic function to handle the basics of weapon thinking
 ================
 */
-//#define FRAME_FIRE_FIRST		(FRAME_ACTIVATE_LAST + 1)
-//#define FRAME_IDLE_FIRST		(FRAME_FIRE_LAST + 1)
-//#define FRAME_DEACTIVATE_FIRST	(FRAME_IDLE_LAST + 1)
-
 //removed args int *pause_frames[], int *fire_frames[], 
 void(float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRAME_IDLE_LAST, float FRAME_DEACTIVATE_LAST, void() fire_func) Weapon_Generic =
 {
@@ -678,7 +676,7 @@ void(float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRAME_IDLE_LAST, fl
 		{
 			//ent->client->latched_buttons &= ~BUTTON_ATTACK;
 			self.button0 = 0;
-			if ( !self.ammo_index || W_Ammo_Amount(self.ammo_index) >= 0)	//ent->client->pers.weapon->quantity
+			if ( !self.ammo_index || W_Ammo_Amount(self.ammo_index) >= self.weapon_ammo_min)	//ent->client->pers.weapon->quantity
 			{
 				self.weaponframe = FRAME_FIRE_FIRST;
 				self.weaponstate = WEAPON_FIRING;
@@ -843,22 +841,8 @@ void() Weapon_SuperShotgun={
 		damage *= 4;
 		kick *= 4;
 	}
-
-	//TODO - double barrel
-	/*v[PITCH] = ent->client->v_angle[PITCH];
-	v[YAW]   = ent->client->v_angle[YAW] - 5;
-	v[ROLL]  = ent->client->v_angle[ROLL];
-	AngleVectors (v, forward, NULL, NULL);
-	fire_shotgun (ent, start, forward, damage, kick, DEFAULT_SHOTGUN_HSPREAD, DEFAULT_SHOTGUN_VSPREAD, DEFAULT_SSHOTGUN_COUNT/2, MOD_SSHOTGUN);
-	v[YAW]   = ent->client->v_angle[YAW] + 5;
-	AngleVectors (v, forward, NULL, NULL);
-	fire_shotgun (ent, start, forward, damage, kick, DEFAULT_SHOTGUN_HSPREAD, DEFAULT_SHOTGUN_VSPREAD, DEFAULT_SSHOTGUN_COUNT/2, MOD_SSHOTGUN);
-	*/
 	//TODO - muzzle flash
-	
-	
 	sound (self ,CHAN_WEAPON, "weapons/Sshotf1b.wav", 1, ATTN_NORM);
-	
 	
 	makevectors(self.v_angle);
 	left = self.origin + (v_right * -5);
@@ -882,8 +866,8 @@ void() weapon_supershotg_update={
 
 void() Weapon_MachineGun_Fire={
 	
-	local vector start, offset;
-	local float i, damage, kick;
+	//local vector start, offset;
+	local float i, damage, kick, cone, sfx;
 	
 	damage = 8;
 	kick = 2;
@@ -942,7 +926,28 @@ void() Weapon_MachineGun_Fire={
 		if (self.machinegun_shots > 9)
 			self.machinegun_shots = 9;
 	}
-
+	
+	cone = self.machinegun_shots / 9;
+	
+	fire_bullet_base(self.origin, self.v_angle, '0.02 0.02' * cone, damage);
+	
+	sfx = random() * 1.0;
+	if(sfx < 0.3){
+		sound(self, CHAN_AUTO, "weapons/Machgf1b.wav", 1.0, ATTN_NORM);
+	}
+	else if(sfx < 0.5){
+		sound(self, CHAN_AUTO, "weapons/Machgf2b.wav", 1.0, ATTN_NORM);
+	}
+	else if(sfx < 0.7){
+		sound(self, CHAN_AUTO, "weapons/Machgf3b.wav", 1.0, ATTN_NORM);
+	}
+	else if(sfx < 0.9){
+		sound(self, CHAN_AUTO, "weapons/Machgf4b.wav", 1.0, ATTN_NORM);
+	}
+	else{
+		sound(self, CHAN_AUTO, "weapons/Machgf5b.wav", 1.0, ATTN_NORM);
+	}
+	
 	// get start / end positions
 	/*VectorAdd (ent->client->v_angle, ent->client->kick_angles, angles);
 	AngleVectors (angles, forward, right, NULL);
@@ -957,13 +962,6 @@ void() Weapon_MachineGun_Fire={
 
 	PlayerNoise(ent, start, PNOISE_WEAPON);
 */
-
-	makevectors(self.v_angle);
-	
-	offset = VectorSet(0, self.view_ofs_z-8, 8);
-	start = G_ProjectSource(self.origin, offset, v_forward, v_right, '0 0 0');
-
-	FireBullet(damage);
 	//if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
 	self.inv_ammo_bullets = max(self.inv_ammo_bullets - 1, 0);
 	self.currentammo = W_Ammo_Amount(self.ammo_index);
@@ -986,7 +984,7 @@ void() weapon_machineg_update={
 
 
 void() Weapon_Chaingun_Fire={
-	local float i, shots, damage, kick, r, u;
+	local float i, shots, damage, kick, r, u, sfx;
 	kick = 2;
 	
 	if (deathmatch)
@@ -1094,7 +1092,24 @@ void() Weapon_Chaingun_Fire={
 		//P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
 
 		//fire_bullet (ent, start, forward, damage, kick, DEFAULT_BULLET_HSPREAD, DEFAULT_BULLET_VSPREAD, MOD_CHAINGUN);
-		FireBullet(damage);
+		
+		fire_bullet_base(self.origin, self.v_angle, '0.02 0.02', damage);
+	}
+	sfx = random() * 1.0;
+	if(sfx < 0.3){
+		sound(self, CHAN_AUTO, "weapons/Machgf1b.wav", 1.0, ATTN_NORM);
+	}
+	else if(sfx < 0.5){
+		sound(self, CHAN_AUTO, "weapons/Machgf2b.wav", 1.0, ATTN_NORM);
+	}
+	else if(sfx < 0.7){
+		sound(self, CHAN_AUTO, "weapons/Machgf3b.wav", 1.0, ATTN_NORM);
+	}
+	else if(sfx < 0.9){
+		sound(self, CHAN_AUTO, "weapons/Machgf4b.wav", 1.0, ATTN_NORM);
+	}
+	else{
+		sound(self, CHAN_AUTO, "weapons/Machgf5b.wav", 1.0, ATTN_NORM);
 	}
 
 	// send muzzle flash
@@ -1117,49 +1132,72 @@ void() weapon_chaingun_update={
 	Weapon_Generic (4, 31, 61, 64, Weapon_Chaingun_Fire);
 };
 
-
 void() Weapon_GrenadeLauncher_Fire={
 	local float radius, damage;
 	local vector offset, start;
 	
+	//simply does the ka-chunk sound of reload
+	if(self.weaponframe == 9){
+		sound(self, CHAN_AUTO, "weapons/Grenlr1b.WAV", 1.0, ATTN_NORM);
+		self.weaponframe++;
+		return;
+	}
+	
 	damage = 120;
-
+	
 	radius = damage+40;
-	//if (is_quad)
-	//	damage *= 4;
-
-	//VectorSet(offset, 8, 8, ent->viewheight-8);
-	//AngleVectors (ent->client->v_angle, forward, right, NULL);
-	//P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
-
-	//VectorScale (forward, -2, ent->client->kick_origin);
-	//ent->client->kick_angles[0] = -1;
-
-	//fire_grenade (ent, start, forward, damage, 600, 2.5, radius);
-
+	if (self.super_damage_finished > time)
+		damage *= 4;
+	
+	self.punchangle_x = -1;
+	fire_grenade_base(self.origin, self.v_angle, damage, '700 250 0', 2.5, radius);
+	
 	//gi.WriteByte (svc_muzzleflash);
 	//gi.WriteShort (ent-g_edicts);
 	//gi.WriteByte (MZ_GRENADE | is_silenced);
 	//gi.multicast (ent->s.origin, MULTICAST_PVS);
-
+	sound(self, CHAN_WEAPON, "weapons/GRENLF1A.WAV", 1.0, ATTN_NORM);
+	
 	self.weaponframe++;
-
-	//PlayerNoise(ent, start, PNOISE_WEAPON);
-
+	
 	//if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
-	self.inv_ammo_rockets = max(self.inv_ammo_rockets - 1, 0);;
+	self.inv_ammo_rockets = max(self.inv_ammo_rockets - 1, 0);
 	self.currentammo = W_Ammo_Amount(self.ammo_index);
-
 };
-
-void() weapon_nadelaunch_update={
+void() weapon_nadelaunch_update={	
 	Weapon_Generic (5, 16, 59, 64, Weapon_GrenadeLauncher_Fire);
 };
 
 void() Weapon_RocketLauncher_Fire={
-	W_FireRocket();
+	local float		damage;
+	local float	damage_radius;
+	local float		radius_damage;
 	
-	self.inv_ammo_rockets = max(self.inv_ammo_rockets - 1, 0);;
+	if(self.weaponframe == 9){
+		sound(self, CHAN_AUTO, "weapons/Rocklr1b.wav", 0.67, ATTN_NORM);
+		self.weaponframe++;
+		return;
+	}
+	
+	damage = 100 + (random() * 20.0);
+	radius_damage = 120;
+	damage_radius = 120;
+	if (self.super_damage_finished > time)
+	{
+		damage *= 4;
+		radius_damage *= 4;
+	}
+	
+	self.punchangle_x = -1;
+	
+	fire_rocket_base(self.origin, self.v_angle, damage, '650 0 0', 5, damage_radius, radius_damage);
+	
+	sound(self, CHAN_WEAPON, "weapons/ROCKLF1A.WAV", 1.0, ATTN_NORM);
+	
+	// send muzzle flash
+	
+	//if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
+	self.inv_ammo_rockets = max(self.inv_ammo_rockets - 1, 0);
 	self.currentammo = W_Ammo_Amount(self.ammo_index);
 	self.weaponframe++;
 };
@@ -1246,7 +1284,8 @@ void() weapon_hyperb_update={
 
 void() Weapon_Railgun_Fire={
 	local float damage, kick;
-
+	local vector start;
+	
 	if (deathmatch)
 	{	// normal damage is too extreme in dm
 		damage = 100;
@@ -1258,29 +1297,24 @@ void() Weapon_Railgun_Fire={
 		kick = 250;
 	}
 
-	/*if (is_quad)
+	if (self.super_damage_finished > time)
 	{
 		damage *= 4;
 		kick *= 4;
-	}*/
+	}
 
-	//AngleVectors (ent->client->v_angle, forward, right, NULL);
+	self.punchangle_x = -3;
 
-	//VectorScale (forward, -3, ent->client->kick_origin);
-	//ent->client->kick_angles[0] = -3;
-
-	//VectorSet(offset, 0, 7,  ent->viewheight-8);
-	//P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
-	//fire_rail (ent, start, forward, damage, kick);
+	makevectors(self.v_angle);
+	start = self.origin + v_forward*10;
+	start_z = self.absmin_z + self.size_z * 0.7;
+	fire_railgun_base(start, self.origin + (v_forward * 4096)+ PlayerViewOrg(v_up), damage);
 
 	// send muzzle flash
-	/*gi.WriteByte (svc_muzzleflash);
-	gi.WriteShort (ent-g_edicts);
-	gi.WriteByte (MZ_RAILGUN | is_silenced);
-	gi.multicast (ent->s.origin, MULTICAST_PVS);*/
 
 	self.weaponframe++;
-	//PlayerNoise(ent, start, PNOISE_WEAPON);
+	
+	sound(self, CHAN_WEAPON, "weapons/RAILGF1A.WAV", 1.0, ATTN_NORM);
 
 	//if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
 	self.inv_ammo_slugs = max(self.inv_ammo_slugs - 1, 0);

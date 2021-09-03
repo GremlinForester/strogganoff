@@ -101,6 +101,12 @@ float START_ON = 1;
 
 .string sightSound;
 
+vector(vector vUp) PlayerViewOrg={
+	local vector v;
+	v = vUp * self.view_ofs_z;
+	return v;
+};
+
 .float weapon_anim_start;
 .float weapon_frame_end;
 
@@ -128,7 +134,9 @@ enum
 .float() weapon_update_func;
 .float() weapon_pause_frames;	// these really need to be structs
 .float() weapon_fire_frames;
-
+.float weapon_ammo_min;				//many weapons have a 1 or 2 shot min to fire.
+.string weapon_sound;	//maps to Q2's p_view client->weapon_sound, but as a string and not float
+											//apparently used to do most spin up/down weapons.
 
 //frame_t wpnFramesFire[10];
 //frame_t wpnFamesPause[10];
