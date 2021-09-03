@@ -786,23 +786,23 @@ void() Weapon_Shotgun_Fire={
 
 	if (self.weaponframe == 9)
 	{
+		sound(self, CHAN_AUTO, "weapons/Shotgr1b.wav", 1, ATTN_NORM);
 		self.weaponframe++;
 		return;
 	}
-	
-	makevectors(self.v_angle);
 
 	//VectorScale (forward, -2, ent->client->kick_origin);
 	//ent->client->kick_angles[0] = -2;
 	
-	W_FireShotgun();
-
+	
 	if (self.super_damage_finished > time)
 	{
 		damage *= 4;
 		kick *= 4;
 	}
-
+	
+	fire_shotgun_base(self.origin, self.v_angle, 6, '0.06 0.06', damage);
+	
 	self.punchangle_x = random() * kick;
 
 	//if (deathmatch->value)
@@ -816,10 +816,7 @@ void() Weapon_Shotgun_Fire={
 	//gi.WriteByte (MZ_SHOTGUN | is_silenced);
 	//gi.multicast (ent->s.origin, MULTICAST_PVS);
 
-	if(self.weaponframe == 9){
-		sound(self, CHAN_AUTO, "weapons/Shotgr1b.wav", 1, ATTN_NORM);
-	}
-
+	sound(self, CHAN_WEAPON, "weapons/Shotgf1b.wav", 1, ATTN_NORM);
 	self.weaponframe++;
 
 	//if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
@@ -834,16 +831,13 @@ void() weapon_shotgun_update={
 
 void() Weapon_SuperShotgun={
 
-	local vector v, start, offset;
+	local vector v, left, right;
 	local float damage, kick;
 	damage = 6;
 	kick = 12;
-
-	makevectors(self.v_angle);
+	
 	
 	self.punchangle_x = -2;
-
-	offset = G_ProjectSource(self.origin, VectorSet(0, self.view_ofs_z-8, 8), v_forward, v_right, '0 0 0'); 
 	
 	if (self.super_damage_finished > time){
 		damage *= 4;
@@ -864,11 +858,16 @@ void() Weapon_SuperShotgun={
 	
 	
 	sound (self ,CHAN_WEAPON, "weapons/Sshotf1b.wav", 1, ATTN_NORM);
-	//TODO - weapon fire generics.
-	W_FireSuperShotgun();
+	
+	
+	makevectors(self.v_angle);
+	left = self.origin + (v_right * -5);
+	right = self.origin + (v_right * 5);
+	
+	fire_shotgun_base(left, self.v_angle, 6, '0.08 0.06', damage);
+	fire_shotgun_base(right, self.v_angle, 6, '0.08 0.06', damage);
 	
 	self.weaponframe++;
-	//PlayerNoise(ent, start, PNOISE_WEAPON);
 
 	//TODO - infinite ammo flag?
 	//if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
@@ -998,14 +997,13 @@ void() Weapon_Chaingun_Fire={
 	if (self.weaponframe == 5)
 		sound(self, CHAN_WEAPON, "weapons/chngnu1a.wav", 0.5, ATTN_IDLE);
 
-	if ((self.weaponframe == 14) && !self.button0)
+	if (self.weaponframe == 14 && !self.button0)
 	{
 		self.weaponframe = 32;
 		//ent->client->weapon_sound = 0;
 		return;
 	}
-	else if ((self.weaponframe == 21) && (self.button0)
-		&& W_Ammo_Amount(self.ammo_index))
+	else if (self.weaponframe == 21 && self.button0 && W_Ammo_Amount(self.ammo_index))
 	{
 		self.weaponframe = 15;
 	}

@@ -1,7 +1,6 @@
 /*
-  Q2-style weapon system complete with states
-
-
+	Straight port of Q2's p_weapon file.
+		adapted to QuakeC.
 */
 
 //attack funcs return bool TRUE/FALSE if thge attack funcs

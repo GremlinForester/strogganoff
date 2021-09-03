@@ -200,6 +200,51 @@ Functions converted from Quake 2 to QC
 ============
 */
 
+float(vector v1, vector v2) VectorCompare=
+{
+	if (v1_x != v2_x || v1_y != v2_y || v1_z != v2_z)
+			return FALSE;
+			
+	return TRUE;
+}
+
+vector VectorScale (vector in, vector scale)=
+{
+	local vector v;
+	v_x = in_x * scale_x;
+	v_y = in_y * scale_y;
+	v_z = in_z * scale_z;
+	return v;
+};
+
+vector(vector veca, vector vecb) VectorSubtract=
+{
+	local vector v;
+	v_x = veca_x - vecb_x;
+	v_y = veca_y - vecb_y;
+	v_z = veca_z - vecb_z;
+	return v;
+};
+
+vector(vector veca, vector vecb) VectorAdd=
+{
+	local vector v;
+	v_x = veca_x + vecb_x;
+	v_y = veca_y + vecb_y;
+	v_z = veca_z + vecb_z;
+	return v;
+};
+
+vector(vector veca, float scale, vector vecb) VectorMA =
+{
+	local vector v;
+	v_x = veca_x + scale*vecb_x;
+	v_y = veca_y + scale*vecb_y;
+	v_z = veca_z + scale*vecb_z;
+	return v;
+};
+
+
 vector (float vX, float vY, float vZ ) VectorSet={
 	local vector v;
 	v_x = vX;
