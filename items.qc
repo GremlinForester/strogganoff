@@ -607,7 +607,7 @@ void() weapon_touch =
 		
 		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
 		if (self != stemp.owner){
-			self.inv_ammo_cells = self.inv_ammo_cells + 15;
+			self.inv_ammo_cells = self.inv_ammo_cells + 50;
 		}
 	}
 	else

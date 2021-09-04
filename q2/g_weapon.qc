@@ -11,6 +11,67 @@
 		combined elements of Firebullets because not every Firebullets needs a for-loop.
 		and we'd like to reduce func call jump counts.
 */
+
+
+void(vector entOrg, vector aimAngle, float speed, float damage, float clr, float glowSize, float lightLev) fire_blaster_base={
+	local vector source;
+	local vector rotation_offset;
+	local float rotation;
+		
+	newmis = spawn ();
+	newmis.owner = self;
+	newmis.dmg = damage;
+	newmis.movetype = MOVETYPE_FLYMISSILE;
+	newmis.solid = SOLID_BBOX;
+	newmis.classname = "blasterbolt";
+	newmis.glow_color = clr;	//'200 0 0'
+	newmis.glow_size = glowSize;	//100
+	newmis.light_lev = lightLev;	//200
+    newmis.modelflags = MF_TRACER2;
+	newmis.color = '1 0 0'; // color (does not affect radius), typical value '1 1 1' (bright white), can be up to '255 255 255' (nuclear blast)
+	newmis.style = 6; // light style (like normal light entities, flickering torches or switchable, etc)
+	newmis.pflags = PFLAGS_FULLDYNAMIC; // flags (see PFLAGS_ constants)
+
+// set missile speed
+
+//	makevectors (self.v_angle);
+	newmis.velocity = aim(self, speed);
+	newmis.velocity = newmis.velocity * speed;
+	newmis.angles = vectoangles(newmis.velocity);
+
+	newmis.touch = blasterTouch;
+
+// set missile duration
+
+	newmis.nextthink = time + 5;
+	newmis.think = SUB_Remove;
+
+	source = G_ProjectSource (self.origin, '20 8 17', v_forward, v_right, '0 0 0'); //24 -18 22
+	
+	setmodel (newmis, "progs/laser.mdl");
+	setsize (newmis, '4 4 4', '4 4 4');
+	setorigin (newmis, source);
+	
+	SpawnMuzzleFlash(WEP_BLASTER_MFLASH_OFFSET_FP, WEP_BLASTER_MFLASH_SCALE, 0.5);
+	SpawnMuzzleFlashTP(WEP_BLASTER_MFLASH_OFFSET_TP, 0.5);
+	
+	if (self.weapon == WEP_HYPERBLASTER)
+	{
+		sound (self, CHAN_WEAPON2, "weapons/hyprbl1a.wav", 0.7, ATTN_NORM);
+		sound (self, CHAN_WEAPON, "weapons/Hyprbf1a.wav", 1, ATTN_NORM);
+		
+		rotation = (self.weaponframe - 5) * 2*PI/3; //2*PI/6
+		
+		rotation_offset_x = -6 * sin(rotation); //-4
+		rotation_offset_y = 6;					// 0
+		rotation_offset_z = 6 * cos(rotation); //4
+		
+		source = G_ProjectSource (self.origin, '20 6 10' + rotation_offset, v_forward, v_right, '0 0 0'); //24 -18 22
+		source = G_ProjectSource (self.origin, '20 6 10' + rotation_offset, v_forward, v_right, '0 0 0'); //24 -18 22
+		setorigin (newmis, source);
+	}
+};
+
 void(vector entOrg, vector aimAngle, vector spread, float damage) fire_bullet_base={
 	local vector org;
 	local vector dir;
@@ -172,5 +233,11 @@ void(vector start, vector end, float damage) fire_railgun_base={
 		*/
 		//T_Damage (trace_ent, self, self, WEAPON_DEFAULT_DAMAGE);
 	}
+};
+
+void(vector start, vector aimdir, float speed, float damage, float damage_radius) fire_bfg_base={
+	
+
+	
 
 };

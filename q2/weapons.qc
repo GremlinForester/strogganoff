@@ -763,13 +763,12 @@ void() Weapon_Blaster_Fire=
 		damage = 15;
 	else
 		damage = 10;
-	//Blaster_Fire (ent, vec3_origin, damage, false, EF_BLASTER);
-	W_FireBlaster();
+	
+	fire_blaster_base(self.origin, self.v_angle, 800, damage, 200, 100, 200);
+	
+	sound (self, CHAN_WEAPON, "weapons/BLASTF1A.WAV", 1, ATTN_NORM);
 	self.weaponframe++;
 }
-/*
-	Weapon update functions.
-*/
 void() weapon_blaster_update={
 	Weapon_Generic(4, 8, 52, 55, Weapon_Blaster_Fire );
 };
@@ -1246,8 +1245,11 @@ void() Weapon_Hyperblaster_Fire={
 				damage = 15;
 			else
 				damage = 20;
-			//Blaster_Fire (ent, offset, damage, true, effect);
-			W_FireBlaster();
+			
+			fire_blaster_base(self.origin, self.v_angle, 800, damage, 200, 100, 200);
+			
+			sound (self, CHAN_WEAPON, "weapons/Hyprbf1a.wav", 1, ATTN_NORM);
+			
 			//if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
 			self.inv_ammo_cells = max(self.inv_ammo_cells - 1, 0);
 			self.currentammo = W_Ammo_Amount(self.ammo_index);
@@ -1272,7 +1274,7 @@ void() Weapon_Hyperblaster_Fire={
 
 	if (self.weaponframe == 12)
 	{
-		sound(self, CHAN_AUTO, "weapons/hyprbd1a.wav", 1, ATTN_NORM);
+		//sound(self, CHAN_AUTO, "weapons/hyprbd1a.wav", 1, ATTN_NORM);
 		//ent->client->weapon_sound = 0;
 	}
 
@@ -1345,6 +1347,7 @@ void() Weapon_BFG_Fire={
 		self.weaponframe++;
 
 		//PlayerNoise(ent, ent->s.origin, PNOISE_WEAPON);
+		sound(self, CHAN_WEAPON, "weapons/Bfg__f1y.wav", 1.0, ATTN_NORM);
 		return;
 	}
 
@@ -1356,8 +1359,8 @@ void() Weapon_BFG_Fire={
 		return;
 	}
 
-	//if (is_quad)
-	//	damage *= 4;
+	if (self.super_damage_finished > time)
+		damage *= 4;
 
 	/*AngleVectors (ent->client->v_angle, forward, right, NULL);
 
@@ -1371,7 +1374,8 @@ void() Weapon_BFG_Fire={
 	VectorSet(offset, 8, 8, ent->viewheight-8);
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
 	fire_bfg (ent, start, forward, damage, 400, damage_radius);*/
-
+	
+	fire_bfg_base(self.origin, self.v_angle, 400, damage, damage_radius);
 	self.weaponframe++;
 
 	//PlayerNoise(ent, start, PNOISE_WEAPON);
