@@ -127,7 +127,6 @@ framer($FRAME_attak201, $FRAME_attak213, jorg_frames_attack2, jorg_frames_run, 0
 Attack 1 - Chainguns
 
 */
-
 void() jorg_firebullet =
 {
 	local	vector	dir;
@@ -137,11 +136,17 @@ void() jorg_firebullet =
 	sound (self, CHAN_AUTO, JORG_SOUND_FIREGUN, 1, ATTN_NORM);
 
 	en = self.enemy;
-	dir = en.origin - en.velocity*0.1;
-	dir = normalize (en.origin - self.origin);
-	org = self.origin + (v_forward * 30) + (v_right * 16) + (v_up * 36);
-	
-	monster_fire_bullet(self.origin, dir, '0.01 0.01 0', 3);
+
+	//LEFT
+	org = self.origin + (v_forward * 78.5) + (v_right * -47.1) + (v_up * 96);
+	dir = normalize (en.origin - org);
+	pointparticles(particleeffectnum("TE_GLASS_SHATTER"), org, '0 0 0', 1);
+	monster_fire_bullet(org, dir, '0.01 0.01 0', 3);
+	//RIGHT
+	org = self.origin + (v_forward * 78.5) + (v_right * 46.7) + (v_up * 96);
+	dir = normalize (en.origin - org);
+	pointparticles(particleeffectnum("TE_GLASS_SHATTER"), org, '0 0 0', 1);
+	monster_fire_bullet(org, dir, '0.01 0.01 0', 3);
 };
 
 void() jorg_reattack1;

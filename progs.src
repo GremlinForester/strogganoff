@@ -49,6 +49,7 @@ misc.qc
 
 q2_misc.qc
 
+q2/monsterq2_flipper.qc
 q2/monsterq2_soldier.qc
 q2/monsterq2_berserk.qc
 q2/monsterq2_mutant.qc
@@ -63,7 +64,8 @@ q2/monsterq2_flyer.qc
 q2/monsterq2_tank.qc
 q2/monsterq2_hover.qc
 
-//q2/monsterq2_boss2.qc
+q2/monsterq2_supertank.qc
+q2/monsterq2_boss2.qc
 //q2/monsterq2_boss3.qc //more of a prop than a monster
 q2/monsterq2_boss32.qc //do this first so jorg can spawn makron
 q2/monsterq2_boss31.qc

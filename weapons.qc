@@ -1595,4 +1595,3 @@ void() SuperDamageSound =
 //	return;
 };
 
-

@@ -9,7 +9,7 @@ monster_soldier_ss
 
 TODO: 
 Fix q2monster classname and deathfire stuff.
-Machine gun attack is currently only a single frame and not a multi-shot attack.
+X Machine gun attack is currently only a single frame and not a multi-shot attack.
 Corpse stuff and death.
 Wow this needs work!
 
@@ -21,14 +21,72 @@ Wow this needs work!
 void() q2soldier_fire;
 void() q2soldier_death1fire;
 void() q2soldier_selectwalk;
+void() q2soldier_select_stand;
+
+/*
+
+STAND1
+
+*/
+
+void() q2soldier_idle_sound =
+{
+	if (random() > 0.8)
+		sound (self, CHAN_VOICE, "soldier/solidle1.wav", 1, ATTN_IDLE);
+}
+
+void() q2soldier_cock_sound =
+{
+	if (self.frame == $stand322)
+		sound (self, CHAN_WEAPON, "infantry/infatck3.wav", 1, ATTN_IDLE);
+	else
+		sound (self, CHAN_WEAPON, "infantry/infatck3.wav", 1, ATTN_IDLE);
+}
 
 // STAND 1
 
-framerloop($stand101, $stand130, q2soldier_stand1, 0.1, ai_stand());
+framer($stand101, $stand130, q2soldier_frames_stand, q2soldier_select_stand, 0.1,
+	frame_arb($stand101, q2soldier_idle_sound(););
+	ai_stand();
+);
+
+
+/*
+
+STAND FIDGET
+
+*/
 
 // STAND 2
 
-framerloop($stand301, $stand339, q2soldier_stand2_1, 0.1, ai_stand());
+framer($stand301, $stand339, q2soldier_stand_fidget, q2soldier_select_stand, 0.1,
+	frame_arb($stand322, q2soldier_cock_sound(););
+	ai_stand();
+);
+
+/*
+STAND SELECTOR
+
+Chooses between regular idle and randomly playing a fidget animation
+
+*/
+
+void()	q2soldier_select_stand =
+{
+	if (self.health <= 0)
+		return;
+	
+	if (random() > 0.1)
+	{
+		q2soldier_frames_stand ();
+		return;
+	}
+	else
+	{
+		q2soldier_stand_fidget ();
+		return;
+	}
+};
 
 // WALK 1
 
@@ -257,12 +315,54 @@ void() q2soldier_fire =
 	}
 	else if (self.classname == "monster_soldier_ss")
 	{
-		monster_fire_shotgun(8, org, dir, '0.1 0.1 0', WEAPON_DEFAULT_DAMAGE);
+		monster_fire_bullet(org, dir, '0.01 0.01 0', 3);
 		sound (self, CHAN_WEAPON, "soldier/Solatck1.wav", 1, ATTN_NORM);
 	}
 	else
 	{
 		monster_fire_blaster(org, self.enemy.origin - self.origin, 5, '2 0.2 0.2', MF_TRACER2);
+	}
+};
+
+/*
+
+LOOP soldier_ss machine gun for 10 shots
+
+*/
+
+
+framer($attak404, $attak406, q2soldier_frames_endattack, q2soldier_run1, 0.135,);
+
+framerloop($attak402, $attak403, q2solder_frames_holdattack, 0.05,
+	frame_arb($attak402,
+	if (self.shotcount >= 10){
+		self.shotcount = 0;
+	q2soldier_frames_endattack();
+	}
+	else
+	{
+		self.shotcount++;
+	}
+	);
+	frame_arb($attak403, q2soldier_fire(););
+
+	ai_face();
+);
+
+void() q2soldier_seleck_attack =
+{
+	if (self.classname == "monster_soldier")
+	{
+		q2soldier_atk1();
+
+	}
+	else if (self.classname == "monster_soldier_ss")
+	{
+		q2solder_frames_holdattack();
+	}
+	else
+	{
+		q2soldier_atk1();
 	}
 };
 
@@ -287,7 +387,7 @@ void() q2soldier_death1fire =
 
 	if (self.classname == "monster_soldier_ss")
 	{
-		monster_fire_shotgun(8, org, dir, '0.1 0.1 0', WEAPON_DEFAULT_DAMAGE);
+		monster_fire_bullet(org, dir, '0.01 0.01 0', 3);
 		sound (self, CHAN_WEAPON, "soldier/solatck3.wav", 1, ATTN_NORM);
 
 	}
@@ -318,15 +418,6 @@ void() q2soldier_explode =
 	ThrowGib ("models/objects/gibs/chest/tris.md2", self.health, GIB_FLESH);
 	ThrowGib ("models/objects/gibs/head/tris.md2", self.health, GIB_FLESH);
 	ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health, GIB_FLESH);
-	/*
-	ThrowGib ("models/objects/gibs/arm/tris.md2", self.health, GIB_FLESH, 1);
-	ThrowGib ("models/objects/gibs/chest/tris.md2", self.health, GIB_FLESH, 1);
-	ThrowGib ("models/objects/gibs/head/tris.md2", self.health, GIB_FLESH, 1);
-	ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health, GIB_FLESH, 1);
-	ThrowGib ("progs/gib1.mdl", self.health, GIB_FLAMING);
-	ThrowGib ("progs/gib2.mdl", self.health, GIB_FLAMING);
-	ThrowGib ("progs/gib3.mdl", self.health, GIB_FLAMING);
-	*/
 	self.origin_z = self.origin_z + 32;
 	remove(self);
 };
@@ -497,10 +588,10 @@ void () monster_soldier_light =
 	setsize (self, '-16 -16 -24', '16 16 32');
 	self.health = 30;
 
-	self.th_stand = q2soldier_stand1;
+	self.th_stand = q2soldier_select_stand;
 	self.th_walk = q2soldier_selectwalk; //q2soldier_2walk1;
 	self.th_run = q2soldier_run1;
-	self.th_missile = q2soldier_atk1;
+	self.th_missile = q2soldier_seleck_attack; //q2soldier_atk1;
 	self.th_pain = q2soldier_pain;
 	self.th_die = q2soldier_die;
 
@@ -549,10 +640,10 @@ void () monster_soldier =
 	setsize (self, '-16 -16 -24', '16 16 32');
 	self.health = 30;
 
-	self.th_stand = q2soldier_stand1;
+	self.th_stand = q2soldier_select_stand;
 	self.th_walk = q2soldier_selectwalk; //q2soldier_2walk1;
 	self.th_run = q2soldier_run1;
-	self.th_missile = q2soldier_atk1;
+	self.th_missile = q2soldier_seleck_attack; //q2soldier_atk1;
 	self.th_pain = q2soldier_pain;
 	self.th_die = q2soldier_die;
 
@@ -603,10 +694,10 @@ void () monster_soldier_ss =
 	setsize (self, '-16 -16 -24', '16 16 32');
 	self.health = 40;
 
-	self.th_stand = q2soldier_stand1;
+	self.th_stand = q2soldier_select_stand;
 	self.th_walk = q2soldier_selectwalk; //q2soldier_2walk1;
 	self.th_run = q2soldier_run1;
-	self.th_missile = q2soldier_atk1;
+	self.th_missile = q2soldier_seleck_attack; //q2soldier_atk1;
 	self.th_pain = q2soldier_pain;
 	self.th_die = q2soldier_die;
 

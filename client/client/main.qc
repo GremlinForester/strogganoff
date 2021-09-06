@@ -6,6 +6,9 @@ Code entry points for CSQC
 
 */
 
+
+//MrC: Some temporary empty functions so things compile for now.
+
 void()main={};
 void()StartFrame={};
 void()PlayerPreThink={};
@@ -16,6 +19,10 @@ void()PutClientInServer={};
 void()ClientDisconnect={};
 void()SetNewParms={};
 void()SetChangeParms={};
+void(entity targ, entity inflictor, entity attacker, float damage) T_Damage = {};
+float(entity e, float healamount, float ignore) T_Heal = {};
+float(entity targ, entity inflictor) CanDamage = {};
+float (entity targ) visible = {};
 
 //-----------------------------------------------------------------------------
 // Init

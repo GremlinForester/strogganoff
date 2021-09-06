@@ -142,12 +142,36 @@ TODO: all of the above.
 
 */
 
+.float anim_startframe;
+.float anim_lastframe;
+.float anim_lastframe_hold;
+
+void() model_static_think =
+{
+	if (self.frame < self.anim_startframe){
+		self.frame = self.anim_startframe;
+	}
+	
+	if (self.frame > self.anim_lastframe){
+		if (self.anim_lastframe_hold < 0)
+		{
+			self.frame = self.anim_lastframe;
+		//	self.nextthink = -1;
+			return;
+		}
+		else
+		{
+			self.frame = self.anim_startframe;
+		}
+	}
+	
+	self.frame++;
+	self.nextthink = time + 0.1;
+	self.think = model_static_think;
+}
+					
 void(entity attacker, float damage)	model_static_pain =
 {
-	if (self.health < (self.max_health / 2))
-	{
-		setmodel (self, "models/glass64_cracked.MD3");
-	}
 	bprint (ftos(self.health));
 	bprint ("\n");
 };
@@ -156,10 +180,9 @@ void() model_static_die =
 {
 	local float n;
 
- 	if (self.health < self.max_health)
+ 	if (self.health <= 0)
 	{
 		sound (self, CHAN_VOICE, "world/brkglas.wav", 1, ATTN_NORM);
-		setmodel (self, "models/glass64_broke.MD3");
 		
 		for (n= 0; n < 2; n++)
 			ThrowGib ("models/objects/debris1/tris.md2", self.health, GIB_GLASS);
@@ -170,13 +193,23 @@ void() model_static_die =
 		
 		self.solid = SOLID_NOT;
 		self.takedamage = DAMAGE_NO;
-		
+		remove(self);
 	}
 	
 	bprint (ftos(self.health));
 	bprint ("\n");
 }
 
+void() model_static_init =
+{
+	if (!self.health || self.health <= 0) 
+	{
+		self.takedamage = DAMAGE_NO;
+	}
+	
+	self.nextthink = time + 0.1;
+	self.think = model_static_think;
+}
 void() model_static =
 {
 	self.solid = SOLID_BSP;
@@ -185,16 +218,17 @@ void() model_static =
 	setorigin (self, self.origin);
 	setmodel (self, self.model);
 	
-	if (!self.health || self.health <= 0) 
-	{
-		self.takedamage = DAMAGE_NO;
-	}
+	self.takedamage = DAMAGE_YES;
+	
+
 	
 	self.max_health = self.health;
-	self.takedamage = DAMAGE_YES;
+
 	self.classname = "model_static";
 	self.skin = 0;
 	
 	self.th_die = model_static_die;
 	self.th_pain = model_static_pain;
+	self.nextthink = time + 0.2;
+	self.think = model_static_init;
 };

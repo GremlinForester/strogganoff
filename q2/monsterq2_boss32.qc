@@ -168,6 +168,8 @@ void() doMakronDeathFrameShit =
 			break;
 		case 343:
 			sound(self, CHAN_AUTO, MAKRON_SOUND_BRAINSPLORCH, 1, ATTN_IDLE);
+			if (self.target)
+				SUB_UseTargets();
 			break;
 	}
 }

@@ -216,6 +216,37 @@ void() hover_die={
 	hover_move_death();
 };
 
+void() q2hoverSound_think =
+{
+	if (self.owner.health <= 0)
+	{
+		remove(self);
+		return;
+	}
+
+	self.origin = self.owner.origin;
+	sound (self, CHAN_BODY, "hover/hovidle1.wav", 1, ATTN_IDLE);
+	self.think = q2hoverSound_think;
+	self.nextthink = time + soundlength("hover/hovidle1.wav");
+}
+
+void() attachq2hoverSound =
+{
+	local entity q2hoverSound;
+	
+	q2hoverSound = spawn();
+	setorigin (q2hoverSound, self.owner.origin);
+	q2hoverSound.owner = self;
+	q2hoverSound.netname = "q2hoverSound";
+	setmodel (q2hoverSound, "");
+	q2hoverSound.solid = SOLID_NOT;
+	q2hoverSound.movetype = MOVETYPE_NOCLIP;
+	q2hoverSound.think = q2hoverSound_think;
+	q2hoverSound.nextthink = time;
+
+	setattachment(q2hoverSound, self, "");
+};
+
 /*QUAKED monster_hover (1 .5 0) (-16 -16 -24) (16 16 32) Ambush Trigger_Spawn Sight
 */
 void() monster_hover=
@@ -253,6 +284,8 @@ void() monster_hover=
 	self.th_missile = hover_start_attack;
 	self.th_pain = hover_pain;
 	self.th_die = hover_die;
+
+	attachq2hoverSound();
 
 	flymonster_start;
 }
