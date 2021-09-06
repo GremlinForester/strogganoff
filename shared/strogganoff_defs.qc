@@ -136,7 +136,7 @@ enum
 .float() weapon_fire_frames;
 .float weapon_ammo_min;				//many weapons have a 1 or 2 shot min to fire.
 .string weapon_sound;	//maps to Q2's p_view client->weapon_sound, but as a string and not float
-											//apparently used to do most spin up/down weapons.
+											//apparently used to do most spin up/down weapons. todo-  this is called in Q2's client end-of-frame processing
 
 //frame_t wpnFramesFire[10];
 //frame_t wpnFamesPause[10];
