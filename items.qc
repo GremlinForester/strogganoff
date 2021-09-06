@@ -1,4 +1,6 @@
 void() W_SetCurrentAmmo;
+void() W_ChangeWeapon;
+float() W_CheckNoAmmo;
 /* ALL LIGHTS SHOULD BE 0 1 0 IN COLOR ALL OTHER ITEMS SHOULD
 BE .8 .3 .4 IN COLOR */
 
@@ -396,36 +398,52 @@ WEAPONS
 
 void() bound_other_ammo =
 {
-	if (self.ammo_shells > 100)
-		self.ammo_shells = 100;
+	if (self.inv_ammo_shells > 100)
+		self.inv_ammo_shells = 100;
 	if (self.inv_ammo_bullets > 200)
 		self.inv_ammo_bullets = 200;
-	if (self.ammo_rockets > 100)
-		self.ammo_rockets = 100;		
-	if (self.ammo_cells > 100)
-		self.ammo_cells = 100;		
+	if (self.inv_ammo_rockets > 100)
+		self.inv_ammo_rockets = 100;		
+	if (self.inv_ammo_cells > 100)
+		self.inv_ammo_cells = 100;		
 };
 
 //MrC: TODO, compare these to Q2 or give this a going over.
+//good, just needs a slight go-over. - Subject9x
 float(float w) RankForWeapon =
 {
-	if (w == WEP_HYPERBLASTER)
-		return 1;
-	if (w == WEP_ROCKET_LAUNCHER)
-		return 2;
-	if (w == WEP_CHAINGUN)
-		return 3;
-	if (w == WEP_GRENADE_LAUNCHER)
-		return 4;
-	if (w == WEP_SUPERSHOTGUN)
-		return 5;
-	if (w == WEP_MACHINEGUN)
-		return 6;
-	if (w == WEP_RAILGUN)
-		return 7;
-	if (w == WEP_BFG)
-		return 8;
-	return 9;
+	switch(w){
+		case WEP_BLASTER:
+			return 1;
+		
+		case WEP_SHOTGUN:
+			return 2;
+		
+		case WEP_SUPERSHOTGUN:
+			return 3;
+		
+		case WEP_MACHINEGUN:
+			return 4;
+		
+		case WEP_CHAINGUN:
+			return 5;
+		
+		case WEP_GRENADE_LAUNCHER:
+			return 6;
+		
+		case WEP_ROCKET_LAUNCHER:
+			return 7;
+		
+		case WEP_HYPERBLASTER:
+			return 8;
+		
+		case WEP_RAILGUN:
+			return 9;
+		
+		case WEP_BFG:
+			return 10;
+	}
+	return 1;
 };
 
 /*
@@ -434,7 +452,7 @@ Deathmatch_Weapon
 
 Deathmatch weapon change rules for picking up a weapon
 
-.float		ammo_shells, inv_ammo_bullets, ammo_rockets, ammo_cells;
+.float		inv_ammo_shells, inv_ammo_bullets, inv_ammo_rockets, inv_ammo_cells;
 =============
 */
 #ifdef unused
@@ -463,11 +481,10 @@ weapon_touch
 =============
 */
 float() W_BestWeapon;
-void() W_Draw;
 
 void() weapon_touch =
 {
-	local	float	best, new;
+	local	float	new, newRank, oldRank;
 //	local	entity	stemp;
 #define stemp 	newmis
 	local	float	leave;
@@ -478,21 +495,18 @@ void() weapon_touch =
 // if the player was using his best weapon, change up to the new one if better		
 	stemp = self;
 	self = other;
-	best = W_BestWeapon();
 
-// logic change to eliminate extra statements
-//	self = stemp;
-
-	if (deathmatch == 2 || coop)
+	// logic change to eliminate extra statements
+	if (deathmatch == 2 || coop){
 		leave = 1;
-	else
+	}else{
 		leave = 0;
-	
+	}
 	if (stemp.classname == "weapon_machinegun")
 	{
-		if (leave && (self.inv_weapons & WEP_MACHINEGUN) )
+		if (leave && (self.inv_weapons & WEP_MACHINEGUN) ){
 			return;
-
+		}
 		new = WEP_MACHINEGUN;
 		
 		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
@@ -502,9 +516,9 @@ void() weapon_touch =
 	}
 	else if (stemp.classname == "weapon_chaingun")
 	{
-		if (leave && (self.inv_weapons & WEP_CHAINGUN) )
+		if (leave && (self.inv_weapons & WEP_CHAINGUN) ){
 			return;
-
+		}
 		new = WEP_CHAINGUN;
 		
 		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
@@ -514,62 +528,62 @@ void() weapon_touch =
 	}
 	else if (stemp.classname == "weapon_supershotgun")
 	{
-		if (leave && (self.inv_weapons & WEP_SUPERSHOTGUN) )
+		if (leave && (self.inv_weapons & WEP_SUPERSHOTGUN) ){
 			return;
-
+		}
 		new = WEP_SUPERSHOTGUN;
 		
 		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
 		if (self != stemp.owner){
-			self.ammo_shells = self.ammo_shells + 5;
+			self.inv_ammo_shells = self.inv_ammo_shells + 5;
 		}
 	}
 	else if (stemp.classname == "weapon_shotgun")
 	{
-		if (leave && (self.inv_weapons & WEP_SHOTGUN) )
+		if (leave && (self.inv_weapons & WEP_SHOTGUN) ){
 			return;
-
+		}
 		new = WEP_SHOTGUN;
 		
 		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
 		if (self != stemp.owner){
-			self.ammo_shells = self.ammo_shells + 5;
+			self.inv_ammo_shells = self.inv_ammo_shells + 5;
 		}
 	}
 	else if (stemp.classname == "weapon_rocketlauncher")
 	{
-		if (leave && (self.inv_weapons & WEP_ROCKET_LAUNCHER) )
+		if (leave && (self.inv_weapons & WEP_ROCKET_LAUNCHER) ){
 			return;
-
+		}
 		new = WEP_ROCKET_LAUNCHER;
 		
 		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
 		if (self != stemp.owner){
-			self.ammo_rockets = self.ammo_rockets + 5;
+			self.inv_ammo_rockets = self.inv_ammo_rockets + 5;
 		}
 	}
 	else if (stemp.classname == "weapon_grenadelauncher")
 	{
-		if (leave && (self.inv_weapons & WEP_GRENADE_LAUNCHER) )
+		if (leave && (self.inv_weapons & WEP_GRENADE_LAUNCHER) ){
 			return;
-
+		}
 		new = WEP_GRENADE_LAUNCHER;
 		
 		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
 		if (self != stemp.owner){
-			self.ammo_rockets = self.ammo_rockets + 5;
+			self.inv_ammo_rockets = self.inv_ammo_rockets + 5;
 		}
 	}
 	else if (stemp.classname == "weapon_hyperblaster")
 	{
-		if (leave && (self.inv_weapons & WEP_HYPERBLASTER) )
+		if (leave && (self.inv_weapons & WEP_HYPERBLASTER) ){
 			return;
-
+		}
 		new = WEP_HYPERBLASTER;
 		
 		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
 		if (self != stemp.owner){
-			self.ammo_cells = self.ammo_cells + 15;
+			self.inv_ammo_cells = self.inv_ammo_cells + 15;
 		}
 	}
 	else if (stemp.classname == "weapon_railgun")
@@ -581,7 +595,7 @@ void() weapon_touch =
 		
 		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
 		if (self != stemp.owner){
-			self.ammo_cells = self.ammo_cells + 15;
+			self.inv_ammo_slugs = self.inv_ammo_slugs + 15;
 		}
 	}
 	else if (stemp.classname == "weapon_bfg")
@@ -593,7 +607,7 @@ void() weapon_touch =
 		
 		//tossWeapon ammo regain balancing - previous owner gets no additional ammo for THIS pickup.
 		if (self != stemp.owner){
-			self.ammo_cells = self.ammo_cells + 15;
+			self.inv_ammo_cells = self.inv_ammo_cells + 50;
 		}
 	}
 	else
@@ -605,30 +619,31 @@ void() weapon_touch =
 #else
 		objerror ("weapon_touch: unknown classname");					//opgrade protected
 #endifdef
-
+	
 	sprint (self, "You got the ");
 	sprint (self, stemp.netname);
 	sprint (self, "\n");
 // weapon touch sound
 	sound (self, CHAN_ITEM, "weapons/pkup.wav", 1, ATTN_NORM);
 	stuffcmd (self, "bf\n");
-
-	bound_other_ammo ();
-
-// change to the weapon
+	
+	
 	self.inv_weapons = self.inv_weapons | new;
-
-// logic change eliminates
-//	stemp = self;
-//	self = other;
-
-	if (!deathmatch)
+	bound_other_ammo ();
+	
+	/*if (!deathmatch)
 		self.weapon = new;
 	else
-		Deathmatch_Weapon(new);
-
-	W_SetCurrentAmmo();
-	W_Draw();
+		Deathmatch_Weapon(new);*/
+	
+	newRank = RankForWeapon(new);
+	oldRank = RankForWeapon(self.weapon);
+	if( newRank > oldRank ){
+		if(self.weaponstate == WEAPON_READY){
+			self.weapon_next = new;
+			W_ChangeWeapon();
+		}
+	}
 	self = stemp;
 
 	if (leave)
@@ -873,9 +888,9 @@ local float		best;
 // shotgun
 	if (stemp.weapon == 1)
 	{
-		if (self.ammo_shells >= 100)
+		if (self.inv_ammo_shells >= 100)
 			return;
-		self.ammo_shells = self.ammo_shells + stemp.aflag;
+		self.inv_ammo_shells = self.inv_ammo_shells + stemp.aflag;
 	}
 
 // bullets
@@ -889,17 +904,17 @@ local float		best;
 //	rockets
 	if (stemp.weapon == 3)
 	{
-		if (self.ammo_rockets >= 100)
+		if (self.inv_ammo_rockets >= 100)
 			return;
-		self.ammo_rockets = self.ammo_rockets + stemp.aflag;
+		self.inv_ammo_rockets = self.inv_ammo_rockets + stemp.aflag;
 	}
 
 //	cells
 	if (stemp.weapon == 4)
 	{
-		if (self.ammo_cells >= 100)
+		if (self.inv_ammo_cells >= 100)
 			return;
-		self.ammo_cells = self.ammo_cells + stemp.aflag;
+		self.inv_ammo_cells = self.inv_ammo_cells + stemp.aflag;
 	}
 
 	bound_other_ammo ();
@@ -913,21 +928,21 @@ local float		best;
 
 // change to a better weapon if appropriate
 
-	if ( self.weapon == best )
-	{
+	//if ( self.weapon == best )
+	//{
 // logic change eliminates
 //		stemp = self;
 //		self = other;
-		self.weapon = W_BestWeapon();
-		W_SetCurrentAmmo ();
+		//self.weapon = W_BestWeapon();
+		//W_SetCurrentAmmo ();
 //		self = stemp;
-	}
+	//}
 
 // if changed current ammo, update it
 // logic change eliminates
 //	stemp = self;
 //	self = other;
-	W_SetCurrentAmmo();
+	//W_SetCurrentAmmo();
 	self = stemp;
 
 	touched(30);
@@ -1652,10 +1667,10 @@ void() BackpackTouch =
 //	self = stemp;
 
 // change weapons
-	self.ammo_shells = self.ammo_shells + stemp.ammo_shells;
+	self.inv_ammo_shells = self.inv_ammo_shells + stemp.inv_ammo_shells;
 	self.inv_ammo_bullets = self.inv_ammo_bullets + stemp.inv_ammo_bullets;
-	self.ammo_rockets = self.ammo_rockets + stemp.ammo_rockets;
-	self.ammo_cells = self.ammo_cells + stemp.ammo_cells;
+	self.inv_ammo_rockets = self.inv_ammo_rockets + stemp.inv_ammo_rockets;
+	self.inv_ammo_cells = self.inv_ammo_cells + stemp.inv_ammo_cells;
 
 	new = stemp.items;
 	if (!new)
@@ -1670,13 +1685,13 @@ void() BackpackTouch =
 // moved for logic change
 	self = stemp;
 
-	if (self.ammo_shells)
+	if (self.inv_ammo_shells)
 	{
 		if (acount)
 			sprint(other, ", ");
 		acount = 1;
-//		s = ftos(self.ammo_shells);
-		sprint (other, ftos(self.ammo_shells));
+//		s = ftos(self.inv_ammo_shells);
+		sprint (other, ftos(self.inv_ammo_shells));
 		sprint (other, " shells");
 	}
 	if (self.inv_ammo_bullets)
@@ -1687,22 +1702,22 @@ void() BackpackTouch =
 		sprint (other, ftos(self.inv_ammo_bullets));
 		sprint (other, " bullets");
 	}
-	if (self.ammo_rockets)
+	if (self.inv_ammo_rockets)
 	{
 		if (acount)
 			sprint(other, ", ");
 		acount = 1;
-//		s = ftos(self.ammo_rockets);
-		sprint (other, ftos(self.ammo_rockets));
+//		s = ftos(self.inv_ammo_rockets);
+		sprint (other, ftos(self.inv_ammo_rockets));
 		sprint (other, " rockets");
 	}
-	if (self.ammo_cells)
+	if (self.inv_ammo_cells)
 	{
 		if (acount)
 			sprint(other, ", ");
 		acount = 1;
-//		s = ftos(self.ammo_cells);
-		sprint (other, ftos(self.ammo_cells));
+//		s = ftos(self.inv_ammo_cells);
+		sprint (other, ftos(self.inv_ammo_cells));
 		sprint (other, " cells");
 	}
 	
@@ -1725,7 +1740,7 @@ void() BackpackTouch =
 #endifdef
 																new);
 //
-	W_SetCurrentAmmo ();
+	//W_SetCurrentAmmo ();
 
 #undef stemp
 #undef acount
@@ -1741,7 +1756,7 @@ void() DropBackpack =
 //	local entity	item;
 #define item 	newmis
 
-	if (!(self.ammo_shells + self.inv_ammo_bullets + self.ammo_rockets + self.ammo_cells))
+	if (!(self.inv_ammo_shells + self.inv_ammo_bullets + self.inv_ammo_rockets + self.inv_ammo_cells))
 		return;	// nothing in it
 
 	item = spawn();
@@ -1771,10 +1786,10 @@ void() DropBackpack =
 	else
 		item.netname = string_null;
 
-	item.ammo_shells = self.ammo_shells;
+	item.inv_ammo_shells = self.inv_ammo_shells;
 	item.inv_ammo_bullets = self.inv_ammo_bullets;
-	item.ammo_rockets = self.ammo_rockets;
-	item.ammo_cells = self.ammo_cells;
+	item.inv_ammo_rockets = self.inv_ammo_rockets;
+	item.inv_ammo_cells = self.inv_ammo_cells;
 
 	item.velocity_z = 300;
 	item.velocity_x = -100 + (random() * 200);
@@ -1802,9 +1817,19 @@ void() DropBackpack =
 		self == player
 ===============
 */
-void() q2_tossWeapon{
+void() q2_tossWeapon={
 	local entity newWeapon;
 	local entity this;
+	
+	if(self.weapon == WEP_BLASTER){
+		return;
+	}
+	
+	//remove weapon form player inventory
+	self.inv_weapons = self.inv_weapons - (self.inv_weapons & self.weapon);	
+	
+	self.weaponstate_next = WEAPON_ACTIVATING;
+	self.weapon_next = W_BestWeapon();
 	
 	this = self;
 	newWeapon = spawn();
@@ -1868,6 +1893,4 @@ void() q2_tossWeapon{
 	self.nextthink = time + 1;
 	
 	self = this;
-	//remove weapon form player inventory
-	self.inv_weapons = self.inv_weapons - (self.inv_weapons & self.weapon);	
 };

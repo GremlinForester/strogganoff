@@ -2,6 +2,7 @@
 // prototypes
 void () W_WeaponFrame;
 void() W_SetCurrentAmmo;
+void() W_ChangeWeapon;
 void() player_pain;
 //void() q2player_stand1;
 void (vector org) spawn_tfog;
@@ -99,7 +100,7 @@ void() DecodeLevelParms =
 	self.ammo_cells = parm7;
 	self.weapon = parm8;
 	self.armortype = parm9 * 0.01;
-	self.inv_weapons = parm10;
+	self.inv_weapons = self.inv_weapons | parm10;
 	self.inv_ammo_slugs = parm11;
 };
 
@@ -643,11 +644,8 @@ void() PutClientInServer =
 	#ifdef q2model_lighting
 	self.effects = EF_FULLBRIGHT; //MrC Lightgrid workaround
 	#endifdef
-	self.weaponstate = WEAPON_READY;
 	
 	DecodeLevelParms ();
-	
-	W_SetCurrentAmmo ();
 
 	self.attack_finished = time;
 	self.th_pain = player_pain;
@@ -689,12 +687,16 @@ void() PutClientInServer =
 	
 	AttachTPWeapon();
 	
+  //setup player v_wep state machine
+  self.weapon_next = self.weapon;
+  self.inv_weapons = self.inv_weapons | WEP_BLASTER;
+	W_ChangeWeapon();
+  
 	if (deathmatch || coop)
 	{
 		makevectors(self.angles);
 		spawn_tfog (self.origin + v_forward*20);
 	}
-	W_Draw();
 	spawn_tdeath (self.origin, self);
 };
 
@@ -1184,11 +1186,12 @@ void() PlayerPreThink =
 	if (time < self.pausetime)
 		self.velocity = '0 0 0';
 
-	if(time > self.attack_finished && ! self.currentammo /* == 0 */ && self.weapon != WEP_BLASTER)
-	{
-		self.weapon = W_BestWeapon ();
-		W_SetCurrentAmmo ();
-	}
+	//if(time > self.attack_finished && ! self.currentammo /* == 0 */ && self.weapon != WEP_BLASTER)
+	//{
+   // self.weapon_next = W_BestWeapon ();
+  //  self.weaponstate_next = WEAPON_DROPPING;
+	//	//W_SetCurrentAmmo ();
+	//}
 	
 	//----------------------------------------------------------------------
 	// Rubicon Ladder Code - johnfitz
@@ -1456,17 +1459,18 @@ void() PlayerPostThink =
 		return ;
 
 #endifdef
-
-
 	if (!self.view_ofs) // == '0 0 0')
 		return;		// intermission or finale
 	if (self.deadflag)
 		return;
-		
+	
 // do weapon stuff
-
 	W_WeaponFrame ();
-
+	
+	if(self.weapon_update_func && self.weapon_update_func != SUB_Null){
+		W_WeaponAnimate();
+	}
+	
 // check to see if player landed and play landing sound
 	if ((self.jump_flag < -100) && (self.flags & FL_ONGROUND) && (self.health > 0))
 	{
@@ -1511,30 +1515,30 @@ void() PlayerPostThink =
 
 	if (autocvar_cl_surfacesniffer >= 1)
 	{
-	W_surfaceSniffer();
-	
-	bprint ("Contents flag: ");
-	bprint (ftos(trace_dphitcontents));
-	bprint ("\n");
-	bprint ("Surface flag: ");
-	bprint (ftos(trace_dphitq3surfaceflags));
-	bprint ("\n");
-	bprint ("Surface name: ");
-	bprint (trace_dphittexturename);
-	bprint ("\n");
-	bprint ("Surface start: ");
-	bprint (ftos(trace_dpstartcontents));
-	bprint ("\n");
+		W_surfaceSniffer();
+		
+		bprint ("Contents flag: ");
+		bprint (ftos(trace_dphitcontents));
+		bprint ("\n");
+		bprint ("Surface flag: ");
+		bprint (ftos(trace_dphitq3surfaceflags));
+		bprint ("\n");
+		bprint ("Surface name: ");
+		bprint (trace_dphittexturename);
+		bprint ("\n");
+		bprint ("Surface start: ");
+		bprint (ftos(trace_dpstartcontents));
+		bprint ("\n");
 	}
 	
 	if (autocvar_cl_printpos>= 1)
 	{
-	bprint ("Position: ");
-	bprint (vtos(self.origin));
-	bprint ("\n");
-	bprint ("Angle: ");
-	bprint (vtos(self.angles));
-	bprint ("\n");
+		bprint ("Position: ");
+		bprint (vtos(self.origin));
+		bprint ("\n");
+		bprint ("Angle: ");
+		bprint (vtos(self.angles));
+		bprint ("\n");
 	}
 	
 	if (autocvar_cl_printstate >= 1)	
@@ -1577,18 +1581,21 @@ void() PlayerPostThink =
 		switch (self.weaponstate)
 		{
 		case 0:
-			bprint ("WEAPON_READY");
+			bprint ("WEAPON_EMPTY");
 			break;
 		case 1:
-			bprint ("WEAPON_ACTIVATING");
+			bprint ("WEAPON_READY");
 			break;
 		case 2:
-			bprint ("WEAPON_DROPPING");
+			bprint ("WEAPON_ACTIVATING");
 			break;
 		case 3:
-			bprint ("WEAPON_SPINDOWN");
+			bprint ("WEAPON_DROPPING");
 			break;
 		case 4:
+			bprint ("WEAPON_SPINDOWN");
+			break;
+		case 5:
 			bprint ("WEAPON_FIRING");
 			break;
 		}

@@ -442,7 +442,7 @@ void(float damage) FireBullet =
 		fireBulletSound();
 		self.currentammo = self.inv_ammo_bullets = self.inv_ammo_bullets - 1;
 		#ifndef new_weapon_generic
-		self.weaponstate = WEAPON_SPINDOWN;
+		//self.weaponstate = WEAPON_SPINDOWN;
 		#endifdef
 		SpawnMuzzleFlash(WEP_MACHINEGUN_MFLASH_OFFSET_FP, 2, 0.5);
 		sound (self, CHAN_WEAPON2, "weapons/chngnl1a.wav", 0.5, ATTN_NORM); //spinning
@@ -611,17 +611,8 @@ void() W_FireShotgun =
 
 	src = self.origin + v_forward*10;
 	src_z = self.absmin_z + self.size_z * 0.7;	
-
-	//MrC: fixes a sound bug where one shell left on supershotgun makes normal shotgun sound	
-	if (self.weapon == WEP_SUPERSHOTGUN)
-	{
-		sound (self ,CHAN_WEAPON, "weapons/shotgn2.wav", 1, ATTN_NORM);
-	}
-	else
-	{
-		sound (self, CHAN_WEAPON, "weapons/guncock.wav", 1, ATTN_NORM);		
-	}
 	
+	sound (self, CHAN_WEAPON, "weapons/Shotgf1b.wav", 1, ATTN_NORM);		
 	self.punchangle_x = -2;
 	
 	self.currentammo = self.ammo_shells = self.ammo_shells - 1;
@@ -653,7 +644,7 @@ void() W_FireSuperShotgun =
 		return;
 	}
 		
-	sound (self ,CHAN_WEAPON, "weapons/shotgn2.wav", 1, ATTN_NORM);	
+	//sound (self ,CHAN_WEAPON, "weapons/shotgn2.wav", 1, ATTN_NORM);	
 
 	self.punchangle_x = -4;
 	
@@ -721,7 +712,7 @@ void() W_FireBlaster =
 	{
 		self.currentammo = self.ammo_cells = self.ammo_cells - 1;
 		#ifndef new_weapon_generic
-		self.weaponstate = WEAPON_SPINDOWN;
+		//self.weaponstate = WEAPON_SPINDOWN;
 		#endifdef
 		sound (self, CHAN_WEAPON2, "weapons/hyprbl1a.wav", 0.7, ATTN_NORM);
 		sound (self, CHAN_WEAPON, "weapons/Hyprbf1a.wav", 1, ATTN_NORM);

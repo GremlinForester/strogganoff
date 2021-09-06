@@ -101,7 +101,46 @@ float START_ON = 1;
 
 .string sightSound;
 
+vector(vector vUp) PlayerViewOrg={
+	local vector v;
+	v = vUp * self.view_ofs_z;
+	return v;
+};
+
+.float weapon_anim_start;
+.float weapon_frame_end;
+
+//Q2 weapon impl flattened down to player
+//mimic ammo_index value in Q2
+enum
+{
+	AMMO_IDX_NONE,
+	AMMO_IDX_SHELLS,
+	AMMO_IDX_BULLETS,
+	AMMO_IDX_ROCKETS,
+	AMMO_IDX_SLUGS,
+	AMMO_IDX_CELLS
+};
+.float ammo_index;
+
+.float grenade_time;
+.float machinegun_shots;
+
+.float weapon_next;
+.float lastweapon;
 .float weaponstate;
+.float weaponstate_next;
+.float weapon_think;
+.float() weapon_update_func;
+.float() weapon_pause_frames;	// these really need to be structs
+.float() weapon_fire_frames;
+.float weapon_ammo_min;				//many weapons have a 1 or 2 shot min to fire.
+.string weapon_sound;	//maps to Q2's p_view client->weapon_sound, but as a string and not float
+											//apparently used to do most spin up/down weapons. todo-  this is called in Q2's client end-of-frame processing
+
+//frame_t wpnFramesFire[10];
+//frame_t wpnFamesPause[10];
+
 .float state;
 .float bCrouched;
 
@@ -147,11 +186,12 @@ Find/Replace, it's time to work!
 
 enum 
 {
-	WEAPON_READY, 
-	WEAPON_ACTIVATING,
-	WEAPON_DROPPING,
-	WEAPON_SPINDOWN,
-	WEAPON_FIRING
+	WEAPON_EMPTY,			//0
+	WEAPON_READY, 		//1
+	WEAPON_ACTIVATING,//2
+	WEAPON_DROPPING,	//3
+	WEAPON_SPINDOWN,	//4
+	WEAPON_FIRING,		//5
 };
 
 enum 
@@ -167,6 +207,59 @@ enum
 Functions converted from Quake 2 to QC
 ============
 */
+
+float(vector v1, vector v2) VectorCompare=
+{
+	if (v1_x != v2_x || v1_y != v2_y || v1_z != v2_z)
+			return FALSE;
+			
+	return TRUE;
+}
+
+vector VectorScale (vector in, vector scale)=
+{
+	local vector v;
+	v_x = in_x * scale_x;
+	v_y = in_y * scale_y;
+	v_z = in_z * scale_z;
+	return v;
+};
+
+vector(vector veca, vector vecb) VectorSubtract=
+{
+	local vector v;
+	v_x = veca_x - vecb_x;
+	v_y = veca_y - vecb_y;
+	v_z = veca_z - vecb_z;
+	return v;
+};
+
+vector(vector veca, vector vecb) VectorAdd=
+{
+	local vector v;
+	v_x = veca_x + vecb_x;
+	v_y = veca_y + vecb_y;
+	v_z = veca_z + vecb_z;
+	return v;
+};
+
+vector(vector veca, float scale, vector vecb) VectorMA =
+{
+	local vector v;
+	v_x = veca_x + scale*vecb_x;
+	v_y = veca_y + scale*vecb_y;
+	v_z = veca_z + scale*vecb_z;
+	return v;
+};
+
+
+vector (float vX, float vY, float vZ ) VectorSet={
+	local vector v;
+	v_x = vX;
+	v_y = vY;
+	v_z = vZ;
+	return v;
+};
 
 vector (vector point, vector distance, vector forward, vector right, vector result) G_ProjectSource =
 {
@@ -276,16 +369,16 @@ WEAPONS
 #define WEP_BFG 				512
 //#define WEP_GRENADE 			512
 
-#define	WEP_BLASTER_ATTACKTIME 0.4
-#define	WEP_SHOTGUN_ATTACKTIME 0.9
-#define	WEP_SUPERSHOTGUN_ATTACKTIME 0.9
-#define	WEP_MACHINEGUN_ATTACKTIME 0.15
-#define	WEP_CHAINGUN_ATTACKTIME 0.05
+#define	WEP_BLASTER_ATTACKTIME          0.5
+#define	WEP_SHOTGUN_ATTACKTIME          0.9
+#define	WEP_SUPERSHOTGUN_ATTACKTIME     0.9
+#define	WEP_MACHINEGUN_ATTACKTIME       0.05
+#define	WEP_CHAINGUN_ATTACKTIME         0.01
 #define	WEP_GRENADE_LAUNCHER_ATTACKTIME 0.8
-#define	WEP_ROCKET_LAUNCHER_ATTACKTIME 0.8
-#define	WEP_HYPERBLASTER_ATTACKTIME 0.135
-#define	WEP_RAILGUN_ATTACKTIME 2.0
-#define	WEP_BFG_ATTACKTIME 0 //3.105
+#define	WEP_ROCKET_LAUNCHER_ATTACKTIME  0.8
+#define	WEP_HYPERBLASTER_ATTACKTIME     0.135
+#define	WEP_RAILGUN_ATTACKTIME          2.0
+#define	WEP_BFG_ATTACKTIME              0 //3.105
 
 #define	WEP_BLASTER_MFLASH_OFFSET_FP '74 -18 -10'
 #define	WEP_BLASTER_MFLASH_OFFSET_TP '40 -18 -10'
@@ -297,20 +390,178 @@ WEAPONS
 #define	WEP_MACHINEGUN_MFLASH_SCALE 0.5
 #define	WEP_MG_MFLASH_ALPHA 0.5
 
+
+/*
+============
+IMPULSE VALUES
+============
+*/
+#define IMPULSE_TOSS_WEAPON 13
+
+#define IMPULSE_USE_WEAPON1 1
+#define IMPULSE_USE_WEAPON2 2
+#define IMPULSE_USE_WEAPON3 3
+#define IMPULSE_USE_WEAPON4 4
+#define IMPULSE_USE_WEAPON5 5
+#define IMPULSE_USE_WEAPON6 6
+#define IMPULSE_USE_WEAPON7 7
+#define IMPULSE_USE_WEAPON8 8
+#define IMPULSE_USE_WEAPON9 9
+#define IMPULSE_USE_WEAPON10 10
+
+#define IMPULSE_WEAPON_NEXT 30
+#define IMPULSE_WEAPON_PREV 31
+
+#define IMPULSE_CHEAT_CMD 99
+
+#define IMPULSE_SVFLAGS_CMD 11
+
+#define IMPULSE_CHEAT_QUAD 255
+
+
+
 /*
 ============
 VIEW WEAPON FRAMES
 ============
 */
 
-#define WEP_BLASTER_ACTIVE_FIRSTFRAME	0
-#define WEP_BLASTER_ACTIVE_LASTFRAME 	4
-#define WEP_BLASTER_FIRE_FIRSTFRAME 	5
-#define WEP_BLASTER_FIRE_LASTFRAME 		8
-#define WEP_BLASTER_IDLE1_FIRSTFRAME 	9
-#define WEP_BLASTER_IDLE1_LASTFRAME 	32
-#define WEP_BLASTER_IDLE2_FIRSTFRAME 	33
-#define WEP_BLASTER_IDLE2_LASTFRAME 	52
+//BLASTER
+#define WEP_BLASTER_ACTIVE_FIRSTFRAME 1
+#define WEP_BLASTER_ACTIVE_LASTFRAME 4
+
+#define WEP_BLASTER_FIRE_FIRSTFRAME 5
+#define WEP_BLASTER_FIRE_LASTFRAME 8
+
+#define WEP_BLASTER_IDLE1_FIRSTFRAME 9
+#define WEP_BLASTER_IDLE1_LASTFRAME 32
+
+#define WEP_BLASTER_IDLE2_FIRSTFRAME 33
+#define WEP_BLASTER_IDLE2_LASTFRAME 52
+
+#define WEP_BLASTER_AWAY_FIRSTFRAME 54
+#define WEP_BLASTER_AWAY_LASTFRAME 56
+
+//SHOTGUN
+#define WEP_SHOTGUN_ACTIVE_FIRSTFRAME 1
+#define WEP_SHOTGUN_ACTIVE_LASTFRAME 7
+
+#define WEP_SHOTGUN_FIRE_FIRSTFRAME 8
+#define WEP_SHOTGUN_FIRE_LASTFRAME 18
+
+#define WEP_SHOTGUN_IDLE1_FIRSTFRAME 19
+#define WEP_SHOTGUN_IDLE1_LASTFRAME 36
+
+#define WEP_SHOTGUN_AWAY_FIRSTFRAME 37
+#define WEP_SHOTGUN_AWAY_LASTFRAME 39
+
+//SUPER SHOTGUN
+#define WEP_SUPERSHOTGUN_ACTIVE_FIRSTFRAME 1
+#define WEP_SUPERSHOTGUN_ACTIVE_LASTFRAME 7
+
+#define WEP_SUPERSHOTGUN_FIRE_FIRSTFRAME 8
+#define WEP_SUPERSHOTGUN_FIRE_LASTFRAME 18
+
+#define WEP_SUPERSHOTGUN_IDLE1_FIRSTFRAME 19
+#define WEP_SUPERSHOTGUN_IDLE1_LASTFRAME 58
+
+#define WEP_SUPERSHOTGUN_AWAY_FIRSTFRAME 59
+#define WEP_SUPERSHOTGUN_AWAY_LASTFRAME 62
+
+//MACHINE GUN
+#define WEP_MACHINEGUN_ACTIVE_FIRSTFRAME 1
+#define WEP_MACHINEGUN_ACTIVE_LASTFRAME 4
+
+#define WEP_MACHINEGUN_FIRE_FIRSTFRAME 5
+#define WEP_MACHINEGUN_FIRE_LASTFRAME 6
+
+#define WEP_MACHINEGUN_IDLE1_FIRSTFRAME 7
+#define WEP_MACHINEGUN_IDLE1_LASTFRAME 46
+
+#define WEP_MACHINEGUN_AWAY_FIRSTFRAME 47
+#define WEP_MACHINEGUN_AWAY_LASTFRAME 50
+
+//CHAINGUN
+#define WEP_CHAINGUN_ACTIVE_FIRSTFRAME 1
+#define WEP_CHAINGUN_ACTIVE_LASTFRAME 4
+
+#define WEP_CHAINGUN_FIRE_FIRSTFRAME 6
+#define WEP_CHAINGUN_FIRE_LASTFRAME 32
+
+#define WEP_CHAINGUN_IDLE1_FIRSTFRAME 33
+#define WEP_CHAINGUN_IDLE1_LASTFRAME 62
+
+#define WEP_CHAINGUN_AWAY_FIRSTFRAME 63
+#define WEP_CHAINGUN_AWAY_LASTFRAME 65
+
+//NADE LAUNCHER
+#define WEP_NADELAUNCH_ACTIVE_FIRSTFRAME 1
+#define WEP_NADELAUNCH_ACTIVE_LASTFRAME 7
+
+#define WEP_NADELAUNCH_FIRE_FIRSTFRAME 8
+#define WEP_NADELAUNCH_FIRE_LASTFRAME 18
+
+#define WEP_NADELAUNCH_IDLE1_FIRSTFRAME 19
+#define WEP_NADELAUNCH_IDLE1_LASTFRAME 61
+
+#define WEP_NADELAUNCH_AWAY_FIRSTFRAME 62
+#define WEP_NADELAUNCH_AWAY_LASTFRAME 64
+
+//ROCKET LAUNCHER
+#define WEP_ROCKETLAUNCH_ACTIVE_FIRSTFRAME 1
+#define WEP_ROCKETLAUNCH_ACTIVE_LASTFRAME 5
+
+#define WEP_ROCKETLAUNCH_FIRE_FIRSTFRAME 6
+#define WEP_ROCKETLAUNCH_FIRE_LASTFRAME 13
+
+#define WEP_ROCKETLAUNCH_IDLE1_FIRSTFRAME 14
+#define WEP_ROCKETLAUNCH_IDLE1_LASTFRAME 51
+
+#define WEP_ROCKETLAUNCH_AWAY_FIRSTFRAME 52
+#define WEP_ROCKETLAUNCH_AWAY_LASTFRAME 55
+
+//HYPERBLASTER
+#define WEP_HYPERBLAST_ACTIVE_FIRSTFRAME 1
+#define WEP_HYPERBLAST_ACTIVE_LASTFRAME 6
+
+#define WEP_HYPERBLAST_FIRE_FIRSTFRAME 7
+#define WEP_HYPERBLAST_FIRE_LASTFRAME 11
+
+#define WEP_HYPERBLASTER_SPIN_FIRSTFRAME 12
+#define WEP_HYPERBLASTER_LAST_FIRSTFRAME 21
+
+#define WEP_HYPERBLAST_IDLE1_FIRSTFRAME 22
+#define WEP_HYPERBLAST_IDLE1_LASTFRAME 50
+
+#define WEP_HYPERBLAST_AWAY_FIRSTFRAME 51
+#define WEP_HYPERBLAST_AWAY_LASTFRAME 54
+
+//RAILGUN
+#define WEP_RAILGUN_ACTIVE_FIRSTFRAME 1
+#define WEP_RAILGUN_ACTIVE_LASTFRAME 4
+
+#define WEP_RAILGUN_FIRE_FIRSTFRAME 5
+#define WEP_RAILGUN_FIRE_LASTFRAME 19
+
+#define WEP_RAILGUN_IDLE1_FIRSTFRAME 20
+#define WEP_RAILGUN_IDLE1_LASTFRAME 57
+
+#define WEP_RAILGUN_AWAY_FIRSTFRAME 58
+#define WEP_RAILGUN_AWAY_LASTFRAME 62
+
+//BFG
+#define WEP_BFG_ACTIVE_FIRSTFRAME 1
+#define WEP_BFG_ACTIVE_LASTFRAME 9
+
+#define WEP_BFG_FIRE_FIRSTFRAME 10
+#define WEP_BFG_FIRE_LASTFRAME 32
+
+#define WEP_BFG_IDLE1_FIRSTFRAME 33
+#define WEP_BFG_IDLE1_LASTFRAME 55
+
+#define WEP_BFG_AWAY_FIRSTFRAME 56
+#define WEP_BFG_AWAY_LASTFRAME 60
+
 
 /*
 ============
