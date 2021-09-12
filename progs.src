@@ -67,6 +67,7 @@ q2/monsterq2_floater.qc
 q2/monsterq2_flyer.qc
 q2/monsterq2_tank.qc
 q2/monsterq2_hover.qc
+q2/monsterq2_insane.qc
 
 q2/monsterq2_supertank.qc
 q2/monsterq2_boss2.qc
