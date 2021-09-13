@@ -323,7 +323,7 @@ void(entity attacker, float damage)	enf_pain =
 void()	enf_die1	=[	$death1,	enf_die2	] {};
 void()	enf_die2	=[	$death2,	enf_die3	] {};
 void()	enf_die3	=[	$death3,	enf_die4	]
-{self.solid = SOLID_NOT;self.ammo_cells = 5;DropBackpack();};
+{self.solid = SOLID_NOT;self.inv_ammo_cells = 5;DropBackpack();};
 void()	enf_die4	=[	$death4,	enf_die5	] {ai_forward(14);};
 void()	enf_die5	=[	$death5,	enf_die6	] {ai_forward(2);};
 void()	enf_die6	=[	$death6,	enf_die7	] {};
@@ -339,7 +339,7 @@ void()	enf_die14	=[	$death14,	enf_die14	] {};
 
 framer($death1, $death14, enf_die1, SUB_Null, 0.1,
 
-	frame_arb($death3,self.solid = SOLID_NOT;self.ammo_cells = 5;DropBackpack(););
+	frame_arb($death3,self.solid = SOLID_NOT;self.inv_ammo_cells = 5;DropBackpack(););
 	ai_rep($death4, ai_forward, 14, 2, -6, -6, -6, 3, 5, 5);
 	frame_arb($death12,ai_forward(5)); // #cheat here
 );
@@ -350,7 +350,7 @@ void()	enf_fdie1	=[	$fdeath1,	enf_fdie2	] {
 };
 void()	enf_fdie2	=[	$fdeath2,	enf_fdie3	] {};
 void()	enf_fdie3	=[	$fdeath3,	enf_fdie4	] 
-{self.solid = SOLID_NOT;self.ammo_cells = 5;DropBackpack();};
+{self.solid = SOLID_NOT;self.inv_ammo_cells = 5;DropBackpack();};
 void()	enf_fdie4	=[	$fdeath4,	enf_fdie5	] {};
 void()	enf_fdie5	=[	$fdeath5,	enf_fdie6	] {};
 void()	enf_fdie6	=[	$fdeath6,	enf_fdie7	] {};
@@ -363,7 +363,7 @@ void()	enf_fdie11	=[	$fdeath11,	enf_fdie11	] {};
 
 framer($fdeath1, $fdeath11, enf_fdie1, SUB_Null, 0.1,
 
-	frame_arb($fdeath3,self.solid = SOLID_NOT;self.ammo_cells = 5;DropBackpack(););
+	frame_arb($fdeath3,self.solid = SOLID_NOT;self.inv_ammo_cells = 5;DropBackpack(););
 );
 
 	

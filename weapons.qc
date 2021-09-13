@@ -6,8 +6,6 @@ PLAYER WEAPON USE
 ===============================================================================
 */
 
-void() W_SetDefaultFrames;
-void() W_Draw;
 void() q2player_run;
 
 /*
@@ -31,12 +29,12 @@ void() W_SetCurrentAmmo =
 			break;
 			
 		case WEP_SHOTGUN:
-			self.currentammo = self.ammo_shells;
+			self.currentammo = self.inv_ammo_shells;
 			self.items = self.items | IT_SHELLS;
 			break;
 			
 		case WEP_SUPERSHOTGUN:
-			self.currentammo = self.ammo_shells;
+			self.currentammo = self.inv_ammo_shells;
 			self.items = self.items | IT_SHELLS;
 			break;
 			
@@ -51,17 +49,17 @@ void() W_SetCurrentAmmo =
 			break;
 			
 		case WEP_GRENADE_LAUNCHER:
-			self.currentammo = self.ammo_rockets;
+			self.currentammo = self.inv_ammo_rockets;
 			self.items = self.items | IT_ROCKETS;
 			break;
 			
 		case WEP_ROCKET_LAUNCHER:
-			self.currentammo = self.ammo_rockets;
+			self.currentammo = self.inv_ammo_rockets;
 			self.items = self.items | IT_ROCKETS;
 			break;
 			
 		case WEP_HYPERBLASTER:
-			self.currentammo = self.ammo_cells;
+			self.currentammo = self.inv_ammo_cells;
 			self.items = self.items | IT_CELLS;
 			break;
 			
@@ -71,7 +69,7 @@ void() W_SetCurrentAmmo =
 			break;
 			
 		case WEP_BFG:
-			self.currentammo = self.ammo_cells;
+			self.currentammo = self.inv_ammo_cells;
 			self.items = self.items | IT_CELLS;
 			break;
 		
@@ -87,25 +85,25 @@ float() W_BestWeapon =
 	
 	it = self.inv_weapons;
 
-  if (self.ammo_cells > 0 && (it & WEP_BFG) ){
+  if (self.inv_ammo_cells > 0 && (it & WEP_BFG) ){
     return WEP_BFG;
   }
   if (self.inv_ammo_slugs > 0 && (it & WEP_RAILGUN) ){
     return WEP_RAILGUN;
   }
-  if (self.ammo_cells > 0 && (it & WEP_HYPERBLASTER) ){
+  if (self.inv_ammo_cells > 0 && (it & WEP_HYPERBLASTER) ){
     return WEP_HYPERBLASTER;
   }
   if(self.inv_ammo_bullets > 1 && (it & WEP_CHAINGUN) ){
     return WEP_CHAINGUN;
   }
-  if(self.ammo_shells > 1 && (it & WEP_SUPERSHOTGUN) ){
+  if(self.inv_ammo_shells > 1 && (it & WEP_SUPERSHOTGUN) ){
     return WEP_SUPERSHOTGUN;
   }
   if(self.inv_ammo_bullets > 0 && (it & WEP_MACHINEGUN) ){
     return WEP_MACHINEGUN;
   }
-  if(self.ammo_shells > 0 && (it & WEP_SHOTGUN) ){
+  if(self.inv_ammo_shells > 0 && (it & WEP_SHOTGUN) ){
     return WEP_SHOTGUN;
   }
 	return WEP_BLASTER;
@@ -135,14 +133,10 @@ W_Attack
 An attack impulse can be triggered now
 ============
 */
-void()	q2player_MGattackframes;
-void()	q2player_CGattackframes;
-void()	q2player_4attackframes;
-void()	q2player_8attackframes;
+
 void()	q2playeronly_8attackframes;
 void()	q2playeronly_4attackframes;
-void()	q2player_HBattackframes;
-void()	q2player_4drawframes;
+
 
 /*
 ============
@@ -153,83 +147,8 @@ The first 4 are the firing of the weapon and the next 4 are the gun cocking.
 Weapons like the blaster only use the first 4 while almost every other weapon 
 uses the full 8 frames.
 
-void()	q2player_4attackframes;
-void()	q2player_8attackframes;
-
 ============
 */
-
-void() W_Draw =
-{
-	local	float	r;
-
-	if (!W_CheckNoAmmo ())
-		return;
-
-	self.weaponframe = 0;
-	self.weaponstate = WEAPON_ACTIVATING;
-
-	if (self.weapon == WEP_BLASTER)
-	{
-		sound(self, CHAN_WEAPON, "weapons/HGRENT1A.WAV", 0.5, ATTN_IDLE);		
-		q2player_4drawframes ();
-	//	self.attack_finished = time + 0.4;
-	}
-	else if (self.weapon == WEP_SHOTGUN)
-	{
-		sound(self, CHAN_WEAPON, "weapons/Shotgr1b.wav", 0.5, ATTN_IDLE);	
-		q2player_4drawframes ();
-	//	self.attack_finished = time + 0.6;
-	}
-	else if (self.weapon == WEP_SUPERSHOTGUN)
-	{
-		sound(self, CHAN_WEAPON, "weapons/HGRENT1A.WAV", 0.5, ATTN_IDLE);	
-		q2player_4drawframes ();
-	//	self.attack_finished = time + 0.4;
-	}
-	else if (self.weapon == WEP_MACHINEGUN)
-	{
-		sound(self, CHAN_WEAPON, "weapons/HGRENT1A.WAV", 0.5, ATTN_IDLE);	
-		q2player_4drawframes ();
-	//	self.attack_finished = time + 0.4;
-	}
-	else if (self.weapon == WEP_CHAINGUN)
-	{
-		sound(self, CHAN_WEAPON, "weapons/HGRENT1A.WAV", 0.5, ATTN_IDLE);	
-		q2player_4drawframes ();
-	//	self.attack_finished = time + 0.4;
-	}
-	else if (self.weapon == WEP_GRENADE_LAUNCHER)
-	{
-		sound(self, CHAN_WEAPON, "weapons/HGRENT1A.WAV", 0.5, ATTN_IDLE);	
-		q2player_4drawframes ();
-	//	self.attack_finished = time + 0.9;
-	}
-	else if (self.weapon == WEP_ROCKET_LAUNCHER)
-	{
-		sound(self, CHAN_WEAPON, "weapons/HGRENT1A.WAV", 0.5, ATTN_IDLE);	
-		q2player_4drawframes ();
-	//	self.attack_finished = time + 0.9;
-	}
-	else if (self.weapon == WEP_HYPERBLASTER)
-	{
-		sound(self, CHAN_WEAPON, "weapons/HGRENT1A.WAV", 0.5, ATTN_IDLE);	
-		q2player_4drawframes ();
-	//	self.attack_finished = time + 0.9;
-	}
-	else if (self.weapon == WEP_RAILGUN)
-	{
-		sound(self, CHAN_WEAPON, "weapons/HGRENT1A.WAV", 0.5, ATTN_IDLE);	
-		q2player_4drawframes ();
-	//	self.attack_finished = time + 0.9;
-	}
-	else if (self.weapon == WEP_BFG)
-	{
-		sound(self, CHAN_WEAPON, "weapons/HGRENT1A.WAV", 0.5, ATTN_IDLE);	
-		q2player_4drawframes ();
-	//	self.attack_finished = time + 0.9;
-	}
-};
 
 void() W_Attack =
 {
@@ -331,9 +250,11 @@ void() CheatCommand =
 #endifdef
 									)		return;
 
-	self.ammo_rockets = 100;
+	self.inv_ammo_rockets = 100;
 	self.inv_ammo_bullets = 200;
-	self.ammo_shells = 100;
+	self.inv_ammo_shells = 100;
+	self.inv_ammo_slugs = 100;
+	self.inv_ammo_cells = 200;
 	self.inv_weapons = self.inv_weapons | 
 		WEP_BLASTER |
 		WEP_SHOTGUN |
@@ -348,9 +269,6 @@ void() CheatCommand =
 	self.items = self.items | 
 		IT_KEY1 | IT_KEY2;
 
-	self.ammo_cells = 200;
-
-	self.weapon = WEP_BFG;
 	self.impulse = 0;
 };
 
@@ -378,15 +296,15 @@ void() CycleWeaponCommand =
 // since these are bit flags, * 2 selects next and * 0.5 selects previous - for single select set this to 1
 //		self.weapon = self.weapon * self.f__;
 // weapon select logic
-		if (self.weapon_next == WEP_BFG && self.ammo_cells < 1) am = 1;
-		if (self.weapon_next == WEP_RAILGUN && self.ammo_cells < 1) am = 1;
-		if (self.weapon_next == WEP_HYPERBLASTER && self.ammo_cells < 1) am = 1;
-		if (self.weapon_next == WEP_ROCKET_LAUNCHER && self.ammo_rockets < 1) am = 1;
-		if (self.weapon_next == WEP_GRENADE_LAUNCHER && self.ammo_rockets < 1) am = 1;
+		if (self.weapon_next == WEP_BFG && self.inv_ammo_cells < 1) am = 1;
+		if (self.weapon_next == WEP_RAILGUN && self.inv_ammo_slugs < 1) am = 1;
+		if (self.weapon_next == WEP_HYPERBLASTER && self.inv_ammo_cells < 1) am = 1;
+		if (self.weapon_next == WEP_ROCKET_LAUNCHER && self.inv_ammo_rockets < 1) am = 1;
+		if (self.weapon_next == WEP_GRENADE_LAUNCHER && self.inv_ammo_rockets < 1) am = 1;
 		if (self.weapon_next == WEP_CHAINGUN && self.inv_ammo_bullets < 2) am = 1;
 		if (self.weapon_next == WEP_MACHINEGUN && self.inv_ammo_bullets < 1) am = 1;
-		if (self.weapon_next == WEP_SUPERSHOTGUN && self.ammo_shells < 2) am = 1;
-		if (self.weapon_next == WEP_SHOTGUN && self.ammo_shells < 1) am = 1;
+		if (self.weapon_next == WEP_SUPERSHOTGUN && self.inv_ammo_shells < 2) am = 1;
+		if (self.weapon_next == WEP_SHOTGUN && self.inv_ammo_shells < 1) am = 1;
 	
 		if ( (self.inv_weapons & self.weapon_next) && ! am)
 		{
@@ -630,17 +548,6 @@ void() ImpulseCommands =
 	if (self.impulse >= IMPULSE_USE_WEAPON1 && self.impulse <= IMPULSE_USE_WEAPON10)
 	{
 			W_ImpulseChangeWeapon();
-		/*if (self.weaponstate == WEAPON_SPINDOWN)
-		{
-			self.weaponstate = WEAPON_READY;
-			sound (self, CHAN_WEAPON, "weapons/noammo.wav", 0.1, ATTN_NORM);
-			sound (self, CHAN_WEAPON2, "weapons/noammo.wav", 0.1, ATTN_NORM);
-			W_ImpulseChangeWeapon();
-		}
-		else
-		{
-			W_ImpulseChangeWeapon();
-		}*/
 	}
 
 	if (self.impulse == IMPULSE_WEAPON_NEXT)

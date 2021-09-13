@@ -274,12 +274,12 @@ void(float brange) bot_weapon_switch =
 
 	while(it)
 	{
-		if ((self.ammo_rockets >= 1) && (it & 32))
+		if ((self.inv_ammo_rockets >= 1) && (it & 32))
 		{
 			flag = 32;
 			pulse = 7;
 		}
-		else if (self.waterlevel <= 1 && self.ammo_cells >= 1 && (it & 64))
+		else if (self.waterlevel <= 1 && self.inv_ammo_cells >= 1 && (it & 64))
 		{
 			flag = 64;
 			pulse = 8;
@@ -289,12 +289,12 @@ void(float brange) bot_weapon_switch =
 			flag = 8;
 			pulse = 5;
 		}
-		else if ((self.ammo_rockets >= 1) && (it & 16))
+		else if ((self.inv_ammo_rockets >= 1) && (it & 16))
 		{
 			flag = 16;
 			pulse = 6;
 		}
-		else if(self.ammo_shells >= 2 && (it & 2))
+		else if(self.inv_ammo_shells >= 2 && (it & 2))
 		{
 			flag = 2;
 			pulse = 3;
@@ -304,7 +304,7 @@ void(float brange) bot_weapon_switch =
 			flag = 4;
 			pulse = 4;
 		}
-		else if(self.ammo_shells >= 1 && (it & 1))
+		else if(self.inv_ammo_shells >= 1 && (it & 1))
 		{
 			flag = 1;
 			pulse = 2;

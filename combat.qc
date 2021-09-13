@@ -26,17 +26,17 @@ void(entity player, entity monster) PlayerRemarkOnKill =
 		|| monster.classname == "monster_infantry" && monster.health < -10)
 		{
 			player.nextsmacktalktime = time + 2;
-			r = random() * 10;
-			if (r < 1) sound(player, CHAN_SPEECH, PLAYER_KILLCOMMENT_1, 0.5, ATTN_IDLE);
-			else if (r < 2) sound(player, CHAN_SPEECH, PLAYER_KILLCOMMENT_2, 0.5, ATTN_IDLE);
-			else if (r < 3) sound(player, CHAN_SPEECH, PLAYER_KILLCOMMENT_3, 0.5, ATTN_IDLE);
-			else if (r < 7) sound(player, CHAN_SPEECH, PLAYER_KILLCOMMENT_4, 0.5, ATTN_IDLE);
-			else if (r < 9) sound(player, CHAN_SPEECH, PLAYER_KILLCOMMENT_5, 0.5, ATTN_IDLE);
-			else if (r < 10) sound(player, CHAN_SPEECH, PLAYER_KILLCOMMENT_6, 0.5, ATTN_IDLE);
-			else sound(player, CHAN_SPEECH, "", 0.5, ATTN_IDLE);
+			r = random() * 15;
+			if (r < 1) sound(player, CHAN_VOICE, PLAYER_KILLCOMMENT_1, 0.5, ATTN_IDLE);
+			else if (r < 2) sound(player, CHAN_VOICE, PLAYER_KILLCOMMENT_2, 0.5, ATTN_IDLE);
+			else if (r < 3) sound(player, CHAN_VOICE, PLAYER_KILLCOMMENT_3, 0.5, ATTN_IDLE);
+			else if (r < 7) sound(player, CHAN_VOICE, PLAYER_KILLCOMMENT_4, 0.5, ATTN_IDLE);
+			else if (r < 9) sound(player, CHAN_VOICE, PLAYER_KILLCOMMENT_5, 0.5, ATTN_IDLE);
+			else if (r < 10) sound(player, CHAN_VOICE, PLAYER_KILLCOMMENT_6, 0.5, ATTN_IDLE);
+			else sound(player, CHAN_VOICE, "", 0.5, ATTN_IDLE);
 		}
 		
-		player.nextsmacktalktime = time + 5;
+		player.nextsmacktalktime = time + 15;
 		return;
 };
 

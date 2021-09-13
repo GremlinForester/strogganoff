@@ -3,7 +3,7 @@
 void () W_WeaponFrame;
 void() W_SetCurrentAmmo;
 void() W_ChangeWeapon;
-void() player_pain;
+void() q2player_pain;
 //void() q2player_stand1;
 void (vector org) spawn_tfog;
 void (vector org, entity death_owner) spawn_tdeath;
@@ -51,13 +51,13 @@ void() SetChangeParms =
 	parm1 = self.items;
 	parm2 = self.health;
 	parm3 = self.armorvalue;
-	if (self.ammo_shells < 25)
+	if (self.inv_ammo_shells < 25)
 		parm4 = 25;
 	else
-		parm4 = self.ammo_shells;
+		parm4 = self.inv_ammo_shells;
 	parm5 = self.inv_ammo_bullets;
-	parm6 = self.ammo_rockets;
-	parm7 = self.ammo_cells;
+	parm6 = self.inv_ammo_rockets;
+	parm7 = self.inv_ammo_cells;
 	parm8 = self.weapon;
 	parm9 = self.armortype * 100;
 	parm10 = self.inv_weapons;
@@ -66,7 +66,7 @@ void() SetChangeParms =
 
 void() SetNewParms =
 {
-	parm1 = 0; //WEP_BLASTER;
+	parm1 = 0; //.items
 	parm2 = 100;
 	parm3 = 0;
 	parm4 = 0;
@@ -94,10 +94,10 @@ void() DecodeLevelParms =
 	self.items = parm1;
 	self.health = parm2;
 	self.armorvalue = parm3;
-	self.ammo_shells = parm4;
+	self.inv_ammo_shells = parm4;
 	self.inv_ammo_bullets = parm5;
-	self.ammo_rockets = parm6;
-	self.ammo_cells = parm7;
+	self.inv_ammo_rockets = parm6;
+	self.inv_ammo_cells = parm7;
 	self.weapon = parm8;
 	self.armortype = parm9 * 0.01;
 	self.inv_weapons = self.inv_weapons | parm10;
@@ -648,7 +648,7 @@ void() PutClientInServer =
 	DecodeLevelParms ();
 
 	self.attack_finished = time;
-	self.th_pain = player_pain;
+	self.th_pain = q2player_pain;
 	self.th_die = q2PlayerDie;
 	
 	self.deadflag = DEAD_NO;
@@ -936,7 +936,7 @@ void() PlayerJump =
 	
 	self.button2 = 0;
 // player jumping sound
-	sound (self, CHAN_BODY, "player/plyrjmp8.wav", 1, ATTN_NORM);
+	sound (self, CHAN_VOICE, "player/plyrjmp8.wav", 1, ATTN_NORM);
 	q2player_jumpframes();
 	self.velocity_z = self.velocity_z + 270;
 };

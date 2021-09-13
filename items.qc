@@ -916,6 +916,14 @@ local float		best;
 			return;
 		self.inv_ammo_cells = self.inv_ammo_cells + stemp.aflag;
 	}
+	
+//	cells
+	if (stemp.weapon == 5)
+	{
+		if (self.inv_ammo_slugs >= 100)
+			return;
+		self.inv_ammo_slugs = self.inv_ammo_slugs + stemp.aflag;
+	}
 
 	bound_other_ammo ();
 	
@@ -942,7 +950,7 @@ local float		best;
 // logic change eliminates
 //	stemp = self;
 //	self = other;
-	//W_SetCurrentAmmo();
+	W_SetCurrentAmmo(); //MrC 13/09/21: had to restore this to update ammo amounts on pickup
 	self = stemp;
 
 	touched(30);
@@ -961,15 +969,7 @@ local float		best;
 #undef stemp
 };
 
-
-
-
-#define WEAPON_BIG2 1
-
-/*QUAKED item_shells (0 .5 .8) (0 0 0) (32 32 32) big
-
-generic entry:
-
+/*
 "model" - bsp box model - size MUST be '0 0 0', '32 32 56'
 - model must be set or this will be a regular shell box
 "aflag" - ammo count
@@ -978,8 +978,102 @@ generic entry:
 - 2 = bullets
 - 3 = rockets / grenades
 - 4 = cells
+- 5 = slugs
+*/
+
+/*
+
+Quake 2 ammo_ entities
 
 */
+
+/*QUAKED ammo_shells (.3 .3 1) (-16 -16 -16) (16 16 16)
+*/
+void() ammo_shells =
+{
+	precache_model ("models/items/ammo/shells/medium/tris.md2");
+	setmodel (self, "models/items/ammo/shells/medium/tris.md2");
+	self.aflag = 10;
+	self.weapon = 1;
+	self.netname = "shells";
+	setorigin (self, self.origin + '0 0 0');
+	setsize (self, '-16 -16 -16', '16 16 16');
+	self.touch = ammo_touch;
+	StartItem ();
+};
+
+/*QUAKED ammo_bullets (.3 .3 1) (-16 -16 -16) (16 16 16)
+*/
+void() ammo_bullets =
+{
+	precache_model ("models/items/ammo/bullets/medium/tris.md2");
+	setmodel (self, "models/items/ammo/bullets/medium/tris.md2");
+	self.aflag = 50;
+	self.weapon = 2;
+	self.netname = "bullets";
+	setorigin (self, self.origin + '0 0 0');
+	setsize (self, '-16 -16 -16', '16 16 16');
+	self.touch = ammo_touch;
+	StartItem ();
+};
+
+/*QUAKED ammo_rockets (.3 .3 1) (-16 -16 -16) (16 16 16)
+*/
+void() ammo_rockets =
+{
+	precache_model ("models/items/ammo/rockets/medium/tris.md2");
+	setmodel (self, "models/items/ammo/rockets/medium/tris.md2");
+	self.aflag = 5;
+	self.weapon = 3;
+	self.netname = "rockets";
+	setorigin (self, self.origin + '0 0 0');
+	setsize (self, '-16 -16 -16', '16 16 16');
+	self.touch = ammo_touch;
+	StartItem ();
+};
+
+/*QUAKED ammo_cells (.3 .3 1) (-16 -16 -16) (16 16 16)
+*/
+void() ammo_cells =
+{
+	precache_model ("models/items/ammo/cells/medium/tris.md2");
+	setmodel (self, "models/items/ammo/cells/medium/tris.md2");
+	self.aflag = 50;
+	self.weapon = 4;
+	self.netname = "cells";
+	setorigin (self, self.origin + '0 0 0');
+	setsize (self, '-16 -16 -16', '16 16 16');
+	self.touch = ammo_touch;
+	StartItem ();
+};
+
+/*QUAKED ammo_slugs (.3 .3 1) (-16 -16 -16) (16 16 16)
+*/
+void() ammo_slugs =
+{
+	precache_model ("models/items/ammo/slugs/medium/tris.md2");
+	setmodel (self, "models/items/ammo/slugs/medium/tris.md2");
+	self.aflag = 10;
+	self.weapon = 5;
+	self.netname = "slugs";
+	setorigin (self, self.origin + '0 0 0');
+	setsize (self, '-16 -16 -16', '16 16 16');
+	self.touch = ammo_touch;
+	StartItem ();
+};
+
+
+
+
+
+/*
+Quake 1 used for possible replacement items in Q1 map compatibility.
+*/
+
+/*QUAKED item_shells (0 .5 .8) (0 0 0) (32 32 32) big
+*/
+
+#define WEAPON_BIG2 1
 
 void() item_shells =
 {
@@ -1004,27 +1098,6 @@ void() item_shells =
 	}
 	setsize (self, '0 0 0', '32 32 56');
 	StartItem();
-};
-
-/*QUAKED ammo_bullets (0 .5 .8) (0 0 0) (32 32 32) big
-*/
-
-void() ammo_bullets =
-{
-//	self.touch = ammo_touch;
-
-	precache_model ("models/items/ammo/bullets/medium/tris.md2");
-	setmodel (self, "models/items/ammo/bullets/medium/tris.md2");
-	self.aflag = 50;
-	self.weapon = 2;
-	self.netname = "bullets";
-	item_shells();
-	setorigin (self, self.origin + '0 0 18');
-//	self.origin = self.origin + '0 0 18';
-/*
-	setsize (self, '0 0 0', '32 32 56');
-	StartItem ();
-*/
 };
 
 /*QUAKED item_spikes (0 .5 .8) (0 0 0) (32 32 32) big
@@ -1082,7 +1155,6 @@ void() item_rockets =
 	StartItem ();
 */
 };
-
 
 /*QUAKED item_cells (0 .5 .8) (0 0 0) (32 32 32) big
 */
@@ -1824,7 +1896,7 @@ void() q2_tossWeapon={
 	if(self.weapon == WEP_BLASTER){
 		return;
 	}
-	
+		
 	//remove weapon form player inventory
 	self.inv_weapons = self.inv_weapons - (self.inv_weapons & self.weapon);	
 	

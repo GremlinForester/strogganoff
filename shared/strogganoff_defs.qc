@@ -7,6 +7,12 @@ Making a note of it here to help make sense of it for myself or anyone else who 
 
 */
 
+//LOG STUFF (might expand on this)
+
+#define LOG(x) bprint(x);bprint("\n")
+#define FLOG(x) bprint(vtos(x));bprint("\n")
+#define VLOG(x) bprint(ftos(x));bprint("\n")
+
 /*
 ============
 MONSTER MUZZLE FLASH OFFSETS 
@@ -76,8 +82,10 @@ ADDITIONAL CONSOLE COMMANDS
 ============
 */
 
+var float autocvar_cl_fastweaponswitch = 0;
 var float autocvar_cl_surfacesniffer = 0;
 var float autocvar_cl_smacktalk = 0;
+var float autocvar_cl_idletalk = 0;
 var float autocvar_cl_printpos = 0;
 var float autocvar_cl_printstate = 0;
 
@@ -183,6 +191,8 @@ Find/Replace, it's time to work!
 #define	ANIM_ATTACK		4
 #define	ANIM_DEATH		5
 #define	ANIM_REVERSE	6
+
+#define WEAPON_SWITCH_SPEED 0.05 //think speed
 
 enum 
 {

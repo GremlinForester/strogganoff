@@ -114,6 +114,55 @@ framer($FRAME_attack09, $FRAME_attack15, q2mutant_atta1, q2mutant_run, 0.1,
 	ai_rep($FRAME_attack09, ai_charge, 0, 0, 0, 0, 0, 0, 0, 0);
 );
 
+
+
+void() q2mutant_jump;
+
+void()	Mutant_JumpTouch =
+{
+//	local	float	ldmg;
+
+	if (self.health <= 0)
+		return;
+
+	if (!self.dmg) self.dmg = 10;
+
+	if (other.takedamage)
+	{
+		if ( vlen(self.velocity) > self.jump_vel)
+		{
+			self.ldmg_ = self.dmg + 10*random();
+			T_Damage (other, self, self, self.ldmg_);	
+		}
+	}
+
+	self.touch = SUB_Null;
+	self.nextthink = time + 0.1;
+
+	jumptouch_rep(monsterq2_mutant, q2mutant_jump, q2mutant_run);
+};
+
+framer($FRAME_attack01, $FRAME_attack06, q2mutant_jump, q2mutant_run, 0.1,
+
+	framerange_arb($FRAME_attack01,$FRAME_attack03,ai_face());
+	frame_arb($FRAME_attack04,
+
+		ai_face();
+		
+		self.touch = Mutant_JumpTouch;
+		makevectors (self.angles);
+		self.origin_z = self.origin_z + 1;
+		self.velocity = v_forward * 600 + '0 0 250';
+		if (self.flags & FL_ONGROUND)
+			self.flags = self.flags - FL_ONGROUND;
+		self.dmg = 40;
+		self.jump_vel = 400;
+
+	);
+	frame_arb($FRAME_attack01,sound (self, CHAN_VOICE, MUTANT_SOUND_SIGHT, 1, ATTN_NORM););
+	frame_arb($FRAME_attack06,self.nextthink = time + 3);
+);
+
 //
 // PAIN
 //
@@ -129,9 +178,6 @@ framer($FRAME_pain201, $FRAME_pain206, q2mutant_pain2, q2mutant_run, 0.1,SUB_Nul
 //PAIN 3
 
 framer($FRAME_pain301, $FRAME_pain311, q2mutant_pain3, q2mutant_run, 0.1,SUB_Null());
-
-//framer($FRAME_pain301, $FRAME_pain311, q2mutant_pain3, q2mutant_run, 0.1,SUB_Null());
-
 
 // PAIN
 
@@ -217,6 +263,8 @@ void() q2mutant_die =
 */
 void() monster_mutant =
 {
+	self.classname = "monsterq2_mutant";
+	
 	if (deathmatch)
 	{
 		remove(self);
@@ -242,7 +290,7 @@ void() monster_mutant =
 	self.movetype = MOVETYPE_STEP;
 	
 	setmodel (self, "models/monsters/mutant/tris.md2");
-	self.scale = 0.75;
+	self.scale = 1;
 	setsize (self, '-32 -32 -24', '32 32 48');
 	//setsize (self, '-16 -16 -24', '16 16 32');
 	//setsize (self, VEC_HULL2_MIN, VEC_HULL2_MAX);
@@ -254,7 +302,7 @@ void() monster_mutant =
 	self.th_run = q2mutant_run;
 	self.th_die = q2mutant_die;
 	self.th_melee = q2mutant_atta1;		// one of two attacks
-//	self.th_missile = SUB_Null;			// jump attack
+	self.th_missile = q2mutant_jump;			// jump attack
 	self.th_pain = q2mutant_pain;
 
 	self.sightSound = MUTANT_SOUND_SIGHT;

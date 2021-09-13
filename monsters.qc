@@ -75,24 +75,26 @@ void(vector org, vector vec, float dmg, vector colortint, float mflags) monster_
 
 void(vector org, vector vec, float dmg) monster_fire_rocket =
 {
-	newmis = spawn();
-	newmis.owner = self;
-	newmis.damage = dmg;
-	newmis.movetype = MOVETYPE_FLY;
-	newmis.solid = SOLID_BBOX;
-	newmis.modelflags = MF_ROCKET;
+	local entity mrocket;
+	
+	mrocket = spawn();
+	mrocket.owner = self;
+	mrocket.damage = dmg;
+	mrocket.movetype = MOVETYPE_FLY;
+	mrocket.solid = SOLID_BBOX;
+	mrocket.modelflags = MF_ROCKET;
 
-	setmodel (newmis, "models/objects/rocket/tris.md2");
-	setsize (newmis, '0 0 0', '0 0 0');
+	setmodel (mrocket, "models/objects/rocket/tris.md2");
+	setsize (mrocket, '0 0 0', '0 0 0');
 
-	setorigin (newmis, org);
+	setorigin (mrocket, org);
 
-	newmis.velocity = vec * 600;
-	newmis.angles = vectoangles(newmis.velocity);
+	mrocket.velocity = vec * 600;
+	mrocket.angles = vectoangles(mrocket.velocity);
 
-	newmis.nextthink = time + 5;
-	newmis.think = SUB_Remove;
-	newmis.touch = T_MissileTouch;
+	mrocket.nextthink = time + 5;
+	mrocket.think = SUB_Remove;
+	mrocket.touch = T_MissileTouch;
 };
 
 void monster_fire_grenade (vector start, vector rotation, float damage, float speed)

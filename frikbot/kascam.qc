@@ -1072,10 +1072,10 @@ void () CamUpdValues = {
 		self.items = ((self.enemy.items | it) - it);
 		self.health = self.enemy.health;
 		self.armorvalue = self.enemy.armorvalue;
-		self.ammo_shells = self.enemy.ammo_shells;
+		self.inv_ammo_shells = self.enemy.inv_ammo_shells;
 		self.inv_ammo_bullets = self.enemy.inv_ammo_bullets;
-		self.ammo_rockets = self.enemy.ammo_rockets;
-		self.ammo_cells = self.enemy.ammo_cells;
+		self.inv_ammo_rockets = self.enemy.inv_ammo_rockets;
+		self.inv_ammo_cells = self.enemy.inv_ammo_cells;
 		self.weapon = self.enemy.weapon;
 		self.currentammo = self.enemy.currentammo;
 
@@ -1084,10 +1084,10 @@ void () CamUpdValues = {
 		self.items = CAM_IDLE;
 		self.health = 111;
 		self.armorvalue = 111;
-		self.ammo_shells = 111;
+		self.inv_ammo_shells = 111;
 		self.inv_ammo_bullets = 111;
-		self.ammo_rockets = 111;
-		self.ammo_cells = 111;
+		self.inv_ammo_rockets = 111;
+		self.inv_ammo_cells = 111;
 		self.weapon = WEP_BLASTER;
 		self.currentammo = 111;
 

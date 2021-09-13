@@ -220,6 +220,9 @@ void (entity attacker, float damage) q2boss1_pain =
 	if (self.health < (self.max_health / 2))
 			self.skin = 1;
 
+	if (self.pain_finished > time)
+		return;
+
 	// Lessen the chance of him going into his pain frames
 	if (damage <= 25)
 		if (random()<0.2)
@@ -236,16 +239,19 @@ void (entity attacker, float damage) q2boss1_pain =
 	if (damage <= 10)
 	{
 		sound (self, CHAN_VOICE, SUPERTANK_SOUND_PAIN1, 1, ATTN_NORM);
+		self.pain_finished = time + 5;
 		q2boss1_frames_pain1();
 	}
 	else if (damage <= 25)
 	{
 		sound (self, CHAN_VOICE, SUPERTANK_SOUND_PAIN3, 1, ATTN_NORM);
+		self.pain_finished = time + 5;
 		q2boss1_frames_pain2();
 	}
 	else
 	{
 		sound (self, CHAN_VOICE, SUPERTANK_SOUND_PAIN2, 1, ATTN_NORM);
+		self.pain_finished = time + 5;
 		q2boss1_frames_pain3();
 	}
 };

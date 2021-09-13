@@ -397,6 +397,13 @@ void(float damage) FireBullet =
 	setmodel (impact_point, "models/objects/flash/tris.md2");
 	impact_point.think = SUB_Remove;
 	
+	if (self.weapon == WEP_MACHINEGUN)
+	{
+//		fireBulletSound();
+//		self.currentammo = self.inv_ammo_bullets = self.inv_ammo_bullets - 1;
+		SpawnMuzzleFlash(WEP_MACHINEGUN_MFLASH_OFFSET_FP, WEP_MACHINEGUN_MFLASH_SCALE, 0.5);
+	}
+	
 	if (trace_ent.takedamage)
 	{
 		if (trace_ent.classname == "monster_tank" || trace_ent.classname == "monster_tank_commander")
@@ -427,14 +434,7 @@ void(float damage) FireBullet =
 	if (self.weapon == WEP_RAILGUN)
 	{
 		fireRail(self.origin + (v_forward * 70) + (v_right * 20) + (v_up * 15), org, WEAPON_RAILGUN_DAMAGE);
-		self.currentammo = self.ammo_cells = self.ammo_cells - 1;
-	}
-	
-	if (self.weapon == WEP_MACHINEGUN)
-	{
-		fireBulletSound();
-		self.currentammo = self.inv_ammo_bullets = self.inv_ammo_bullets - 1;
-		SpawnMuzzleFlash(WEP_MACHINEGUN_MFLASH_OFFSET_FP, WEP_MACHINEGUN_MFLASH_SCALE, 0.5);
+		self.currentammo = self.inv_ammo_slugs = self.inv_ammo_slugs - 1;
 	}
 	
 	if (self.weapon == WEP_CHAINGUN)
@@ -615,7 +615,7 @@ void() W_FireShotgun =
 	sound (self, CHAN_WEAPON, "weapons/Shotgf1b.wav", 1, ATTN_NORM);		
 	self.punchangle_x = -2;
 	
-	self.currentammo = self.ammo_shells = self.ammo_shells - 1;
+	self.currentammo = self.inv_ammo_shells = self.inv_ammo_shells - 1;
 	dir = aim (self, 100000);
 	self.solid = SOLID_BBOX;
 	FireBullets (6, src, dir, '0.04 0.04 0', WEAPON_SHOTGUN_DAMAGE);
@@ -648,7 +648,7 @@ void() W_FireSuperShotgun =
 
 	self.punchangle_x = -4;
 	
-	self.currentammo = self.ammo_shells = self.ammo_shells - 2;
+	self.currentammo = self.inv_ammo_shells = self.inv_ammo_shells - 2;
 	dir = aim (self, 100000);
 	
 	self.solid = SOLID_BBOX;
@@ -710,7 +710,7 @@ void() W_FireBlaster =
 	
 	if (self.weapon == WEP_HYPERBLASTER)
 	{
-		self.currentammo = self.ammo_cells = self.ammo_cells - 1;
+		self.currentammo = self.inv_ammo_cells = self.inv_ammo_cells - 1;
 		#ifndef new_weapon_generic
 		//self.weaponstate = WEAPON_SPINDOWN;
 		#endifdef
@@ -732,7 +732,7 @@ void() W_FireBlaster =
 	}
 	else
 	{
-		self.currentammo = self.ammo_cells = self.ammo_cells - 5; //ammo cost for testing BFG and Railgun
+		self.currentammo = self.inv_ammo_cells = self.inv_ammo_cells - 5; //ammo cost for testing BFG and Railgun
 	}
 };
 
@@ -832,7 +832,7 @@ W_FireRocket
 void() W_FireRocket =
 {
 	local vector source;
-	self.currentammo = self.ammo_rockets = self.ammo_rockets - 1;
+	self.currentammo = self.inv_ammo_rockets = self.inv_ammo_rockets - 1;
 	
 	sound (self, CHAN_WEAPON, "weapons/sgun1.wav", 1, ATTN_NORM);
 
@@ -892,13 +892,6 @@ void() T_BFGTouch =
 	}	
 
 	damg = self.damage;
-	
-	if (other.health)
-	{
-		if (other.classname == "monster_shambler")
-			damg = damg * 0.5;	// mostly immune
-		T_Damage (other, self, self.owner, self.damage );
-	}
 
 #ifdef opgrade
 
@@ -912,7 +905,7 @@ void() T_BFGTouch =
 #else
 	// don't do radius damage to the other, because all the damage
 	// was done in the impact
-	T_RadiusDamage (self, self.owner, 820, other);
+	T_RadiusDamageRad (self, self.owner, self.damage, self.owner, self.dmgradius);
 
 //	sound (self, CHAN_WEAPON, "weapons/r_exp3.wav", 1, ATTN_NORM);
 	self.origin = self.origin - 8*normalize(self.velocity);
@@ -1134,47 +1127,6 @@ void() BFGthink =
 }
 
 /*
-================
-W_fireBFG
-================
-*/
-void() W_fireBFG =
-{
-	local vector source;
-	self.currentammo = self.ammo_cells = self.ammo_cells - 1;
-
-	self.punchangle_x = -2;
-	newmis = spawn ();
-	newmis.owner = self;
-	newmis.movetype = MOVETYPE_FLYMISSILE;
-	newmis.solid = SOLID_BBOX;
-	newmis.damage = WEAPON_ROCKET_DAMAGE;
-	newmis.effects = EF_ADDITIVE;
-	newmis.classname = "BFG Projectile";
-	newmis.velocity = aim(self, 600);
-	newmis.velocity = newmis.velocity * 600;
-	newmis.avelocity_x = random()*900;
-	newmis.avelocity_y = random()*800;
-	newmis.avelocity_z = random()*700;
-	newmis.angles = vectoangles(newmis.velocity);
-	newmis.touch = T_BFGTouch;
-	newmis.nextthink = time + 0.1;
-	newmis.think = BFGthink;
-	newmis.colormod = '0 4 0';
-	newmis.scale = 40;
-	newmis.alpha = .2;
-	
-	source = G_ProjectSource (self.origin, '20 8 17', v_forward, v_right, '0 0 0');
-
-	setmodel (newmis, "models/objects/flash/tris.md2");
-	setsize (newmis, '0 0 0', '0 0 0');
-	setorigin (newmis, source);
-//	setorigin (newmis, self.origin + v_forward*8 + '0 0 16');
-};
-
-
-
-/*
 ===============================================================================
 
 LIGHTNING
@@ -1236,7 +1188,7 @@ void() W_FireLightning =
 	local	vector		org;
 	local	float		cells;
 
-	if (self.ammo_cells < 1)
+	if (self.inv_ammo_cells < 1)
 	{
 		self.weapon = W_BestWeapon ();
 		W_SetCurrentAmmo ();
@@ -1246,8 +1198,8 @@ void() W_FireLightning =
 // explode if under water
 	if (self.waterlevel > 1)
 	{
-		cells = self.ammo_cells;
-		self.ammo_cells = 0;
+		cells = self.inv_ammo_cells;
+		self.inv_ammo_cells = 0;
 		W_SetCurrentAmmo ();
 		T_RadiusDamage (self, self, 35*cells, world);
 		return;
@@ -1260,7 +1212,7 @@ void() W_FireLightning =
 	}
 	self.punchangle_x = -2;
 
-	self.currentammo = self.ammo_cells = self.ammo_cells - 1;
+	self.currentammo = self.inv_ammo_cells = self.inv_ammo_cells - 1;
 
 	org = self.origin + '0 0 16';
 	
@@ -1340,7 +1292,7 @@ void() W_FireGrenade =
 
 	if (self.classname == "player")
 	{
-		self.currentammo = self.ammo_rockets = self.ammo_rockets - 1;
+		self.currentammo = self.inv_ammo_rockets = self.inv_ammo_rockets - 1;
 		
 		self.punchangle_x = -2;
 

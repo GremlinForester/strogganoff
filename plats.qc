@@ -232,18 +232,23 @@ void() func_plat =
 
 	if (self.sounds == 1)
 	{
-		precache_sound ("plats/plat1.wav");
-		precache_sound ("plats/plat2.wav");
-		self.noise = "plats/plat1.wav";
-		self.noise1 = "plats/plat2.wav";
+		precache_sound ("plats/pt1_mid.wav");
+		precache_sound ("plats/pt1_end.wav");
+		self.noise = "plats/pt1_mid.wav";
+		self.noise1 = "plats/pt1_end.wav";
 	}
 
 	if (self.sounds == 2)
-	{
+	{/*
 		precache_sound ("plats/medplat1.wav");
 		precache_sound ("plats/medplat2.wav");
 		self.noise = "plats/medplat1.wav";
 		self.noise1 = "plats/medplat2.wav";
+		*/
+				precache_sound ("plats/pt1_mid.wav");
+		precache_sound ("plats/pt1_end.wav");
+		self.noise = "plats/pt1_mid.wav";
+		self.noise1 = "plats/pt1_end.wav";
 	}
 
 

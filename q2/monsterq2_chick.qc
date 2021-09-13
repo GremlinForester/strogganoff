@@ -341,7 +341,6 @@ void() q2chick_die =
 
 //MrC: FIXME ai_run in missile attack?
 
-/*
 framer($FRAME_attak101, $FRAME_attak132, q2chick_missile_attack, q2chick_frames_run, 0.1,
 	
 	frame_arb($FRAME_attak101,
@@ -354,30 +353,22 @@ framer($FRAME_attak101, $FRAME_attak132, q2chick_missile_attack, q2chick_frames_
 
 	frame_arb($FRAME_attak114,
 		self.effects = self.effects | EF_MUZZLEFLASH;
-//		W_FireRocket();
+		q2chick_fire();
 	);
 
 	frame_arb($FRAME_attak121,
 		sound (self, CHAN_VOICE, CHICK_SOUND_MISSILE_RELOAD, 1, ATTN_NORM);
 	);
-
-//	frame_arb($FRAME_attack127,
-//		SUB_AttackFinished(4);
-//	);
 	
 	frame_arb($FRAME_attak132,
 		SUB_AttackFinished(4);
 	);
 	
-	ai_rep($FRAME_attack101, ai_run, 0, 0, 0, 4, 0, -3, 3, 5);
-	ai_rep($FRAME_attack109, ai_run, 7, 0, 0, 0, 0, 19, -6, -5);
-	ai_rep($FRAME_attack117, ai_run, -2, -7, 0, 1, 10, 4, 5, 6);
-	ai_rep($FRAME_attack124, ai_run, 6, 4, 3, -3, 0, -6, -4, -2);
+	ai_face();
 );
-*/
 
-// Framer not compiling, so good 'ol frame functions to the rescue!
-
+// Framer not compiling, so good 'ol frame functions to the rescue! NM fixed it. I think.
+/*
 void()	q2chick_missile_attack101	=[	$FRAME_attak101,		q2chick_missile_attack102	] {ai_face();sound (self, CHAN_VOICE, CHICK_SOUND_MISSILE_PRELAUNCH, 1, ATTN_NORM);};
 void()	q2chick_missile_attack102	=[	$FRAME_attak102,		q2chick_missile_attack103	] {ai_face();};
 void()	q2chick_missile_attack103	=[	$FRAME_attak103,		q2chick_missile_attack104	] {ai_face();};
@@ -403,7 +394,7 @@ void()	q2chick_missile_attack128	=[	$FRAME_attak129,		q2chick_missile_attack129	
 void()	q2chick_missile_attack129	=[	$FRAME_attak130,		q2chick_missile_attack130	] {ai_face();};
 void()	q2chick_missile_attack130	=[	$FRAME_attak131,		q2chick_missile_attack131	] {ai_face();};
 void()	q2chick_missile_attack131	=[	$FRAME_attak132,		q2chick_frames_run		] {SUB_AttackFinished(4);};
-
+*/
 /*QUAKED monster_chick (1 .5 0) (-16 -16 -24) (16 16 32) Ambush Trigger_Spawn Sight
 */
 void () monster_chick =
@@ -449,7 +440,7 @@ void () monster_chick =
 	self.th_run = q2chick_frames_run;
 	self.th_pain = q2chick_pain;
 	self.th_die = q2chick_die;
-	self.th_missile = q2chick_missile_attack101;
+	self.th_missile = q2chick_missile_attack;
 	self.th_melee = q2chick_melee_attack;
 
 	self.sightSound = CHICK_SOUND_SIGHT;

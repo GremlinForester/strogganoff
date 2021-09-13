@@ -527,10 +527,11 @@ float() botcam =
 	self.weaponmodel = self.enemy.weaponmodel;
 	self.currentammo = self.enemy.currentammo;
 	self.weaponframe = self.enemy.weaponframe;
-	self.ammo_shells = self.enemy.ammo_shells;
+	self.inv_ammo_shells = self.enemy.inv_ammo_shells;
 	self.inv_ammo_bullets = self.enemy.inv_ammo_bullets;
-	self.ammo_rockets= self.enemy.ammo_rockets;
-	self.ammo_cells = self.enemy.ammo_cells;
+	self.inv_ammo_rockets= self.enemy.inv_ammo_rockets;
+	self.inv_ammo_cells = self.enemy.inv_ammo_cells;
+	self.inv_ammo_slugs = self.enemy.inv_ammo_slugs;
 	self.view_ofs = self.enemy.view_ofs;
 	self.health = self.enemy.health;
 	self.armorvalue = self.enemy.armorvalue;
@@ -1165,7 +1166,7 @@ void(entity bot) BotDisconnect =
 		self.weaponmodel = string_null;
 		self.b_pants = 0;
 		self.b_shirt = 0;
-		self.ammo_shells = self.inv_ammo_bullets = self.ammo_rockets = self.inv_ammo_bullets = 0;
+		self.inv_ammo_shells = self.inv_ammo_bullets = self.inv_ammo_rockets = self.inv_ammo_bullets = 0;
 		UpdateClient(self);
 		active_clients = active_clients - (active_clients & ClientBitFlag(self.b_clientno));
 	      self.b_clientno = -1;

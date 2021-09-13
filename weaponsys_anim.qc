@@ -1,6 +1,54 @@
 #include "q2/q2_player.qh"
 
-void() W_SetDefaultFrames;
+/*
+void() W_SetDefaultFrames =
+{
+	switch (self.weapon)
+	{
+		case WEP_BLASTER:
+			self.weaponframe=WEP_BLASTER_IDLE1_FIRSTFRAME;
+			break;
+		case WEP_SHOTGUN:
+			self.weaponframe=19;
+			break;
+		case WEP_SUPERSHOTGUN:
+			self.weaponframe=18;
+			break;
+		case WEP_MACHINEGUN:
+			self.weaponframe=6;
+			break;
+		case WEP_CHAINGUN:
+			if (self.weaponstate == WEAPON_SPINDOWN){
+				return;
+			}
+			else{
+			self.weaponframe=32;
+			}
+			break;
+		case WEP_GRENADE_LAUNCHER:
+			self.weaponframe=18;
+			break;
+		case WEP_ROCKET_LAUNCHER:
+			self.weaponframe=13;
+			break;
+		case WEP_RAILGUN:
+			self.weaponframe=19;
+			break;
+		case WEP_HYPERBLASTER:
+			if (self.weaponstate == WEAPON_SPINDOWN){
+				return;
+			}
+			else{
+			self.weaponframe=22;
+			}
+			break;
+		case WEP_BFG:
+			self.weaponframe=32;
+			break;
+	}
+}
+*/
+
 void() doQ2PlayerModelStandframes;
 
 //THINK FUNCTION METHOD

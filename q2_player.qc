@@ -17,53 +17,6 @@ PLAYER
 */
 void() q2player_run;
 
-void() W_SetDefaultFrames =
-{
-	switch (self.weapon)
-	{
-		case WEP_BLASTER:
-			self.weaponframe=WEP_BLASTER_IDLE1_FIRSTFRAME;
-			break;
-		case WEP_SHOTGUN:
-			self.weaponframe=19;
-			break;
-		case WEP_SUPERSHOTGUN:
-			self.weaponframe=18;
-			break;
-		case WEP_MACHINEGUN:
-			self.weaponframe=6;
-			break;
-		case WEP_CHAINGUN:
-			if (self.weaponstate == WEAPON_SPINDOWN){
-				return;
-			}
-			else{
-			self.weaponframe=32;
-			}
-			break;
-		case WEP_GRENADE_LAUNCHER:
-			self.weaponframe=18;
-			break;
-		case WEP_ROCKET_LAUNCHER:
-			self.weaponframe=13;
-			break;
-		case WEP_RAILGUN:
-			self.weaponframe=19;
-			break;
-		case WEP_HYPERBLASTER:
-			if (self.weaponstate == WEAPON_SPINDOWN){
-				return;
-			}
-			else{
-			self.weaponframe=22;
-			}
-			break;
-		case WEP_BFG:
-			self.weaponframe=32;
-			break;
-	}
-}
-
 
 framer($FRAME_jump1, $FRAME_jump3, q2player_jumpframes, q2player_run, 0.1,
 
@@ -109,6 +62,7 @@ void()	doQ2PlayerModelStandframes =
 void()	q2Player_stand =[	$FRAME_stand01,	q2Player_stand	] //hold still dammit!
 {
 	self.state = STATE_IDLE;
+	player_chatter_idle();
 	doQ2PlayerModelStandframes();
 	self.nextthink = time + 0.135;		
 };
@@ -116,7 +70,6 @@ void()	q2Player_stand =[	$FRAME_stand01,	q2Player_stand	] //hold still dammit!
 void()	q2player_run =[	$FRAME_run1,	q2player_run	]
 {
 	self.state = STATE_RUNNING;
-//	W_SetDefaultFrames();
 	
 	if (!self.velocity_x && !self.velocity_y)
 	{
@@ -131,123 +84,6 @@ void()	q2player_run =[	$FRAME_run1,	q2player_run	]
 
 	self.walkframe = self.walkframe + 1;
 };
-
-// draw weapon frames
-framer($FRAME_pain301, $FRAME_pain304, q2player_4drawframes, q2player_run, 0.1,
-
-	frame_arb($FRAME_pain301,
-//	self.weaponframe=0;	
-	);
-	frame_arb($FRAME_pain304,
-//	W_SetDefaultFrames();
-//	self.weaponstate = WEAPON_READY;	
-	);
-	
-//	self.weaponframe++;
-);
-
-// Quake II Blaster 4 Frames (no gun cock)
-
-framer($FRAME_attack1, $FRAME_attack4, q2player_4attackframes, q2player_run, 0.1,
-
-	frame_arb($FRAME_attack1,
-	//self.weaponframe=5;
-	self.state = STATE_ATTACKING;
-	);
-	frame_arb($FRAME_attack4,
-	W_SetDefaultFrames();
-	//self.weaponstate = WEAPON_READY;	
-	);
-	//self.weaponframe++;
-);
-
-framer($FRAME_attack1, $FRAME_attack2, q2player_HBattackframes, q2player_run, 0.1,
-
-	frame_arb($FRAME_attack1,
-	if (self.weaponframe>11)
-	{
-		//self.weaponframe=6;
-	}
-	);
-	frame_arb($FRAME_attack2,
-	if (self.weaponframe>11)
-	{
-		//self.weaponframe=6;
-	}
-	);
-	//self.weaponframe++;
-);
-
-framer($FRAME_attack1, $FRAME_attack2, q2player_MGattackframes, q2player_run, 0.1,
-
-	frame_arb($FRAME_attack1,
-	FireBullet(WEAPON_MACHINEGUN_DAMAGE);
-	self.punchangle_x = -4;
-	self.effects = self.effects | EF_MUZZLEFLASH;
-	
-	self.weaponframe=4;
-	);
-	
-	frame_arb($FRAME_attack2,
-	self.weaponframe=5;
-	);
-);
-
-framer($FRAME_attack1, $FRAME_attack2, q2player_CGattackframes, q2player_run, 0.1,
-
-	frame_arb($FRAME_attack1,
-	
-	if (self.weaponframe >= 21 || self.weaponframe <= 4)
-		self.weaponframe = 15;
-	
-	FireBullet(WEAPON_CHAINGUN_DAMAGE);
-	self.punchangle_x = -4;
-	self.effects = self.effects | EF_MUZZLEFLASH;
-	);
-	frame_arb($FRAME_attack2,
-	
-	if (self.weaponframe >= 21 || self.weaponframe <= 4)
-		self.weaponframe = 15;
-	);
-	self.weaponframe++;
-);
-
-framer($FRAME_attack1, $FRAME_attack8, q2player_8attackframes, q2player_run, 0.1,
-
-	frame_arb($FRAME_attack1,
-	switch(self.weapon)
-	{
-		case WEP_SHOTGUN:
-		self.weaponframe=8;
-			break;
-		case WEP_SUPERSHOTGUN:
-		self.weaponframe=8;
-			break;
-		case WEP_ROCKET_LAUNCHER:
-		self.weaponframe=10; 
-			break;
-		case WEP_GRENADE_LAUNCHER:
-		self.weaponframe=8; 
-			break;
-		case WEP_BFG:
-		self.weaponframe=9; 
-			break;
-	}
-	self.effects = self.effects | EF_MUZZLEFLASH;
-	);
-	frame_arb($FRAME_attack8,
-	W_SetDefaultFrames();
-	self.weaponstate = WEAPON_READY;
-	);
-	if (self.weapon == WEP_BFG)
-	{
-	self.weaponframe+3;
-	}
-	else
-	{
-	self.weaponframe++;
-	}
-);
 
 framer($FRAME_attack1, $FRAME_attack4, q2playeronly_4attackframes, q2player_run, 0.1,
 
@@ -354,8 +190,7 @@ void() q2playerPainSound =
 framer($FRAME_pain101, $FRAME_pain104, q2player_painFramesA, q2player_run, 0.1,
 
 	frame_arb($FRAME_pain101,
-	PainSound();
-	self.weaponframe=0;
+	q2playerPainSound();
 	);
 );
 
@@ -363,8 +198,7 @@ framer($FRAME_pain201, $FRAME_pain204, q2player_painFramesB, q2player_run, 0.1,
 
 	frame_arb($FRAME_pain201,
 	
-	PainSound();
-	self.weaponframe=0;
+	q2playerPainSound();
 	);
 );
 
@@ -372,8 +206,7 @@ framer($FRAME_pain301, $FRAME_pain304, q2player_painFramesC, q2player_run, 0.1,
 
 	frame_arb($FRAME_pain301,
 	
-	PainSound();
-	self.weaponframe=0;
+	q2playerPainSound();
 	);
 );
 
@@ -383,8 +216,8 @@ void() q2player_pain =
 	
 	r = random() * 3;
 	
-	if (self.weaponframe)
-		return;
+//	if (self.weaponframe)
+//		return;
 
 	if (self.invisible_finished > time)
 		return;		// eyes don't have pain frames

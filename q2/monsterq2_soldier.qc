@@ -429,7 +429,7 @@ framer($death101, $death136, q2soldier_die1, SUB_Null, 0.1,
 	frame_arb($death103,
 
 		self.solid = SOLID_NOT;
-		self.ammo_shells = 5;
+		self.inv_ammo_shells = 5;
 		DropBackpack();
 	);
 	
@@ -450,7 +450,7 @@ framer($death201, $death235, q2soldier_die2, SUB_Null, 0.1,
 	frame_arb($death203,
 
 		self.solid = SOLID_NOT;
-		self.ammo_shells = 5;
+		self.inv_ammo_shells = 5;
 		DropBackpack();
 	);
 );
@@ -462,7 +462,7 @@ framer($death301, $death345, q2soldier_die3, SUB_Null, 0.1,
 	frame_arb($death303,
 
 		self.solid = SOLID_NOT;
-		self.ammo_shells = 5;
+		self.inv_ammo_shells = 5;
 		DropBackpack();
 	);
 );
@@ -474,7 +474,7 @@ framer($death401, $death453, q2soldier_die4, SUB_Null, 0.1,
 	frame_arb($death402,
 
 		self.solid = SOLID_NOT;
-		self.ammo_shells = 5;
+		self.inv_ammo_shells = 5;
 		DropBackpack();
 	);
 );
@@ -486,7 +486,7 @@ framer($death501, $death524, q2soldier_die5, SUB_Null, 0.1,
 	frame_arb($death502,
 
 		self.solid = SOLID_NOT;
-		self.ammo_shells = 5;
+		self.inv_ammo_shells = 5;
 		DropBackpack();
 	);
 );
@@ -498,7 +498,7 @@ framer($death601, $death610, q2soldier_die6, SUB_Null, 0.1,
 	frame_arb($death602,
 
 		self.solid = SOLID_NOT;
-		self.ammo_shells = 5;
+		self.inv_ammo_shells = 5;
 		DropBackpack();
 	);
 );
@@ -601,7 +601,7 @@ void () monster_soldier_light =
 
 	precache_sound ("soldier/solpain2.wav");
 	precache_sound ("soldier/soldeth2.wav");
-	precache_sound ("models/objects/laser/tris.md2");
+	precache_model ("models/objects/laser/tris.md2");
 	precache_sound("misc/lasfly.wav");
 	precache_sound("soldier/solatck2.wav");
 

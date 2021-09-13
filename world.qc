@@ -419,6 +419,7 @@ Quake 2 MP Map ladder volumes
 	precache_model ("progs/v_rock2.mdl");
 	
 	precache_model ("models/weapons/v_blast/tris.md2");
+	precache_model ("models/weapons/v_bfg/tris.md2");
 	
 	precache_model ("progs/muzzleflash3.spr");
 	precache_model ("models/glass64_broke.MD3");

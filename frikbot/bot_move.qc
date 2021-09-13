@@ -64,7 +64,7 @@ float(entity e) bot_can_rj =
 		return FALSE;
 
 	// do I have rockets & RL?
-	if (!((e.items & 32) && (e.ammo_rockets > 0)))
+	if (!((e.items & 32) && (e.inv_ammo_rockets > 0)))
 		return FALSE;
 
 	// do I have pent?

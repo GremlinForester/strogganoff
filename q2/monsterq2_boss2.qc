@@ -232,6 +232,9 @@ void (entity attacker, float damage) q2boss2_pain =
 {
 	if(self.health < (self.max_health / 2))
 		self.skin = 1;
+
+	if (self.pain_finished > time)
+		return;
 	
 	if (skill == 3)
 		return;		// no pain anims in nightmare
@@ -239,16 +242,19 @@ void (entity attacker, float damage) q2boss2_pain =
 	if (damage < 10)
 	{
 		sound (self, CHAN_VOICE, HORNET_SOUND_PAIN3, 1, ATTN_NORM);
+		self.pain_finished = time + 5;
 		q2boss2_frames_pain_light();
 	}
 	else if (damage < 30)
 	{
 		sound (self, CHAN_VOICE, HORNET_SOUND_PAIN1, 1, ATTN_NORM);
+		self.pain_finished = time + 5;
 		q2boss2_frames_pain_light();
 	}
 	else
 	{
 		sound (self, CHAN_VOICE, HORNET_SOUND_PAIN2, 1, ATTN_NORM);
+		self.pain_finished = time + 5;
 		q2boss2_frames_pain_heavy();
 	}
 };

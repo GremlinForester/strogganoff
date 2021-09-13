@@ -12,15 +12,16 @@
 		and we'd like to reduce func call jump counts.
 */
 
+.float dmgradius; //used for assigning radius to projectiles, could be useful for other things.
 
-void(vector entOrg, vector aimAngle, float speed, float damage, float clr, float glowSize, float lightLev) fire_blaster_base={
+void(vector entOrg, vector aimAngle, float speed, float dmg, float clr, float glowSize, float lightLev) fire_blaster_base={
 	local vector source;
 	local vector rotation_offset;
 	local float rotation;
 		
 	newmis = spawn ();
 	newmis.owner = self;
-	newmis.dmg = damage;
+	newmis.damage = dmg;
 	newmis.movetype = MOVETYPE_FLYMISSILE;
 	newmis.solid = SOLID_BBOX;
 	newmis.classname = "blasterbolt";
@@ -34,7 +35,6 @@ void(vector entOrg, vector aimAngle, float speed, float damage, float clr, float
 
 // set missile speed
 
-//	makevectors (self.v_angle);
 	newmis.velocity = aim(self, speed);
 	newmis.velocity = newmis.velocity * speed;
 	newmis.angles = vectoangles(newmis.velocity);
@@ -57,19 +57,16 @@ void(vector entOrg, vector aimAngle, float speed, float damage, float clr, float
 	
 	if (self.weapon == WEP_HYPERBLASTER)
 	{
-		sound (self, CHAN_WEAPON2, "weapons/hyprbl1a.wav", 0.7, ATTN_NORM);
-		sound (self, CHAN_WEAPON, "weapons/Hyprbf1a.wav", 1, ATTN_NORM);
+		rotation = (self.weaponframe - 5) * 2*PI/6;
 		
-		rotation = (self.weaponframe - 5) * 2*PI/3; //2*PI/6
-		
-		rotation_offset_x = -6 * sin(rotation); //-4
-		rotation_offset_y = 6;					// 0
-		rotation_offset_z = 6 * cos(rotation); //4
-		
-		source = G_ProjectSource (self.origin, '20 6 10' + rotation_offset, v_forward, v_right, '0 0 0'); //24 -18 22
+		rotation_offset_x = -6 * sin(rotation);
+		rotation_offset_y = 6;					
+		rotation_offset_z = -6 * cos(rotation);
+	
 		source = G_ProjectSource (self.origin, '20 6 10' + rotation_offset, v_forward, v_right, '0 0 0'); //24 -18 22
 		setorigin (newmis, source);
 	}
+	
 };
 
 void(vector entOrg, vector aimAngle, vector spread, float damage) fire_bullet_base={
@@ -163,7 +160,7 @@ void(vector start, vector aimdir, float damage, vector speed, float timer, float
 };
 
 
-void(vector start, vector aimdir, float damage, vector speed, float timer, float damage_radius, float radius_damage) fire_rocket_base={
+void(vector start, vector aimdir, float dmg, vector speed, float timer, float damage_radius, float radius_damage) fire_rocket_base={
 	
 	local vector source;
 	
@@ -171,7 +168,7 @@ void(vector start, vector aimdir, float damage, vector speed, float timer, float
 	newmis.owner = self;
 	newmis.movetype = MOVETYPE_FLYMISSILE;
 	newmis.solid = SOLID_BBOX;
-	newmis.dmg = damage;
+	newmis.damage = dmg;
 	newmis.modelflags = MF_ROCKET;
 	
 	newmis.classname = "missile";
@@ -235,8 +232,39 @@ void(vector start, vector end, float damage) fire_railgun_base={
 	}
 };
 
-void(vector start, vector aimdir, float speed, float damage, float damage_radius) fire_bfg_base={
+void(vector start, vector aimdir, float speed, float dmg, float damage_radius) fire_bfg_base=
+{
+	local vector source;
+	self.currentammo = self.inv_ammo_cells = self.inv_ammo_cells - 1;
+
+	self.punchangle_x = -8;
+	newmis = spawn ();
+	newmis.owner = self;
+	newmis.movetype = MOVETYPE_FLYMISSILE;
+	newmis.solid = SOLID_BBOX;
+	newmis.damage = dmg;
+	newmis.dmgradius = damage_radius;
+	newmis.effects = EF_ADDITIVE;
+	newmis.classname = "BFG Projectile";
+	newmis.velocity = aim(self, speed);
+	newmis.velocity = newmis.velocity * speed;
+	newmis.avelocity_x = random()*900;
+	newmis.avelocity_y = random()*800;
+	newmis.avelocity_z = random()*700;
+	newmis.angles = vectoangles(newmis.velocity);
+	newmis.touch = T_BFGTouch;
+	newmis.nextthink = time + 0.1;
+	newmis.think = BFGthink;
+	newmis.colormod = '0 4 0';
+	newmis.scale = 40;
+	newmis.alpha = .2;
 	
+	source = G_ProjectSource (self.origin, '20 8 17', v_forward, v_right, '0 0 0');
+
+	setmodel (newmis, "models/objects/flash/tris.md2");
+	setsize (newmis, '0 0 0', '0 0 0');
+	setorigin (newmis, source);
+//	setorigin (newmis, self.origin + v_forward*8 + '0 0 16');	
 
 	
 

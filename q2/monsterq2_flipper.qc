@@ -64,13 +64,13 @@ void(entity attacker, float damage)	q2flipper_pain =
 
 	if (random() < 0.5)
 	{
-		self.pain_finished = time + 0.5;
+		self.pain_finished = time + 1;
 		q2flipper_frames_pain1 ();
 		sound (self, CHAN_VOICE, FLIPPER_SOUND_PAIN1, 1, ATTN_NORM);
 	}
 	else
 	{
-		self.pain_finished = time + 0.5;
+		self.pain_finished = time + 1;
 		q2flipper_frames_pain2 ();
 		sound (self, CHAN_VOICE, FLIPPER_SOUND_PAIN2, 1, ATTN_NORM);
 	}
