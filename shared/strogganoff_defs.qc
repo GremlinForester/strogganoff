@@ -7,11 +7,11 @@ Making a note of it here to help make sense of it for myself or anyone else who 
 
 */
 
-//LOG STUFF (might expand on this)
+//LOG STUFF (might expand on this) these currently require {} braces on any conditional if logging.
 
-#define LOG(x) bprint(x);bprint("\n")
-#define FLOG(x) bprint(vtos(x));bprint("\n")
-#define VLOG(x) bprint(ftos(x));bprint("\n")
+#define LOG(x) bprint(x"\n")
+#define VLOG(x) bprint(vtos(x));bprint("\n")
+#define FLOG(x) bprint(ftos(x));bprint("\n")
 
 /*
 ============
@@ -91,7 +91,7 @@ var float autocvar_cl_printstate = 0;
 
 /*
 ============
-SMACK TALK LINES
+SPEECH LINES
 ============
 */
 #define PLAYER_KILLCOMMENT_1 "player/killcomment1.wav"
@@ -100,6 +100,11 @@ SMACK TALK LINES
 #define PLAYER_KILLCOMMENT_4 "player/killcomment4.wav"
 #define PLAYER_KILLCOMMENT_5 "player/killcomment5.wav"
 #define PLAYER_KILLCOMMENT_6 "player/killcomment6.wav"
+
+#define	PLAYER_IDLECOMMENT_1 "player/idlecomment1.wav"
+#define	PLAYER_IDLECOMMENT_2 "player/idlecomment2.wav"
+#define	PLAYER_IDLECOMMENT_3 "player/idlecomment3.wav"
+#define	PLAYER_IDLECOMMENT_4 "player/idlecomment4.wav"
 
 .float nexttalktime;
 .float nextsmacktalktime;

@@ -50,7 +50,7 @@ void(vector org, vector vec, float dmg, vector colortint, float mflags) monster_
 	mlaser.modelflags = mflags; //MF_TRACER2;
 	mlaser.effects = EF_FULLBRIGHT;
 	mlaser.colormod = colortint;
-	mlaser.glow_color = colortint;
+//	mlaser.glow_color = colortint;
 	mlaser.glow_size = 100;
 	mlaser.light_lev = 200;
 	mlaser.color = colortint; // color (does not affect radius), typical value '1 1 1' (bright white), can be up to '255 255 255' (nuclear blast)

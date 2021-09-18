@@ -12,7 +12,7 @@
 		and we'd like to reduce func call jump counts.
 */
 
-.float dmgradius; //used for assigning radius to projectiles, could be useful for other things.
+.float dmgradius; //MrC: used for assigning radius to projectiles, could be useful for other things. Or maybe it's like the second act of my .dmg/.damage saga. *clown face*
 
 void() blaster_base_touch={
 	
@@ -35,7 +35,7 @@ void() blaster_base_touch={
 	traceline(self.origin, self.origin + (v_forward * self.maxs_x), FALSE, self);
 	
 	
-	T_Damage (other, self, self.owner, self.dmg);
+	T_Damage (other, self, self.owner, self.damage);
 	
 };
 

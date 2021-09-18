@@ -367,6 +367,18 @@ Quake 2 MP Map ladder volumes
 	precache_sound ("player/udeath.wav");		// player gib sound
 	precache_sound ("player/tornoff2.wav");		// gib sound
 
+	precache_sound (PLAYER_KILLCOMMENT_1);
+	precache_sound (PLAYER_KILLCOMMENT_2);
+	precache_sound (PLAYER_KILLCOMMENT_3);
+	precache_sound (PLAYER_KILLCOMMENT_4);
+	precache_sound (PLAYER_KILLCOMMENT_5);
+	precache_sound (PLAYER_KILLCOMMENT_6);
+
+	precache_sound (PLAYER_IDLECOMMENT_1);
+	precache_sound (PLAYER_IDLECOMMENT_2);
+	precache_sound (PLAYER_IDLECOMMENT_3);
+	precache_sound (PLAYER_IDLECOMMENT_4);
+
 // player pain sounds
 
 	precache_sound ("player/pain1.wav");

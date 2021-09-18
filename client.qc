@@ -682,7 +682,6 @@ void() PutClientInServer =
 	self.velocity = '0 0 0';	// 1998-07-21 Player moves after respawn fix by Xian
 #endifdef
 
-
 	q2Player_stand();
 	
 	AttachTPWeapon();

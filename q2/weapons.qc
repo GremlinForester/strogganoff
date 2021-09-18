@@ -643,16 +643,16 @@ void() player_chatter_idle =
 		return;
 	}
 	
-	if (r < 1) {sound(self, CHAN_VOICE, "player/Duke_whistle.wav", 0.5, ATTN_IDLE);
+	if (r < 1) {sound(self, CHAN_VOICE, PLAYER_IDLECOMMENT_1, 0.5, ATTN_IDLE);
 	}
-	else if (r < 2) {sound(self, CHAN_VOICE, "player/Duke_christmas.wav", 0.5, ATTN_IDLE);
+	else if (r < 2) {sound(self, CHAN_VOICE, PLAYER_IDLECOMMENT_2, 0.5, ATTN_IDLE);
 	}
-	else if (r < 3) {sound(self, CHAN_VOICE, "player/Duke_sing1.wav", 0.5, ATTN_IDLE);
+	else if (r < 3) {sound(self, CHAN_VOICE, PLAYER_IDLECOMMENT_3, 0.5, ATTN_IDLE);
 	}
-	else            {sound(self, CHAN_VOICE, "", 0.5, ATTN_IDLE);
+	else            {sound(self, CHAN_VOICE, PLAYER_IDLECOMMENT_4, 0.5, ATTN_IDLE);
 	}
 	
-	self.nexttalktime = time + 15;
+	self.nexttalktime = time + 45;
 }
 
 /*

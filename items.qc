@@ -1062,10 +1062,6 @@ void() ammo_slugs =
 	StartItem ();
 };
 
-
-
-
-
 /*
 Quake 1 used for possible replacement items in Q1 map compatibility.
 */
