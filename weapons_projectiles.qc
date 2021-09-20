@@ -212,8 +212,8 @@ void() blasterTouch =
 
 	if (other.health)
 	{
-		SpawnBlood (org, self.velocity*0.2, self.damage);
-		T_Damage (other, self, self.owner, self.damage);
+		SpawnBlood (org, self.velocity*0.2, self.dmg);
+		T_Damage (other, self, self.owner, self.dmg);
 	}
 	else
 	{
@@ -673,7 +673,7 @@ void() W_FireBlaster =
 	self.punchangle_x = -3;
 	newmis = spawn ();
 	newmis.owner = self;
-	newmis.damage = WEAPON_BLASTER_DAMAGE;
+	newmis.dmg = WEAPON_BLASTER_DAMAGE;
 	newmis.movetype = MOVETYPE_FLYMISSILE;
 	newmis.solid = SOLID_BBOX;
 	newmis.classname = "blasterbolt";
@@ -786,13 +786,13 @@ void() T_MissileTouch =
 		return;
 	}	
 
-	damg = self.damage;
+	damg = self.dmg;
 	
 	if (other.health)
 	{
 		if (other.classname == "monster_shambler")
 			damg = damg * 0.5;	// mostly immune
-		T_Damage (other, self, self.owner, self.damage );
+		T_Damage (other, self, self.owner, self.dmg );
 	}
 
 #ifdef opgrade
@@ -844,7 +844,7 @@ void() W_FireRocket =
 	newmis.owner = self;
 	newmis.movetype = MOVETYPE_FLYMISSILE;
 	newmis.solid = SOLID_BBOX;
-	newmis.damage = WEAPON_ROCKET_DAMAGE;
+	newmis.dmg = WEAPON_ROCKET_DAMAGE;
 	newmis.modelflags = MF_ROCKET;
 
 	newmis.classname = "missile";
@@ -891,7 +891,7 @@ void() T_BFGTouch =
 		return;
 	}	
 
-	damg = self.damage;
+	damg = self.dmg;
 
 #ifdef opgrade
 
@@ -905,7 +905,7 @@ void() T_BFGTouch =
 #else
 	// don't do radius damage to the other, because all the damage
 	// was done in the impact
-	T_RadiusDamageRad (self, self.owner, self.damage, self.owner, self.dmgradius);
+	T_RadiusDamageRad (self, self.owner, self.dmg, self.owner, self.dmgradius);
 
 //	sound (self, CHAN_WEAPON, "weapons/r_exp3.wav", 1, ATTN_NORM);
 	self.origin = self.origin - 8*normalize(self.velocity);

@@ -462,7 +462,7 @@ void() t_on
 #define new_weapon_generic
 
 #define q2monster_replace_soldier
-//#define q2monster_replace_demon
+#define q2monster_replace_demon
 
 // Quake 2 Strogg Replacements
 // Replaces Quake 1 monsters with Quake 2 counterparts

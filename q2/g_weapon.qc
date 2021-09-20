@@ -35,18 +35,18 @@ void() blaster_base_touch={
 	traceline(self.origin, self.origin + (v_forward * self.maxs_x), FALSE, self);
 	
 	
-	T_Damage (other, self, self.owner, self.damage);
+	T_Damage (other, self, self.owner, self.dmg);
 	
 };
 
-void(vector entOrg, vector aimAngle, float speed, float dmg, float clr, float glowSize, float lightLev) fire_blaster_base={
+void(vector entOrg, vector aimAngle, float speed, float damage, float clr, float glowSize, float lightLev) fire_blaster_base={
 	local vector source;
 	local vector rotation_offset;
 	local float rotation;
 		
 	newmis = spawn ();
 	newmis.owner = self;
-	newmis.damage = dmg;
+	newmis.dmg = damage;
 	newmis.movetype = MOVETYPE_FLYMISSILE;
 	newmis.solid = SOLID_BBOX;
 	newmis.classname = "blasterbolt";
@@ -185,7 +185,7 @@ void(vector start, vector aimdir, float damage, vector speed, float timer, float
 };
 
 
-void(vector start, vector aimdir, float dmg, vector speed, float timer, float damage_radius, float radius_damage) fire_rocket_base={
+void(vector start, vector aimdir, float damage, vector speed, float timer, float damage_radius, float radius_damage) fire_rocket_base={
 	
 	local vector source;
 	
@@ -193,7 +193,7 @@ void(vector start, vector aimdir, float dmg, vector speed, float timer, float da
 	newmis.owner = self;
 	newmis.movetype = MOVETYPE_FLYMISSILE;
 	newmis.solid = SOLID_BBOX;
-	newmis.damage = dmg;
+	newmis.dmg = damage;
 	newmis.modelflags = MF_ROCKET;
 	
 	newmis.classname = "missile";
@@ -257,7 +257,7 @@ void(vector start, vector end, float damage) fire_railgun_base={
 	}
 };
 
-void(vector start, vector aimdir, float speed, float dmg, float damage_radius) fire_bfg_base=
+void(vector start, vector aimdir, float speed, float damage, float damage_radius) fire_bfg_base=
 {
 	local vector source;
 	self.currentammo = self.inv_ammo_cells = self.inv_ammo_cells - 1;
@@ -267,7 +267,7 @@ void(vector start, vector aimdir, float speed, float dmg, float damage_radius) f
 	newmis.owner = self;
 	newmis.movetype = MOVETYPE_FLYMISSILE;
 	newmis.solid = SOLID_BBOX;
-	newmis.damage = dmg;
+	newmis.dmg = damage;
 	newmis.dmgradius = damage_radius;
 	newmis.effects = EF_ADDITIVE;
 	newmis.classname = "BFG Projectile";

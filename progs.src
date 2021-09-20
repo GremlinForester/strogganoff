@@ -32,7 +32,13 @@ subs.qc
 fight.qc
 ai.qc
 combat.qc
-items.qc
+items.qc //touch functions for items, ammo and weapons. Q2 weapon tossing. Loot/Backpack.
+q2_items.qc //Q2 item pickups
+q2_items_weapons.qc //Q2 weapon pickups
+q2_items_ammo.qc //Q2 ammo pickups
+q1_items.qc //Q1 map compatibility
+
+
 //weaponsys_anim.qc
 weapons_projectiles.qc
 

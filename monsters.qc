@@ -38,13 +38,13 @@ void (float shotcount, vector start, vector aim, vector spread, float dmg) monst
 }
 
 // Blaster and rocket spawns a new entity for monsters for now, can expose more parms if needed, like speed etc...
-void(vector org, vector vec, float dmg, vector colortint, float mflags) monster_fire_blaster =
+void(vector org, vector vec, float damage, vector colortint, float mflags) monster_fire_blaster =
 {
 	local entity mlaser;
 	
 	mlaser = spawn();
 	mlaser.owner = self;
-	mlaser.damage = dmg;
+	mlaser.dmg = damage;
 	mlaser.movetype = MOVETYPE_FLY;
 	mlaser.solid = SOLID_BBOX;
 	mlaser.modelflags = mflags; //MF_TRACER2;
@@ -73,13 +73,13 @@ void(vector org, vector vec, float dmg, vector colortint, float mflags) monster_
 	mlaser.touch = blasterTouch;
 };
 
-void(vector org, vector vec, float dmg) monster_fire_rocket =
+void(vector org, vector vec, float damage) monster_fire_rocket =
 {
 	local entity mrocket;
 	
 	mrocket = spawn();
 	mrocket.owner = self;
-	mrocket.damage = dmg;
+	mrocket.dmg = damage;
 	mrocket.movetype = MOVETYPE_FLY;
 	mrocket.solid = SOLID_BBOX;
 	mrocket.modelflags = MF_ROCKET;
@@ -135,11 +135,11 @@ void monster_fire_railgun (vector start, vector aimdir, float damage) =
 	fireRail(start, aimdir, damage);
 }
 
-void(vector org, vector vec, float dmg) monster_fire_bfg =
+void(vector org, vector vec, float damage) monster_fire_bfg =
 {
 	newmis = spawn();
 	newmis.owner = self;
-	newmis.damage = dmg;
+	newmis.dmg = damage;
 	newmis.movetype = MOVETYPE_FLY;
 	newmis.solid = SOLID_BBOX;
 

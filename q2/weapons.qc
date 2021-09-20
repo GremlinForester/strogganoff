@@ -1171,7 +1171,7 @@ void() Weapon_Chaingun_Fire={
 
 	if (self.weaponframe == 14 && !self.button0)
 	{
-		sound(self, CHAN_WEAPON2, "weapons/noammo.wav", 1, ATTN_IDLE);
+		sound(self, CHAN_WEAPON2, "weapons/noammo.wav", 0.1, ATTN_IDLE);
 		self.weaponframe = 32;
 		//ent->client->weapon_sound = 0;
 		return;
@@ -1267,7 +1267,6 @@ void() Weapon_Chaingun_Fire={
 		//P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
 
 		//fire_bullet (ent, start, forward, damage, kick, DEFAULT_BULLET_HSPREAD, DEFAULT_BULLET_VSPREAD, MOD_CHAINGUN);
-		
 		fire_bullet_base(self.origin, self.v_angle, '0.02 0.02', damage);
 	}
 	sfx = random() * 1.0;
@@ -1487,7 +1486,7 @@ void() Weapon_Railgun_Fire={
 
 	makevectors(self.v_angle);
 	//start = self.origin + v_forward*10;
-	start = self.origin + (v_forward * 70) + (v_right * 20) + (v_up * 15);
+	start = self.origin + (v_forward * 10) + (v_right * 20) + (v_up * 15);
 	start_z = self.absmin_z + self.size_z * 0.7;
 	fire_railgun_base(start, self.origin + (v_forward * 4096)+ PlayerViewOrg(v_up), damage);
 

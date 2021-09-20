@@ -243,6 +243,13 @@ CheatCommand
 // only for testing, so only enabled in debug mode
 void() CheatCommand =
 {
+	//Yes, this is completely unnecessary but dammit I can't be the only one who needs just a little reassurance that I just cheated!
+	//Just a little flash. And a sound. Just a little bling and some cha-ching. That's all. 
+	//Alright fine. I need it okay!? Happy? There I said it. I need it.
+	//Think of me what you will, judge me even, but just don't take this away. Ok, alright. Maybe I need help.
+	stuffcmd(self, "bf\n");
+	sound(self, CHAN_ITEM, "misc/ar1_pkup.wav", 1, ATTN_NORM);
+	
 	if (deathmatch
 // note: opgrade has this cheat enabled in coop
 #ifndef opgrade
@@ -266,8 +273,9 @@ void() CheatCommand =
 		WEP_HYPERBLASTER |
 		WEP_RAILGUN |
 		WEP_BFG;
+		WEP_GRENADE;
 	self.items = self.items | 
-		IT_KEY1 | IT_KEY2;
+		IT_KEY1 | IT_KEY2 | IT_ARMOR1;
 
 	self.impulse = 0;
 };
@@ -296,6 +304,7 @@ void() CycleWeaponCommand =
 // since these are bit flags, * 2 selects next and * 0.5 selects previous - for single select set this to 1
 //		self.weapon = self.weapon * self.f__;
 // weapon select logic
+		if (self.weapon_next == WEP_GRENADE && self.inv_ammo_rockets < 1) am = 1;
 		if (self.weapon_next == WEP_BFG && self.inv_ammo_cells < 1) am = 1;
 		if (self.weapon_next == WEP_RAILGUN && self.inv_ammo_slugs < 1) am = 1;
 		if (self.weapon_next == WEP_HYPERBLASTER && self.inv_ammo_cells < 1) am = 1;
@@ -313,7 +322,7 @@ void() CycleWeaponCommand =
 			return;
 		}
 // dont cycle single select
-		if (self.impulse <= IMPULSE_USE_WEAPON10) 
+		if (self.impulse <= IMPULSE_USE_WEAPON11) 
 			return;
 	}
 };
@@ -545,7 +554,7 @@ void() ImpulseCommands =
 		self.impulse = 0;
 	}
 	
-	if (self.impulse >= IMPULSE_USE_WEAPON1 && self.impulse <= IMPULSE_USE_WEAPON10)
+	if (self.impulse >= IMPULSE_USE_WEAPON1 && self.impulse <= IMPULSE_USE_WEAPON11)
 	{
 			W_ImpulseChangeWeapon();
 	}

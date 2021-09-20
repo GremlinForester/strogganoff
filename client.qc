@@ -548,7 +548,6 @@ void() UpdateTPWeaponFrames =
 			setmodel (self, "players/male/w_rlauncher.md2");
 			break;
 		case WEP_RAILGUN:
-			
 			setmodel (self, "players/male/w_railgun.md2");
 			break;
 		case WEP_HYPERBLASTER:
@@ -578,8 +577,6 @@ void() UpdateTPWeaponFrames =
 	#ifdef q2model_lighting
 	self.colormod = getlight(self.owner.origin); //MrC Lightgrid workaround
 	#endifdef
-//	sound (self.owner, CHAN_BODY, "weapons/bfg_hum.wav", 1, ATTN_NORM);
-	//ambientsound (self.origin, "ambience/fl_hum1.wav", 0.5, ATTN_STATIC);
 	self.frame = self.owner.frame;
 	self.think = UpdateTPWeaponFrames;
 	self.nextthink = time;	
@@ -1065,6 +1062,26 @@ LADDER STUFF from Quake 1.5
 
 */
 
+
+void() LadderSound2 =
+{
+	if (self.timeladder < time) 
+	{
+	// Reset timer for next sound to play
+	self.timeladder = time + 0.35;
+	// Check for any sounds and query if footsteps are active
+
+			if (random() < 0.25) 
+				sound (self, CHAN_BODY, "player/clank1.wav", 1, ATTN_NORM);
+			else if (random() < 0.5) 
+				sound (self, CHAN_BODY, "player/clank1.wav", 1, ATTN_NORM);
+			else if (random() < 0.75) 
+				sound (self, CHAN_BODY, "player/clank1.wav", 1, ATTN_NORM);
+			else 
+				sound (self, CHAN_BODY, "player/clank1.wav", 1, ATTN_NORM);
+	}
+}
+
 void() LadderSound =
 {
 	if (self.timeladder < time) 
@@ -1113,16 +1130,17 @@ void() Ladder_ClimbMove =
 	if (Dot(v_forward,self.velocity) > 2 || Dot(v_up,self.velocity) < -20 || Dot(v_up,self.velocity) > 20) //-20 20
 	{
 		//self.velocity = v_forward*self.entladder.speed;
-		if (self.v_angle_x < -25) //-25
+		if (self.v_angle_x < -35) //-25
 			self.velocity_z = self.entladder.speed; //climb up with the ladder speed when player is looking up
-		else if (self.v_angle_x > 25) //25
+		else if (self.v_angle_x > 35) //25
 		{
 			self.velocity = v_forward*self.entladder.speed;
 			self.velocity_z = -self.entladder.speed; //negate ladder speed when player looks down, was not possible to descend before
 		}
 		else 
 		//	self.velocity = '0 0 0'; //let the player hover on ladder when not moving forward
-		LadderSound();		
+		LadderSound();
+		LadderSound2();			
 	}
 }
 
@@ -1418,6 +1436,7 @@ void() CheckLadder =
 	}
 }
 */
+
 void() W_surfaceSniffer =
 {
 	local	vector	source;
@@ -1835,6 +1854,11 @@ void(entity targ, entity attacker) ClientObituary =
 					deathstring2 = "'s railgun\n";
 				}
 				if (rnum == WEP_BFG)
+				{
+					deathstring = " was obliterated by ";
+					deathstring2 = "'s bfg\n";
+				}
+				if (rnum == WEP_GRENADE)
 				{
 					deathstring = " was obliterated by ";
 					deathstring2 = "'s bfg\n";
