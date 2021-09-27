@@ -598,7 +598,7 @@ void() SV_FlyMove =
 				self.phys_obj.wad = "insta spawn phys_obj"; // test: nothing spawn test
 #else
 				error("No physics entity spawned!\nMake sure BotInit was called\n");					//opgrade protected
-#endifdef
+#endif
 			}
 		}
 	}
@@ -679,7 +679,7 @@ void() SV_Physics_Client =
 #ifndef noobjerr
 	else
 		error ("SV_Physics_Client: Bad Movetype (BOT)");					//opgrade protected
-#endifdef
+#endif
 
 };
 

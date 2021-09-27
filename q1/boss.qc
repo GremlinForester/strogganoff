@@ -386,7 +386,7 @@ void() lightning_use =
 	{
 #ifndef nodprint
 		dprint ("missing lightning targets\n");
-#endifdef
+#endif
 		return;
 	}
 	

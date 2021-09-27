@@ -254,7 +254,7 @@ void() CheatCommand =
 // note: opgrade has this cheat enabled in coop
 #ifndef opgrade
 						|| coop
-#endifdef
+#endif
 									)		return;
 
 	self.inv_ammo_rockets = 100;
@@ -281,7 +281,7 @@ void() CheatCommand =
 };
 
 // debug qual
-#endifdef
+#endif
 
 /*
 ============
@@ -515,7 +515,7 @@ void() ServerflagsCommand =
 #ifdef opgrade
 	if (deathmatch)
 		return;
-#endifdef
+#endif
 	serverflags = serverflags * 2 + 1;
 };
 
@@ -525,18 +525,18 @@ void() QuadCheat =
 // note: opgrade has this cheat enabled in coop
 #ifndef opgrade
 						|| coop
-#endifdef
+#endif
 									)		return;
 	self.super_time = 1;
 	self.super_damage_finished = time + 30;
 	self.items = self.items | IT_QUAD;
 #ifndef nodprint
 	dprint ("quad cheat\n");
-#endifdef
+#endif
 };
 
 // debug qual
-#endifdef
+#endif
 
 /*
 ============
@@ -583,7 +583,7 @@ void() ImpulseCommands =
 	}
 	if (self.impulse == IMPULSE_CHEAT_QUAD)
 		QuadCheat ();
-#endifdef
+#endif
 
 	self.impulse = 0;
 };
@@ -602,7 +602,7 @@ void() W_WeaponFrame =
 	
 #ifdef opgrade
 	if (self.impulse)
-#endifdef
+#endif
 		ImpulseCommands ();
 	
 	// check for attack

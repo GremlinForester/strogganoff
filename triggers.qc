@@ -147,13 +147,13 @@ void() trigger_multiple =
 				remove(self);
 				return;
 			}
-#endifdef
+#endif
 			self.spawnflags = self.spawnflags - SPAWNFLAG_NOTOUCH;
 		
 		}
 #else
 			objerror ("health and notouch don't make sense\n");					//opgrade protected
-#endifdef
+#endif
 		self.max_health = self.health;
 		self.th_die = multi_killed;
 		self.takedamage = DAMAGE_YES;
@@ -406,7 +406,7 @@ local vector	org;
 
 //#ifdef opgrade // note - we cannot block this off
 	if (self.target) // fix for no target issue
-//#endifdef
+//#endif
 
 	t = find (world, targetname, self.target);
 	if (!t)
@@ -419,7 +419,7 @@ local vector	org;
 			remove(self);
 			return;
 		}
-#endifdef
+#endif
 // later - randomize dest
 		t = find (world, classname, "info_player_deathmatch");
 		if (!t) t = find (world, classname, "info_player_start");
@@ -428,7 +428,7 @@ local vector	org;
 	}
 #else
 		objerror ("couldn't find target");					//opgrade protected
-#endifdef
+#endif
 		
 // spawn a tfog flash in front of the destination
 	makevectors (t.mangle);
@@ -478,13 +478,13 @@ void() info_teleport_destination =
 			remove(self);
 			return;
 		}
-#endifdef
+#endif
 // later - set a random targetname from some ?
 // for now do nothing
 	}
 #else
 		objerror ("no targetname");					//opgrade protected
-#endifdef
+#endif
 };
 
 void() teleport_use =
@@ -516,13 +516,13 @@ void() trigger_teleport =
 			remove(self);
 			return;
 		}
-#endifdef
+#endif
 // later - pick random target, but it has to be find-able - may have to make a target
 // for now teleport_touch can handle no target
 	}
 #else
 		objerror ("no target");					//opgrade protected
-#endifdef
+#endif
 	self.use = teleport_use;
 
 	if (!(self.spawnflags & SILENT))

@@ -85,7 +85,7 @@ void() movetarget_f =
 	}
 #else
 		objerror ("monster_movetarget: no targetname");					//opgrade protected
-#endifdef
+#endif
 		
 	self.solid = SOLID_TRIGGER;
 	self.touch = t_movetarget;
@@ -108,7 +108,7 @@ void() path_corner =
 	}
 #else
 		objerror ("monster_movetarget: no targetname");					//opgrade protected
-#endifdef
+#endif
 		
 	self.solid = SOLID_TRIGGER;
 	self.touch = t_movetarget;
@@ -209,7 +209,7 @@ float (entity targ) visible =
 		return TRUE;
 #ifdef pointless_warning
 	return FALSE;
-#endifdef
+#endif
 };
 
 
@@ -235,7 +235,7 @@ float(entity targ) infront =
 	}
 #ifdef pointless_warning
 	return FALSE;
-#endifdef
+#endif
 };
 
 
@@ -400,7 +400,7 @@ float() FindTarget =
 			return 
 #ifdef codefix 
 					FALSE
-#endifdef 
+#endif 
 					;
 	}
 	else
@@ -601,7 +601,7 @@ void(vector dest3) ChooseTurn =
 	self.ideal_yaw = vectoyaw(dir);	
 };
 
-#endifdef
+#endif
 
 /*
 ============
@@ -631,7 +631,7 @@ float() CheckAnyAttack =
 		return 
 #ifdef codefix 
 				FALSE
-#endifdef 
+#endif 
 				;
 
 // qc++ check attack code boiled down to multi* & demon*

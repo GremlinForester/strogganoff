@@ -71,7 +71,7 @@ framerloop($walk2, $walkeoc, shal_walk1, 0.1,
 	ai_rep($walk10, ai_walk, 5, 0, 4, 5, -6, -6, -6, -6);
 	frame_arb($walkeoc,self.frame = $walk1);
 );
-//#endifdef
+//#endif
 
 /*
 void() shal_run1     =[      $walk2,       shal_run2    ] {
@@ -114,7 +114,7 @@ framerloop($walk2, $walkeoc, shal_run1, 0.1,
 	ai_rep($walk10, ai_run, 5, 0, 4, 5, -6, -6, -6, -6);
 	frame_arb($walkeoc,self.frame = $walk1);
 );
-//#endifdef
+//#endif
 
 
 /*
@@ -292,7 +292,7 @@ void() ShalMissileTouch =
 	setmodel (self, "progs/s_explod.spr");
 	self.solid = SOLID_NOT;
 	s_explode1 ();
-#endifdef
+#endif
 };
 
 //=================================================================

@@ -322,7 +322,7 @@ void() Sbar_DrawInventory =
 	ALPHA_MEDIUM = ibar_alpha * 0.7;	
 	ALPHA_LOW = ibar_alpha * 0.5;
 
-	float shells, rockets, bullets, cells;
+	float shells, rockets, bullets, cells, slugs;
 
 	shells  = GetStat_FLOAT_TRUNCATED(STAT_SHELLS);
 	bullets   = GetStat_FLOAT_TRUNCATED(STAT_BULLETS);

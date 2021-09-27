@@ -317,5 +317,5 @@ void() monster_demon1 =
 {
 	monster_mutant ();
 };
-#endifdef
+#endif
 

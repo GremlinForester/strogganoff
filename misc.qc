@@ -181,7 +181,7 @@ void() misc_fireball =
 		self.speed = 1000;
 #else
 		self.speed == 1000;
-#endifdef
+#endif
 };
 
 void() fire_fly =
@@ -260,7 +260,7 @@ void() misc_explobox =
 		dprint ("item fell out of level at ");
 		dprint (vtos(self.origin));
 		dprint ("\n");
-#endifdef
+#endif
 		remove(self);
 		self = world;
 	}
@@ -513,7 +513,7 @@ void() viewthing =
 		precache_model(self.model);
 };
 
-#endifdef
+#endif
 
 
 /*
@@ -557,14 +557,14 @@ void() func_illusionary =
 	self.movetype = MOVETYPE_NONE;
 	self.solid = SOLID_NOT;
 	setmodel (self, self.model);
-#endifdef 
+#endif 
 
 // interesting - makestatic makes SOLID_BSP map brush objects like func_wall non solid !
 //							  unless some engine mod treats this differently - most opgrades were only tested in darkplaces
 	makestatic ( 
 #ifdef codefix 
 					 self 
-#endifdef 
+#endif 
 						  );
 };
 
@@ -710,4 +710,4 @@ void() misc_noisemaker =
 	self.nextthink = time + 0.1 + random();
 	self.think = noise_think;
 };
-#endifdef
+#endif

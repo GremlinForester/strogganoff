@@ -80,7 +80,7 @@ void(entity missile, float mspeed, float accuracy) LaunchMissile =
 	missile.think = SUB_Remove;	
 };
 
-#endifdef
+#endif
 
 void() wiz_run1;
 void() wiz_side1;
@@ -163,7 +163,7 @@ float()	WizardCheckAttack =
 
 #ifdef pointless_warning
 	return FALSE;
-#endifdef
+#endif
 };
 
 /*

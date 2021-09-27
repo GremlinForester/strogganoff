@@ -28,7 +28,7 @@ float() crandom =
 {
 	return 2*(random() - 0.5);
 };
-#endifdef
+#endif
 /*
 ================
 W_FireAxe
@@ -144,7 +144,7 @@ void(vector org, vector vel) SpawnChunk =
 	particle (org, vel*0.02, 0, 10);
 };
 
-#endifdef
+#endif
 /*
 ==============================================================================
 
@@ -443,7 +443,7 @@ void(float damage) FireBullet =
 		self.currentammo = self.inv_ammo_bullets = self.inv_ammo_bullets - 1;
 		#ifndef new_weapon_generic
 		//self.weaponstate = WEAPON_SPINDOWN;
-		#endifdef
+		#endif
 		SpawnMuzzleFlash(WEP_MACHINEGUN_MFLASH_OFFSET_FP, 2, 0.5);
 		sound (self, CHAN_WEAPON2, "weapons/chngnl1a.wav", 0.5, ATTN_NORM); //spinning
 	}
@@ -657,86 +657,6 @@ void() W_FireSuperShotgun =
 };
 
 /*
-================
-W_FireBlaster
-================
-*/
-
-void()blasterTouch;
-
-void() W_FireBlaster =
-{
-	local vector source;
-	local vector rotation_offset;
-	local float rotation;
-		
-	self.punchangle_x = -3;
-	newmis = spawn ();
-	newmis.owner = self;
-	newmis.dmg = WEAPON_BLASTER_DAMAGE;
-	newmis.movetype = MOVETYPE_FLYMISSILE;
-	newmis.solid = SOLID_BBOX;
-	newmis.classname = "blasterbolt";
-	newmis.glow_color = '200 0 0';
-	newmis.glow_size = 100;
-	newmis.light_lev = 200;
-    newmis.modelflags = MF_TRACER2;
-	newmis.color = '1 0 0'; // color (does not affect radius), typical value '1 1 1' (bright white), can be up to '255 255 255' (nuclear blast)
-	newmis.style = 6; // light style (like normal light entities, flickering torches or switchable, etc)
-	newmis.pflags = PFLAGS_FULLDYNAMIC; // flags (see PFLAGS_ constants)
-
-// set missile speed
-
-//	makevectors (self.v_angle);
-	newmis.velocity = aim(self, PLAYER_ROCKET_SPEED);
-	newmis.velocity = newmis.velocity * PLAYER_ROCKET_SPEED;
-	newmis.angles = vectoangles(newmis.velocity);
-
-	newmis.touch = blasterTouch;
-
-// set missile duration
-
-	newmis.nextthink = time + 5;
-	newmis.think = SUB_Remove;
-
-	source = G_ProjectSource (self.origin, '20 8 17', v_forward, v_right, '0 0 0'); //24 -18 22
-	
-	setmodel (newmis, "progs/laser.mdl");
-	setsize (newmis, '4 4 4', '4 4 4');
-	setorigin (newmis, source);
-	
-	SpawnMuzzleFlash(WEP_BLASTER_MFLASH_OFFSET_FP, WEP_BLASTER_MFLASH_SCALE, 0.5);
-	SpawnMuzzleFlashTP(WEP_BLASTER_MFLASH_OFFSET_TP, 0.5);
-	
-	if (self.weapon == WEP_HYPERBLASTER)
-	{
-		self.currentammo = self.inv_ammo_cells = self.inv_ammo_cells - 1;
-		#ifndef new_weapon_generic
-		//self.weaponstate = WEAPON_SPINDOWN;
-		#endifdef
-		sound (self, CHAN_WEAPON2, "weapons/hyprbl1a.wav", 0.7, ATTN_NORM);
-		sound (self, CHAN_WEAPON, "weapons/Hyprbf1a.wav", 1, ATTN_NORM);
-		
-		rotation = (self.weaponframe - 5) * 2*PI/3; //2*PI/6
-		
-		rotation_offset_x = -6 * sin(rotation); //-4
-		rotation_offset_y = 6;					// 0
-		rotation_offset_z = 6 * cos(rotation); //4
-		
-		source = G_ProjectSource (self.origin, '20 6 10' + rotation_offset, v_forward, v_right, '0 0 0'); //24 -18 22
-		setorigin (newmis, source);
-	}
-	else if (self.weapon == WEP_BLASTER)
-	{
-		sound (self, CHAN_WEAPON, "weapons/BLASTF1A.WAV", 1, ATTN_NORM);
-	}
-	else
-	{
-		self.currentammo = self.inv_ammo_cells = self.inv_ammo_cells - 5; //ammo cost for testing BFG and Railgun
-	}
-};
-
-/*
 ==============================================================================
 
 ROCKETS
@@ -819,7 +739,7 @@ void() T_MissileTouch =
 	WriteCoord (MSG_BROADCAST, self.origin_z);
 
 	BecomeExplosion ();
-#endifdef
+#endif
 };
 
 
@@ -874,7 +794,7 @@ void() W_FireRocket =
 
 void() T_BFGTouch =
 {
-	local float	damg;
+//	local float	damg;
 
 	if (other == self.owner)
 		return;		// don't explode on owner
@@ -891,7 +811,7 @@ void() T_BFGTouch =
 		return;
 	}	
 
-	damg = self.dmg;
+//	damg = self.dmg;
 
 #ifdef opgrade
 
@@ -917,7 +837,7 @@ void() T_BFGTouch =
 	WriteCoord (MSG_BROADCAST, self.origin_z);
 
 	BecomeExplosion ();
-#endifdef
+#endif
 };
 
 void(vector org, vector vec, float dmg, vector colortint, float mflags) monster_fire_blaster;
@@ -1245,7 +1165,7 @@ void() GrenadeExplode =
 	T_RadiusDamage (self, self.owner, self.dmg, other);
 #else
 	T_RadiusDamage (self, self.owner, self.dmg, world);
-#endifdef
+#endif
 
 
 	WriteByte (MSG_BROADCAST, SVC_TEMPENTITY);
@@ -1361,7 +1281,7 @@ void() spike_touch;
 
 void() superspike_touch;
 
-#endifdef
+#endif
 
 
 /*
@@ -1426,7 +1346,7 @@ void(float ox) W_FireSpikes =
 	local vector	dir;
 	dir = aim (self, 1000);
 	launch_spike (self.origin + '0 0 16' + v_right*ox, dir);
-#endifdef
+#endif
 	
 	if (!ox)
 	{
@@ -1493,7 +1413,7 @@ void(float ox) W_FireSpikes =
 	self.punchangle_x = -2;
 
 };
-#endifdef
+#endif
 
 
 //.float hit_z;	// fx_warning
@@ -1531,7 +1451,7 @@ void() spike_touch =
 			self.spike_type = TE_SPIKE;
 #ifdef opgrade
 			if (self.dmg > SPIKE_DMG_SUPER) self.spike_type = TE_SUPERSPIKE;
-#endifdef
+#endif
 			if (self.classname == "wizspike") self.spike_type = TE_WIZSPIKE;
 //			WriteByte (MSG_BROADCAST, TE_WIZSPIKE);
 //			else
@@ -1585,6 +1505,6 @@ void() superspike_touch =
 
 };
 
-#endifdef
+#endif
 
 

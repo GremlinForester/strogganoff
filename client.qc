@@ -84,7 +84,7 @@ void() DecodeLevelParms =
 	if (serverflags)
 #ifdef opgrade
 	if (!deathmatch)
-#endifdef
+#endif
 
 	{
 		if (world.model == "maps/start.bsp")
@@ -145,7 +145,7 @@ entity() FindIntermission =
 	return world;
 #else
 	objerror ("FindIntermission: no spot");					//opgrade protected
-#endifdef
+#endif
 	
 };
 
@@ -353,11 +353,11 @@ void() trigger_changelevel =
 #ifdef xvars1
 // future add cvar_string("svx_tc_rndmap") - random map selected from list
 		if (cvar_string("svx_tc_defmap")) self.map = cvar_string("svx_tc_defmap");
-#endifdef
+#endif
 	}
 #else
 		objerror ("changelevel trigger doesn't have map");					//opgrade protected
-#endifdef
+#endif
 	
 	InitTrigger ();
 	self.touch = changelevel_touch;
@@ -414,7 +414,7 @@ void() ClientKill =
 #ifdef opgrade
 	if ((intermission_running) && ((coop) || (deathmatch)))  // not allowed during intermission
 		return;
-#endifdef
+#endif
 	bprint (self.netname);
 	bprint (" suicides\n");
 	set_suicide_frame ();
@@ -429,7 +429,7 @@ float(vector v) CheckSpawnPoint =
 	return FALSE;
 };
 
-#endifdef
+#endif
 
 /*
 ============
@@ -509,7 +509,7 @@ entity() SelectSpawnPoint =
 	}
 #else
 		error ("PutClientInServer: no info_player_start on level");					//opgrade protected
-#endifdef
+#endif
 	
 	return spot;
 };
@@ -568,15 +568,15 @@ void() UpdateTPWeaponFrames =
 	else
 	#ifdef q2model_lighting
 			self.effects = EF_FULLBRIGHT;
-	#endifdef
+	#endif
 	#ifndef q2model_lighting
 			self.effects = 0;
-	#endifdef
+	#endif
 
 
 	#ifdef q2model_lighting
 	self.colormod = getlight(self.owner.origin); //MrC Lightgrid workaround
-	#endifdef
+	#endif
 	self.frame = self.owner.frame;
 	self.think = UpdateTPWeaponFrames;
 	self.nextthink = time;	
@@ -597,7 +597,7 @@ void() AttachTPWeapon =
 	
 	#ifdef q2model_lighting
 	playerTPWeapon.effects = EF_FULLBRIGHT; //MrC Lightgrid workaround
-	#endifdef
+	#endif
 	playerTPWeapon.think = UpdateTPWeaponFrames;
 	playerTPWeapon.nextthink = time;
 
@@ -640,7 +640,7 @@ void() PutClientInServer =
 	self.onladder = 0;
 	#ifdef q2model_lighting
 	self.effects = EF_FULLBRIGHT; //MrC Lightgrid workaround
-	#endifdef
+	#endif
 	
 	DecodeLevelParms ();
 
@@ -656,7 +656,7 @@ void() PutClientInServer =
 
 #ifdef opgrade
 	self.oldorigin = 
-#endifdef
+#endif
 	self.origin = spot.origin + '0 0 1';	// 1998-07-21 Respawning where player died fix by Robert Field
 	self.angles = spot.angles;
 	self.fixangle = TRUE;		// turn this way immediately
@@ -677,7 +677,7 @@ void() PutClientInServer =
 
 #ifdef opgrade
 	self.velocity = '0 0 0';	// 1998-07-21 Player moves after respawn fix by Xian
-#endifdef
+#endif
 
 	q2Player_stand();
 	
@@ -730,7 +730,7 @@ saved out by quaked in region mode
 void() testplayerstart =
 {
 };
-#endifdef
+#endif
 
 /*QUAKED info_player_deathmatch (1 0 1) (-16 -16 -24) (16 16 24)
 potential spawning position for deathmatch games
@@ -836,7 +836,7 @@ void() CheckRules =
 	
 #ifdef opgrade
 	if (deathmatch)	// 1998-07-27 Timelimit/Fraglimit fix by Maddes
-#endifdef
+#endif
 	if (timelimit && time >= timelimit)
 	{
 		NextLevel();
@@ -845,7 +845,7 @@ void() CheckRules =
 	
 #ifdef opgrade
 	if (deathmatch)	// 1998-07-27 Timelimit/Fraglimit fix by Maddes
-#endifdef
+#endif
 	if (fraglimit && self.frags >= fraglimit)
 	{
 		NextLevel();
@@ -1164,7 +1164,7 @@ void() PlayerPreThink =
 	if ( BotPreFrame () )
 		return ;
 
-#endifdef
+#endif
 
 	if (intermission_running)
 	{
@@ -1476,7 +1476,7 @@ void() PlayerPostThink =
 	if ( BotPostFrame () )
 		return ;
 
-#endifdef
+#endif
 	if (!self.view_ofs) // == '0 0 0')
 		return;		// intermission or finale
 	if (self.deadflag)
@@ -1527,7 +1527,7 @@ void() PlayerPostThink =
 	//Doesn't transfer over to view weapons :(
 	#ifdef q2model_lighting
 	self.colormod = (getlight(self.origin + '0 0 22') - '0.1 0.1 0.1');
-	#endifdef
+	#endif
 
 	Q3Surface_FootStep();
 
@@ -1667,7 +1667,7 @@ void() ClientConnect =
 	}
 */
 
-#endifdef
+#endif
 
 	bprint (self.netname);
 	bprint (" entered the game\n");
@@ -1707,7 +1707,7 @@ void() ClientDisconnect =
 	}
 */
 
-#endifdef
+#endif
 
 	if (gameover)
 		return;

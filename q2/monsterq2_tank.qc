@@ -32,9 +32,6 @@ void() tank_reattack_blaster;
 #define MZ2_TANK_ROCKET_2	'6.9 23.8 49.1'
 #define MZ2_TANK_ROCKET_3	'8.3 17.8 49.5'
 
-float INI_TANK_DATA;
-vector MZ2_TANK_MACHINEGUN[19];
-
 void() tank_sight={
 	sound (self, CHAN_VOICE, TANK_SOUND_SIGHT, 1, ATTN_NORM);
 };
@@ -547,31 +544,6 @@ void() monster_tank={
 	self.th_missile = tank_attack;
 	self.th_die = tank_die;
 	self.th_pain = tank_pain;
-	
-	//grumble grumble giant offset arrays for special effects
-	if(!INI_TANK_DATA){
-		INI_TANK_DATA = TRUE;
-		MZ2_TANK_MACHINEGUN[0] = '22.9 -0.7 25.3';
-		MZ2_TANK_MACHINEGUN[1] = '22.9 -0.7 25.3';
-		MZ2_TANK_MACHINEGUN[2] = '22.2 6.2 22.3';
-		MZ2_TANK_MACHINEGUN[3] = '19.4 13.1 18.6';
-		MZ2_TANK_MACHINEGUN[4] = '19.4 18.8 18.6';
-		MZ2_TANK_MACHINEGUN[5] = '17.9 25.0 18.6';
-		MZ2_TANK_MACHINEGUN[6] = '14.1 30.5 20.6';
-		MZ2_TANK_MACHINEGUN[7] = '9.3 35.3 22.1';
-		MZ2_TANK_MACHINEGUN[8] = '4.7 38.4 22.1';
-		MZ2_TANK_MACHINEGUN[9] = '-1.1 40.4 24.1';
-		MZ2_TANK_MACHINEGUN[10] = '-6.5 41.2 24.1';
-		MZ2_TANK_MACHINEGUN[11] = '3.2 40.1 24.7';
-		MZ2_TANK_MACHINEGUN[12] = '11.7 36.7 26.0';
-		MZ2_TANK_MACHINEGUN[13] = '18.9 31.3 26.0';
-		MZ2_TANK_MACHINEGUN[14] = '24.4 24.4 26.4';
-		MZ2_TANK_MACHINEGUN[15] = '27.1 17.1 27.2';
-		MZ2_TANK_MACHINEGUN[16] = '28.5 9.1 28.0';
-		MZ2_TANK_MACHINEGUN[17] = '27.1 2.2 28.0';
-		MZ2_TANK_MACHINEGUN[18] = '24.9 -2.8 28.0';
-		MZ2_TANK_MACHINEGUN[19] = '21.6 -7.0 26.4';
-	}
 	
 	walkmonster_start;
 };

@@ -639,47 +639,47 @@ float(entity thing) priority_for_thing =
 		}
 		else if (thing.classname == "weapon_shotgun")
 		{
-			if (!(self.inv_weapons & WEP_SHOTGUN)) // WEP_SHOTGUN  
+			if (!(self.inv_weapons & WEP_SHOTGUN)) 
 				thisp = 20;
 		}
 		else if (thing.classname == "weapon_supershotgun")
 		{
-			if (!(self.inv_weapons & WEP_SUPERSHOTGUN)) // WEP_SUPERSHOTGUN  
+			if (!(self.inv_weapons & WEP_SUPERSHOTGUN))
 				thisp = 25;
 		}
 		else if (thing.classname == "weapon_machinegun")
 		{
-			if (!(self.inv_weapons & WEP_MACHINEGUN)) // WEP_MACHINEGUN 
+			if (!(self.inv_weapons & WEP_MACHINEGUN))
 				thisp = 30;
 		}
 		else if (thing.classname == "weapon_chaingun")
 		{
-			if (!(self.inv_weapons & WEP_CHAINGUN)) // WEP_CHAINGUN
+			if (!(self.inv_weapons & WEP_CHAINGUN))
 				thisp = 35;
 		}
 		else if (thing.classname == "weapon_grenadelauncher")
 		{
-			if (!(self.inv_weapons & WEP_GRENADE_LAUNCHER)) // WEP_GRENADE_LAUNCHER
+			if (!(self.inv_weapons & WEP_GRENADE_LAUNCHER))
 				thisp = 45;
 		}
 		else if (thing.classname == "weapon_rocketlauncher")
 		{
-			if (!(self.inv_weapons & WEP_ROCKET_LAUNCHER)) // WEP_ROCKET_LAUNCHER
+			if (!(self.inv_weapons & WEP_ROCKET_LAUNCHER))
 				thisp = 60;
 		}
 		else if (thing.classname == "weapon_hyperblaster")
 		{
-			if (!(self.inv_weapons & WEP_HYPERBLASTER)) // WEP_HYPERBLASTER
+			if (!(self.inv_weapons & WEP_HYPERBLASTER))
 				thisp = 50;
 		}
 		else if (thing.classname == "weapon_railgun")
 		{
-			if (!(self.inv_weapons & WEP_RAILGUN)) // WEP_RAILGUN
+			if (!(self.inv_weapons & WEP_RAILGUN))
 				thisp = 60;
 		}
 		else if (thing.classname == "weapon_bfg")
 		{
-			if (!(self.inv_weapons & WEP_BFG)) // WEP_BFG
+			if (!(self.inv_weapons & WEP_BFG))
 				thisp = 70;
 		}
 	}
@@ -940,7 +940,7 @@ void() BotAI =
 		{
 #ifdef frikbot_waycode
 			if (waypoint_mode < WM_EDITOR)
-#endifdef
+#endif
 				bot_look_for_crap(TRUE);
 		}
 		self.b_aiflags = 0;
@@ -956,7 +956,7 @@ void() BotAI =
 #ifdef frikbot_waycode
 		if (waypoint_mode < WM_EDITOR)
 		{
-#endifdef
+#endif
 		 	if(self.route_failed)
 		 	{
 		 		frik_bot_roam();
@@ -974,7 +974,7 @@ void() BotAI =
 			self.b_aiflags = AI_WAIT;
 			self.keys = 0;
 		}
-#endifdef
+#endif
 	}
 
 	// bot_angle_set points the bot at it's goal (self.enemy or target1)

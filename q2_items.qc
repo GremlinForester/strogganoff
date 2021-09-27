@@ -74,11 +74,36 @@ void() item_armor_shard =
 /*QUAKED item_power_screen (.3 .3 1) (-16 -16 -16) (16 16 16)
 model="models/items/armor/screen/"
 */
-
+void() item_power_screen =
+{
+	self.touch = powerup_touch;
+	precache_model ("models/items/armor/screen/tris.md2");
+	precache_sound ("misc/ar3_pkup.wav");
+	self.noise = "misc/ar3_pkup.wav";
+	setmodel (self, "models/items/armor/screen/tris.md2");
+	self.netname = "Power Screen";
+//	self.items = IT_QUAD;
+	self.modelflags = MF_ROTATE;
+	setsize (self, '-16 -16 -16', '16 16 16');
+	StartItem ();
+}
 
 /*QUAKED item_power_shield (.3 .3 1) (-16 -16 -16) (16 16 16)
 model="models/items/armor/shield/"
 */
+void() item_power_shield =
+{
+	self.touch = powerup_touch;
+	precache_model ("models/items/armor/shield/tris.md2");
+	precache_sound ("misc/ar3_pkup.wav");
+	self.noise = "misc/ar3_pkup.wav";
+	setmodel (self, "models/items/armor/shield/tris.md2");
+	self.netname = "Power Shield";
+//	self.items = IT_QUAD;
+	self.modelflags = MF_ROTATE;
+	setsize (self, '-16 -16 -16', '16 16 16');
+	StartItem ();
+}
 
 /*
 ===============================================================================
@@ -128,37 +153,105 @@ void() item_invulnerability =
 /*QUAKED item_silencer (.3 .3 1) (-16 -16 -16) (16 16 16)
 model="models/items/silencer/"
 */
-
+void() item_silencer =
+{
+	self.touch = powerup_touch;
+	precache_model ("models/items/silencer/tris.md2");
+	precache_sound ("misc/ar3_pkup.wav");
+	self.noise = "misc/ar3_pkup.wav";
+	setmodel (self, "models/items/silencer/tris.md2");
+	self.netname = "Silencer";
+//	self.items = IT_QUAD;
+	self.modelflags = MF_ROTATE;
+	setsize (self, '-16 -16 -16', '16 16 16');
+	StartItem ();
+}
 
 /*QUAKED item_breather (.3 .3 1) (-16 -16 -16) (16 16 16)
 model="models/items/breather/"
 */
-
+void() item_breather =
+{
+	self.touch = powerup_touch;
+	precache_model ("models/items/breather/tris.md2");
+	precache_sound ("misc/ar3_pkup.wav");
+	self.noise = "misc/ar3_pkup.wav";
+	setmodel (self, "models/items/breather/tris.md2");
+	self.netname = "Rebreather";
+//	self.items = IT_QUAD;
+	self.modelflags = MF_ROTATE;
+	setsize (self, '-16 -16 -16', '16 16 16');
+	StartItem ();
+}
 
 /*QUAKED item_enviro (.3 .3 1) (-16 -16 -16) (16 16 16)
 model="models/items/enviro/"
 */
-
-
-/*QUAKED item_ancient_head (.3 .3 1) (-16 -16 -16) (16 16 16)
-Special item that gives +2 to maximum health
-*/
-
+void() item_enviro =
+{
+	self.touch = powerup_touch;
+	precache_model ("models/items/enviro/tris.md2");
+	precache_sound ("misc/ar3_pkup.wav");
+	self.noise = "misc/ar3_pkup.wav";
+	setmodel (self, "models/items/enviro/tris.md2");
+	self.netname = "Environment Suit";
+//	self.items = IT_QUAD;
+	self.modelflags = MF_ROTATE;
+	setsize (self, '-16 -16 -16', '16 16 16');
+	StartItem ();
+}
 
 /*QUAKED item_adrenaline (.3 .3 1) (-16 -16 -16) (16 16 16)
 gives +1 to maximum health
 model="models/items/adrenal/"
 */
-
+void() item_adrenaline =
+{
+	self.touch = powerup_touch;
+	precache_model ("models/items/adrenal/tris.md2");
+	precache_sound ("items/pkup.wav");
+	self.noise = "items/pkup.wav";
+	setmodel (self, "models/items/adrenal/tris.md2");
+	self.netname = "Adrenaline";
+	self.modelflags = MF_ROTATE;
+//	self.items = IT_QUAD;
+	setsize (self, '-16 -16 -16', '16 16 16');
+	StartItem ();
+}
 
 /*QUAKED item_bandolier (.3 .3 1) (-16 -16 -16) (16 16 16)
 model="models/items/band/"
 */
-
+void() item_bandolier =
+{
+	self.touch = powerup_touch;
+	precache_model ("models/items/band/tris.md2");
+	precache_sound ("items/pkup.wav");
+	self.noise = "items/pkup.wav";
+	setmodel (self, "models/items/band/tris.md2");
+	self.netname = "Bandolier";
+//	self.items = IT_QUAD;
+	self.modelflags = MF_ROTATE;
+	setsize (self, '-16 -16 -16', '16 16 16');
+	StartItem ();
+}
 
 /*QUAKED item_pack (.3 .3 1) (-16 -16 -16) (16 16 16)
 model="models/items/pack/"
 */
+void() item_pack =
+{
+	self.touch = powerup_touch;
+	precache_model ("models/items/pack/tris.md2");
+	precache_sound ("items/pkup.wav");
+	self.noise = "items/pkup.wav";
+	setmodel (self, "models/items/pack/tris.md2");
+	self.netname = "Ammo Pack";
+//	self.items = IT_QUAD;
+	self.modelflags = MF_ROTATE;
+	setsize (self, '-16 -16 -16', '16 16 16');
+	StartItem ();
+}
 
 /*
 ===============================================================================
@@ -172,54 +265,154 @@ KEYS
 key for computer centers
 model="models/items/keys/data_cd/"
 */
+void() key_data_cd =
+{
+
+	precache_model ("models/items/keys/data_cd/tris.md2");
+	setmodel (self, "models/items/keys/data_cd/tris.md2");
+	precache_sound ("items/pkup.wav");
+	self.noise = "items/pkup.wav";
+	self.netname = "Data CD";
+	self.modelflags = MF_ROTATE;
+	self.noise = "items/pkup.wav";
+	self.touch = key_touch;
+//	self.items = IT_KEY1;
+	setsize (self, '-16 -16 -16', '16 16 16');
+	StartItem ();
+};
 
 
 /*QUAKED key_power_cube (0 .5 .8) (-16 -16 -16) (16 16 16) TRIGGER_SPAWN NO_TOUCH
 warehouse circuits
 model="models/items/keys/power/"
 */
-
+void() key_power_cube =
+{
+	precache_model ("models/items/keys/power/tris.md2");
+	setmodel (self, "models/items/keys/power/tris.md2");
+	precache_sound ("items/pkup.wav");
+	self.noise = "items/pkup.wav";
+	self.netname = "Power Cube";
+	self.modelflags = MF_ROTATE;
+	self.noise = "items/pkup.wav";
+	self.touch = key_touch;
+//	self.items = IT_KEY1;
+	setsize (self, '-16 -16 -16', '16 16 16');
+	StartItem ();
+};
 
 /*QUAKED key_pyramid (0 .5 .8) (-16 -16 -16) (16 16 16)
 key for the entrance of jail3
 model="models/items/keys/pyramid/"
 */
-
+void() key_pyramid =
+{
+	precache_model ("models/items/keys/pyramid/tris.md2");
+	setmodel (self, "models/items/keys/pyramid/tris.md2");
+	precache_sound ("items/pkup.wav");
+	self.noise = "items/pkup.wav";
+	self.netname = "Pyramid Key";
+	self.modelflags = MF_ROTATE;
+	self.noise = "items/pkup.wav";
+	self.touch = key_touch;
+//	self.items = IT_KEY1;
+	setsize (self, '-16 -16 -16', '16 16 16');
+	StartItem ();
+};
 
 /*QUAKED key_data_spinner (0 .5 .8) (-16 -16 -16) (16 16 16)
 key for the city computer
 model="models/items/keys/spinner/"
 */
-
+void() key_data_spinner =
+{
+	precache_model ("models/items/keys/spinner/tris.md2");
+	setmodel (self, "models/items/keys/spinner/tris.md2");
+	precache_sound ("items/pkup.wav");
+	self.noise = "items/pkup.wav";
+	self.netname = "Data Spinner";
+	self.modelflags = MF_ROTATE;
+	self.noise = "items/pkup.wav";
+	self.touch = key_touch;
+//	self.items = IT_KEY1;
+	setsize (self, '-16 -16 -16', '16 16 16');
+	StartItem ();
+};
 
 /*QUAKED key_pass (0 .5 .8) (-16 -16 -16) (16 16 16)
 security pass for the security level
 model="models/items/keys/pass/"
 */
-
+void() key_pass =
+{
+	precache_model ("models/items/keys/pass/tris.md2");
+	setmodel (self, "models/items/keys/pass/tris.md2");
+	precache_sound ("items/pkup.wav");
+	self.noise = "items/pkup.wav";
+	self.netname = "Security Pass";
+	self.modelflags = MF_ROTATE;
+	self.noise = "items/pkup.wav";
+	self.touch = key_touch;
+//	self.items = IT_KEY1;
+	setsize (self, '-16 -16 -16', '16 16 16');
+	StartItem ();
+};
 
 /*QUAKED key_blue_key (0 .5 .8) (-16 -16 -16) (16 16 16)
 normal door key - blue
 model="models/items/keys/key/"
 */
-
+void() key_blue_key =
+{
+	precache_model ("models/items/keys/key/tris.md2");
+	setmodel (self, "models/items/keys/key/tris.md2");
+	precache_sound ("items/pkup.wav");
+	self.noise = "items/pkup.wav";
+	self.netname = "Blue Key";
+	self.modelflags = MF_ROTATE;
+	self.noise = "items/pkup.wav";
+	self.touch = key_touch;
+//	self.items = IT_KEY1;
+	setsize (self, '-16 -16 -16', '16 16 16');
+	StartItem ();
+};
 
 /*QUAKED key_red_key (0 .5 .8) (-16 -16 -16) (16 16 16)
 normal door key - red
 model="models/items/keys/red_key/"
 */
-
+void() key_red_key =
+{
+	precache_model ("models/items/keys/red_key/tris.md2");
+	setmodel (self, "models/items/keys/red_key/tris.md2");
+	precache_sound ("items/pkup.wav");
+	self.noise = "items/pkup.wav";
+	self.netname = "Red Key";
+	self.modelflags = MF_ROTATE;
+	self.noise = "items/pkup.wav";
+	self.touch = key_touch;
+//	self.items = IT_KEY1;
+	setsize (self, '-16 -16 -16', '16 16 16');
+	StartItem ();
+};
 
 /*QUAKED key_commander_head (0 .5 .8) (-16 -16 -16) (16 16 16)
 tank commander's head
 model="models/items/c_head/"
 */
-
-
-/*QUAKED key_airstrike_target (0 .5 .8) (-16 -16 -16) (16 16 16)
-tank commander's head
-model="models/items/c_head/"
-*/
+void() key_commander_head =
+{
+	precache_model ("models/items/c_head/tris.md2");
+	setmodel (self, "models/items/c_head/tris.md2");
+	precache_sound ("items/pkup.wav");
+	self.noise = "items/pkup.wav";
+	self.netname = "Commander's Head";
+	self.noise = "items/pkup.wav";
+	self.touch = key_touch;
+//	self.items = IT_KEY1;
+	setsize (self, '-16 -16 -16', '16 16 16');
+	StartItem ();
+};
 
 /*
 ===============================================================================
@@ -290,6 +483,6 @@ void() item_health_mega =
 	setmodel (self, "models/items/mega_h/tris.md2");
 	setsize (self, '-16 -16 -16', '16 16 16');
 	self.healamount = 100;
-	self.healtype = 1;
+	self.healtype = 2;
 	StartItem ();
 }

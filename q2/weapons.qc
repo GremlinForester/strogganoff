@@ -168,10 +168,17 @@ float() weapon_chaingun_fire={
 	return FALSE;
 };
 float() weapon_nadelaunch_fire={
+	if(self.weaponframe == 6)
+		return TRUE;
+	return FALSE;
+};
+/*
+float() weapon_nadelaunch_fire={
 	if(self.weaponframe == 6 || self.weaponframe == 9)
 		return TRUE;
 	return FALSE;
 };
+*/
 float() weapon_rocketlaunch_fire={
 	if(self.weaponframe == 5 || self.weaponframe == 0 || self.weaponframe == 9)
 		return TRUE;
@@ -657,8 +664,8 @@ void() player_chatter_idle =
 
 /*
 
-This is called during weapon idle. 
-It could be used to call random sounds or effects during a sequence.
+This is called weapon_generic. 
+It could be used to call sounds, effects, etc... during a sequence.
 
 */
 
@@ -666,91 +673,14 @@ void() doWeaponframes =
 {
 	switch(self.weapon)
 	{
-	case WEP_BLASTER:
-		switch(self.weaponframe)
-		{
-			case 27:
-			//	player_chatter_idle();
-			break;
-			case 50:
-			//	player_chatter_idle();
-			break;
-		}
-	break;
-	/*
-	case WEP_SHOTGUN:
-		switch(self.weaponframe)
-		{
-			case 0:
-				sound(self, CHAN_WEAPON2, "player/axhit2.wav", 1, ATTN_IDLE);
-			break;
-		}
-	break;
-	case WEP_SUPERSHOTGUN:
-		switch(self.weaponframe)
-		{
-			case 0:
-				sound(self, CHAN_WEAPON2, "player/axhit2.wav", 1, ATTN_IDLE);
-			break;
-		}
-	break;
-	case WEP_MACHINEGUN:
-		switch(self.weaponframe)
-		{
-			case 0:
-				sound(self, CHAN_WEAPON2, "player/axhit2.wav", 1, ATTN_IDLE);
-			break;
-		}
-	break;
-	case WEP_CHAINGUN:
-		switch(self.weaponframe)
-		{
-			case 0:
-				sound(self, CHAN_WEAPON2, "player/axhit2.wav", 1, ATTN_IDLE);
-			break;
-		}
-	break;
 	case WEP_GRENADE_LAUNCHER:
 		switch(self.weaponframe)
 		{
-			case 0:
-				sound(self, CHAN_WEAPON2, "player/axhit2.wav", 1, ATTN_IDLE);
+			case 9:
+			sound(self, CHAN_AUTO, "weapons/Grenlr1b.WAV", 0.6, ATTN_NORM);
 			break;
 		}
 	break;
-	case WEP_ROCKET_LAUNCHER:
-		switch(self.weaponframe)
-		{
-			case 0:
-				sound(self, CHAN_WEAPON2, "player/axhit2.wav", 1, ATTN_IDLE);
-			break;
-		}
-	break;
-	case WEP_HYPERBLASTER:
-		switch(self.weaponframe)
-		{
-			case 0:
-				sound(self, CHAN_WEAPON2, "player/axhit2.wav", 1, ATTN_IDLE);
-			break;
-		}
-	break;
-	case WEP_RAILGUN:
-		switch(self.weaponframe)
-		{
-			case 0:
-				sound(self, CHAN_WEAPON2, "player/axhit2.wav", 1, ATTN_IDLE);
-			break;
-		}
-	break;
-	case WEP_BFG:
-		switch(self.weaponframe)
-		{
-			case 0:
-				sound(self, CHAN_WEAPON2, "player/axhit2.wav", 1, ATTN_IDLE);
-			break;
-		}
-	break;
-	*/
 	}
 }
 
@@ -925,6 +855,7 @@ void(float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRAME_IDLE_LAST, fl
 		if (self.weaponframe == FRAME_IDLE_FIRST+1)
 			self.weaponstate = WEAPON_READY;
 	}
+	doWeaponframes();
 }
 
 void() Weapon_Blaster_Fire=
@@ -969,8 +900,10 @@ void() Weapon_Shotgun_Fire={
 		damage *= 4;
 		kick *= 4;
 	}
-	
+	self.solid = SOLID_BBOX;
 	fire_shotgun_base(self.origin, self.v_angle, 6, '0.06 0.06', damage);
+	self.solid = SOLID_SLIDEBOX;
+
 	
 	self.punchangle_x = random() * kick;
 
@@ -1018,9 +951,11 @@ void() Weapon_SuperShotgun={
 	makevectors(self.v_angle);
 	left = self.origin + (v_right * -5);
 	right = self.origin + (v_right * 5);
-	
+
+	self.solid = SOLID_BBOX;
 	fire_shotgun_base(left, self.v_angle, 6, '0.08 0.06', damage);
 	fire_shotgun_base(right, self.v_angle, 6, '0.08 0.06', damage);
+	self.solid = SOLID_SLIDEBOX;
 	
 	self.weaponframe++;
 
@@ -1103,7 +1038,9 @@ void() Weapon_MachineGun_Fire={
 	//Aim is all over the place? Reverted back to FireBullet for now.
 	
 //	fire_bullet_base(self.origin, self.v_angle, '0.02 0.02 0' * cone, damage);
+	self.solid = SOLID_BBOX;
 	FireBullet(damage);
+	self.solid = SOLID_SLIDEBOX;
 	
 	sfx = random() * 1.0;
 	if(sfx < 0.3){
@@ -1267,7 +1204,10 @@ void() Weapon_Chaingun_Fire={
 		//P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
 
 		//fire_bullet (ent, start, forward, damage, kick, DEFAULT_BULLET_HSPREAD, DEFAULT_BULLET_VSPREAD, MOD_CHAINGUN);
+		self.solid = SOLID_BBOX;
 		fire_bullet_base(self.origin, self.v_angle, '0.02 0.02', damage);
+		self.solid = SOLID_SLIDEBOX;
+		//FireBullet(damage);
 	}
 	sfx = random() * 1.0;
 	if(sfx < 0.3){
@@ -1310,13 +1250,15 @@ void() Weapon_GrenadeLauncher_Fire={
 	local float radius, damage;
 	local vector offset, start;
 
+	//MrC: moved this to doWeaponframes since it's just playing a sound, so far no noticable issues.	
 	//simply does the ka-chunk sound of reload
+	/*
 	if(self.weaponframe == 9){
 		sound(self, CHAN_AUTO, "weapons/Grenlr1b.WAV", 0.6, ATTN_NORM);
 		self.weaponframe++;
 		return;
 	}
-	
+	*/
 	damage = 120;
 	
 	radius = damage+40;
@@ -1488,7 +1430,9 @@ void() Weapon_Railgun_Fire={
 	//start = self.origin + v_forward*10;
 	start = self.origin + (v_forward * 10) + (v_right * 20) + (v_up * 15);
 	start_z = self.absmin_z + self.size_z * 0.7;
+	self.solid = SOLID_BBOX;
 	fire_railgun_base(start, self.origin + (v_forward * 4096)+ PlayerViewOrg(v_up), damage);
+	self.solid = SOLID_SLIDEBOX;
 
 	// send muzzle flash
 

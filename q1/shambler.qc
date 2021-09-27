@@ -233,7 +233,7 @@ framer($swingr1, $swingr9, sham_swingr1, sham_run1, 0.1,
 //#else
 	ai_rep($swingr2, ai_charge, 8, 14, 7, 3, 6, 6, 3, 1);
 	frame_arb($swingr9,ai_charge(10));
-//#endifdef
+//#endif
 	frame_arb($swingr9,if (random()<0.5) self.think = sham_swingl1);
 );
 
@@ -308,7 +308,7 @@ setorigin (o, self.origin);
 o.angles = self.angles;
 o.nextthink = time + 0.7;
 o.think = SUB_Remove;
-#endifdef
+#endif
 };
 void() sham_magic4     =[      $magic4,       sham_magic5    ]
 {

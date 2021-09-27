@@ -30,7 +30,7 @@ void()	tbaby_stand1	=[	$walk1,		tbaby_stand1	] {ai_stand();};
 
 #ifdef unused
 void()	tbaby_hang1		=[	$walk1,		tbaby_hang1	] {ai_stand();};
-#endifdef
+#endif
 
 /*
 void()	tbaby_walk1	=[	$walk1,		tbaby_walk2	] {ai_turn();};

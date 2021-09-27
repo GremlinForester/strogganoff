@@ -69,10 +69,10 @@ void() noclass =
 	dprint("noclass spawned at");
 	dprint(vtos(self.origin));
 	dprint("\n");
-#endifdef
+#endif
 	remove (self);
 };
-#endifdef
+#endif
 
 
 
@@ -87,7 +87,7 @@ void() PlaceItem =
 {
 #ifndef opgrade
 	local float	oldz;
-#endifdef
+#endif
 
 	self.mdl = self.model;		// so it can be restored on respawn
 	self.flags = FL_ITEM;		// make extra wide
@@ -98,14 +98,14 @@ void() PlaceItem =
 #ifndef opgrade
 // stats - cost of this one line of code: strofs = 4, numstatements = 1, numfunc = 0, numglobaldef = 1, numpr_global = 1, total size+ = 24
 	oldz = self.origin_z;
-#endifdef
+#endif
 	if (!droptofloor())
 	{
 #ifndef nodprint
 		dprint ("Bonus item fell out of level at ");
 		dprint (vtos(self.origin));
 		dprint ("\n");
-#endifdef
+#endif
 		remove(self);
 //		return;
 	}
@@ -241,6 +241,9 @@ void() armor_touch =
 	if (other.classname != "player")
 		return;
 
+//MrC: FTEQCCGUI bitches about this switch/case :( "expected :, found type/value/bit" or something like that so, guess we'll use an if statement.
+//This is still WIP anyway.
+/*
 	switch (self.classname)
 	{
 		case "item_armor1":
@@ -279,6 +282,29 @@ void() armor_touch =
 			bit = IT_ARMOR1;
 		break;
 	}
+*/
+	if (self.classname == "item_armor1" 
+	|| self.classname == "item_armor_body" 
+	|| self.classname == "item_armor_combat"
+	|| self.classname == "item_armor_jacket"
+	|| self.classname == "item_armor_shard")
+	{
+		type = 0.3;
+		value = 100;
+		bit = IT_ARMOR1;
+	}
+	else if (self.classname == "item_armor2")
+	{
+		type = 0.6;
+		value = 150;
+		bit = IT_ARMOR2;
+	}
+	else
+	{
+		type = 0.8;
+		value = 200;
+		bit = IT_ARMOR3;
+	}		
 	
 //	if (other.armortype*other.armorvalue >= type*value)
 //		return;
@@ -407,7 +433,7 @@ void(float new) Deathmatch_Weapon =
 {
 // change self.weapon if desired
 	if ( RankForWeapon(new) < RankForWeapon(self.weapon) )
-#endifdef
+#endif
 		self.weapon = new;
 };
 
@@ -566,7 +592,7 @@ void() weapon_touch =
 	}
 #else
 		objerror ("weapon_touch: unknown classname");					//opgrade protected
-#endifdef
+#endif
 	
 	sprint (self, "You got the ");
 	sprint (self, stemp.netname);
@@ -842,7 +868,7 @@ void() BackpackTouch =
 //	local string	s;
 #ifdef unused
 	local	float	old;
-#endifdef
+#endif
 	local	float	best, new;
 //	local		entity	stemp;
 //	local	float	acount;
@@ -884,7 +910,7 @@ void() BackpackTouch =
 		new = self.weapon;
 #ifdef unused
 	old = self.items;
-#endifdef
+#endif
 	self.items = self.items | new;
 	
 	bound_other_ammo ();

@@ -716,7 +716,7 @@ float (entity targ) sisible =
 
 #ifdef pointless_warning
 	return FALSE;
-#endifdef
+#endif
 };
 /*
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

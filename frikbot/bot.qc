@@ -162,7 +162,7 @@ void() bot_map_load =
 		map_dm6();
 };
 
-#endifdef
+#endif
 
 /*
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -190,7 +190,7 @@ for all variable in the bot...
 .vector	b_angle, mouse_emu, obs_dir;
 #ifdef unused
 .vector	b_dest;
-#endifdef
+#endif
 
 .vector	movevect, b_dir;
 .vector dyn_dest;
@@ -382,7 +382,7 @@ void(entity	client, string s) stuffcmd =
 		}
 		b_temp1 = b_temp1._next;
 	}
-#endifdef
+#endif
 };
 
 void(entity	e) setspawnparms =
@@ -420,7 +420,7 @@ void(entity	client, string s) sprint =
 		}
 		b_temp1 = b_temp1._next;
 	}
-#endifdef
+#endif
 
 };
 void(entity	client, string s) centerprint =
@@ -439,7 +439,7 @@ void(entity	client, string s) centerprint =
 		}
 		b_temp1 = b_temp1._next;
 	}
-#endifdef
+#endif
 };
 
 vector(entity e, float sped) aim =
@@ -561,7 +561,7 @@ void() botcam_u =
 	{
 #ifdef svc_botcam
 		if (!cvar("svx_botcam")) return;
-#endifdef
+#endif
 		self.enemy = player_head;
 	}
 	else
@@ -569,7 +569,7 @@ void() botcam_u =
 #ifdef svc_botcam
 		if (!cvar("svx_botcam")) self.enemy = world;
 		else
-#endifdef
+#endif
 		do
 			self.enemy = self.enemy._next;
 		while (self.enemy.classname == "botcam");
@@ -606,7 +606,7 @@ void() botcam_u =
 	sprint(self, "\n");
 };
 
-#endifdef
+#endif
 
 
 /*
@@ -700,7 +700,7 @@ float () BotPreFrame =
 #ifdef botcam_code
 		if (self.classname == "botcam")
 			return TRUE;
-#endifdef
+#endif
 	}
 	if (self.b_frags != self.frags)
 	{
@@ -729,7 +729,7 @@ float () BotPostFrame =
 #ifdef frikbot_waycode
 		if (waypoint_mode > WM_LOADED)
 			bot_menu_display();
-#endifdef
+#endif
 
 		if (self.impulse)
 			BotImpulses();
@@ -738,12 +738,12 @@ float () BotPostFrame =
 		if (cvar("sv_botcon"))
 			BotImpulses();
 		cvar_set("sv_botcon", "0");
-#endifdef
+#endif
 
 #ifdef botcam_code
 		if (botcam())
 			return TRUE;
-#endifdef
+#endif
 	}
 	return FALSE;
 };
@@ -864,7 +864,7 @@ void() BotInit =
 		waypoint_mode = WM_DYNAMIC;
 #ifdef frikbot_waycode
 		bot_map_load();
-#endifdef
+#endif
 	}
 	else
 		waypoint_mode = WM_LOADED;
@@ -992,7 +992,7 @@ void(entity e1, entity e2, float flag) DeveloperLightning =
 	WriteCoord (MSG_BROADCAST, e2.origin_y);
 	WriteCoord (MSG_BROADCAST, e2.origin_z); 
 };
-#endifdef
+#endif
 
 /*
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -1309,7 +1309,7 @@ void() BotFrame =
 #ifdef svc_frikbot
 			if (! cvar("svx_frikbot")) KickABot();
 			else
-#endifdef
+#endif
 			if (active_clients & ClientBitFlag(num))
 			{
 				frik_obstacles();
@@ -1344,11 +1344,11 @@ void() BotImpulses =
 #ifdef frikbot_waycode
 	if (self.impulse == 104)
 		bot_way_edit();
-#endifdef
+#endif
 
 #ifdef svc_frikbot
 		if (! cvar("svx_frikbot")) return ;
-#endifdef
+#endif
 
 #ifdef svc_botcon
 
@@ -1392,12 +1392,12 @@ void() BotImpulses =
 	}
 	else if (self.impulse == 102)
 		KickABot();
-#endifdef
+#endif
 
 #ifdef botcam_code
 	if (self.impulse == 103)
 		botcam_u();
-#endifdef
+#endif
 
 //	else
 //		return;

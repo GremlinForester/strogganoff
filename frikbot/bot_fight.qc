@@ -82,7 +82,7 @@ void() bot_dodge_stuff =
 	local float foedist, avdist, foesz, flen, tsz;
 #ifdef unused
 	local float scandist;
-#endifdef
+#endif
 	local vector v;
 
 	if (waypoint_mode > WM_LOADED)

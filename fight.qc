@@ -24,7 +24,7 @@ void(float side)	Demon_Melee;
 
 #ifdef unused
 void(vector dest) ChooseTurn;
-#endifdef
+#endif
 
 void() ai_face;
 
@@ -129,7 +129,7 @@ float() CheckAttack =
 
 #ifdef pointless_warning
 	return FALSE;
-#endifdef
+#endif
 };
 
 

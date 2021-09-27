@@ -12,7 +12,7 @@
 		and we'd like to reduce func call jump counts.
 */
 
-.float dmgradius; //MrC: used for assigning radius to projectiles, could be useful for other things. Or maybe it's like the second act of my .dmg/.damage saga. *clown face*
+.float dmgradius;
 
 void() blaster_base_touch={
 	
@@ -50,7 +50,7 @@ void(vector entOrg, vector aimAngle, float speed, float damage, float clr, float
 	newmis.movetype = MOVETYPE_FLYMISSILE;
 	newmis.solid = SOLID_BBOX;
 	newmis.classname = "blasterbolt";
-	newmis.glow_color = clr;	//'200 0 0'
+	newmis.glow_color = clr;
 	newmis.glow_size = glowSize;	//100
 	newmis.light_lev = lightLev;	//200
     newmis.modelflags = MF_TRACER2;

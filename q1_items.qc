@@ -210,7 +210,7 @@ void() item_weapon =
 // if no spawnflags & 7 - this causes a "You got the" message	with no inventory change
 	setsize (self, '0 0 0', '32 32 56');
 	StartItem ();
-#endifdef
+#endif
 };
 
 
@@ -332,11 +332,11 @@ void() item_sigil =
 #ifdef xvars2
 // future add cvar("svx_rndsigil") - random bit mask selector via rnd_bit
 		if (cvar("svx_defsigil") & 15) self.spawnflags = cvar("svx_defsigil");
-#endifdef
+#endif
 	}
 #else
 		objerror ("no spawnflags");					//opgrade protected
-#endifdef
+#endif
 
 	precache_sound ("misc/runekey.wav");
 	self.noise = "misc/runekey.wav";

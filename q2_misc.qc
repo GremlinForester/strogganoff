@@ -108,6 +108,64 @@ void(vector org, float height, vector rot) make_ladderVolume =
 	setsize(ladderVolume, '-16 -16 -24', '16 16 32' + ladderHeight); //'-4 -16 -24', '4 16 32'
 };
 
+void() trigger_ladder =
+{
+	// Default = wood
+	if (!self.sounds) self.sounds = 2;
+	if (self.sounds == 1) {				// Metal
+		if(!self.waitmin) self.waitmin = 0.45;
+		self.noise1 = "player/ladmetal1.wav";
+		self.noise2 = "player/ladmetal2.wav";
+		self.noise3 = "player/ladmetal3.wav";
+		self.noise4 = "player/ladmetal4.wav";
+	}
+	else if (self.sounds == 2) {		// Wood
+		if(!self.waitmin) self.waitmin = 0.4;
+		self.noise1 = "player/ladwood1.wav";
+		self.noise2 = "player/ladwood2.wav";
+		self.noise3 = "player/ladwood3.wav";
+		self.noise4 = "player/ladwood4.wav";
+	}
+	else if (self.sounds == 3) {		// Old Rope
+		if(!self.waitmin) self.waitmin = 0.7;
+		self.noise1 = "player/ladrope1.wav";
+		self.noise2 = "player/ladrope2.wav";
+		self.noise3 = "player/ladrope3.wav";
+		self.noise4 = "player/ladrope4.wav";
+	}
+	else {
+		// Custom or empty
+		if (!self.waitmin) self.waitmin = 0.5;
+		if (self.noise1 == "") self.noise1 = SOUND_EMPTY;
+		if (self.noise2 == "") self.noise2 = SOUND_EMPTY;
+		if (self.noise3 == "") self.noise3 = SOUND_EMPTY;
+		if (self.noise4 == "") self.noise4 = SOUND_EMPTY;
+	}
+	precache_sound(self.noise1);
+	precache_sound(self.noise2);
+	precache_sound(self.noise3);
+	precache_sound(self.noise4);
+	
+//	self.classtype = CT_TRIGLADDER;
+	InitTrigger ();
+	if (!self.speed) self.speed = 160;
+	// No trigger damage functionality and always touchable!
+//	self.spawnflags = self.spawnflags | TRIG_ALWAYTOUCH | TRIG_NODAMAGE;
+
+	// Cannot have ladder triggers touched by monsters
+//	self.spawnflags = self.spawnflags - (self.spawnflags & TRIG_MONSTERS);
+
+	// Setup Entity State functionality
+	//self.estate_fire = trigger_ladder_fire;
+	if (self.spawnflags & ENT_STARTOFF) {
+		self.touch = SUB_Null;
+		self.use = trigger_ladder_fire;
+	}
+	else
+		self.touch = trigger_ladder_fire;
+	//trigger_bmodel_setup();
+};
+
 /*QUAKED misc_banner (1 .5 0) (-4 -4 -4) (4 4 4)
 The origin is the bottom of the banner.
 The banner is 128 tall.
@@ -305,12 +363,12 @@ void() func_train_activator =
 			return;
 		}
 		else
-#endifdef
+#endif
 		return;
 	}
 #else
 		objerror ("func_train_activator without a target");					//opgrade protected
-#endifdef
+#endif
 
 
 // start trains on the second frame, to make sure their targets have had

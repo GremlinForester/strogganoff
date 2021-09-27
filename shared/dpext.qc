@@ -29,4 +29,4 @@ string(string s, float start, float length) substring = #116;
 //string(float chars, string s, ...) strpad = #225;
 // effect of #nondp here
 
-#endifdef
+#endif

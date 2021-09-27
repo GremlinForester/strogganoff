@@ -34,7 +34,7 @@ $frame painb10 painb11
 $frame attackb0 attackb1 attackb2 attackb3 attackb4 attackb5
 #else
 $frame attackb1 attackb1 attackb2 attackb3 attackb4 attackb5
-#endifdef
+#endif
 
 $frame attackb6 attackb7 attackb8 attackb9 attackb10
 

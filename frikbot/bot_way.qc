@@ -281,7 +281,7 @@ entity(vector org) make_waypoint =
 #ifdef frikbot_waycode
 	if (waypoint_mode > WM_LOADED) // editor modes
 		setmodel(point, "progs/s_bubble.spr"); 
-#endifdef
+#endif
 	return point;
 };
 
@@ -300,7 +300,7 @@ void() DynamicWaypoint =
 	local float dist, dynlink, dynpoint;
 #ifdef frikbot_waycode
 	local float editor;
-#endifdef
+#endif
 
 	if (self.teleport_time > self.portal_time)
 	{
@@ -333,7 +333,7 @@ void() DynamicWaypoint =
 		}
 	}	
 	else 
-#endifdef
+#endif
 		if (waypoint_mode == WM_DYNAMIC)
 			dynlink = dynpoint = 1;
 
@@ -342,7 +342,7 @@ void() DynamicWaypoint =
 	{
 #ifdef frikbot_waycode
 		if (!editor)
-#endifdef
+#endif
 			return;
 	}
 // for speed sake, I won't have bots dynamic waypoint in coop
@@ -410,7 +410,7 @@ void() DynamicWaypoint =
 		if (self.b_aiflags & AI_HOLD_SELECT)
 			return;
 	}
-#endifdef
+#endif
 
 	t = FindWayPoint(self.current_way);
 	if (t)
@@ -442,7 +442,7 @@ void() DynamicWaypoint =
 						if (self.current_way)
 							setmodel(self.current_way, "progs/s_bubble.spr");
 					}
-#endifdef
+#endif
 				}
 				self.current_way = t;
 				self.dyn_flags = 0;
@@ -492,7 +492,7 @@ void() DynamicWaypoint =
 	if (noway_above)
 	if (self.dyn_dest_z > noway_above) return;
 
-#endifdef
+#endif
 	
 	t = make_waypoint(self.dyn_dest);
 
@@ -513,7 +513,7 @@ void() DynamicWaypoint =
 		if (self.current_way)
 			setmodel(self.current_way, "progs/s_bubble.spr");
 	}
-#endifdef
+#endif
 	self.current_way = t;
 	self.dyn_flags = 0;
 	

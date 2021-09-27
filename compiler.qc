@@ -77,6 +77,7 @@
 
 // turn off warnings for map spawn functions - most are normally only called by the engine
 #pragma warning off F300
+#pragma warning off F317
 
 
 
@@ -88,7 +89,7 @@
 
 #ifdef qc++
 #message			-- compile: qc++ v1.07 included 
-#endifdef
+#endif
 
 /*
 	an operation upgrade to vanilla qc 1.06
@@ -171,11 +172,11 @@ this is fixed with
 
 
 // end not using qc++
-#endifdef
+#endif
 
 
 // end of opgrade not used
-#endifdef
+#endif
 
 // ******************************************************************************************************************
 
@@ -187,7 +188,7 @@ this is fixed with
 #ifndef pointless_warning
 // comment this out to see any related warnings
 #pragma warning disable Q206
-#endifdef
+#endif
 
 // ******************************************************************************************************************
 
@@ -200,7 +201,7 @@ this is fixed with
 
 #ifdef noobjerr
 #message			-- compile: objerror() and error() statements removed 
-#endifdef
+#endif
 
 
 // ******************************************************************************************************************
@@ -231,7 +232,7 @@ spec track by cvar
 /// remove these segments entirely for final or gold release
 #define nodprint
 
-#endifdef
+#endif
 
 
 // ******************************************************************************************************************
@@ -245,7 +246,7 @@ spec track by cvar
 
 #ifdef nondp
 #message			-- compile: darkplaces __not__ required - runs on any engine (in theory) 
-#endifdef
+#endif
 
 /// remove the above section for dp only releases
 
@@ -290,7 +291,7 @@ spec track by cvar
 #message			-- compile: xvars level 0 control package 
 
 
-#endifdef
+#endif
 
 
 // cvar define package for default.cfg will be used if we define this element
@@ -469,9 +470,9 @@ void() t_on
 
 #ifdef q2monster_replace_soldier
 #message			-- compile: Replace Quake 1 Soldier with Quake 2 Soldier 
-#endifdef
+#endif
 #ifdef q2monster_replace_demon
 #message			-- compile: Replace Quake 1 Demon with Quake 2 Mutant 
-#endifdef
+#endif
 
 

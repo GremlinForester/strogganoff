@@ -104,13 +104,31 @@ void() misc_breakable_glass =
 };
 
 
+void() func_explosive_die =
+{
+	local float n;
+
+//	self.origin = self.mins + self.maxs / 2;
+
+	for (n= 0; n < 6; n++)
+		ThrowGib ("models/objects/debris1/tris.md2", self.health, GIB_NONE);
+	for (n= 0; n < 4; n++)
+		ThrowGib ("models/objects/debris2/tris.md2", self.health, GIB_NONE);
+	
+	SUB_UseTargets();
+	remove(self);
+}
+
 void() func_explosive =
 {
-	self.solid = SOLID_BSP;
+	local vector org;
+	
+	self.solid = SOLID_BBOX;
 	self.movetype = MOVETYPE_NONE;
 	setorigin (self, self.origin);
 	setmodel (self, self.model);
-	
+	setsize (self, self.mins, self.maxs);
+
 	if (!self.health)
 	{
 		self.health = 20;
@@ -120,9 +138,9 @@ void() func_explosive =
 	self.takedamage = DAMAGE_YES;
 	self.classname = "func_explosive";
 	
-	self.touch = breakable_glass_touch;
+//	self.touch = breakable_glass_touch;
 	
-	self.th_die = breakable_glass_die;
+	self.th_die = func_explosive_die;
 };
 
 //********************************************

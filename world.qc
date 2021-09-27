@@ -50,7 +50,7 @@ void() main =
 {
 #ifndef nodprint
 	dprint ("main function\n");
-#endifdef
+#endif
 
 	FRIK_FILE_precaches(); //MrC: Thanks goes to Peter Roohr (battleMETAL), precaching with external text files is TIGHT!
 	//But I don't think works for some reason.
@@ -231,7 +231,7 @@ void() worldspawn =
 // version command string for console
 	#ifdef qcvers
 	localcmd(version__);
-	#endifdef
+	#endif
 
 // xvars level 1
 
@@ -240,7 +240,7 @@ void() worldspawn =
 		localcmd("seta svx_platdoorfail	0\n");
 		localcmd("seta svx_tc_defmap \"\"\n");
 	
-	#endifdef
+	#endif
 
 // xvars level 2
 
@@ -249,10 +249,10 @@ void() worldspawn =
 		localcmd("seta svx_defsigil 0\n");
 		localcmd("seta svx_glowcorpse 0\n");
 
-	#endifdef
+	#endif
 
 
-#endifdef
+#endif
 
 
 #ifdef FRIKBOT
@@ -263,19 +263,19 @@ void() worldspawn =
 // create non-storable cvar for frikbot control
 // has same code as impulse - 100, 101 - add bot, 102 - remove bot
 		localcmd("set sv_botcon 0\n");
-		#endifdef
+		#endif
 
 		#ifdef svc_frikbot
 // create a config.cfg storable xvar for frikbots, default to on
 		localcmd("seta svx_frikbot 1\n");
-		#endifdef
+		#endif
 
 		#ifdef svc_botcam
 // create a config.cfg storable xvar for botcam, default to off
 		localcmd("seta svx_botcam 0\n");
-		#endifdef
+		#endif
 	
-	#endifdef
+	#endif
 
 // an alternate that saves global vars is to place these commands in default.cfg
 // and comment out the lines of code
@@ -296,7 +296,7 @@ void() worldspawn =
 		localcmd("set sv_bot_noway_above 0\n");
 		localcmd("set sv_bot_noway_below 0\n");
 
-		#endifdef
+		#endif
 
 // note: these require a per map load
 	noway_below = cvar("sv_bot_noway_below");
@@ -305,10 +305,10 @@ void() worldspawn =
 	if (!noway_below) noway_below = world.mins_z - 8;
 	if (!noway_above) noway_above = world.maxs_z + 8;
 
-	#endifdef
+	#endif
 
 // end frikbot section
-#endifdef
+#endif
 
 // custom map attributes
 	if (self.model == "maps/e1m8.bsp")
@@ -430,9 +430,6 @@ Quake 2 MP Map ladder volumes
 	precache_model ("progs/v_nail2.mdl");
 	precache_model ("progs/v_rock2.mdl");
 	
-	precache_model ("models/weapons/v_blast/tris.md2");
-	precache_model ("models/weapons/v_bfg/tris.md2");
-	
 	precache_model ("progs/muzzleflash3.spr");
 	precache_model ("models/glass64_broke.MD3");
 	precache_model ("models/glass64_cracked.MD3");
@@ -459,6 +456,8 @@ Quake 2 MP Map ladder volumes
 	precache_model ("models/weapons/v_launch/tris.md2");
 	precache_model ("models/weapons/v_rocket/tris.md2");
 	precache_model ("models/weapons/v_hyperb/tris.md2");
+	precache_model ("models/weapons/v_rail/tris.md2");
+	precache_model ("models/weapons/v_bfg/tris.md2");
 
 	precache_model ("progs/bolt.mdl");		// for lightning gun
 	precache_model ("progs/bolt2.mdl");		// for lightning gun
@@ -532,6 +531,8 @@ Quake 2 MP Map ladder volumes
 	precache_sound ("player/footsteps/pl_snow2.wav");
 	precache_sound ("player/footsteps/pl_snow3.wav");
 	precache_sound ("player/footsteps/pl_snow4.wav");
+	
+	precache_sound ("weapons/HGRENT1A.WAV");
 
 //
 // Setup light animation tables. 'a' is total darkness, 'z' is maxbright.
@@ -591,7 +592,7 @@ void() StartFrame =
 
 	BotFrame(); 
 
-#endifdef
+#endif
 
 };
 
@@ -610,7 +611,7 @@ void() bodyque =
 {	// just here so spawn functions don't complain after the world
 	// creates bodyques
 };
-#endifdef
+#endif
 
 void() InitBodyQue =
 {

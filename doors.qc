@@ -114,13 +114,13 @@ void() door_fire =
 			remove(self);
 			return;
 		}
-#endifdef
+#endif
 		self.owner = self;
 
 	}
 #else
 		objerror ("door_fire: self.owner != self");					//opgrade protected
-#endifdef
+#endif
 
 // play use key sound
 
@@ -129,7 +129,7 @@ void() door_fire =
 		sound (self, CHAN_ITEM, self.noise4, 1, ATTN_NORM);
 #else
 		sound (self, CHAN_VOICE, self.noise4, 1, ATTN_NORM);
-#endifdef
+#endif
 
 	self.message = string_null;		// no more message
 	oself = self;
@@ -403,13 +403,13 @@ void() LinkDoors =
 					remove(t);
 					continue;
 				}
-#endifdef
+#endif
 				t.enemy = world; // find a way to test this - what will it really do...
 
 			}
 #else
 				objerror ("cross connected doors");					//opgrade protected
-#endifdef
+#endif
 
 			self.enemy = t;
 			self = t;
@@ -487,7 +487,7 @@ void() func_door =
 	{
 		dprint ("no worldtype set!\n");
 	}
-#endifdef
+#endif
 	if (! self.sounds) // == 0)
 	{
 		precache_sound ("misc/null.wav");

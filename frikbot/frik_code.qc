@@ -39,20 +39,20 @@
 #else
 // may be affected by sv_aim
 vector(entity e, float speed) frik_aim = #44;		// returns the shooting vector
-#endifdef
+#endif
 
 
 // activate here if unused doesnt get it
 #ifndef unused
 entity(entity e) nextent = #47;					// for looping through all ents			// qc++ - seems not used in v1.06
-#endifdef
+#endif
 
 
 #ifdef nodprint
 // currently this is only used in dprints & frikbot
 // activate here if dprint doesnt get it
 string(vector v) vtos				= #27;
-#endifdef
+#endif
 
 
 
@@ -102,14 +102,14 @@ Writing ./progs.dat
 
 	#messagefrikbot compiled waypoints: dm1 - dm6 
 
-	#include </map_dm1.qc>
-	#include </map_dm2.qc>
-	#include </map_dm3.qc>
-	#include </map_dm4.qc>
-	#include </map_dm5.qc>
-	#include </map_dm6.qc>
+	#include "map_dm1.qc"
+	#include "map_dm2.qc"
+	#include "map_dm3.qc"
+	#include "map_dm4.qc"
+	#include "map_dm5.qc"
+	#include "map_dm6.qc"
 
-	#endifdef
+	#endif
 
 
 // limit placement of dynamic waypoints by world _z boundary, or server spec
@@ -125,7 +125,7 @@ Writing ./progs.dat
 float noway_above;
 float noway_below;
 
-#endifdef
+#endif
 
 
 
@@ -153,9 +153,9 @@ float noway_below;
 
 	#ifdef svc_botcam
 	#define botcam_code
-	#endifdef
+	#endif
 
-#endifdef
+#endif
 
 // enable use of botcam
 // this uses some global resources and gives players a way to spy on other players
@@ -166,31 +166,31 @@ float noway_below;
 
 #message			-- compile: frikbot botcam disabled - code excluded 
 
-#endifdef
+#endif
 
 
 // main bot modules
 
 #messagefrikbot/bot.qc 
-#include </bot.qc>
+#include "bot.qc"
 
 #messagefrikbot/bot_way.qc 
-#include </bot_way.qc>
+#include "bot_way.qc"
 
 #messagefrikbot/bot_fight.qc 
-#include </bot_fight.qc>
+#include "bot_fight.qc"
 
 #messagefrikbot/bot_ai.qc 
-#include </bot_ai.qc>
+#include "bot_ai.qc"
 
 #messagefrikbot/bot_misc.qc 
-#include </bot_misc.qc>
+#include "bot_misc.qc"
 
 #messagefrikbot/bot_phys.qc 
-#include </bot_phys.qc>
+#include "bot_phys.qc"
 
 #messagefrikbot/bot_move.qc 
-#include </bot_move.qc>
+#include "bot_move.qc"
 
 
 
@@ -203,13 +203,13 @@ float noway_below;
 	#message			-- compile: frikbot waypoint editor 
 	 
 	#messagefrikbot/bot_ed.qc 
-	#include </bot_ed.qc>
+	#include "bot_ed.qc"
 
-	#endifdef
+	#endif
 
 
 
-#endifdef
+#endif
 
 
 /*

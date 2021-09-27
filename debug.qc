@@ -93,7 +93,7 @@ void() test_teleport =
 	}
 #else
 		objerror ("no target\n");				//opgrade protected
-#endifdef
+#endif
 };
 
 void() test_teleport_touch =
@@ -182,11 +182,11 @@ void() jctrig =
 #ifdef opgrade
 // otherwise this damn thing is fired off as soon as the level loads - and you will know it
 	if (other.classname != "player") return;
-#endifdef
+#endif
 
 #ifndef nodprint
 	dprint ("here\n\n");
-#endifdef
+#endif
 
 // when this happens, the level wide lighting starts flashing
 	lightstyle(0, "az");

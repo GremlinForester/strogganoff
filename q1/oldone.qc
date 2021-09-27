@@ -32,7 +32,7 @@ $frame shake1 shake2 shake3 shake4 shake5 shake6 shake7 shake8
 $frame shake9 shake10 shake11 shakeb12 shake12 shake13 shake14
 #else
 $frame shake9 shake10 shake11 shake12 shake12 shake13 shake14
-#endifdef
+#endif
 $frame shake15 shake16 shake17 shake18 shake19 shake20
 
 //void() old_stand     =[      $old1,       old_stand    ] {};
@@ -143,7 +143,7 @@ framer($shake1, $shake20, old_thrash1, SUB_Null, 0.1,
 	frame_arb($shake20,finale_4());
 );
 
-#endifdef
+#endif
 
 //============================================================================
 
@@ -155,7 +155,7 @@ void() finale_1 =
 #ifdef opgrade
 	killed_monsters = killed_monsters + 1;
 	WriteByte (MSG_ALL, SVC_KILLEDMONSTER);	// FIXME: reliable broadcast
-#endifdef
+#endif
 
 	intermission_exittime = time + 10000000;	// never allow exit
 	intermission_running = 1;
@@ -177,7 +177,7 @@ void() finale_1 =
 	}
 #else
 		error ("no info_intermission");					//opgrade protected
-#endifdef
+#endif
 
 	pl = find (world, classname, "misc_teleporttrain");
 	if (!pl)
@@ -186,7 +186,7 @@ void() finale_1 =
 	else
 #else
 		error ("no teleporttrain");					//opgrade protected
-#endifdef
+#endif
 	remove (pl);
 
 	WriteByte (MSG_ALL, SVC_FINALE);
@@ -273,7 +273,7 @@ void() finale_4 =
 // spatter factor
 #define spat_	-999
 
-#endifdef
+#endif
 
 //	local	float	r;
 //	local entity	n;
@@ -299,7 +299,7 @@ void() finale_4 =
 // opg - some random spatter factor for shubs gibs
 				spat_ = -999;
 				if (random() < 0.3) spat_ = -666 * random();
-#endifdef
+#endif
 				self.rnd_ = random();
 				if (self.rnd_ < 0.3)				
 					ThrowGib ("progs/gib1.mdl", spat_);
@@ -311,8 +311,8 @@ void() finale_4 =
 // opg in dp - scale some chunks up
 #ifndef nondp
 				if (random() < 0.25) nspawn.scale = 6 * random();
-#endifdef
-#endifdef
+#endif
+#endif
 				y__ = y__ + GIB_RATIO1;
 			}
 			x__ = x__ + GIB_RATIO1;

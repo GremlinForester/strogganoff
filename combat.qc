@@ -79,7 +79,7 @@ float(entity targ, entity inflictor) CanDamage =
 
 #ifdef pointless_warning
 	return FALSE;
-#endifdef
+#endif
 };
 
 
@@ -210,7 +210,7 @@ void(entity targ, entity inflictor, entity attacker, float damage) T_Damage=
 	&& (inflictor.classname != "door") )	// because squishing a teammate is still possible
 #else
 	if ( (teamplay == 1) && (targ.team > 0)&&(targ.team == attacker.team) )
-#endifdef
+#endif
 
 		return;
 		
@@ -379,7 +379,7 @@ void(entity attacker, float damage) T_BeamDamage =
 	}
 };
 
-#endifdef
+#endif
 
 /*
 ============

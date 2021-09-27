@@ -242,7 +242,7 @@ void() monster_go =
 		}
 	}
 	else
-#endifdef	
+#endif	
 	if (self.flags & FL_SWIM)
 	{
 		self.view_ofs = '0 0 10';
@@ -262,7 +262,7 @@ void() monster_go =
 			dprint (vtos(self.origin));
 			dprint ("\n");
 		}
-#endifdef
+#endif
 	}
 
 	if (!self.yaw_speed)
@@ -286,7 +286,7 @@ void() monster_go =
 			dprint (vtos(self.origin));
 			dprint ("\n");
 		}
-#endifdef
+#endif
 
 		if ((self.flags & FL_SWIM) ||
 // this used to be an objerror

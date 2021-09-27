@@ -63,7 +63,7 @@ local entity	stemp;
 	self = stemp;
 };
 
-#endifdef
+#endif
 
 void(vector tdest, float tspeed, void() func) SUB_CalcMove =
 {
@@ -81,13 +81,13 @@ local float		len, traveltime;
 			self.nextthink = time + 1;
 			return;
 		}
-#endifdef
+#endif
 		tspeed = 50; // just guess - and we can use this code even tho it is an abomination
 		
 	}
 #else
 		objerror("No speed is defined!");					//opgrade protected
-#endifdef
+#endif
 
 	self.think1 = func;
 	self.finaldest = tdest;
@@ -158,7 +158,7 @@ local entity		stemp;
 	SUB_CalcAngleMove (destangle, tspeed, func);
 	self = stemp;
 };
-#endifdef
+#endif
 
 
 void(vector destangle, float tspeed, void() func) SUB_CalcAngleMove =
@@ -177,13 +177,13 @@ local float		len, traveltime;
 			self.nextthink = time + 1;
 			return;
 		}
-#endifdef
+#endif
 		tspeed = 50; // just guess - and we can use this code even tho it is an abomination
 		
 	}
 #else
 		objerror("No speed is defined!");					//opgrade protected
-#endifdef
+#endif
 		
 // set destdelta to the vector needed to move
 	destdelta = destangle - self.angles;

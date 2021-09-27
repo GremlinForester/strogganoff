@@ -369,4 +369,4 @@ void() monster_army =
 
 	walkmonster_start;
 };
-#endifdef
+#endif

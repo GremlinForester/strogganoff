@@ -373,7 +373,7 @@ void() PainSound =
 #ifdef opgrade
 		if (self.waterlevel == 3)
 			DeathBubbles(1);
-#endifdef
+#endif
 
 		if (random() > 0.5)
 			sound (self, CHAN_VOICE, "player/lburn1.wav", 1, ATTN_NORM);
@@ -498,10 +498,10 @@ void() DeathBubblesSpawn =
 		{
 #ifdef codefix
 			remove(self);	// remove bubble spawner
-#endifdef
+#endif
 			return;
 		}
-#endifdef
+#endif
 /*
 	bubble = spawn();
 	setmodel (bubble, "progs/s_bubble.spr");
@@ -521,7 +521,7 @@ void() DeathBubblesSpawn =
 	nspawn.touch = SUB_Null;
 #ifndef opgrade
 	setorigin (nspawn, self.owner.origin + '0 0 24'); // can eliminate this step by setting it below
-#endifdef
+#endif
 
 	self.nextthink = time + 0.1;
 
@@ -540,7 +540,7 @@ void(float num_bubbles) DeathBubbles =
 	setorigin (bubble_spawner, self.origin
 #ifdef opgrade
 																					 + '0 0 24'
-#endifdef
+#endif
 	);
 //	bubble_spawner.movetype = MOVETYPE_NONE;
 //	bubble_spawner.solid = SOLID_NOT;
@@ -549,7 +549,7 @@ void(float num_bubbles) DeathBubbles =
 									 			+ 0.01;
 #else
 												 + 0.1;
-#endifdef
+#endif
 	bubble_spawner.think = DeathBubblesSpawn;
 //	bubble_spawner.air_finished = 0;
 	bubble_spawner.owner = self;
@@ -635,7 +635,7 @@ void() PlayerDie =
 
 #ifdef opgrade
 					| IT_INVULNERABILITY | IT_SUIT | IT_QUAD
-#endifdef
+#endif
 																				 );
 	self.invisible_finished = 0;	// don't die as eyes
 	self.invincible_finished = 0;
@@ -647,11 +647,11 @@ void() PlayerDie =
 #ifndef glowcorpse
 #ifdef xvars2
 	if (!cvar("svx_glowcorpse"))
-#endifdef
+#endif
 	self.effects = 0;	// 1998-07-23 Glowing corpse of players which had quad/pentagram until respawn fix by Maddes
-#endifdef
+#endif
 
-#endifdef
+#endif
 
 	self.modelindex = modelindex_player;	// don't use eyes
 
@@ -688,7 +688,7 @@ void() PlayerDie =
 // seems like this is test code that got left in - temp1 overrides death frame selection if set to non zero
 	self.f__ = cvar("temp1");
 	if (!self.f__)
-#endifdef
+#endif
 		self.f__ = 1 + floor(random()*6);
 	
 	if (self.f__ == 1)

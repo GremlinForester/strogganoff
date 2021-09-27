@@ -452,7 +452,7 @@ float		skill;
 //
 #ifdef unused
 .float		light_lev;		// not used by game, but parsed by light util					// qc++ - seems not used in v1.06
-#endifdef
+#endif
 .float		style;
 
 
@@ -580,7 +580,7 @@ float		skill;
 .float		waitmax;																														// qc++ - seems not used in v1.06
 .float		distance;
 .float		volume;
-#endifdef
+#endif
 
 
 
@@ -599,16 +599,16 @@ void(entity e, vector min, vector max) setsize = #4;
 // #5 was removed
 #ifdef unused
 void() break						= #6;																							// qc++ - seems not used in v1.06
-#endifdef
+#endif
 float() random						= #7;		// returns 0 - 1
 #ifndef FRIKBOT
 void(entity e, float chan, string samp, float vol, float atten) sound = #8;
-#endifdef
+#endif
 vector(vector v) normalize			= #9;
 #ifndef noobjerr
 void(string e) error				= #10;
 void(string e) objerror				= #11;
-#endifdef
+#endif
 float(vector v) vlen				= #12;
 float(vector v) vectoyaw			= #13;
 entity() spawn						= #14;
@@ -625,25 +625,25 @@ entity() checkclient				= #17;	// returns a client to look for
 entity(entity start, .string fld, string match) find = #18;
 #ifndef FRIKBOT
 void(entity client, string s)stuffcmd = #21;
-#endifdef
+#endif
 entity(vector org, float rad) findradius = #22;
 void(string s) bprint				= #23;
 #ifndef FRIKBOT
 void(entity client, string s) sprint = #24;
-#endifdef
+#endif
 
 #ifndef nodprint
 void(string s) dprint				= #25;
 // currently this is only used in dprints
 string(vector v) vtos				= #27;
-#endifdef
+#endif
 string(float f) ftos				= #26;
 #ifdef unused
 void() coredump						= #28;		// prints all edicts											// qc++ - seems not used in v1.06
 void() traceon						= #29;		// turns statment trace on
 void() traceoff						= #30;
 void(entity e) eprint				= #31;		// prints an entire edict
-#endifdef
+#endif
 float(float yaw, float dist) walkmove	= #32;	// returns TRUE or FALSE
 // #33 was removed
 float() droptofloor= #34;	// TRUE if landed on floor
@@ -666,15 +666,15 @@ float(float f) fabs = #43;
 	#else
 // may be affected by sv_aim
 	vector(entity e, float speed) aim = #44;		// returns the shooting vector
-	#endifdef
+	#endif
 
-#endifdef
+#endif
 
 float(string s) cvar = #45;						// return cvar.value
 void(string s) localcmd = #46;					// put string into local que
 #ifdef unused
 entity(entity e) nextent = #47;					// for looping through all ents			// qc++ - seems not used in v1.06
-#endifdef
+#endif
 void(vector o, vector d, float color, float count) particle = #48;// start a particle effect
 void() ChangeYaw = #49;						// turn towards self.ideal_yaw
 											// at self.yaw_speed
@@ -693,11 +693,11 @@ void(float to, float f) WriteByte		= #52;
 	void(float to, float f) WriteShort		= #54;
 	void(float to, float f) WriteLong		= #55;
 	void(float to, float f) WriteAngle		= #57;
-	#endifdef
+	#endif
 void(float to, float f) WriteCoord		= #56;
 void(float to, string s) WriteString	= #58;
 void(float to, entity s) WriteEntity	= #59;
-#endifdef
+#endif
 
 //
 // broadcast client message generation
@@ -723,7 +723,7 @@ void(string var, string val) cvar_set = #72;	// sets cvar.value
 
 #ifndef FRIKBOT
 void(entity client, string s) centerprint = #73;	// sprint, but in middle
-#endifdef
+#endif
 
 void(vector pos, string samp, float vol, float atten) ambientsound = #74;
 
@@ -757,14 +757,14 @@ string(string s) precache_file2		= #77;		// registered version only
 #define precache_file //
 #define precache_file2 //
 
-#endifdef
+#endif
 */
 
 #ifndef FRIKBOT
 void(entity e) setspawnparms		= #78;		// set parm1... to the
 																						// values at level start
 																						// for coop respawn
-#endifdef
+#endif
 //
 //============================================================================
 
@@ -774,7 +774,7 @@ void(entity e) setspawnparms		= #78;		// set parm1... to the
 void(vector tdest, float tspeed, void() func) SUB_CalcMove;
 #ifdef unused
 void(entity ent, vector tdest, float tspeed, void() func) SUB_CalcMoveEnt;
-#endifdef
+#endif
 void(vector destangle, float tspeed, void() func) SUB_CalcAngleMove;
 void() SUB_CalcMoveDone;
 void() SUB_CalcAngleMoveDone;

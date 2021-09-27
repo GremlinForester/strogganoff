@@ -284,7 +284,7 @@ void() monster_demon1 =
 
 	walkmonster_start;
 };
-#endifdef
+#endif
 
 /*
 ==============================================================================
@@ -388,7 +388,7 @@ float()	DemonCheckAttack =
 	
 #ifdef pointless_warning
 	return FALSE;
-#endifdef
+#endif
 };
 
 

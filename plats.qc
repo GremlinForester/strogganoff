@@ -160,7 +160,7 @@ void() plat_crush =
 			plat_go_up();
 		}
 		else
-#endifdef
+#endif
 		{
 			self.velocity = '0 0 0';
 			return; // dont go away mad - just go away
@@ -168,7 +168,7 @@ void() plat_crush =
 	}
 #else
 		objerror ("plat_crush: bad self.state\n");					//opgrade protected
-#endifdef
+#endif
 };
 
 void() plat_use =
@@ -189,7 +189,7 @@ void() plat_use =
 			self.state = STATE_UP;
 		}
 		else
-#endifdef
+#endif
 		{
 			self.velocity = '0 0 0';
 			return;
@@ -197,7 +197,7 @@ void() plat_use =
 	}
 #else
 		objerror ("plat_use: not in up state");					//opgrade protected
-#endifdef
+#endif
 	plat_go_down();
 };
 
@@ -339,7 +339,7 @@ void() train_next =
 			return;
 		}
 		else
-#endifdef
+#endif
 		{
 			self.velocity = '0 0 0';
 			return;
@@ -347,7 +347,7 @@ void() train_next =
 	}
 #else
 		objerror ("train_next: no next target");					//opgrade protected
-#endifdef
+#endif
 
 	if (targ.wait)
 		self.wait = targ.wait;
@@ -429,12 +429,12 @@ void() func_train =
 			return;
 		}
 		else
-#endifdef
+#endif
 		return;
 	}
 #else
 		objerror ("func_train without a target");					//opgrade protected
-#endifdef
+#endif
 
 
 // start trains on the second frame, to make sure their targets have had
@@ -480,12 +480,12 @@ void() misc_teleporttrain =
 			return;
 		}
 		else
-#endifdef
+#endif
 		return;
 	}
 #else
 		objerror ("func_train without a target");					//opgrade protected
-#endifdef
+#endif
 
 // start trains on the second frame, to make sure their targets have had
 // a chance to spawn

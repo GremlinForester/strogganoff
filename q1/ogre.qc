@@ -298,7 +298,7 @@ void() ogre_smash12 =[$smash12, ogre_smash13] {ai_charge(0);};
 #else 
 // there is no difference in code ops - as this code calls ai_charge with 0.000000
 void() ogre_smash12 =[$smash12, ogre_smash13] {ai_charge();};
-#endifdef
+#endif
 
 void() ogre_smash13	=[	$smash13,		ogre_smash14 ] {ai_charge(4);};
 void() ogre_smash14	=[	$smash14,		ogre_run1	] {ai_charge(12);};

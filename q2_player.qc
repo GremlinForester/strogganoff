@@ -131,7 +131,7 @@ void() q2playerPainSound =
 #ifdef opgrade
 		if (self.waterlevel == 3)
 			DeathBubbles(1);
-#endifdef
+#endif
 
 		if (random() > 0.5)
 			sound (self, CHAN_VOICE, "player/lburn1.wav", 1, ATTN_NORM);
@@ -312,7 +312,7 @@ void() q2PlayerDie =
 
 #ifdef opgrade
 					| IT_INVULNERABILITY | IT_SUIT | IT_QUAD
-#endifdef
+#endif
 																				 );
 	self.invisible_finished = 0;	// don't die as eyes
 	self.invincible_finished = 0;
@@ -324,11 +324,11 @@ void() q2PlayerDie =
 #ifndef glowcorpse
 #ifdef xvars2
 	if (!cvar("svx_glowcorpse"))
-#endifdef
+#endif
 	self.effects = 0;	// 1998-07-23 Glowing corpse of players which had quad/pentagram until respawn fix by Maddes
-#endifdef
+#endif
 
-#endifdef
+#endif
 
 	self.modelindex = modelindex_player;	// don't use eyes
 

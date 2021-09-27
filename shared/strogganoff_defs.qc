@@ -42,6 +42,29 @@ vector MZ2_MAKRON_BLASTER[] = {
 '-1.8 -25.5 59.5'
 };
 
+vector MZ2_TANK_MACHINEGUN[] = {
+'22.9 -0.7 25.3',
+'22.9 -0.7 25.3',
+'22.2 6.2 22.3',
+'19.4 13.1 18.6',
+'19.4 18.8 18.6',
+'17.9 25.0 18.6',
+'14.1 30.5 20.6',
+'9.3 35.3 22.1',
+'4.7 38.4 22.1',
+'-1.1 40.4 24.1',
+'-6.5 41.2 24.1',
+'3.2 40.1 24.7',
+'11.7 36.7 26.0',
+'18.9 31.3 26.0',
+'24.4 24.4 26.4',
+'27.1 17.1 27.2',
+'28.5 9.1 28.0',
+'27.1 2.2 28.0',
+'24.9 -2.8 28.0',
+'21.6 -7.0 26.4'
+};
+
 /*
 ============
 PROGS DUMP / QUAKE 1.5 STUFF
@@ -74,6 +97,8 @@ float (vector from, vector to) Dot =
 {
 	return from_x * to_x + from_y * to_y + from_z * to_z;
 };
+
+string SOUND_EMPTY = "misc/null.wav";			// No sound
 
 /*
 ============
@@ -130,7 +155,9 @@ enum
 	LOOT_BULLETS,
 	LOOT_ROCKETS,
 	LOOT_SLUGS,
-	LOOT_CELLS
+	LOOT_CELLS,
+	LOOT_ARMOR_SHARD,
+	LOOT_HEALTH_SMALL
 };
 
 //Q2 weapon impl flattened down to player
@@ -170,11 +197,6 @@ enum
 .float idletime;
 .float animIdle;
 .float nextframetime;
-
-//Quake 1.5 stuff, used for spinning down the chaingun and hyperblaster
-//Thanks again for pointing me in the right direction!
-.float spindown;
-.float spintimer;
 
 #define	FL_DUCKED 4096
 
