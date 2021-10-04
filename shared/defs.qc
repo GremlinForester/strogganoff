@@ -307,6 +307,7 @@ void		end_sys_fields;			// flag for structure dumping
 #define	DAMAGE_AIM				2
 
 // items
+
 #define	IT_AXE					4096
 #define	IT_SHOTGUN				1
 #define	IT_SUPER_SHOTGUN		2
@@ -315,6 +316,7 @@ void		end_sys_fields;			// flag for structure dumping
 #define	IT_GRENADE_LAUNCHER		16
 #define	IT_ROCKET_LAUNCHER		32
 #define	IT_LIGHTNING			64
+/*
 #define	IT_EXTRA_WEAPON			128
 
 #define	IT_SHELLS				256
@@ -334,7 +336,7 @@ void		end_sys_fields;			// flag for structure dumping
 #define	IT_INVULNERABILITY		1048576
 #define	IT_SUIT					2097152
 #define	IT_QUAD					4194304
-
+*/
 // point content values
 
 #define	CONTENT_EMPTY			-1

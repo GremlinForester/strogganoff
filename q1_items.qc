@@ -15,7 +15,7 @@ Quake 1 used for possible replacement items in Q1 map compatibility.
 */
 
 #define WEAPON_BIG2 1
-
+/*
 void() item_shells =
 {
 	self.touch = ammo_touch;
@@ -40,33 +40,19 @@ void() item_shells =
 	setsize (self, '0 0 0', '32 32 56');
 	StartItem();
 };
+*/
+
+void() item_shells =
+{
+	ammo_shells();
+};
 
 /*QUAKED item_spikes (0 .5 .8) (0 0 0) (32 32 32) big
 */
 
 void() item_spikes =
 {
-//	self.touch = ammo_touch;
-
-	if (self.spawnflags & WEAPON_BIG2)
-	{
-		precache_model ("maps/b_nail1.bsp");
-		setmodel (self, "maps/b_nail1.bsp");
-		self.aflag = 50;
-	}
-	else
-	{
-		precache_model ("maps/b_nail0.bsp");
-		setmodel (self, "maps/b_nail0.bsp");
-		self.aflag = 25;
-	}
-	self.weapon = 2;
-	self.netname = "bullets";
-	item_shells();
-/*
-	setsize (self, '0 0 0', '32 32 56');
-	StartItem ();
-*/
+	ammo_bullets();
 };
 
 /*QUAKED item_rockets (0 .5 .8) (0 0 0) (32 32 32) big
@@ -74,27 +60,7 @@ void() item_spikes =
 
 void() item_rockets =
 {
-//	self.touch = ammo_touch;
-
-	if (self.spawnflags & WEAPON_BIG2)
-	{
-		precache_model ("maps/b_rock1.bsp");
-		setmodel (self, "maps/b_rock1.bsp");
-		self.aflag = 10;
-	}
-	else
-	{
-		precache_model ("maps/b_rock0.bsp");
-		setmodel (self, "maps/b_rock0.bsp");
-		self.aflag = 5;
-	}
-	self.weapon = 3;
-	self.netname = "rockets";
-	item_shells();
-/*
-	setsize (self, '0 0 0', '32 32 56');
-	StartItem ();
-*/
+	ammo_rockets();
 };
 
 /*QUAKED item_cells (0 .5 .8) (0 0 0) (32 32 32) big
@@ -102,27 +68,7 @@ void() item_rockets =
 
 void() item_cells =
 {
-//	self.touch = ammo_touch;
-
-	if (self.spawnflags & WEAPON_BIG2)
-	{
-		precache_model ("maps/b_batt1.bsp");
-		setmodel (self, "maps/b_batt1.bsp");
-		self.aflag = 12;
-	}
-	else
-	{
-		precache_model ("maps/b_batt0.bsp");
-		setmodel (self, "maps/b_batt0.bsp");
-		self.aflag = 6;
-	}
-	self.weapon = 4;
-	self.netname = "cells";
-	item_shells();
-/*
-	setsize (self, '0 0 0', '32 32 56');
-	StartItem ();
-*/
+	ammo_cells();
 };
 
 
@@ -415,6 +361,8 @@ Player is invisible for 30 seconds
 */
 void() item_artifact_invisibility =
 {
+	item_power_screen();
+	/*
 	self.touch = powerup_touch;
 	precache_model ("progs/invisibl.mdl");
 	precache_sound ("items/inv1.wav");
@@ -426,6 +374,7 @@ void() item_artifact_invisibility =
 	self.items = IT_INVISIBILITY;
 	setsize (self, '-16 -16 -24', '16 16 32');
 	StartItem ();
+	*/
 };
 
 

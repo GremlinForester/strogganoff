@@ -13,6 +13,30 @@ Making a note of it here to help make sense of it for myself or anyone else who 
 #define VLOG(x) bprint(vtos(x));bprint("\n")
 #define FLOG(x) bprint(ftos(x));bprint("\n")
 
+//used by playerVOSound to select a sound of the following conditions
+enum
+{
+	PLAYER_VOICE_JUMP,
+	PLAYER_VOICE_PAIN25,
+	PLAYER_VOICE_PAIN50,
+	PLAYER_VOICE_PAIN75,
+	PLAYER_VOICE_PAIN100,
+	PLAYER_VOICE_DEATH,
+	PLAYER_VOICE_LAND1,
+	PLAYER_VOICE_LAND2
+};
+
+enum
+{
+	PT_MALE,
+	PT_FEMALE,
+	PT_OTHER
+};
+
+.float playerType;
+
+
+
 /*
 ============
 MONSTER MUZZLE FLASH OFFSETS 
@@ -112,6 +136,7 @@ var float autocvar_cl_smacktalk = 0;
 var float autocvar_cl_idletalk = 0;
 var float autocvar_cl_printpos = 0;
 var float autocvar_cl_printstate = 0;
+var float autocvar_cl_playertype = 0;
 
 /*
 ============
@@ -202,7 +227,7 @@ enum
 
 /*
 Quake used ammo_ for inventory tracking but Quake 2 used ammo_ as the pickup item name. 
-For compatibility with Quake 2 maps (espeically MP),
+For compatibility with Quake 2 maps (especially MP),
 all variables pertaining to the player's inventory were renamed to 
 inv_ammo_ instead of ammo_. 
 
@@ -210,6 +235,62 @@ Find/Replace, it's time to work!
 */
 
 .float inv_weapons;
+#define	WEP_BLASTER				1
+#define	WEP_SHOTGUN				2
+#define	WEP_SUPERSHOTGUN		4
+#define	WEP_MACHINEGUN			8
+#define	WEP_CHAINGUN			16
+#define	WEP_GRENADE_LAUNCHER	32
+#define	WEP_ROCKET_LAUNCHER		64
+#define	WEP_HYPERBLASTER		128
+#define	WEP_RAILGUN				256
+#define WEP_BFG 				512
+#define WEP_GRENADE 			1024
+
+//Not known at this time if storing these as bit flags will be used, seem a waste atm, but perhaps some can be merged into
+//self.items, or an alternative method will be used. If the following is employed, it certainly leaves a lot of room for extra expansion.
+//With 23 different keys, more armor types etc... Will leave as-is for now.
+
+.float inv_armor;
+#define	IT_ARMOR_BODY			1 //IT_ARMOR1
+#define	IT_ARMOR_COMBAT			2 //IT_ARMOR2
+#define	IT_ARMOR_JACKET			4 //IT_ARMOR3
+
+.float inv_items;
+#define	IT_SILENCER				1
+#define	IT_BREATHER				2
+#define	IT_POWER_SHIELD			8
+
+.float inv_keys;
+#define	IT_KEY_DATACD			1
+#define	IT_KEY_POWERCUBE		2
+#define	IT_KEY_PYRAMID			4
+#define	IT_KEY_DATASPINNER		8
+#define	IT_KEY_PASS				16
+#define	IT_KEY_BLUE				32
+#define	IT_KEY_RED				64
+#define	IT_KEY_HEAD				128
+
+//still used by self.items
+
+#define	IT_SLUGS				128 //this was extra, not currently used yet, not sure if it will?
+#define	IT_SHELLS				256
+#define	IT_BULLETS				512
+#define	IT_ROCKETS				1024
+#define	IT_CELLS				2048
+
+#define	IT_ARMOR1				8192
+#define	IT_ARMOR2				16384
+#define	IT_ARMOR3				32768
+#define	IT_SUPERHEALTH			65536
+
+#define	IT_KEY1					131072
+#define	IT_KEY2					262144
+
+#define	IT_INVISIBILITY			524288 //could replace power screen, cloak armor!
+#define	IT_INVULNERABILITY		1048576
+#define	IT_SUIT					2097152
+#define	IT_QUAD					4194304
 
 .float inv_ammo_bullets;
 .float inv_ammo_shells;
@@ -404,18 +485,6 @@ WEAPONS
 #define WEAPON_HUPERBLASTER_DAMAGE 	200
 #define WEAPON_BFG_DAMAGE 		200
 
-#define	WEP_BLASTER				1
-#define	WEP_SHOTGUN				2
-#define	WEP_SUPERSHOTGUN		4
-#define	WEP_MACHINEGUN			8
-#define	WEP_CHAINGUN			16
-#define	WEP_GRENADE_LAUNCHER	32
-#define	WEP_ROCKET_LAUNCHER		64
-#define	WEP_HYPERBLASTER		128
-#define	WEP_RAILGUN				256
-#define WEP_BFG 				512
-#define WEP_GRENADE 			1024
-
 #define	WEP_BLASTER_ATTACKTIME          0.5
 #define	WEP_SHOTGUN_ATTACKTIME          0.9
 #define	WEP_SUPERSHOTGUN_ATTACKTIME     0.9
@@ -490,10 +559,7 @@ IMPULSE VALUES
 	Line 977: 																		if ( (self.impulse == 217) ) {
 */
 
-
 #define IMPULSE_CHEAT_QUAD 255
-
-
 
 /*
 ============

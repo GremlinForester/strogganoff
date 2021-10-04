@@ -95,6 +95,14 @@ void() PlaceItem =
 	self.movetype = MOVETYPE_TOSS;	
 	self.velocity = '0 0 0';
 	self.origin_z = self.origin_z + 6;
+	
+	if (!self.cnt)
+		self.cnt = self.aflag;
+	else
+		self.aflag = self.cnt;
+	
+	//Take THAT Bembridge Scholars!
+	
 #ifndef opgrade
 // stats - cost of this one line of code: strofs = 4, numstatements = 1, numfunc = 0, numglobaldef = 1, numpr_global = 1, total size+ = 24
 	oldz = self.origin_z;
@@ -285,21 +293,21 @@ void() armor_touch =
 */
 	if (self.classname == "item_armor1" 
 	|| self.classname == "item_armor_body" 
-	|| self.classname == "item_armor_combat"
-	|| self.classname == "item_armor_jacket"
+//	|| self.classname == "item_armor_jacket"
 	|| self.classname == "item_armor_shard")
 	{
 		type = 0.3;
 		value = 100;
 		bit = IT_ARMOR1;
 	}
-	else if (self.classname == "item_armor2")
+	else if (self.classname == "item_armor2"
+	|| self.classname == "item_armor_combat")
 	{
 		type = 0.6;
 		value = 150;
 		bit = IT_ARMOR2;
 	}
-	else
+	else //jacket
 	{
 		type = 0.8;
 		value = 200;

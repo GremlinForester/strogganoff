@@ -416,7 +416,7 @@ void() insane_die=
 
 /*QUAKED misc_insane (1 .5 0) (-16 -16 -24) (16 16 32) Ambush Trigger_Spawn CRAWL CRUCIFIED STAND_GROUND ALWAYS_STAND
 */
-void() SP_misc_insane=
+void() misc_insane =
 {
 //	static int skin = 0;	//@@
 
@@ -425,6 +425,8 @@ void() SP_misc_insane=
 		remove(self);
 		return;
 	}
+
+	precache_model("models/monsters/insane/tris.md2");
 
 	precache_sound(sound_fist);
 	precache_sound(sound_shake);
@@ -486,7 +488,4 @@ void() SP_misc_insane=
 		walkmonster_start;
 		self.skin = ceil(random() * 3);
 	}
-};
-void() misc_insane={
-	SP_misc_insane();	//why...q2
 };

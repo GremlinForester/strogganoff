@@ -170,6 +170,24 @@ void() trigger_multiple =
 };
 
 
+/*QUAKED trigger_key (.5 .5 .5) (-8 -8 -8) (8 8 8)
+A relay trigger that only fires it's targets if player has the proper key.
+Use "item" to specify the required key, for example "key_data_cd"
+
+Quake2 handles keys in a weird way, this trigger will have to check if the activator has
+the right item by checking something like inv_item_keys before it triggers whatever it's target is.
+This may be a bit of work. Right now, this just opens any locked door in Q2 SP.
+
+*/
+
+void() trigger_key =
+{
+	self.message ="Open Sensimilla";
+		
+	self.use = multi_use;
+	InitTrigger ();
+};
+
 /*QUAKED trigger_once (.5 .5 .5) ? notouch
 Variable sized trigger. Triggers once, then removes itself.  You must set the key "target" to the name of another object in the level that has a matching
 "targetname".  If "health" is set, the trigger must be killed to activate.

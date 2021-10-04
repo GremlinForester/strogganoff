@@ -65,7 +65,7 @@ void() W_SetCurrentAmmo =
 			
 		case WEP_RAILGUN:
 			self.currentammo = self.inv_ammo_slugs;
-			self.items = self.items | IT_CELLS;
+			self.items = self.items | IT_SLUGS;
 			break;
 			
 		case WEP_BFG:

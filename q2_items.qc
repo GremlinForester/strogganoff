@@ -22,6 +22,7 @@ void() item_armor_body =
 	setmodel (self, "models/items/armor/body/tris.md2");
 	setsize (self, '-16 -16 -16', '16 16 16');
 	self.modelflags = MF_ROTATE;
+	self.items = IT_ARMOR_BODY;
 	self.netname = "Body Armor";
 	StartItem ();
 }
@@ -36,6 +37,7 @@ void() item_armor_combat =
 	setmodel (self, "models/items/armor/combat/tris.md2");
 	setsize (self, '-16 -16 -16', '16 16 16');
 	self.modelflags = MF_ROTATE;
+	self.items = IT_ARMOR_COMBAT;
 	self.netname = "Combat Armor";
 	StartItem ();
 }
@@ -50,6 +52,7 @@ void() item_armor_jacket =
 	setmodel (self, "models/items/armor/jacket/tris.md2");
 	setsize (self, '-16 -16 -16', '16 16 16');
 	self.modelflags = MF_ROTATE;
+	self.items = IT_ARMOR_JACKET;
 	self.netname = "Jacket Armor";
 	StartItem ();
 }
@@ -74,6 +77,7 @@ void() item_armor_shard =
 /*QUAKED item_power_screen (.3 .3 1) (-16 -16 -16) (16 16 16)
 model="models/items/armor/screen/"
 */
+//MrC: This item went apparently unused in Q2, how about an invisibility cloak?
 void() item_power_screen =
 {
 	self.touch = powerup_touch;
@@ -82,7 +86,7 @@ void() item_power_screen =
 	self.noise = "misc/ar3_pkup.wav";
 	setmodel (self, "models/items/armor/screen/tris.md2");
 	self.netname = "Power Screen";
-//	self.items = IT_QUAD;
+	self.items = IT_INVISIBILITY;
 	self.modelflags = MF_ROTATE;
 	setsize (self, '-16 -16 -16', '16 16 16');
 	StartItem ();
@@ -99,7 +103,7 @@ void() item_power_shield =
 	self.noise = "misc/ar3_pkup.wav";
 	setmodel (self, "models/items/armor/shield/tris.md2");
 	self.netname = "Power Shield";
-//	self.items = IT_QUAD;
+	self.items = IT_POWER_SHIELD;
 	self.modelflags = MF_ROTATE;
 	setsize (self, '-16 -16 -16', '16 16 16');
 	StartItem ();
@@ -161,7 +165,7 @@ void() item_silencer =
 	self.noise = "misc/ar3_pkup.wav";
 	setmodel (self, "models/items/silencer/tris.md2");
 	self.netname = "Silencer";
-//	self.items = IT_QUAD;
+	self.items = IT_SILENCER;
 	self.modelflags = MF_ROTATE;
 	setsize (self, '-16 -16 -16', '16 16 16');
 	StartItem ();
@@ -178,7 +182,7 @@ void() item_breather =
 	self.noise = "misc/ar3_pkup.wav";
 	setmodel (self, "models/items/breather/tris.md2");
 	self.netname = "Rebreather";
-//	self.items = IT_QUAD;
+	self.items = IT_BREATHER;
 	self.modelflags = MF_ROTATE;
 	setsize (self, '-16 -16 -16', '16 16 16');
 	StartItem ();
@@ -195,7 +199,7 @@ void() item_enviro =
 	self.noise = "misc/ar3_pkup.wav";
 	setmodel (self, "models/items/enviro/tris.md2");
 	self.netname = "Environment Suit";
-//	self.items = IT_QUAD;
+	self.items = IT_SUIT;
 	self.modelflags = MF_ROTATE;
 	setsize (self, '-16 -16 -16', '16 16 16');
 	StartItem ();
@@ -276,7 +280,7 @@ void() key_data_cd =
 	self.modelflags = MF_ROTATE;
 	self.noise = "items/pkup.wav";
 	self.touch = key_touch;
-//	self.items = IT_KEY1;
+	self.items = IT_KEY_DATACD;
 	setsize (self, '-16 -16 -16', '16 16 16');
 	StartItem ();
 };
@@ -296,7 +300,7 @@ void() key_power_cube =
 	self.modelflags = MF_ROTATE;
 	self.noise = "items/pkup.wav";
 	self.touch = key_touch;
-//	self.items = IT_KEY1;
+	self.items = IT_KEY_POWERCUBE;
 	setsize (self, '-16 -16 -16', '16 16 16');
 	StartItem ();
 };
@@ -315,7 +319,7 @@ void() key_pyramid =
 	self.modelflags = MF_ROTATE;
 	self.noise = "items/pkup.wav";
 	self.touch = key_touch;
-//	self.items = IT_KEY1;
+	self.items = IT_KEY_PYRAMID;
 	setsize (self, '-16 -16 -16', '16 16 16');
 	StartItem ();
 };
@@ -334,7 +338,7 @@ void() key_data_spinner =
 	self.modelflags = MF_ROTATE;
 	self.noise = "items/pkup.wav";
 	self.touch = key_touch;
-//	self.items = IT_KEY1;
+	self.items = IT_KEY_DATASPINNER;
 	setsize (self, '-16 -16 -16', '16 16 16');
 	StartItem ();
 };
@@ -353,7 +357,7 @@ void() key_pass =
 	self.modelflags = MF_ROTATE;
 	self.noise = "items/pkup.wav";
 	self.touch = key_touch;
-//	self.items = IT_KEY1;
+	self.items = IT_KEY_PASS;
 	setsize (self, '-16 -16 -16', '16 16 16');
 	StartItem ();
 };
@@ -372,7 +376,7 @@ void() key_blue_key =
 	self.modelflags = MF_ROTATE;
 	self.noise = "items/pkup.wav";
 	self.touch = key_touch;
-//	self.items = IT_KEY1;
+	self.items = IT_KEY_BLUE;
 	setsize (self, '-16 -16 -16', '16 16 16');
 	StartItem ();
 };
@@ -391,7 +395,7 @@ void() key_red_key =
 	self.modelflags = MF_ROTATE;
 	self.noise = "items/pkup.wav";
 	self.touch = key_touch;
-//	self.items = IT_KEY1;
+	self.items = IT_KEY_RED;
 	setsize (self, '-16 -16 -16', '16 16 16');
 	StartItem ();
 };
@@ -409,7 +413,7 @@ void() key_commander_head =
 	self.netname = "Commander's Head";
 	self.noise = "items/pkup.wav";
 	self.touch = key_touch;
-//	self.items = IT_KEY1;
+	self.items = IT_KEY_HEAD;
 	setsize (self, '-16 -16 -16', '16 16 16');
 	StartItem ();
 };

@@ -220,9 +220,9 @@ void() model_static_die =
 
 void() model_static_init =
 {
-	if (!self.health || self.health <= 0) 
+	if (self.health && self.health > 0) 
 	{
-		self.takedamage = DAMAGE_NO;
+			self.takedamage = DAMAGE_YES;
 	}
 	
 	self.nextthink = time + 0.1;
@@ -236,7 +236,8 @@ void() model_static =
 	setorigin (self, self.origin);
 	setmodel (self, self.model);
 	
-	self.takedamage = DAMAGE_YES;
+	self.takedamage = DAMAGE_NO;
+
 	
 
 	

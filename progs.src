@@ -48,7 +48,6 @@ q2/weapons.qc
 weapons.qc
 world.qc
 client.qc
-player.qc
 q2_player.qc
 monsters.qc
 doors.qc

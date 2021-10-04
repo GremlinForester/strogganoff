@@ -21,6 +21,196 @@ float	modelindex_eyes, modelindex_player;
 float	intermission_running;
 float	intermission_exittime;
 
+/*
+plrVO is an enum that is checked below to select different sounds based on player type.
+
+When calling a player sound, use something like: playerVOSound(PLAYER_VOICE_JUMP);
+
+This could also be done by assigning globals for player entity self.sndpain25_1 etc... But I went with this instead, it might be a bit of a messy read. 
+
+Tried to keep it clean.
+
+*/
+
+void(float plrVO) playerVOSound =
+{
+	local string playerVO;
+	local float r;
+
+	if (self.playerType == PT_MALE)
+	{	
+		switch(plrVO)
+		{
+			case PLAYER_VOICE_JUMP:
+			playerVO = "players/male/jump1.wav";
+			break;
+
+			case PLAYER_VOICE_LAND1:
+			playerVO = "players/male/fall1.wav";
+			break;
+
+			case PLAYER_VOICE_LAND2:
+			playerVO = "players/male/fall2.wav";
+			break;
+			
+			case PLAYER_VOICE_PAIN25:
+				if (random() > 0.5)
+					playerVO = "players/male/pain25_1.wav";
+				else
+					playerVO = "players/male/pain25_2.wav";
+			break;
+
+			case PLAYER_VOICE_PAIN50:
+				if (random() > 0.5)
+					playerVO = "players/male/pain50_1.wav";
+				else
+					playerVO = "players/male/pain50_2.wav";
+			break;
+			
+			case PLAYER_VOICE_PAIN75:
+				if (random() > 0.5)
+					playerVO = "players/male/pain75_1.wav";
+				else
+					playerVO = "players/male/pain75_2.wav";
+			break;
+			
+			case PLAYER_VOICE_PAIN100:
+				if (random() > 0.5)
+					playerVO = "players/male/pain100_1.wav";
+				else
+					playerVO = "players/male/pain100_2.wav";
+			break;
+			
+			case PLAYER_VOICE_DEATH:
+				r = rint(random() * 4);
+				if (r == 1)
+					playerVO = "players/male/death1.wav";
+				else if (r == 2)
+					playerVO = "players/male/death2.wav";
+				else if (r == 3)
+					playerVO = "players/male/death3.wav";
+				else
+					playerVO = "players/male/death4.wav";
+			break;
+		}
+	}
+	else if (self.playerType == PT_FEMALE)
+	{	
+		switch(plrVO)
+		{
+			case PLAYER_VOICE_JUMP:
+			playerVO = "players/female/jump1.wav";
+			break;
+
+			case PLAYER_VOICE_LAND1:
+			playerVO = "players/female/fall1.wav";
+			break;
+
+			case PLAYER_VOICE_LAND2:
+			playerVO = "players/female/fall2.wav";
+			break;
+
+			case PLAYER_VOICE_PAIN25:
+				if (random() > 0.5)
+					playerVO = "players/female/pain25_1.wav";
+				else
+					playerVO = "players/female/pain25_2.wav";
+			break;
+
+			case PLAYER_VOICE_PAIN50:
+				if (random() > 0.5)
+					playerVO = "players/female/pain50_1.wav";
+				else
+					playerVO = "players/female/pain50_2.wav";
+			break;
+			
+			case PLAYER_VOICE_PAIN75:
+				if (random() > 0.5)
+					playerVO = "players/female/pain75_1.wav";
+				else
+					playerVO = "players/female/pain75_2.wav";
+			break;
+			
+			case PLAYER_VOICE_PAIN100:
+				if (random() > 0.5)
+					playerVO = "players/female/pain100_1.wav";
+				else
+					playerVO = "players/female/pain100_2.wav";
+			break;
+			
+			case PLAYER_VOICE_DEATH:
+				r = rint(random() * 4);
+				if (r == 1)
+					playerVO = "players/female/death1.wav";
+				else if (r == 2)
+					playerVO = "players/female/death2.wav";
+				else if (r == 3)
+					playerVO = "players/female/death3.wav";
+				else
+					playerVO = "players/female/death4.wav";
+			break;
+		}
+	}
+	else
+	{
+		switch(plrVO)
+		{
+			case PLAYER_VOICE_JUMP:
+			playerVO = "players/cyborg/jump1.wav";
+			break;
+
+			case PLAYER_VOICE_LAND1:
+			playerVO = "players/cyborg/fall1.wav";
+			break;
+
+			case PLAYER_VOICE_LAND2:
+			playerVO = "players/cyborg/fall2.wav";
+			break;
+			
+			case PLAYER_VOICE_PAIN25:
+				if (random() > 0.5)
+					playerVO = "players/cyborg/pain25_1.wav";
+				else
+					playerVO = "players/cyborg/pain25_2.wav";
+			break;
+
+			case PLAYER_VOICE_PAIN50:
+				if (random() > 0.5)
+					playerVO = "players/cyborg/pain50_1.wav";
+				else
+					playerVO = "players/cyborg/pain50_2.wav";
+			break;
+			
+			case PLAYER_VOICE_PAIN75:
+				if (random() > 0.5)
+					playerVO = "players/cyborg/pain75_1.wav";
+				else
+					playerVO = "players/cyborg/pain75_2.wav";
+			break;
+			
+			case PLAYER_VOICE_PAIN100:
+				if (random() > 0.5)
+					playerVO = "players/cyborg/pain100_1.wav";
+				else
+					playerVO = "players/cyborg/pain100_2.wav";
+			break;
+			
+			case PLAYER_VOICE_DEATH:
+				r = rint(random() * 4);
+				if (r == 1)
+					playerVO = "players/cyborg/death1.wav";
+				else if (r == 2)
+					playerVO = "players/cyborg/death2.wav";
+				else if (r == 3)
+					playerVO = "players/cyborg/death3.wav";
+				else
+					playerVO = "players/cyborg/death4.wav";
+			break;
+		}		
+	}
+	sound(self, CHAN_VOICE, playerVO, 1, ATTN_IDLE);
+}
+
 /*QUAKED info_intermission (1 0.5 0.5) (-16 -16 -16) (16 16 16)
 This is the camera point for the intermission.
 Use mangle instead of angle, so you can set pitch or roll as well as yaw.  'pitch roll yaw'
@@ -615,6 +805,28 @@ void() DecodeLevelParms;
 void() q2PlayerDie;
 void() q2Player_stand;
 
+void() setPlayerModel =
+{
+	if(self.playerType == PT_MALE)
+	{
+		setmodel (self, "players/male/tris.md2");
+		modelindex_player = self.modelindex;
+		setsize (self, VEC_HULL_MIN, VEC_HULL_MAX);
+	}
+	else if (self.playerType == PT_FEMALE)
+	{
+		setmodel (self, "players/female/tris.md2");
+		modelindex_player = self.modelindex;
+		setsize (self, VEC_HULL_MIN, VEC_HULL_MAX);		
+	}
+	else
+	{
+		setmodel (self, "players/cyborg/tris.md2");
+		modelindex_player = self.modelindex;
+		setsize (self, VEC_HULL_MIN, VEC_HULL_MAX);
+	}
+}
+
 void() PutClientInServer =
 {
 	local	entity spot;
@@ -652,6 +864,19 @@ void() PutClientInServer =
 // paustime is set by teleporters to keep the player from moving a while
 	self.pausetime = 0;
 	
+	if (autocvar_cl_playertype == PT_MALE)
+	{
+		self.playerType = PT_MALE;
+	}
+	if (autocvar_cl_playertype == PT_FEMALE)
+	{
+		self.playerType = PT_FEMALE;
+	}
+	if (autocvar_cl_playertype == PT_OTHER)
+	{
+		self.playerType = PT_OTHER;
+	}
+
 //	spot = SelectSpawnPoint ();
 
 #ifdef opgrade
@@ -665,27 +890,22 @@ void() PutClientInServer =
 	setmodel (self, "progs/eyes.mdl");
 	modelindex_eyes = self.modelindex;
 
-//	setmodel (self, "progs/player.mdl");
+//	setmodel (self, "players/male/tris.md2");
 //	modelindex_player = self.modelindex;
-	
-	setmodel (self, "players/male/tris.md2");
-	modelindex_player = self.modelindex;
 
-	setsize (self, VEC_HULL_MIN, VEC_HULL_MAX);
-	
 	self.view_ofs = '0 0 22';
 
 #ifdef opgrade
 	self.velocity = '0 0 0';	// 1998-07-21 Player moves after respawn fix by Xian
 #endif
-
+//	setsize (self, VEC_HULL_MIN, VEC_HULL_MAX);
+	setPlayerModel();
 	q2Player_stand();
-	
 	AttachTPWeapon();
 	
-  //setup player v_wep state machine
-  self.weapon_next = self.weapon;
-  self.inv_weapons = self.inv_weapons | WEP_BLASTER;
+	//setup player v_wep state machine
+	self.weapon_next = self.weapon;
+	self.inv_weapons = self.inv_weapons | WEP_BLASTER;
 	W_ChangeWeapon();
   
 	if (deathmatch || coop)
@@ -932,7 +1152,8 @@ void() PlayerJump =
 	
 	self.button2 = 0;
 // player jumping sound
-	sound (self, CHAN_VOICE, "player/plyrjmp8.wav", 1, ATTN_NORM);
+//	sound (self, CHAN_VOICE, "player/plyrjmp8.wav", 1, ATTN_NORM);
+	playerVOSound(PLAYER_VOICE_JUMP);
 	q2player_jumpframes();
 	self.velocity_z = self.velocity_z + 270;
 };
@@ -1497,19 +1718,23 @@ void() PlayerPostThink =
 		else if (self.jump_flag < -650)
 		{
 			T_Damage (self, world, world, 10);
-			sound (self, CHAN_VOICE, "player/land2.wav", 1, ATTN_NORM);
+			//sound (self, CHAN_VOICE, "player/land2.wav", 1, ATTN_NORM);
+			playerVOSound(PLAYER_VOICE_LAND1);
 			self.deathtype = "falling";
 		}
 		else if (self.jump_flag < -850)
 		{
 			T_Damage (self, world, world, 200);
-			sound (self, CHAN_VOICE, "player/land2.wav", 1, ATTN_NORM);
+			//sound (self, CHAN_VOICE, "player/land2.wav", 1, ATTN_NORM);
+			playerVOSound(PLAYER_VOICE_LAND1);
 			self.deathtype = "falling";
 		}
 		else
 		{
 			q2player_landframes();
-			Generic_FootStep(); //sound (self, CHAN_VOICE, "player/land.wav", 1, ATTN_NORM);
+			Generic_FootStep();
+			//playerVOSound(PLAYER_VOICE_LAND2);			
+			//sound (self, CHAN_VOICE, "player/land1.wav", 1, ATTN_NORM);
 			self.jump_flag = 0;
 		}
 			
@@ -1548,7 +1773,7 @@ void() PlayerPostThink =
 		bprint (ftos(trace_dpstartcontents));
 		bprint ("\n");
 	}
-	
+
 	if (autocvar_cl_printpos>= 1)
 	{
 		bprint ("Position: ");

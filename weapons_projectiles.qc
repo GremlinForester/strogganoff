@@ -1311,112 +1311,6 @@ void(vector org, vector dir) launch_spike =
 	newmis.velocity = dir * 1000;
 };
 
-#ifdef opgrade
-
-
-// damage we exceed to make a super spike
-#define SPIKE_DMG_SUPER		15
-
-// recode - all in one
-//					- if ox = 0, this will fire superspikes
-//					  or if self.weaon = IT_SUPER_NAILGUN and self.ammo_nails > 1
-
-// if needed - not called in original code without the qualifier in W_FireSpikes
-#define W_FireSuperSpikes() W_FireSpikes(0)
-
-void(float ox) W_FireSpikes =
-{
-
-	if (self.ammo_nails < 1)
-	{
-		self.weapon = W_BestWeapon ();
-		W_SetCurrentAmmo ();
-		return;
-	}
-	
-	makevectors (self.v_angle);
-
-	sound (self, CHAN_WEAPON, "weapons/rocket1i.wav", 1, ATTN_NORM);
-
-	if (self.ammo_nails >= 2 && self.weapon == IT_SUPER_NAILGUN) ox = 0;
-
-#ifdef noautoaim
-	launch_spike (self.origin + '0 0 16' + v_right*ox, v_forward);
-#else
-	local vector	dir;
-	dir = aim (self, 1000);
-	launch_spike (self.origin + '0 0 16' + v_right*ox, dir);
-#endif
-	
-	if (!ox)
-	{
-		sound (self, CHAN_WEAPON, "weapons/spike2.wav", 1, ATTN_NORM);
-		self.ammo_nails = self.ammo_nails - 1;
-		newmis.touch = superspike_touch;
-		setmodel (newmis, "progs/s_spike.mdl");
-		setsize (newmis, VEC_ORIGIN, VEC_ORIGIN);		
-		newmis.dmg = 18;
-	}
-
-	self.attack_finished = time + 0.2;
-	self.currentammo = self.ammo_nails = self.ammo_nails - 1;
-
-	self.punchangle_x = -2;
-};
-
-#else
-
-// if opgrade is defined separate spike code below is all folded into one function for both / all types
-
-void() W_FireSuperSpikes =
-{
-	local vector	dir;
-//	local entity	old;	// fx_warning
-	
-	sound (self, CHAN_WEAPON, "weapons/spike2.wav", 1, ATTN_NORM);
-	self.attack_finished = time + 0.2;
-	self.currentammo = self.ammo_nails = self.ammo_nails - 2;
-	dir = aim (self, 1000);
-	launch_spike (self.origin + '0 0 16', dir);
-	newmis.touch = superspike_touch;
-	setmodel (newmis, "progs/s_spike.mdl");
-	setsize (newmis, VEC_ORIGIN, VEC_ORIGIN);		
-	newmis.dmg = 18;
-	self.punchangle_x = -2;
-};
-
-void(float ox) W_FireSpikes =
-{
-	local vector	dir;
-//	local entity	old;	// fx_warning
-	
-	makevectors (self.v_angle);
-	
-	if (self.ammo_nails >= 2 && self.weapon == IT_SUPER_NAILGUN)
-	{
-		W_FireSuperSpikes ();
-		return;
-	}
-
-	if (self.ammo_nails < 1)
-	{
-		self.weapon = W_BestWeapon ();
-		W_SetCurrentAmmo ();
-		return;
-	}
-
-	sound (self, CHAN_WEAPON, "weapons/rocket1i.wav", 1, ATTN_NORM);
-	self.attack_finished = time + 0.2;
-	self.currentammo = self.ammo_nails = self.ammo_nails - 1;
-	dir = aim (self, 1000);
-	launch_spike (self.origin + '0 0 16' + v_right*ox, dir);
-	self.punchangle_x = -2;
-
-};
-#endif
-
-
-//.float hit_z;	// fx_warning
 void() spike_touch =
 {
 //local float rand;	// fx_warning
@@ -1449,9 +1343,6 @@ void() spike_touch =
 ///		if (!self.spike_type)
 ///		{
 			self.spike_type = TE_SPIKE;
-#ifdef opgrade
-			if (self.dmg > SPIKE_DMG_SUPER) self.spike_type = TE_SUPERSPIKE;
-#endif
 			if (self.classname == "wizspike") self.spike_type = TE_WIZSPIKE;
 //			WriteByte (MSG_BROADCAST, TE_WIZSPIKE);
 //			else

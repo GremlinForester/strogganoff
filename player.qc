@@ -486,78 +486,7 @@ void() player_died1;
 void() player_diee1;
 void() player_die_ax1;
 
-void() make_bubbles;
 
-void() DeathBubblesSpawn =
-{
-//local entity	bubble;
-
-#ifndef opgrade
-	if (self.owner.health > 1) // was a previous opgrade - not sure of intent, removes spawner after respawn
-	if (self.owner.waterlevel != 3)
-		{
-#ifdef codefix
-			remove(self);	// remove bubble spawner
-#endif
-			return;
-		}
-#endif
-/*
-	bubble = spawn();
-	setmodel (bubble, "progs/s_bubble.spr");
-	setorigin (bubble, self.owner.origin + '0 0 24');
-	bubble.movetype = MOVETYPE_NOCLIP;
-	bubble.solid = SOLID_NOT;
-	bubble.velocity = '0 0 15';
-	bubble.nextthink = time + 0.5;
-	bubble.think = bubble_bob;
-	bubble.classname = "bubble";
-	bubble.frame = 0;
-	bubble.cnt = 0;
-	setsize (bubble, '-8 -8 -8', '8 8 8');
-*/
-// note: fn sets think - the calling code below always resets it
-	make_bubbles();
-	nspawn.touch = SUB_Null;
-#ifndef opgrade
-	setorigin (nspawn, self.owner.origin + '0 0 24'); // can eliminate this step by setting it below
-#endif
-
-	self.nextthink = time + 0.1;
-
-	self.think = DeathBubblesSpawn;
-	self.air_finished = self.air_finished + 1;
-	if (self.air_finished >= self.bubble_count)
-		remove(self);
-};
-
-void(float num_bubbles) DeathBubbles =
-{
-#define bubble_spawner newmis
-//local entity	bubble_spawner;
-	
-	bubble_spawner = spawn();
-	setorigin (bubble_spawner, self.origin
-#ifdef opgrade
-																					 + '0 0 24'
-#endif
-	);
-//	bubble_spawner.movetype = MOVETYPE_NONE;
-//	bubble_spawner.solid = SOLID_NOT;
-	bubble_spawner.nextthink = time
-#ifdef opgrade
-									 			+ 0.01;
-#else
-												 + 0.1;
-#endif
-	bubble_spawner.think = DeathBubblesSpawn;
-//	bubble_spawner.air_finished = 0;
-	bubble_spawner.owner = self;
-	bubble_spawner.bubble_count = num_bubbles;
-//	return;
-
-#undef bubble_spawner
-};
 
 
 void() DeathSound =
@@ -589,12 +518,7 @@ void() DeathSound =
 };
 
 
-void() PlayerDead =
-{
-	self.nextthink = -1;
-// allow respawn after a certain time
-	self.deadflag = DEAD_DEAD;
-};
+
 
 void() GibPlayer =
 {
@@ -704,16 +628,7 @@ void() PlayerDie =
 
 };
 
-void() set_suicide_frame =
-{	// used by klill command and diconnect command
-	if (self.model != "progs/player.mdl")
-		return;	// allready gibbed
-	self.frame = $deatha11;
-	self.solid = SOLID_NOT;
-	self.movetype = MOVETYPE_TOSS;
-	self.deadflag = DEAD_DEAD;
-	self.nextthink = -1;
-};
+
 
 /*
 void()	player_diea1	=	[	$deatha1,	player_diea2	] {};
