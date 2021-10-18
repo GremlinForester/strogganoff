@@ -169,23 +169,104 @@ void() trigger_multiple =
 	}
 };
 
+.string item;
 
 /*QUAKED trigger_key (.5 .5 .5) (-8 -8 -8) (8 8 8)
 A relay trigger that only fires it's targets if player has the proper key.
 Use "item" to specify the required key, for example "key_data_cd"
 
 Quake2 handles keys in a weird way, this trigger will have to check if the activator has
-the right item by checking something like inv_item_keys before it triggers whatever it's target is.
-This may be a bit of work. Right now, this just opens any locked door in Q2 SP.
+the right item by checking something like inv_item_keys before it triggers whatever its target is.
+This will work like doors with keys set via spawnflags.
 
 */
 
 void() trigger_key =
 {
-	self.message ="Open Sensimilla";
-		
-	self.use = multi_use;
+	local string it_stringname;
+	
 	InitTrigger ();
+	
+	it_stringname = self.item;
+	
+	if (self.item)
+	{	
+		switch(it_stringname)
+		{
+			case "key_data_cd":
+			self.items = IT_KEY_DATACD;
+			break;
+		}
+		switch(it_stringname)
+		{
+			case "key_pass":
+			self.items = IT_KEY_PASS;
+			break;
+		}
+		switch(it_stringname)
+		{
+			case "key_blue_key":
+			self.items = IT_KEY_BLUE;
+			break;
+		}
+		switch(it_stringname)
+		{
+			case "key_power_cube":
+			self.items = IT_KEY_POWERCUBE;
+			break;
+		}
+		
+	}
+	
+	if ( (self.items & other.items) != self.items )
+	{
+		if (self.items == IT_KEY_DATACD)
+		{
+				centerprint (activator, "You need the data CD");
+				sound (self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
+		}
+		else if (self.items == IT_KEY_POWERCUBE)
+		{
+				centerprint (activator, "You need a power cube");
+				sound (self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
+		}
+		else if (self.items == IT_KEY_PYRAMID)
+		{
+				centerprint (activator, "You need the pyramid key");
+				sound (self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
+		}
+		else if (self.items == IT_KEY_DATASPINNER)
+		{
+				centerprint (activator, "You need the data spinner");
+				sound (self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
+		}
+		else if (self.items == IT_KEY_PASS)
+		{
+				centerprint (activator, "You need the security pass");
+				sound (self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
+		}
+		else if (self.items == IT_KEY_BLUE)
+		{
+				centerprint (activator, "You need the blue keycard");
+				sound (self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
+		}
+		else if (self.items == IT_KEY_RED)
+		{
+				centerprint (activator, "You need the red keycard");
+				sound (self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
+		}
+		else if (self.items == IT_KEY_HEAD)
+		{
+				centerprint (activator, "You need to get a head");
+				sound (self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
+		}
+		return;
+	}
+	else
+	{
+		self.message = self.item;
+		self.use = multi_use;
+	}
 };
 
 /*QUAKED trigger_once (.5 .5 .5) ? notouch
@@ -726,4 +807,36 @@ void() trigger_monsterjump =
 	InitTrigger ();
 	self.touch = trigger_monsterjump_touch;
 };
+
+
+void() splashzone_on =
+{
+	self.solid = SOLID_TRIGGER;
+	self.nextthink = -1;
+};
+
+void() splashzone_touch =
+{
+	if (other.classname != "player"){
+	return;
+	}
+	else{
+	self.solid = SOLID_NOT;
+	SetVModelOverlayOther('0 0 0', "models/overlay.md3", OVERLAY_RAIN, '1 1 1'); //0 ripple 1 rain
+	self.think = splashzone_on;
+	self.nextthink = time + 1;
+	}
+	return;
+};
+
+/*QUAKED trigger_splashzone (.5 .5 .5) ?
+Just a simple trigger that cuases a water dripping lens effect. Can be expanded to indicate whether to put out objects that are on fire.
+*/
+
+void() trigger_splashzone =
+{
+	InitTrigger ();
+	self.touch = splashzone_touch;
+};
+
 

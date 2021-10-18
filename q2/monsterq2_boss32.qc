@@ -528,7 +528,7 @@ void() monster_makron =
 	self.movetype = MOVETYPE_STEP;
 	setmodel (self, "models/monsters/boss3/rider/tris.md2");
 	setsize (self, '-30 -30 0', '30 30 90');
-	self.health = 300; //MrC: 3000 also lowered for testing
+	self.health = 3000;
 	self.max_health = self.health;
 
 	self.th_stand = makron_frames_stand;

@@ -366,7 +366,7 @@ void() monster_boss2 =
 	setmodel (self, "models/monsters/boss2/tris.md2");
 
 	setsize (self, '-56 -56 0', '56 56 80');
-	self.health = 300; //MrC: 2000 lowered for testing
+	self.health = 2000;
 	self.max_health = self.health;
 
 	self.th_stand = q2boss2_select_stand;

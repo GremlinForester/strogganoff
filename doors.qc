@@ -27,13 +27,28 @@ THINK FUNCTIONS
 
 void() door_go_down;
 void() door_go_up;
+void() spawn_q2_func_door;
 
 void() door_blocked =
 {
-	T_Damage (other, self, self, self.dmg);
+	if (self.spawnflags & CRUSHER)
+	{
+		T_Damage (other, self, self, self.dmg);
+		return;
+	}
+	else
+	{
+		T_Damage (other, self, self, self.dmg);
+		
+		if (self.state == STATE_DOWN)
+			door_go_up ();
+		else
+			door_go_down ();
+	}
 	
 // if a door has a negative wait, it would never come back if blocked,
 // so let it just squash the object to death real fast
+/*
 	if (self.wait >= 0)
 	{
 		if (self.state == STATE_DOWN)
@@ -41,6 +56,7 @@ void() door_blocked =
 		else
 			door_go_down ();
 	}
+	*/
 };
 
 
@@ -163,7 +179,7 @@ void() door_fire =
 void() door_use =
 {
 	local entity oself;
-
+	
 	self.message = string_null;			// door message are for touch only
 	self.owner.message = string_null;	
 	self.enemy.message = string_null;
@@ -176,6 +192,9 @@ void() door_use =
 
 void() door_trigger_touch =
 {
+	if ((self.owner.spawnflags & NOMONSTER) && (other.flags & FL_MONSTER))
+		return;
+	
 	if (other.health <= 0)
 		return;
 
@@ -457,10 +476,8 @@ Key doors are allways wait -1.
 4)	screechy metal
 */
 
-void() func_door =
-
+void() spawn_q1_func_door = 
 {
-
 	if (! world.worldtype) // == 0)
 	{
 		precache_sound ("doors/medtry.wav");
@@ -488,42 +505,41 @@ void() func_door =
 		dprint ("no worldtype set!\n");
 	}
 #endif
-	if (! self.sounds) // == 0)
+	if (!self.sounds || self.sounds == 1)
 	{
 		precache_sound ("misc/null.wav");
 		precache_sound ("misc/null.wav");
 		self.noise1 = "misc/null.wav";
 		self.noise2 = "misc/null.wav";
 	}
-	if (self.sounds == 1)
+	if (self.sounds == 2)
 	{
 		precache_sound ("doors/drclos4.wav");
 		precache_sound ("doors/doormv1.wav");
 		self.noise1 = "doors/drclos4.wav";
 		self.noise2 = "doors/doormv1.wav";
 	}
-	if (self.sounds == 2)
+	if (self.sounds == 3)
 	{
 		precache_sound ("doors/hydro1.wav");
 		precache_sound ("doors/hydro2.wav");
 		self.noise2 = "doors/hydro1.wav";
 		self.noise1 = "doors/hydro2.wav";
 	}
-	if (self.sounds == 3)
+	if (self.sounds == 4)
 	{
 		precache_sound ("doors/stndr1.wav");
 		precache_sound ("doors/stndr2.wav");
 		self.noise2 = "doors/stndr1.wav";
 		self.noise1 = "doors/stndr2.wav";
 	}
-	if (self.sounds == 4)
+	if (self.sounds == 5)
 	{
 		precache_sound ("doors/ddoor1.wav");
 		precache_sound ("doors/ddoor2.wav");
 		self.noise1 = "doors/ddoor2.wav";
 		self.noise2 = "doors/ddoor1.wav";
 	}
-
 
 	SetMovedir ();
 
@@ -580,6 +596,56 @@ void() func_door =
 // the sizes can be detected properly.
 	self.think = LinkDoors;
 	self.nextthink = self.ltime + 0.1;
+}
+
+void() func_door =
+{
+	if (world.model == "maps/start.bsp"
+	|| world.model == "maps/e1m1.bsp"
+	|| world.model == "maps/e1m2.bsp"
+	|| world.model == "maps/e1m3.bsp"
+	|| world.model == "maps/e1m4.bsp"
+	|| world.model == "maps/e1m5.bsp"
+	|| world.model == "maps/e1m6.bsp"
+	|| world.model == "maps/e1m7.bsp"
+	|| world.model == "maps/e1m8.bsp"
+	|| world.model == "maps/e2m1.bsp"
+	|| world.model == "maps/e2m2.bsp"
+	|| world.model == "maps/e2m3.bsp"
+	|| world.model == "maps/e2m4.bsp"
+	|| world.model == "maps/e2m5.bsp"
+	|| world.model == "maps/e2m6.bsp"
+	|| world.model == "maps/e2m7.bsp"
+	|| world.model == "maps/e3m1.bsp"
+	|| world.model == "maps/e3m2.bsp"
+	|| world.model == "maps/e3m3.bsp"
+	|| world.model == "maps/e3m4.bsp"
+	|| world.model == "maps/e3m5.bsp"
+	|| world.model == "maps/e3m6.bsp"
+	|| world.model == "maps/e3m7.bsp"
+	|| world.model == "maps/e4m1.bsp"
+	|| world.model == "maps/e4m2.bsp"
+	|| world.model == "maps/e4m3.bsp"
+	|| world.model == "maps/e4m4.bsp"
+	|| world.model == "maps/e4m5.bsp"
+	|| world.model == "maps/e4m6.bsp"
+	|| world.model == "maps/e4m7.bsp"
+	|| world.model == "maps/e4m8.bsp"
+	|| world.model == "maps/end.bsp"
+	|| world.model == "maps/dm1.bsp"
+	|| world.model == "maps/dm2.bsp"
+	|| world.model == "maps/dm3.bsp"
+	|| world.model == "maps/dm4.bsp"
+	|| world.model == "maps/dm5.bsp"
+	|| world.model == "maps/dm6.bsp")
+	{
+		spawn_q1_func_door();
+	}
+	else
+	{
+		spawn_q2_func_door();
+	}
+
 };
 
 /*

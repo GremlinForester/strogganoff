@@ -63,25 +63,16 @@ void() Glass_Touch =
 	remove(self);
 }
 
+void() GibPhysicsThinkRemove;
+
 void() Gib_Touch =
 {
-	if (other.classname == "player"){
-		remove(self);
-	}
-	
-	if (self.velocity < '10 10 10'){
-		self.avelocity = '0 0 0';
-		self.angles = '0 90 0';
-	}
-	
 	if (self.modelflags == MF_GIB){
 		SpawnBlood (self.origin, '0 0 20', 55);
 	}
 	else{
 		pointparticles(particleeffectnum("TE_WOODIMPACT"), self.origin, '0 0 0', 1);
 	}
-	self.think = GibThinkRemove;
-	self.nextthink = time + 0.1;
 }
 
 void() Gib_Touch_Wood =
@@ -112,8 +103,8 @@ void() Gib_Touch_Flesh =
 {
 	if (other.classname == "player"){ //MrC: Add a screen effect, blood on the lens.
 		SpawnBlood (self.origin, '0 0 20', 55);
-//		SetVModelOverlayOther('0 0 0', "models/overlay.md3", OVERLAY_RAIN, '1 0 0');
-	remove(self);
+		SetVModelOverlayOther('0 0 0', "models/overlay.md3", OVERLAY_RAIN, '1 0 0');
+	//remove(self);
 	}
 	else if (self.velocity >= '10 10 10'){
 	sound (self, CHAN_BODY, "zombie/z_miss.wav", 0.8, ATTN_NORM);
@@ -143,7 +134,7 @@ void () GibPhysicsThinkPreRemove =
 {
 	self.solid = SOLID_NOT;
 	self.think = GibPhysicsThinkRemove;
-	self.nextthink = time + GIB_LIFE;
+	self.nextthink = time + GIB_LIFE + random()*10;;
 }
 
 void () GibPhysicsThink =
@@ -161,62 +152,6 @@ void () GibPhysicsThink =
 	self.think = GibPhysicsThinkPreRemove; //SUB_Remove;
 	self.nextthink = time + 0.2;
 }
-/*
-void(string gibname, float dm, float GibType, float GibScale) ThrowGib =
-{
-	local float t;
-	local	entity gib;
-	local 	vector v;
-
-	v = randompos(self.mins, self.maxs) + self.origin;
-
-	gib = spawn();
-	gib.origin = ((v + (random () * '0 50 50')) - (random () * '0 50 50'));
-	setmodel (gib, gibname);
-	setsize (gib, VEC_ORIGIN, VEC_ORIGIN);
-	//setorigin (gib, ((self.origin + (random () * (self.mins + '0 0 100'))) - (random () * self.mins + '0 0 100')));
-	gib.velocity = 1.11 * (VelocityForDamage (dm));
-	gib.movetype = MOVETYPE_TOSS;
-	gib.modelflags = EF_NOMODELFLAGS;
-	gib.avelocity_x = ((random()*5) * (VelocityForDamage (dm)));
-	gib.avelocity_y = ((random()*7) * (VelocityForDamage (dm)));
-	gib.avelocity_z = ((random()*4) * (VelocityForDamage (dm)));
-	gib.scale = GibScale; //((random()*1) + (random()*1.1));
-	gib.solid = SOLID_TRIGGER;
-	gib.bouncefactor = 0.5;
-	gib.bouncestop = 0.1;
-	gib.mass = 100;
-	gib.think = GibPhysicsThink;
-	gib.nextthink = time + 0.2;
-	
-	//	gib.ltime = time;
-	switch(GibType)
-	{
-		case GIB_NONE:
-			break;
-		case GIB_FLESH:
-			gib.modelflags = MF_GIB;
-			gib.touch = Gib_Touch_Flesh;
-			break;
-		case GIB_METAL:
-			gib.touch = Gib_Touch_Metal;
-			break;
-		case GIB_WOOD:
-			gib.touch = Gib_Touch_Wood;
-			break;
-		case GIB_GLASS:
-			break;
-		case GIB_FLAMING:
-			gib.modelflags = MF_ROCKET;
-			gib.avelocity_x = random()*900;
-			gib.avelocity_y = random()*800;
-			gib.avelocity_z = random()*700;
-			gib.velocity = 3.11 * (VelocityForDamage (dm));
-			gib.touch = GibPhysicsThinkRemove;
-			break;
-	}
-};
-*/
 
 void(string gibname, float dm) ThrowGibFlamingPhysics =
 {
@@ -296,119 +231,8 @@ void(string gibname, float dm) ThrowGibPhysics =
 	//physics_addforce(new, self.origin * 900000 , '500 600 700');
 };
 
-//
-//	SPRITE DEBRIS FRAMES
-//
-
-/*
-void()	smokepuff1	=	[0,	smokepuff2] {};
-void()	smokepuff2	=	[1,	smokepuff3] {};
-void()	smokepuff3	=	[2,	smokepuff4] {};
-void()	smokepuff4	=	[3,	smokepuff5] {};
-void()	smokepuff5	=	[4,	smokepuff6] {};
-void()	smokepuff6	=	[5,	smokepuff7] {};
-void()	smokepuff7	=	[6,	smokepuff8] {};
-void()	smokepuff8	=	[7,	smokepuff9] {};
-void()	smokepuff9	=	[8,	smokepuff10] {};
-void()	smokepuff10	=	[9,	smokepuff11] {};
-void()	smokepuff11	=	[10,	smokepuff12] {};
-void()	smokepuff12	=	[11,	smokepuff13] {};
-void()	smokepuff13	=	[12,	smokepuff14] {};
-void()	smokepuff14	=	[13,	smokepuff15] {};
-void()	smokepuff15	=	[14,	smokepuff16] {};
-void()	smokepuff16	=	[15,	smokepuff17] {};
-void()	smokepuff17	=	[16,	smokepuff18] {};
-void()	smokepuff18	=	[17,	smokepuff19] {};
-void()	smokepuff19	=	[18,	SUB_Remove] {};
-
-
-void(vector org) SpawnSpriteDebris =	//Spawns a puff of smoke
-{
-	newmis = spawn();
-	newmis.movetype = MOVETYPE_NONE;
-	newmis.classname = "smoke";
-	newmis.touch = SUB_Null;
-	newmis.velocity = '0 0 0';  //Note that you could mess with the movetype and give it a z velocity for rising smoke..
-	newmis.effects = newmis.effects | EF_ADDITIVE;
-	setmodel(newmis, "progs/smokepuff.spr");
-	newmis.solid = SOLID_NOT;
-	setsize(newmis, '0 0 0', '0 0 0');
-	setorigin(newmis, org);
-	newmis.think = smokepuff1;
-	newmis.nextthink = time + 0.1;
-};
-*/
-
-/*
-void(float dm, float GibType, float GibScale) SpawnSpriteDebris =
-{
-	local float t;
-	local	entity gib;
-	local 	vector v;
-
-	v = randompos(self.mins, self.maxs) + self.origin;
-
-	gib = spawn();
-	gib.origin = ((v + (random () * '0 50 50')) - (random () * '0 50 50'));
-	setmodel (gib, "");
-	newmis.classname = "spritedebris";
-	setsize (gib, VEC_ORIGIN, VEC_ORIGIN);
-	gib.velocity = 1.11 * (VelocityForDamage (dm));
-	gib.movetype = MOVETYPE_TOSS;
-	newmis.touch = SUB_Null;
-	gib.modelflags = EF_NOMODELFLAGS;
-	gib.avelocity_x = ((random()*5) * (VelocityForDamage (dm)));
-	gib.avelocity_y = ((random()*7) * (VelocityForDamage (dm)));
-	gib.avelocity_z = ((random()*4) * (VelocityForDamage (dm)));
-	gib.scale = GibScale; //((random()*1) + (random()*1.1));
-	gib.solid = SOLID_NOT;
-	gib.think = SUB_Remove; //Default doesn't spawn anything?
-	gib.nextthink = time + 0.2;
-	
-	//	gib.ltime = time;
-	switch(GibType)
-	{
-		case GIB_NONE:
-			break;
-		case GIB_FLESH:
-			setmodel (gib, "progs/smokepuff.spr");
-			gib.think = FleshSpriteDebris1;
-			gib.modelflags = MF_GIB;
-			gib.touch = Gib_Touch_Flesh;
-			break;
-		case GIB_METAL:
-			setmodel (gib, "progs/smokepuff.spr");
-			gib.think = MetalSpriteDebris1; //Wood frames
-			gib.touch = Gib_Touch_Metal;
-			break;
-		case GIB_WOOD:
-			setmodel (gib, "progs/smokepuff.spr");
-			gib.think = WoodSpriteDebris1; //Wood frames
-			gib.touch = Gib_Touch_Wood;
-			break;
-		case GIB_GLASS:
-			setmodel (gib, "progs/smokepuff.spr");
-			gib.think = GlassSpriteDebris1; //Wood frames
-			gib.touch = Gib_Touch_Glass;
-			break;
-		case GIB_FLAMING:
-			setmodel (gib, "progs/smokepuff.spr");
-			gib.modelflags = MF_ROCKET;
-			gib.avelocity_x = random()*900;
-			gib.avelocity_y = random()*800;
-			gib.avelocity_z = random()*700;
-			gib.velocity = 3.11 * (VelocityForDamage (dm));
-			gib.touch = GibPhysicsThinkRemove;
-			break;
-	}
-};
-*/
-// SpawnSmoke(self.origin + v_forward * 16 + v_right * 4 + '0 0 16');
-
 void(string gibname, float dm, float GibType) ThrowGib =
 {
-//	local	entity new;
-
 	nspawn = spawn();
 	nspawn.origin = self.origin;
 	setmodel (nspawn, gibname);
@@ -422,39 +246,107 @@ void(string gibname, float dm, float GibType) ThrowGib =
 	nspawn.think = SUB_Remove;
 	nspawn.ltime = time;
 	nspawn.nextthink = time + 10 + random()*10;
-//	nspawn.frame = 0;
-//	nspawn.flags = 0;
 
-
-		switch(GibType)
-		{
-		case GIB_NONE:
-			nspawn.modelflags = EF_NOMODELFLAGS;
-		break;
+	switch(GibType)
+	{
+	case GIB_NONE:
+		nspawn.modelflags = EF_NOMODELFLAGS;
+	break;
 		
-		case GIB_FLESH:
-			nspawn.modelflags = MF_GIB;
-		break;
+	case GIB_FLESH:
+		nspawn.modelflags = MF_GIB;
+	break;
+	
+	case GIB_METAL:
+	break;
 		
-		case GIB_METAL:
-		break;
+	case GIB_FLAMING:
+		nspawn.modelflags = MF_ROCKET;
+		nspawn.avelocity_x = random()*900;
+		nspawn.avelocity_y = random()*800;
+		nspawn.avelocity_z = random()*700;
+		nspawn.velocity = 3.11 * (VelocityForDamage (dm));
+		nspawn.touch = SUB_Remove;
+	break;
 		
-		case GIB_FLAMING:
-			nspawn.modelflags = MF_ROCKET;
-			nspawn.avelocity_x = random()*900;
-			nspawn.avelocity_y = random()*800;
-			nspawn.avelocity_z = random()*700;
-			nspawn.velocity = 3.11 * (VelocityForDamage (dm));
-			nspawn.touch = SUB_Remove;
-		break;
-		
-		case GIB_GLASS:
-			nspawn.modelflags = EF_NOMODELFLAGS;
-			nspawn.effects = EF_ADDITIVE;
-			nspawn.touch = Glass_Touch;
-		break;
-		}
+	case GIB_GLASS:
+		nspawn.modelflags = EF_NOMODELFLAGS;
+		nspawn.effects = EF_ADDITIVE;
+		nspawn.touch = Glass_Touch;
+	break;
+	}
 }
+
+.float isdecor;
+void(entity e, vector org, vector vel, string gibname, float GibType) ThrowDebris =
+{
+	if (e)
+		e = newdecor(e);
+	else
+	{
+		// if in danger of running out of entities, don't spawn any new ones
+		if (numdecors >= 16384)
+			return;
+		e = newdecor(world);
+		e.angles = randomvec() * 360;
+	}
+	e.classname = "gib";
+	e.cnt = 30 * (0.5 + random());
+	setorigin(e, org);
+	setmodel (e, gibname);
+	setsize (e, '0 0 -8', '0 0 -8');
+	e.velocity = vel + randomvec() * 150;
+	e.movetype = MOVETYPE_BOUNCE;
+	e.avelocity = randomvec()*300;
+	e.takedamage = DAMAGE_YES;
+	e.touch = Gib_Touch;
+	e.th_die = SUB_Null;
+	e.th_pain = SUB_Null;
+	e.think = GibPhysicsThinkPreRemove;
+	e.solid = SOLID_BBOX;
+	e.nextthink = time;
+
+	switch(GibType)
+	{
+	case GIB_NONE:
+		e.modelflags = EF_NOMODELFLAGS;
+	break;
+		
+	case GIB_FLESH:
+		e.solid = SOLID_TRIGGER;
+		e.modelflags = MF_GIB;
+		e.touch = Gib_Touch_Flesh;
+		e.nextthink = time + 1;
+	break;
+		
+	case GIB_METAL:
+	break;
+	
+	case GIB_FLAMING:
+		e.modelflags = MF_ROCKET;
+		e.avelocity_x = random()*900;
+		e.avelocity_y = random()*800;
+		e.avelocity_z = random()*700;
+		e.velocity = VelocityForDamage(100);
+		e.touch = SUB_Remove;
+	break;
+		
+	case GIB_GLASS:
+		e.modelflags = EF_NOMODELFLAGS;
+		e.effects = EF_ADDITIVE;
+		e.think = SUB_Null;
+		e.touch = Glass_Touch;
+	break;
+	}
+	
+	if (cvar("dpmod_odephysics"))
+	{
+		e.movetype = MOVETYPE_PHYSICS;
+		e.solid = SOLID_PHYSICS_BOX;
+		e.mass = 5;
+		setmodel(e, e.model); // setmodel sets mins/maxs
+	}
+};
 
 void(string gibname, float dm) ThrowHead =
 {

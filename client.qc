@@ -2146,7 +2146,7 @@ void(entity targ, entity attacker) ClientObituary =
 				return;
 			}
 			if (attacker.solid == SOLID_BSP && attacker) // != world)
-			{	
+			{
 				bprint (" was squished\n");
 				return;
 			}

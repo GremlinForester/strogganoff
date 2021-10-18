@@ -29,7 +29,9 @@ void() ammo_shells =
 {
 	precache_model ("models/items/ammo/shells/medium/tris.md2");
 	setmodel (self, "models/items/ammo/shells/medium/tris.md2");
-	self.aflag = 10;
+	self.aflag = self.aflag;
+	if (!self.aflag)
+		self.aflag = 10;
 	self.weapon = 1;
 	self.netname = "shells";
 	setorigin (self, self.origin + '0 0 0');
@@ -44,7 +46,9 @@ void() ammo_bullets =
 {
 	precache_model ("models/items/ammo/bullets/medium/tris.md2");
 	setmodel (self, "models/items/ammo/bullets/medium/tris.md2");
-	self.aflag = 50;
+	self.aflag = self.aflag;
+	if (!self.aflag)
+		self.aflag = 50;
 	self.weapon = 2;
 	self.netname = "bullets";
 	setorigin (self, self.origin + '0 0 0');
@@ -59,7 +63,9 @@ void() ammo_rockets =
 {
 	precache_model ("models/items/ammo/rockets/medium/tris.md2");
 	setmodel (self, "models/items/ammo/rockets/medium/tris.md2");
-	self.aflag = 5;
+	self.aflag = self.aflag;
+	if (!self.aflag)
+		self.aflag = 5;
 	self.weapon = 3;
 	self.netname = "rockets";
 	setorigin (self, self.origin + '0 0 0');
@@ -74,7 +80,9 @@ void() ammo_cells =
 {
 	precache_model ("models/items/ammo/cells/medium/tris.md2");
 	setmodel (self, "models/items/ammo/cells/medium/tris.md2");
-	self.aflag = 50;
+	self.aflag = self.aflag;
+	if (!self.aflag)
+		self.aflag = 50;
 	self.weapon = 4;
 	self.netname = "cells";
 	setorigin (self, self.origin + '0 0 0');
@@ -89,7 +97,9 @@ void() ammo_slugs =
 {
 	precache_model ("models/items/ammo/slugs/medium/tris.md2");
 	setmodel (self, "models/items/ammo/slugs/medium/tris.md2");
-	self.aflag = 10;
+	self.aflag = self.aflag;
+	if (!self.aflag)
+		self.aflag = 10;
 	self.weapon = 5;
 	self.netname = "slugs";
 	setorigin (self, self.origin + '0 0 0');

@@ -245,7 +245,7 @@ void(entity e) Q3Surface_Impact_Ent =
 void(vector org) Q3Surface_Impact = //q3surface_hit =
 {
 	local float r;
-	
+
 	if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS)
 	{
 		return;

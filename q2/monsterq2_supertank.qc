@@ -359,7 +359,7 @@ void() monster_supertank =
 	setmodel (self, "models/monsters/boss1/tris.md2");
 
 	setsize (self, '-64 -64 0', '64 64 112');
-	self.health = 300; //MrC: 1500 lowered for testing
+	self.health = 1500;
 	self.max_health = self.health;
 
 	self.th_stand = q2boss1_frames_stand;

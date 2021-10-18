@@ -95,12 +95,12 @@ void() PlaceItem =
 	self.movetype = MOVETYPE_TOSS;	
 	self.velocity = '0 0 0';
 	self.origin_z = self.origin_z + 6;
-	
+	/*
 	if (!self.cnt)
 		self.cnt = self.aflag;
 	else
 		self.aflag = self.cnt;
-	
+	*/
 	//Take THAT Bembridge Scholars!
 	
 #ifndef opgrade
@@ -703,7 +703,9 @@ local float		best;
 
 	bound_other_ammo ();
 	
-	sprint (self, "You got the ");
+	sprint (self, "You got ");
+	sprint (self, ftos(stemp.aflag));
+	sprint (self, " ");
 	sprint (self, stemp.netname);
 	sprint (self, "\n");
 	// ammo touch sound

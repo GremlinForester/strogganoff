@@ -51,6 +51,7 @@ client.qc
 q2_player.qc
 monsters.qc
 doors.qc
+q2_doors.qc
 buttons.qc
 triggers.qc
 plats.qc

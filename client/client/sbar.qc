@@ -19,7 +19,7 @@ float cl_items;
 // for weapon icon blink
 float shotgun, supershotgun, machinegun, chaingun, grenadelauncher, rocketlauncher, hyperblaster, railgun, bfg;
 
-float inv_items, inv_items2, currentweap;
+float inv_items2, currentweap;
 
 //-----------------------------------------------------------------------------
 // Custom hud config init / shutdown

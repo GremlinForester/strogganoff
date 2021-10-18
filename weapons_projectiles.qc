@@ -684,7 +684,9 @@ void() BecomeExplosion =
 	self.touch = SUB_Null;
 	setmodel (self, "progs/s_explod.spr");
 	self.solid = SOLID_NOT;
-	s_explode1 ();
+	self.think = SUB_Remove;
+	self.nextthink = 0.6;
+	effect(self.origin, "progs/s_explod.spr", 0, 5, 10);
 };
 
 void() T_MissileTouch =

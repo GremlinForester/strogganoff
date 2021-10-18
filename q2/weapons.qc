@@ -127,7 +127,7 @@ float() weapon_bfg_pause={
 */
 float() weapon_blaster_fire={
 	switch(self.weaponframe){
-		case 5:
+		case 4: //5
 			return TRUE;
 	}
 	return FALSE;
@@ -873,7 +873,7 @@ void() Weapon_Blaster_Fire=
 	self.weaponframe++;
 }
 void() weapon_blaster_update={
-	Weapon_Generic(4, 8, 52, 55, Weapon_Blaster_Fire );
+	Weapon_Generic(3 /*4*/, 8, 52, 55, Weapon_Blaster_Fire );
 };
 
 

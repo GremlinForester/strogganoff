@@ -275,6 +275,14 @@ void() CheatCommand =
 		WEP_BFG;
 		WEP_GRENADE;
 	self.items = self.items | 
+		IT_KEY_DATACD | 
+		IT_KEY_POWERCUBE | 
+		IT_KEY_PYRAMID | 
+		IT_KEY_DATASPINNER |
+		IT_KEY_PASS |
+		IT_KEY_BLUE |
+		IT_KEY_RED |
+		IT_KEY_HEAD |
 		IT_KEY1 | IT_KEY2 | IT_ARMOR1;
 
 	self.impulse = 0;
@@ -327,6 +335,29 @@ void() CycleWeaponCommand =
 	}
 };
 
+float() onlyBlaster =
+{
+	if (self.inv_weapons & WEP_SHOTGUN)
+		return FALSE;
+	if (self.inv_weapons & WEP_SUPERSHOTGUN)
+		return FALSE;
+	if (self.inv_weapons & WEP_MACHINEGUN)
+		return FALSE;
+	if (self.inv_weapons & WEP_CHAINGUN)
+		return FALSE;
+	if (self.inv_weapons & WEP_GRENADE_LAUNCHER)
+		return FALSE;
+	if (self.inv_weapons & WEP_ROCKET_LAUNCHER)
+		return FALSE;
+	if (self.inv_weapons & WEP_HYPERBLASTER)
+		return FALSE;
+	if (self.inv_weapons & WEP_RAILGUN)
+		return FALSE;
+	if (self.inv_weapons & WEP_BFG)
+		return FALSE;
+	return TRUE;
+} 
+
 /*
 ============
 CycleWeaponNext
@@ -340,6 +371,10 @@ void() CycleWeaponNext =
 	
 	self.impulse = 0;
 	checkWep = self.weapon;
+
+	if (onlyBlaster()){
+		return;
+	}
 	
 	while (1)
 	{
@@ -427,7 +462,11 @@ void() CycleWeaponPrev =
 	self.impulse = 0;
 	//cache this here, I think the loop only works when using specifically 1 var
 	checkWep = self.weapon;
-
+	
+	if (onlyBlaster()){
+		return;
+	}
+	
 	while (1)
 	{
 		am = 0;
@@ -497,7 +536,6 @@ void() CycleWeaponPrev =
 			return;
 		}
 	}
-
 };
 
 /*

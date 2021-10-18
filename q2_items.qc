@@ -149,6 +149,7 @@ void() item_invulnerability =
 	setmodel (self, "models/items/invulner/tris.md2");
 	self.netname = "Invulnerability";
 	self.items = IT_INVULNERABILITY;
+	self.modelflags = MF_ROTATE;
 	setsize (self, '-16 -16 -16', '16 16 16');
 	self.touch = powerup_touch;
 	StartItem();
@@ -406,8 +407,8 @@ model="models/items/c_head/"
 */
 void() key_commander_head =
 {
-	precache_model ("models/items/c_head/tris.md2");
-	setmodel (self, "models/items/c_head/tris.md2");
+	precache_model ("models/monsters/commandr/head/tris.md2");
+	setmodel (self, "models/monsters/commandr/head/tris.md2");
 	precache_sound ("items/pkup.wav");
 	self.noise = "items/pkup.wav";
 	self.netname = "Commander's Head";

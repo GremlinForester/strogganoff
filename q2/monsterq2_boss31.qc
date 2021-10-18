@@ -430,7 +430,7 @@ void() monster_jorg =
 	setmodel (self, "models/monsters/boss3/jorg/tris.md2");
 
 	setsize (self, '-80 -80 0', '80 80 140');
-	self.health = 300; //MrC: 3000 lowered for testing
+	self.health = 3000;
 	self.max_health = self.health;
 
 	self.th_stand = jorg_frames_stand;

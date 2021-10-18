@@ -7,11 +7,31 @@ Making a note of it here to help make sense of it for myself or anyone else who 
 
 */
 
+float numdecors;
+float maxdecors;
+
 //LOG STUFF (might expand on this) these may require {} braces on any conditional i.e. 'if' logging.
 
 #define LOG(x) bprint(x);bprint("\n")
 #define VLOG(x) bprint(vtos(x));bprint("\n")
 #define FLOG(x) bprint(ftos(x));bprint("\n")
+
+#define DOOR_START_OPEN				1
+#define DOOR_KEY_PYRAMID			2
+#define CRUSHER						4 //must be toggled?
+#define NOMONSTER					8
+#define DOOR_KEY_DATA_SPINNER		16
+#define DOOR_TOGGLE					32
+#define DOOR_KEY_PASS				64
+#define DOOR_KEY_DATA_CD			128
+#define DOOR_NOT_EASY				256
+#define DOOR_NOT_NORMAL				512
+#define DOOR_NOT_HARD				1024
+#define DOOR_NOT_DEATHMATCH			2048
+#define DOOR_KEY_BLUE_KEY			4096
+#define DOOR_KEY_RED_KEY			8192
+#define DOOR_KEY_COMMANDER_HEAD		16384
+#define DOOR_KEY_POWER_CUBE			32768
 
 //used by playerVOSound to select a sound of the following conditions
 enum
@@ -34,8 +54,6 @@ enum
 };
 
 .float playerType;
-
-
 
 /*
 ============
@@ -158,7 +176,7 @@ SPEECH LINES
 .float nexttalktime;
 .float nextsmacktalktime;
 
-float START_ON = 1;
+//float START_ON = 1;
 
 .string sightSound;
 
@@ -251,29 +269,25 @@ Find/Replace, it's time to work!
 //self.items, or an alternative method will be used. If the following is employed, it certainly leaves a lot of room for extra expansion.
 //With 23 different keys, more armor types etc... Will leave as-is for now.
 
-.float inv_armor;
-#define	IT_ARMOR_BODY			1 //IT_ARMOR1
-#define	IT_ARMOR_COMBAT			2 //IT_ARMOR2
-#define	IT_ARMOR_JACKET			4 //IT_ARMOR3
-
-.float inv_items;
-#define	IT_SILENCER				1
-#define	IT_BREATHER				2
-#define	IT_POWER_SHIELD			8
-
-.float inv_keys;
-#define	IT_KEY_DATACD			1
-#define	IT_KEY_POWERCUBE		2
-#define	IT_KEY_PYRAMID			4
-#define	IT_KEY_DATASPINNER		8
-#define	IT_KEY_PASS				16
-#define	IT_KEY_BLUE				32
-#define	IT_KEY_RED				64
-#define	IT_KEY_HEAD				128
+.float inv_q2items;
+#define	IT_KEY_DATACD			1 //still used by self.items
+#define	IT_KEY_POWERCUBE		2 //still used by self.items
+#define	IT_KEY_PYRAMID			4 //still used by self.items
+#define	IT_KEY_DATASPINNER		8 //still used by self.items
+#define	IT_KEY_PASS				16 //still used by self.items
+#define	IT_KEY_BLUE				32 //still used by self.items
+#define	IT_KEY_RED				64 //still used by self.items
+#define	IT_KEY_HEAD				128 //still used by self.items
+#define	IT_SILENCER				256
+#define	IT_BREATHER				512
+#define	IT_POWER_SHIELD			1024
+#define	IT_ARMOR_BODY			2048 //IT_ARMOR1
+#define	IT_ARMOR_COMBAT			4096 //IT_ARMOR2
+#define	IT_ARMOR_JACKET			8192 //IT_ARMOR3
 
 //still used by self.items
 
-#define	IT_SLUGS				128 //this was extra, not currently used yet, not sure if it will?
+#define	IT_SLUGS				128
 #define	IT_SHELLS				256
 #define	IT_BULLETS				512
 #define	IT_ROCKETS				1024
@@ -426,7 +440,7 @@ float Q3SURFACEFLAG_GLASS = 0x100000;
 float Q3SURFACEFLAG_DIRT = 0x200000;
 float Q3SURFACEFLAG_FORCEFIELD = 0x400000;
 float Q3SURFACEFLAG_GRASS = 0x800000;
-float Q3SURFACEFLAG_TILE = 0x1000000;
+float Q3SURFACEFLAG_TILE = 	0x1000000;
 
 .float aiflags;
 .float shotcount;
@@ -457,9 +471,6 @@ float FULL_DYN	= 16;
 #define MAX_BLEED 10
 .float bIsWounded;
 .float bleedcount;
-
-.float state_mood;
-.float state_movement;
 
 // added for Dark Places
 float CHAN_SPEECH             = 5;
@@ -703,12 +714,27 @@ VIEW WEAPON FRAMES
 #define WEP_BFG_AWAY_FIRSTFRAME 56
 #define WEP_BFG_AWAY_LASTFRAME 60
 
+/*
+============
+LENS OVERLAYS
+============
+*/
+
+enum
+{
+OVERLAY_RIPPLE,
+OVERLAY_RAIN,
+OVERLAY_BLOOD,
+OVERLAY_FACE
+};
 
 /*
 ============
 GIB TYPES
 ============
 */
+
+.float material;
 
 enum
 {
