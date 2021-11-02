@@ -140,7 +140,7 @@ void() door_fire =
 
 // play use key sound
 
-	if (self.items)
+	if (self.items_q2keys)
 #ifdef opgrade
 		sound (self, CHAN_ITEM, self.noise4, 1, ATTN_NORM);
 #else
@@ -396,7 +396,7 @@ void() LinkDoors =
 				return;
 			if (self.targetname)
 				return;
-			if (self.items)
+			if (self.items_q2keys)
 				return;
 
 			self.owner.trigger_field = spawn_field(cmins, cmaxs);

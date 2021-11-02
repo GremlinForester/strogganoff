@@ -24,47 +24,47 @@ void() q2door_touch =
 	}
 	
 // key door stuff
-	if (!self.items)
+	if (!self.items_q2keys)
 		return;
 
-	if ( (self.items & other.items) != self.items )
+	if ( (self.items_q2keys & other.items_q2keys) != self.items_q2keys )
 	{
-		if (self.owner.items == IT_KEY_DATACD)
+		if (self.owner.items_q2keys == IT_KEY_DATACD)
 		{
 				centerprint (other, "You need the data CD");
 				sound (self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
 		}
-		else if (self.owner.items == IT_KEY_POWERCUBE)
+		else if (self.owner.items_q2keys == IT_KEY_POWERCUBE)
 		{
 				centerprint (other, "You need a power cube");
 				sound (self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
 		}
-		else if (self.owner.items == IT_KEY_PYRAMID)
+		else if (self.owner.items_q2keys == IT_KEY_PYRAMID)
 		{
 				centerprint (other, "You need the pyramid key");
 				sound (self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
 		}
-		else if (self.owner.items == IT_KEY_DATASPINNER)
+		else if (self.owner.items_q2keys == IT_KEY_DATASPINNER)
 		{
 				centerprint (other, "You need the data spinner");
 				sound (self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
 		}
-		else if (self.owner.items == IT_KEY_PASS)
+		else if (self.owner.items_q2keys == IT_KEY_PASS)
 		{
 				centerprint (other, "You need the security pass");
 				sound (self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
 		}
-		else if (self.owner.items == IT_KEY_BLUE)
+		else if (self.owner.items_q2keys == IT_KEY_BLUE)
 		{
 				centerprint (other, "You need the blue keycard");
 				sound (self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
 		}
-		else if (self.owner.items == IT_KEY_RED)
+		else if (self.owner.items_q2keys == IT_KEY_RED)
 		{
 				centerprint (other, "You need the red keycard");
 				sound (self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
 		}
-		else if (self.owner.items == IT_KEY_HEAD)
+		else if (self.owner.items_q2keys == IT_KEY_HEAD)
 		{
 				centerprint (other, "You need to get a head");
 				sound (self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
@@ -72,7 +72,7 @@ void() q2door_touch =
 		return;
 	}
 
-	other.items = other.items - self.items;
+	other.items_q2keys = other.items_q2keys - self.items_q2keys;
 	self.touch = SUB_Null;
 	if (self.enemy)
 		self.enemy.touch = SUB_Null;	// get paired door
@@ -130,28 +130,28 @@ void() spawn_q2_func_door =
 	self.use = door_use;
 
 	if (self.spawnflags & DOOR_KEY_DATA_CD)
-		self.items = IT_KEY_DATACD;
+		self.items_q2keys = IT_KEY_DATACD;
 	
 	if (self.spawnflags & DOOR_KEY_POWER_CUBE)
-		self.items = IT_KEY_POWERCUBE;
+		self.items_q2keys = IT_KEY_POWERCUBE;
 	
 	if (self.spawnflags & DOOR_KEY_PYRAMID)
-		self.items = IT_KEY_PYRAMID;
+		self.items_q2keys = IT_KEY_PYRAMID;
 	
 	if (self.spawnflags & DOOR_KEY_DATA_SPINNER)
-		self.items = IT_KEY_DATASPINNER;
+		self.items_q2keys = IT_KEY_DATASPINNER;
 	
 	if (self.spawnflags & DOOR_KEY_PASS)
-		self.items = IT_KEY_PASS;
+		self.items_q2keys = IT_KEY_PASS;
 	
 	if (self.spawnflags & DOOR_KEY_BLUE_KEY)
-		self.items = IT_KEY_BLUE;
+		self.items_q2keys = IT_KEY_BLUE;
 	
 	if (self.spawnflags & DOOR_KEY_RED_KEY)
-		self.items = IT_KEY_RED;
+		self.items_q2keys = IT_KEY_RED;
 	
 	if (self.spawnflags & DOOR_KEY_COMMANDER_HEAD)
-		self.items = IT_KEY_HEAD;
+		self.items_q2keys = IT_KEY_HEAD;
 	
 	if (!self.speed)
 		self.speed = 100;
@@ -182,7 +182,7 @@ void() spawn_q2_func_door =
 		self.th_die = door_killed;
 	}
 	
-	if (self.items)
+	if (self.items_q2keys)
 		self.wait = -1;
 		
 	self.touch = q2door_touch;

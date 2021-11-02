@@ -304,46 +304,40 @@ void() xwall_breakthink =
 		switch(self.owner.material)
 		{
 		case 1:
-		mat = GIB_NONE;
 		break_sound = "";
-		if (r == 0) ThrowDebris(world, v, v2, "models/objects/debris1/tris.md2", mat);
-		if (r == 1) ThrowDebris(world, v, v2, "models/objects/debris2/tris.md2", mat);
-		if (r == 2) ThrowDebris(world, v, v2, "models/objects/debris3/tris.md2", mat);
+		if (r == 0) ThrowDebris(world, v, v2, "models/objects/debris1/tris.md2", GIB_NONE);
+		if (r == 1) ThrowDebris(world, v, v2, "models/objects/debris2/tris.md2", GIB_NONE);
+		if (r == 2) ThrowDebris(world, v, v2, "models/objects/debris3/tris.md2", GIB_NONE);
 		break;
 		
 		case 2:
-		mat = GIB_FLESH;
 		break_sound = "misc/udeath.wav";
-		if (r == 0) ThrowDebris(world, v, v2, "models/objects/gibs/bone/tris.md2", mat);
-		if (r == 1) ThrowDebris(world, v, v2, "models/objects/gibs/sm_meat/tris.md2", mat);
+		if (r == 0) ThrowDebris(world, v, v2, "models/objects/gibs/bone/tris.md2", GIB_FLESH);
+		if (r == 1) ThrowDebris(world, v, v2, "models/objects/gibs/sm_meat/tris.md2", GIB_FLESH);
 		break;
 		
 		case 3:
-		mat = GIB_METAL;
-		if (r == 0) ThrowDebris(world, v, v2, "models/objects/debris1/tris.md2", mat);
-		if (r == 1) ThrowDebris(world, v, v2, "models/objects/debris2/tris.md2", mat);
-		if (r == 2) ThrowDebris(world, v, v2, "models/objects/debris3/tris.md2", mat);
+		if (r == 0) ThrowDebris(world, v, v2, "models/objects/debris1/tris.md2", GIB_METAL);
+		if (r == 1) ThrowDebris(world, v, v2, "models/objects/debris2/tris.md2", GIB_METAL);
+		if (r == 2) ThrowDebris(world, v, v2, "models/objects/debris3/tris.md2", GIB_METAL);
 		break;
 		
 		case 4:
-		mat = GIB_FLAMING;
-		if (r == 0) ThrowDebris(world, v, v2, "models/objects/debris1/tris.md2", mat);
-		if (r == 1) ThrowDebris(world, v, v2, "models/objects/debris2/tris.md2", mat);
-		if (r == 2) ThrowDebris(world, v, v2, "models/objects/debris3/tris.md2", mat);
+		if (r == 0) ThrowDebris(world, v, v2, "models/objects/debris1/tris.md2", GIB_FLAMING);
+		if (r == 1) ThrowDebris(world, v, v2, "models/objects/debris2/tris.md2", GIB_FLAMING);
+		if (r == 2) ThrowDebris(world, v, v2, "models/objects/debris3/tris.md2", GIB_FLAMING);
 		break;
 		
 		case 5:
-		mat = GIB_GLASS;
-		if (r == 0) ThrowDebris(world, v, v2, "models/objects/debris1/tris.md2", mat);
-		if (r == 1) ThrowDebris(world, v, v2, "models/objects/debris2/tris.md2", mat);
-		if (r == 2) ThrowDebris(world, v, v2, "models/objects/debris3/tris.md2", mat);
+		if (r == 0) ThrowDebris(world, v, v2, "models/objects/debris1/tris.md2", GIB_GLASS);
+		if (r == 1) ThrowDebris(world, v, v2, "models/objects/debris2/tris.md2", GIB_GLASS);
+		if (r == 2) ThrowDebris(world, v, v2, "models/objects/debris3/tris.md2", GIB_GLASS);
 		break;
 		
 		case 6:
-		mat = GIB_WOOD;
-		if (r == 0) ThrowDebris(world, v, v2, "models/objects/debris1/tris.md2", mat);
-		if (r == 1) ThrowDebris(world, v, v2, "models/objects/debris2/tris.md2", mat);
-		if (r == 2) ThrowDebris(world, v, v2, "models/objects/debris3/tris.md2", mat);
+		if (r == 0) ThrowDebris(world, v, v2, "models/objects/debris1/tris.md2", GIB_WOOD);
+		if (r == 1) ThrowDebris(world, v, v2, "models/objects/debris2/tris.md2", GIB_WOOD);
+		if (r == 2) ThrowDebris(world, v, v2, "models/objects/debris3/tris.md2", GIB_WOOD);
 		break;
 		}
 
@@ -453,10 +447,6 @@ Keys:
   last explosion)
 "material"
  Type of debris, normal gibs make no impact sounds or effects. 
- Flesh will leave some nice gore.
- Metal will make impact sounds. 
- Flaming will have a rocket effect attached to them.
- Glass will shatter upon touch.
 
  1: Normal Gibs
  2: Flesh

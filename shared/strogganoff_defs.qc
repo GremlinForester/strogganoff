@@ -16,6 +16,8 @@ float maxdecors;
 #define VLOG(x) bprint(vtos(x));bprint("\n")
 #define FLOG(x) bprint(ftos(x));bprint("\n")
 
+//MrC: FixMe: use shared/reserved appearflags if there are any in defs or something
+
 #define DOOR_START_OPEN				1
 #define DOOR_KEY_PYRAMID			2
 #define CRUSHER						4 //must be toggled?
@@ -155,12 +157,17 @@ var float autocvar_cl_idletalk = 0;
 var float autocvar_cl_printpos = 0;
 var float autocvar_cl_printstate = 0;
 var float autocvar_cl_playertype = 0;
+var float autocvar_bot_print_waypointcreate = 0;
 
 /*
 ============
 SPEECH LINES
 ============
 */
+
+//MrC: These don't currently take into account player types. 
+//Will need to switch/case similar to player sound wrapper function (or something).
+
 #define PLAYER_KILLCOMMENT_1 "player/killcomment1.wav"
 #define PLAYER_KILLCOMMENT_2 "player/killcomment2.wav"
 #define PLAYER_KILLCOMMENT_3 "player/killcomment3.wav"
@@ -175,8 +182,6 @@ SPEECH LINES
 
 .float nexttalktime;
 .float nextsmacktalktime;
-
-//float START_ON = 1;
 
 .string sightSound;
 
@@ -241,7 +246,7 @@ enum
 .float animIdle;
 .float nextframetime;
 
-#define	FL_DUCKED 4096
+#define	FL_DUCKED 8192
 
 /*
 Quake used ammo_ for inventory tracking but Quake 2 used ammo_ as the pickup item name. 
@@ -265,11 +270,7 @@ Find/Replace, it's time to work!
 #define WEP_BFG 				512
 #define WEP_GRENADE 			1024
 
-//Not known at this time if storing these as bit flags will be used, seem a waste atm, but perhaps some can be merged into
-//self.items, or an alternative method will be used. If the following is employed, it certainly leaves a lot of room for extra expansion.
-//With 23 different keys, more armor types etc... Will leave as-is for now.
-
-.float inv_q2items;
+.float items_q2keys;
 #define	IT_KEY_DATACD			1 //still used by self.items
 #define	IT_KEY_POWERCUBE		2 //still used by self.items
 #define	IT_KEY_PYRAMID			4 //still used by self.items
@@ -278,14 +279,16 @@ Find/Replace, it's time to work!
 #define	IT_KEY_BLUE				32 //still used by self.items
 #define	IT_KEY_RED				64 //still used by self.items
 #define	IT_KEY_HEAD				128 //still used by self.items
-#define	IT_SILENCER				256
-#define	IT_BREATHER				512
-#define	IT_POWER_SHIELD			1024
-#define	IT_ARMOR_BODY			2048 //IT_ARMOR1
-#define	IT_ARMOR_COMBAT			4096 //IT_ARMOR2
-#define	IT_ARMOR_JACKET			8192 //IT_ARMOR3
 
-//still used by self.items
+
+//used self.items (powerups seem to be hard coded?)
+//#define	IT_EXTRA			1
+//#define	IT_EXTRA			2
+//#define	IT_EXTRA			4
+//#define	IT_EXTRA			8
+#define	IT_SILENCER				16
+#define	IT_BREATHER				32
+#define	IT_POWER_SHIELD			64
 
 #define	IT_SLUGS				128
 #define	IT_SHELLS				256
@@ -293,9 +296,11 @@ Find/Replace, it's time to work!
 #define	IT_ROCKETS				1024
 #define	IT_CELLS				2048
 
-#define	IT_ARMOR1				8192
-#define	IT_ARMOR2				16384
-#define	IT_ARMOR3				32768
+//#define IT_EXTRA				4096
+
+#define	IT_ARMOR_JACKET			8192 //IT_ARMOR1
+#define	IT_ARMOR_COMBAT			16384 //IT_ARMOR2
+#define	IT_ARMOR_BODY			32768 //IT_ARMOR3
 #define	IT_SUPERHEALTH			65536
 
 #define	IT_KEY1					131072
@@ -305,6 +310,37 @@ Find/Replace, it's time to work!
 #define	IT_INVULNERABILITY		1048576
 #define	IT_SUIT					2097152
 #define	IT_QUAD					4194304
+
+/*
+// .items
+#define	IT_INVISIBILITY			1
+#define	IT_INVULNERABILITY		2
+#define	IT_SUIT					4
+#define	IT_QUAD					8
+#define	IT_SILENCER				16
+#define	IT_BREATHER				32
+#define	IT_POWER_SHIELD			64
+
+#define	IT_SLUGS				128
+#define	IT_SHELLS				256
+#define	IT_BULLETS				512
+#define	IT_ROCKETS				1024
+#define	IT_CELLS				2048
+
+#define IT_EXTRA				4096
+#define	IT_ARMOR_BODY			8192
+#define	IT_ARMOR_COMBAT			16384
+#define	IT_ARMOR_JACKET			32768
+#define	IT_SUPERHEALTH			65536
+
+#define	IT_KEY1					131072
+#define	IT_KEY2					262144
+
+#define	IT_EXTRA				524288 
+#define	IT_EXTRA				1048576
+#define	IT_EXTRA				2097152
+#define	IT_EXTRA				4194304
+*/
 
 .float inv_ammo_bullets;
 .float inv_ammo_shells;
@@ -542,6 +578,9 @@ IMPULSE VALUES
 #define IMPULSE_WEAPON_NEXT 30
 #define IMPULSE_WEAPON_PREV 31
 
+#define IMPULSE_CROUCH_ON 33
+#define IMPULSE_CROUCH_OFF 34
+
 #define IMPULSE_CHEAT_CMD 99
 
 //FrikBot Waypoint Edit Impulses
@@ -724,7 +763,10 @@ enum
 {
 OVERLAY_RIPPLE,
 OVERLAY_RAIN,
-OVERLAY_BLOOD,
+OVERLAY_BLOODSPLAT1,
+OVERLAY_BLOODSPLAT2,
+OVERLAY_BLOODSPLAT3,
+OVERLAY_BLOODSPLAT4,
 OVERLAY_FACE
 };
 

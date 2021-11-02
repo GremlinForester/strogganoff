@@ -73,11 +73,11 @@ void() button_touch =
 	self.attack_finished = time + 2;
 
 // key door stuff
-	if (!self.items){
+	if (!self.items_q2keys){
 		button_fire();
 	}
 
-	switch(self.items){
+	switch(self.items_q2keys){
 		case IT_KEY_DATACD:
 			keyname = "Data CD";
 			break;
@@ -104,44 +104,44 @@ void() button_touch =
 			break;
 	}
 	
-	if ( (self.items & other.items) != self.items )
+	if ( (self.items_q2keys & other.items_q2keys) != self.items_q2keys )
 	{
-		if (self.items == IT_KEY_DATACD)
+		if (self.items_q2keys == IT_KEY_DATACD)
 		{
 				centerprint (other, "You need the data CD");
 				sound (self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
 		}
-		else if (self.items == IT_KEY_POWERCUBE)
+		else if (self.items_q2keys == IT_KEY_POWERCUBE)
 		{
 				centerprint (other, "You need a power cube");
 				sound (self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
 		}
-		else if (self.items == IT_KEY_PYRAMID)
+		else if (self.items_q2keys == IT_KEY_PYRAMID)
 		{
 				centerprint (other, "You need the pyramid key");
 				sound (self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
 		}
-		else if (self.owner.items == IT_KEY_DATASPINNER)
+		else if (self.owner.items_q2keys == IT_KEY_DATASPINNER)
 		{
 				centerprint (other, "You need the data spinner");
 				sound (self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
 		}
-		else if (self.items == IT_KEY_PASS)
+		else if (self.items_q2keys == IT_KEY_PASS)
 		{
 				centerprint (other, "You need the security pass");
 				sound (self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
 		}
-		else if (self.items == IT_KEY_BLUE)
+		else if (self.items_q2keys == IT_KEY_BLUE)
 		{
 				centerprint (other, "You need the blue keycard");
 				sound (self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
 		}
-		else if (self.items == IT_KEY_RED)
+		else if (self.items_q2keys == IT_KEY_RED)
 		{
 				centerprint (other, "You need the red keycard");
 				sound (self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
 		}
-		else if (self.items == IT_KEY_HEAD)
+		else if (self.items_q2keys == IT_KEY_HEAD)
 		{
 				centerprint (other, "You need to get a head");
 				sound (self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
@@ -150,8 +150,8 @@ void() button_touch =
 	}
 
 	if (self.spawnflags & REMOVE_KEY){
-		centerprint (other, strcat("Access granted: ", keyname, " removed."));
-		other.items = other.items - self.items;
+		centerprint (other, strcat("Access granted: ", keyname, " removed"));
+		other.items_q2keys = other.items_q2keys - self.items_q2keys;
 		button_fire();
 		return;
 	}
@@ -219,28 +219,28 @@ void() func_button =
 	setmodel (self, self.model);
 
 	if (self.spawnflags & DOOR_KEY_DATA_CD)
-		self.items = IT_KEY_DATACD;
+		self.items_q2keys = IT_KEY_DATACD;
 	
 	if (self.spawnflags & DOOR_KEY_POWER_CUBE)
-		self.items = IT_KEY_POWERCUBE;
+		self.items_q2keys = IT_KEY_POWERCUBE;
 	
 	if (self.spawnflags & DOOR_KEY_PYRAMID)
-		self.items = IT_KEY_PYRAMID;
+		self.items_q2keys = IT_KEY_PYRAMID;
 	
 	if (self.spawnflags & DOOR_KEY_DATA_SPINNER)
-		self.items = IT_KEY_DATASPINNER;
+		self.items_q2keys = IT_KEY_DATASPINNER;
 	
 	if (self.spawnflags & DOOR_KEY_PASS)
-		self.items = IT_KEY_PASS;
+		self.items_q2keys = IT_KEY_PASS;
 	
 	if (self.spawnflags & DOOR_KEY_BLUE_KEY)
-		self.items = IT_KEY_BLUE;
+		self.items_q2keys = IT_KEY_BLUE;
 	
 	if (self.spawnflags & DOOR_KEY_RED_KEY)
-		self.items = IT_KEY_RED;
+		self.items_q2keys = IT_KEY_RED;
 	
 	if (self.spawnflags & DOOR_KEY_COMMANDER_HEAD)
-		self.items = IT_KEY_HEAD;
+		self.items_q2keys = IT_KEY_HEAD;
 
 	self.blocked = button_blocked;
 	self.use = button_use;

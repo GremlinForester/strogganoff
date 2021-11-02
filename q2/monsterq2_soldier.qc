@@ -518,10 +518,10 @@ void() q2soldier_die =
  	if (self.health < -35)
 	{
 		sound (self, CHAN_VOICE, "misc/udeath.wav", 1, ATTN_NORM);
- 		ThrowGib ("models/objects/gibs/arm/tris.md2", self.health);
-		ThrowGib ("models/objects/gibs/chest/tris.md2", self.health);
-		ThrowGib ("models/objects/gibs/head/tris.md2", self.health);
-		ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health);
+ 		ThrowGib ("models/objects/gibs/arm/tris.md2", self.health, GIB_FLESH);
+		ThrowGib ("models/objects/gibs/chest/tris.md2", self.health, GIB_FLESH);
+		ThrowGib ("models/objects/gibs/head/tris.md2", self.health, GIB_FLESH);
+		ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health, GIB_FLESH);
 		ThrowHead ("progs/h_player.mdl", self.health); 
 		return;
 	}

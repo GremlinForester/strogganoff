@@ -114,7 +114,14 @@ void() SV_PlayerPhysics =
 	{
 		// walking
 		makevectors(self.v_angle_y * '0 1 0');
-		wishvel = v_forward * self.movement_x + v_right * self.movement_y;
+		
+		if (self.flags & FL_DUCKED){
+			wishvel = ((v_forward * self.movement_x + v_right * self.movement_y) * 0.25);
+		}
+		else
+		{
+			wishvel = v_forward * self.movement_x + v_right * self.movement_y;
+		}
 		// friction
 		if (self.velocity_x || self.velocity_y)
 		{
@@ -158,9 +165,7 @@ wishspeed);
 		{
 			f = wishspeed - (self.velocity * wishdir);
 			if (f > 0)
-				self.velocity = self.velocity + wishdir * min(f, sv_accelerate * frametime * 
-
-wishspeed);
+				self.velocity = self.velocity + wishdir * min(f, sv_accelerate * frametime * wishspeed);
 		}
 	}
 };

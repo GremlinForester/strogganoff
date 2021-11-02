@@ -77,7 +77,9 @@ void(vector pos, float mfsize, float trans) SpawnMuzzleFlash =			//Spawns a firs
 	mflashfp.nextthink = time + 0.04;
 };
 
-void () SetVModelOverlay_fade =
+float numoverlays;
+
+void() SetVModelOverlay_fade =
 {
 	if (!self.alpha)
 		self.alpha = 1;
@@ -87,6 +89,7 @@ void () SetVModelOverlay_fade =
 	if (self.alpha < 0.02){
 	//	self.overlay_active_count--;
 		self.think = SUB_Remove;
+		numoverlays -= 1;
 	}
 	else{
 		self.think = SetVModelOverlay_fade;
@@ -95,19 +98,23 @@ void () SetVModelOverlay_fade =
 	self.nextthink = time + 0.1;
 };
 
-void(vector pos, string model, float skinnum, vector ColorMod) SetVModelOverlayOther =
+void(vector pos, string model, float skinnum, vector ColorMod, float additive) SetVModelOverlayOther =
 {
 	local entity overlay;
+		
+	if (numoverlays >= 8){
+		return;
+	}
 	
-	//if (other.overlay_active_count >= 2){
-	//	return;
-	//}
+	FLOG(numoverlays);
 
 	//other.overlay_active_count++;	
 	overlay = spawn();
 	overlay.movetype = MOVETYPE_NONE;
 	overlay.solid = SOLID_NOT;
-	overlay.effects = overlay.effects + EF_ADDITIVE + EF_NOGUNBOB; //EF_NODEPTHTEST
+	overlay.effects = overlay.effects + EF_NOGUNBOB;
+	if (additive)
+		overlay.effects = overlay.effects + EF_ADDITIVE;
 	overlay.viewmodelforclient = other;
 	overlay.owner = other;
 	overlay.classname = "client_overlay";
@@ -116,6 +123,56 @@ void(vector pos, string model, float skinnum, vector ColorMod) SetVModelOverlayO
 	overlay.skin = skinnum;
 	setmodel(overlay, model);
 	setorigin(overlay, pos);
+	numoverlays++;
 	overlay.think = SetVModelOverlay_fade;
 	overlay.nextthink = time + 0.1;
+};
+
+
+void(vector pos, string model, float skinnum, vector ColorMod, float tim) SetVModelOverlaySelf =
+{
+	local entity overlay;
+		
+	if (numoverlays >= 8){
+		return;
+	}
+	
+	FLOG(numoverlays);
+
+	overlay = spawn();
+	overlay.movetype = MOVETYPE_NONE;
+	overlay.solid = SOLID_NOT;
+	overlay.effects = overlay.effects + EF_ADDITIVE + EF_NOGUNBOB; //EF_NODEPTHTEST
+	overlay.viewmodelforclient = self;
+	overlay.owner = self;
+	overlay.classname = "client_overlay";
+	overlay.alpha = 1;
+	overlay.colormod = ColorMod;
+	overlay.skin = skinnum;
+	setmodel(overlay, model);
+	setorigin(overlay, pos);
+	numoverlays++;
+	overlay.think = SetVModelOverlay_fade;
+	overlay.nextthink = time + tim;
+};
+
+void(vector pos, string model, float skinnum, vector ColorMod, float tim, float scl) SetVModelHUDSelf =
+{
+	local entity overlay;
+		
+	overlay = spawn();
+	overlay.movetype = MOVETYPE_NONE;
+	overlay.solid = SOLID_NOT;
+	overlay.effects = overlay.effects + EF_NOGUNBOB + EF_NODEPTHTEST + EF_FULLBRIGHT;
+	overlay.viewmodelforclient = self;
+	overlay.owner = self;
+	overlay.classname = "hud_model";
+	overlay.alpha = 1;
+	overlay.colormod = ColorMod;
+	overlay.skin = skinnum;
+	overlay.scale = scl;
+	setmodel(overlay, model);
+	setorigin(overlay, pos);
+	overlay.think = SetVModelOverlay_fade;
+	overlay.nextthink = time + tim;
 };

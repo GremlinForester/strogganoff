@@ -6,6 +6,8 @@ float CheckFootStep () =
 		return FALSE;
 	if (!(self.flags & FL_ONGROUND))
 		return FALSE;
+	if (self.flags & FL_DUCKED)
+		return FALSE;
 	if (vlen(self.velocity) < 100)
 		return FALSE;
 	if (self.movetype == MOVETYPE_NOCLIP || self.movetype == MOVETYPE_FLY)

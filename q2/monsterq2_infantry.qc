@@ -262,8 +262,7 @@ void() q2infantry_dead =
 	setsize (self, '-16 -16 0', '16 16 16');
 	self.movetype = MOVETYPE_TOSS;
 	self.solid = SOLID_CORPSE;
-	//	self.ammo_shells = 5;
-	//	DropBackpack();
+	DropLoot(LOOT_BULLETS, floor(random()*12)+1);
 }
 
 // Death 1
@@ -272,7 +271,6 @@ void() q2infantry_dead =
 framer($FRAME_death101, $FRAME_death120, q2infantry_frames_die1, SUB_Null, 0.1,
 	
 	frame_arb($FRAME_death101,
-		ThrowGib ("models/objects/gibs/head2/tris.md2", self.health);
 		q2infantry_dead();
 	);
 	

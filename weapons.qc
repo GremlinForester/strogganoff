@@ -274,7 +274,7 @@ void() CheatCommand =
 		WEP_RAILGUN |
 		WEP_BFG;
 		WEP_GRENADE;
-	self.items = self.items | 
+	self.items_q2keys = self.items_q2keys | 
 		IT_KEY_DATACD | 
 		IT_KEY_POWERCUBE | 
 		IT_KEY_PYRAMID | 
@@ -282,8 +282,9 @@ void() CheatCommand =
 		IT_KEY_PASS |
 		IT_KEY_BLUE |
 		IT_KEY_RED |
-		IT_KEY_HEAD |
-		IT_KEY1 | IT_KEY2 | IT_ARMOR1;
+		IT_KEY_HEAD;
+	self.items = self.items | 
+		IT_KEY1 | IT_KEY2 | IT_ARMOR_JACKET;
 
 	self.impulse = 0;
 };
@@ -583,6 +584,9 @@ ImpulseCommands
 ============
 */
 
+void() crouch_on;
+void() crouch_off;
+
 void() ImpulseCommands =
 {
 	if (self.impulse == IMPULSE_TOSS_WEAPON){
@@ -606,6 +610,14 @@ void() ImpulseCommands =
 	{
 		if(self.weaponstate == WEAPON_READY)
 			CycleWeaponPrev();
+	}
+
+	if (self.impulse == IMPULSE_CROUCH_ON){
+		crouch_on ();
+	}
+
+	if (self.impulse == IMPULSE_CROUCH_OFF){
+		crouch_off ();
 	}
 
 #ifdef debug

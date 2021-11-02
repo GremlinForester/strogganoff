@@ -280,8 +280,8 @@ void() key_data_cd =
 	self.netname = "Data CD";
 	self.modelflags = MF_ROTATE;
 	self.noise = "items/pkup.wav";
-	self.touch = key_touch;
-	self.items = IT_KEY_DATACD;
+	self.touch = q2key_touch;
+	self.items_q2keys = IT_KEY_DATACD;
 	setsize (self, '-16 -16 -16', '16 16 16');
 	StartItem ();
 };
@@ -300,8 +300,8 @@ void() key_power_cube =
 	self.netname = "Power Cube";
 	self.modelflags = MF_ROTATE;
 	self.noise = "items/pkup.wav";
-	self.touch = key_touch;
-	self.items = IT_KEY_POWERCUBE;
+	self.touch = q2key_touch;
+	self.items_q2keys = IT_KEY_POWERCUBE;
 	setsize (self, '-16 -16 -16', '16 16 16');
 	StartItem ();
 };
@@ -319,8 +319,8 @@ void() key_pyramid =
 	self.netname = "Pyramid Key";
 	self.modelflags = MF_ROTATE;
 	self.noise = "items/pkup.wav";
-	self.touch = key_touch;
-	self.items = IT_KEY_PYRAMID;
+	self.touch = q2key_touch;
+	self.items_q2keys = IT_KEY_PYRAMID;
 	setsize (self, '-16 -16 -16', '16 16 16');
 	StartItem ();
 };
@@ -338,8 +338,8 @@ void() key_data_spinner =
 	self.netname = "Data Spinner";
 	self.modelflags = MF_ROTATE;
 	self.noise = "items/pkup.wav";
-	self.touch = key_touch;
-	self.items = IT_KEY_DATASPINNER;
+	self.touch = q2key_touch;
+	self.items_q2keys = IT_KEY_DATASPINNER;
 	setsize (self, '-16 -16 -16', '16 16 16');
 	StartItem ();
 };
@@ -357,8 +357,8 @@ void() key_pass =
 	self.netname = "Security Pass";
 	self.modelflags = MF_ROTATE;
 	self.noise = "items/pkup.wav";
-	self.touch = key_touch;
-	self.items = IT_KEY_PASS;
+	self.touch = q2key_touch;
+	self.items_q2keys = IT_KEY_PASS;
 	setsize (self, '-16 -16 -16', '16 16 16');
 	StartItem ();
 };
@@ -376,8 +376,8 @@ void() key_blue_key =
 	self.netname = "Blue Key";
 	self.modelflags = MF_ROTATE;
 	self.noise = "items/pkup.wav";
-	self.touch = key_touch;
-	self.items = IT_KEY_BLUE;
+	self.touch = q2key_touch;
+	self.items_q2keys = IT_KEY_BLUE;
 	setsize (self, '-16 -16 -16', '16 16 16');
 	StartItem ();
 };
@@ -395,8 +395,8 @@ void() key_red_key =
 	self.netname = "Red Key";
 	self.modelflags = MF_ROTATE;
 	self.noise = "items/pkup.wav";
-	self.touch = key_touch;
-	self.items = IT_KEY_RED;
+	self.touch = q2key_touch;
+	self.items_q2keys = IT_KEY_RED;
 	setsize (self, '-16 -16 -16', '16 16 16');
 	StartItem ();
 };
@@ -413,8 +413,8 @@ void() key_commander_head =
 	self.noise = "items/pkup.wav";
 	self.netname = "Commander's Head";
 	self.noise = "items/pkup.wav";
-	self.touch = key_touch;
-	self.items = IT_KEY_HEAD;
+	self.touch = q2key_touch;
+	self.items_q2keys = IT_KEY_HEAD;
 	setsize (self, '-16 -16 -16', '16 16 16');
 	StartItem ();
 };

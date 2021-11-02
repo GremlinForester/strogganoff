@@ -684,6 +684,7 @@ void() doWeaponframes =
 	}
 }
 
+void() q2playeronly_4attackframes_crouch;
 
 /*
 ================
@@ -795,6 +796,17 @@ void(float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRAME_IDLE_LAST, fl
 					ent->s.frame = FRAME_attack1-1;
 					ent->client->anim_end = FRAME_attack8;
 				}*/
+				
+				
+				// start the animation
+				//TODO - syncing player model
+				//ent->client->anim_priority = ANIM_ATTACK;
+				if (self.flags & FL_DUCKED)
+				{
+					q2playeronly_4attackframes_crouch();
+				//	ent->client->anim_end = FRAME_crattak9;
+				}
+				
 			}
 			else
 			{

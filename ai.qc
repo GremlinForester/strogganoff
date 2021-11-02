@@ -310,7 +310,6 @@ void() SightSound =
 {
 //local float	rsnd;
 
-//MrC: Don't think this needs any error checking
 	sound (self, CHAN_VOICE, self.sightSound, 1, ATTN_NORM);
 
 	if (self.classname == "monster_ogre")	

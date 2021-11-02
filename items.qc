@@ -249,74 +249,50 @@ void() armor_touch =
 	if (other.classname != "player")
 		return;
 
-//MrC: FTEQCCGUI bitches about this switch/case :( "expected :, found type/value/bit" or something like that so, guess we'll use an if statement.
-//This is still WIP anyway.
-/*
-	switch (self.classname)
-	{
-		case "item_armor1":
-			type = 0.3;
-			value = 100;
-			bit = IT_ARMOR1;
-		break;
-		case "item_armor2":
-			type = 0.6;
-			value = 150;
-			bit = IT_ARMOR2;
-		break;
-		case "item_armorInv":
-			type = 0.8;
-			value = 200;
-			bit = IT_ARMOR3;
-		break;
-		case "item_armor_body":
-			type = 0.3;
-			value = 100;
-			bit = IT_ARMOR1;
-		break;
-		case "item_armor_combat":
-			type = 0.3;
-			value = 50;
-			bit = IT_ARMOR1;
-		break;
-		case "item_armor_jacket":
-			type = 0.3;
-			value = 25;
-			bit = IT_ARMOR1;
-		break;
-		case "item_armor_shard":
-			type = 0.3;
-			value = 2;
-			bit = IT_ARMOR1;
-		break;
-	}
-*/
 	if (self.classname == "item_armor1" 
-	|| self.classname == "item_armor_body" 
-//	|| self.classname == "item_armor_jacket"
-	|| self.classname == "item_armor_shard")
+	|| self.classname == "item_armor_jacket")
 	{
 		type = 0.3;
 		value = 100;
-		bit = IT_ARMOR1;
+		bit = IT_ARMOR_JACKET;
 	}
 	else if (self.classname == "item_armor2"
 	|| self.classname == "item_armor_combat")
 	{
 		type = 0.6;
 		value = 150;
-		bit = IT_ARMOR2;
+		bit = IT_ARMOR_COMBAT;
 	}
-	else //jacket
+	else
 	{
 		type = 0.8;
 		value = 200;
-		bit = IT_ARMOR3;
-	}		
+		bit = IT_ARMOR_BODY;
+	}
+
+	if (self.classname == "item_armor_shard")
+	{
+		if (other.items & IT_ARMOR_JACKET){
+			bit = IT_ARMOR_JACKET;
+			type = 0.3;
+		}
+		else if (other.items & IT_ARMOR_COMBAT){
+			bit = IT_ARMOR_COMBAT;
+			type = 0.6;
+		}
+		else if (other.items & IT_ARMOR_BODY){
+			bit = IT_ARMOR_BODY;
+			type = 0.8;
+		}
+		else{
+			bit = IT_ARMOR_JACKET;
+			type = 0.3;
+		} 
+		value = 2;
+	}	
 	
 //	if (other.armortype*other.armorvalue >= type*value)
 //		return;
-
 
 /*		
 	other.armortype = type;
@@ -327,15 +303,14 @@ void() armor_touch =
 	other.armorvalue = other.armorvalue += value;
 	other.armortype = type;
 	
-	if (other.armorvalue >= 100){
-		other.armorvalue = 100;
+	if (other.armorvalue >= 200){
+		other.armorvalue = 200;
 	}
 
-	other.items = other.items - (other.items & (IT_ARMOR1 | IT_ARMOR2 | IT_ARMOR3)) + bit;
+	other.items = other.items - (other.items & (IT_ARMOR_JACKET | IT_ARMOR_COMBAT | IT_ARMOR_BODY)) + bit;
 	
 	touched(20);
 
-//	sprint(other, "You got armor\n");
 	sprint(other, "You got ");
 	if (!self.netname){
 	sprint(other, self.classname);
@@ -352,9 +327,6 @@ void() armor_touch =
 	sound(other, CHAN_ITEM, self.noise, 1, ATTN_NORM);
 	}
 };
-
-
-
 
 /*
 ===============================================================================
@@ -375,7 +347,9 @@ void() bound_other_ammo =
 	if (self.inv_ammo_rockets > 100)
 		self.inv_ammo_rockets = 100;
 	if (self.inv_ammo_cells > 100)
-		self.inv_ammo_cells = 100;		
+		self.inv_ammo_cells = 100;
+	if (self.inv_ammo_slugs > 100)
+		self.inv_ammo_slugs = 100;	
 };
 
 //MrC: TODO, compare these to Q2 or give this a going over.
@@ -726,6 +700,33 @@ KEYS
 
 ===============================================================================
 */
+
+void() q2key_touch =
+{
+	if (other.classname != "player")
+		return;
+	if (other.health <= 0)
+		return;
+	if (other.items_q2keys & self.items_q2keys)
+		return;
+
+	sprint (other, "You got the ");
+	sprint (other, self.netname);
+	sprint (other,"\n");
+
+	sound (other, CHAN_ITEM, self.noise, 1, ATTN_NORM);
+	stuffcmd (other, "bf\n");
+	other.items_q2keys = other.items_q2keys | self.items_q2keys;
+
+	if (!coop)
+	{	
+		self.solid = SOLID_NOT;
+		self.model = string_null;
+	}
+
+	activator = other;
+	SUB_UseTargets();				// fire all targets / killtargets
+};
 
 void() key_touch =
 {

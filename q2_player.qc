@@ -151,7 +151,7 @@ void()	doQ2PlayerModelStandframes =
 	self.walkframe++;
 }
 
-void()	q2Player_stand =[	$FRAME_stand01,	q2Player_stand	] //hold still dammit!
+void()	q2Player_stand =[	$FRAME_stand01,	q2Player_stand	]
 {
 	self.state = STATE_IDLE;
 	player_chatter_idle();
@@ -180,6 +180,13 @@ void()	q2player_run =[	$FRAME_run1,	q2player_run	]
 framer($FRAME_attack1, $FRAME_attack4, q2playeronly_4attackframes, q2player_run, 0.1,
 
 	frame_arb($FRAME_attack1,
+	);
+
+);
+
+framer($FRAME_crattak1, $FRAME_crattak4, q2playeronly_4attackframes_crouch, q2player_run, 0.1,
+
+	frame_arb($FRAME_crattak1,
 	);
 
 );
@@ -279,20 +286,24 @@ void() q2playerPainSound =
 */	
 	if (self.health > 75){
 		playerVOSound(PLAYER_VOICE_PAIN75);
-			LOG("OUCH 75");
+	//		LOG("OUCH 75");
+	//		SetVModelOverlaySelf('0 0 0', "models/overlay.md3", OVERLAY_RAIN, '1 0 0', 0.1);
 	}
 	else if (self.health > 50){
 		playerVOSound(PLAYER_VOICE_PAIN50);
-			LOG("OUCH 50");
+	//		LOG("OUCH 50");
+	//		SetVModelOverlaySelf('0 0 0', "models/overlay.md3", OVERLAY_RAIN, '0 1 0', 0.1);
 	}
 	else if (self.health > 25){
 		playerVOSound(PLAYER_VOICE_PAIN25);
-			LOG("OUCH 25");
+	//		LOG("OUCH 25");
+	//		SetVModelOverlaySelf('0 0 0', "models/overlay.md3", OVERLAY_FACE, '0 1 0', 0.1);
 	}
 	else
 	{
 		playerVOSound(PLAYER_VOICE_PAIN100);
-			LOG("OUCH 100?");
+	//		LOG("OUCH 100?");
+	//		SetVModelOverlaySelf('0 0 0', "models/overlay.md3", OVERLAY_RAIN, '5 1 1', 0.1);
 	}
 //	return;
 };

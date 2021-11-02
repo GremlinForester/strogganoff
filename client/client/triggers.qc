@@ -12,7 +12,7 @@ void() splashzone_touch =
 	}
 	else{
 	self.solid = SOLID_NOT;
-	SetVModelOverlayOther('0 0 0', "models/overlay.md3", OVERLAY_RAIN, '1 1 1'); //0 ripple 1 rain
+	SetVModelOverlayOther('0 0 0', "models/overlay.md3", OVERLAY_BLOODSPLAT1, '1 0 0'); //0 ripple 1 rain
 	self.think = splashzone_on;
 	self.nextthink = time + 2;
 	}

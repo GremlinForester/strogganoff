@@ -113,6 +113,11 @@ set "message" to text string
 */
 void() trigger_multiple =
 {
+	if (!self.sounds)
+	{
+		self.noise = "";
+	}
+	
 	if (self.sounds == 1)
 	{
 		precache_sound ("misc/secret.wav");
@@ -170,6 +175,7 @@ void() trigger_multiple =
 };
 
 .string item;
+.float notify;
 
 /*QUAKED trigger_key (.5 .5 .5) (-8 -8 -8) (8 8 8)
 A relay trigger that only fires it's targets if player has the proper key.
@@ -180,94 +186,143 @@ the right item by checking something like inv_item_keys before it triggers whate
 This will work like doors with keys set via spawnflags.
 
 */
-
-void() trigger_key =
+void() trigger_key_touch =
 {
-	local string it_stringname;
+	local string keyname;
 	
-	InitTrigger ();
+	if (other.classname != "player")
+		return;
 	
-	it_stringname = self.item;
-	
-	if (self.item)
-	{	
-		switch(it_stringname)
-		{
-			case "key_data_cd":
-			self.items = IT_KEY_DATACD;
-			break;
-		}
-		switch(it_stringname)
-		{
-			case "key_pass":
-			self.items = IT_KEY_PASS;
-			break;
-		}
-		switch(it_stringname)
-		{
-			case "key_blue_key":
-			self.items = IT_KEY_BLUE;
-			break;
-		}
-		switch(it_stringname)
-		{
-			case "key_power_cube":
-			self.items = IT_KEY_POWERCUBE;
-			break;
-		}
-		
+	if (self.message) // != string_null)
+	{
+		centerprint (other, self.owner.message);
+		sound (other, CHAN_VOICE, "misc/talk.wav", 1, ATTN_NORM);
 	}
 	
-	if ( (self.items & other.items) != self.items )
+	if (!self.items_q2keys)
+		return;
+
+
+	switch(self.items_q2keys){
+		case IT_KEY_DATACD:
+			keyname = "Data CD";
+			break;
+		case IT_KEY_POWERCUBE:
+			keyname = "Power Cube";
+			break;
+		case IT_KEY_PYRAMID:
+			keyname = "Pyramid Key";
+			break;
+		case IT_KEY_DATASPINNER:
+			keyname = "Data Spinner";
+			break;			
+		case IT_KEY_PASS:
+			keyname = "Security Pass";
+			break;
+		case IT_KEY_BLUE:
+			keyname = "Blue Key";
+			break;
+		case IT_KEY_RED:
+			keyname = "Red Key";
+			break;
+		case IT_KEY_HEAD:
+			keyname = "Head Key";
+			break;
+	}
+	
+	if ( (self.items_q2keys & other.items_q2keys) != self.items_q2keys )
 	{
+		/*
 		if (self.items == IT_KEY_DATACD)
 		{
-				centerprint (activator, "You need the data CD");
+				centerprint (other, "You need the data CD");
 				sound (self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
 		}
 		else if (self.items == IT_KEY_POWERCUBE)
 		{
-				centerprint (activator, "You need a power cube");
+				centerprint (other, "You need a power cube");
 				sound (self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
 		}
 		else if (self.items == IT_KEY_PYRAMID)
 		{
-				centerprint (activator, "You need the pyramid key");
+				centerprint (other, "You need the pyramid key");
 				sound (self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
 		}
-		else if (self.items == IT_KEY_DATASPINNER)
+		else if (self.owner.items == IT_KEY_DATASPINNER)
 		{
-				centerprint (activator, "You need the data spinner");
+				centerprint (other, "You need the data spinner");
 				sound (self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
 		}
 		else if (self.items == IT_KEY_PASS)
 		{
-				centerprint (activator, "You need the security pass");
+				centerprint (other, "You need the security pass");
 				sound (self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
 		}
 		else if (self.items == IT_KEY_BLUE)
 		{
-				centerprint (activator, "You need the blue keycard");
+				centerprint (other, "You need the blue keycard");
 				sound (self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
 		}
 		else if (self.items == IT_KEY_RED)
 		{
-				centerprint (activator, "You need the red keycard");
+				centerprint (other, "You need the red keycard");
 				sound (self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
 		}
 		else if (self.items == IT_KEY_HEAD)
 		{
-				centerprint (activator, "You need to get a head");
+				centerprint (other, "You need to get a head");
 				sound (self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
 		}
+		*/
 		return;
 	}
-	else
-	{
-		self.message = self.item;
-		self.use = multi_use;
+	
+	if (self.spawnflags & REMOVE_KEY){
+			if (self.notify >= 1){
+			centerprint (other, strcat("Access granted: ", keyname, " removed"));
+			}
+		other.items_q2keys = other.items_q2keys - self.items_q2keys;
+		SUB_UseTargets ();
+		return;
 	}
+	self.touch = SUB_Null;
+	SUB_UseTargets ();
 };
+
+void() trigger_key = 
+{
+	self.solid = SOLID_TRIGGER;
+	self.movetype = MOVETYPE_NONE;
+	setorigin (self, self.origin);	
+	setmodel (self, self.model);
+	self.classname = "trigger_key";
+
+	if (self.spawnflags & DOOR_KEY_DATA_CD)
+		self.items_q2keys = IT_KEY_DATACD;
+	
+	if (self.spawnflags & DOOR_KEY_POWER_CUBE)
+		self.items_q2keys = IT_KEY_POWERCUBE;
+	
+	if (self.spawnflags & DOOR_KEY_PYRAMID)
+		self.items_q2keys = IT_KEY_PYRAMID;
+	
+	if (self.spawnflags & DOOR_KEY_DATA_SPINNER)
+		self.items_q2keys = IT_KEY_DATASPINNER;
+	
+	if (self.spawnflags & DOOR_KEY_PASS)
+		self.items_q2keys = IT_KEY_PASS;
+	
+	if (self.spawnflags & DOOR_KEY_BLUE_KEY)
+		self.items_q2keys = IT_KEY_BLUE;
+	
+	if (self.spawnflags & DOOR_KEY_RED_KEY)
+		self.items_q2keys = IT_KEY_RED;
+	
+	if (self.spawnflags & DOOR_KEY_COMMANDER_HEAD)
+		self.items_q2keys = IT_KEY_HEAD;
+		
+	self.touch = trigger_key_touch;
+}
 
 /*QUAKED trigger_once (.5 .5 .5) ? notouch
 Variable sized trigger. Triggers once, then removes itself.  You must set the key "target" to the name of another object in the level that has a matching
@@ -815,6 +870,8 @@ void() splashzone_on =
 	self.nextthink = -1;
 };
 
+.float splashtype;
+
 void() splashzone_touch =
 {
 	if (other.classname != "player"){
@@ -822,7 +879,26 @@ void() splashzone_touch =
 	}
 	else{
 	self.solid = SOLID_NOT;
-	SetVModelOverlayOther('0 0 0', "models/overlay.md3", OVERLAY_RAIN, '1 1 1'); //0 ripple 1 rain
+	
+	if (self.splashtype == 0){
+		SetVModelOverlayOther('0 0 0', "models/overlay.md3", OVERLAY_RAIN, '1 1 1', 1);
+	}
+	
+	if (self.splashtype == 1){
+		if (random() < 0.3){
+		SetVModelOverlayOther('0 0 0', "models/overlay.md3", OVERLAY_BLOODSPLAT1, '1 0 0', 0);
+		}
+		else if (random() < 0.5){
+		SetVModelOverlayOther('0 0 0', "models/overlay.md3", OVERLAY_BLOODSPLAT2, '1 0 0', 0);
+		}
+		else if (random() < 0.8){
+		SetVModelOverlayOther('0 0 0', "models/overlay.md3", OVERLAY_BLOODSPLAT3, '1 0 0', 0);
+		}
+		else{
+		SetVModelOverlayOther('0 0 0', "models/overlay.md3", OVERLAY_BLOODSPLAT4, '1 0 0', 0);
+		}
+	}
+	
 	self.think = splashzone_on;
 	self.nextthink = time + 1;
 	}
@@ -837,6 +913,29 @@ void() trigger_splashzone =
 {
 	InitTrigger ();
 	self.touch = splashzone_touch;
+	if (!self.splashtype)
+		self.splashtype = 0;
+	self.splashtype = self.splashtype;
 };
+
+/*QUAKED trigger_stripkeys (.5 .5 .5) ?
+Strips the player of all keys and then removes itself.
+*/
+void() trigger_stripkeys_touch =
+{
+	if (other.classname != "player")
+		return;
+	
+	stripKeys(1); //other
+	
+//	remove(self); //TODO: Add spawnflag to remove or not, maybe a delay to go non-solid?
+};
+
+void() trigger_stripkeys =
+{
+	InitTrigger ();
+	self.touch = trigger_stripkeys_touch;
+};
+
 
 

@@ -52,6 +52,12 @@ void () GibThinkRemove =
 void() Glass_Touch =
 {
 	local float r;
+
+	if (pointcontents(self.origin) == CONTENT_SOLID){
+		LOG("Removed stuck debris!");
+		remove(self);
+		return;
+	}
 	
 	r = random() * 2;
 	if (r < 1) 		sound(self, CHAN_BODY, "glass_smash1.wav", 0.75, ATTN_IDLE);
@@ -101,13 +107,33 @@ void() Gib_Touch_Metal =
 
 void() Gib_Touch_Flesh =
 {
-	if (other.classname == "player"){ //MrC: Add a screen effect, blood on the lens.
+	if (pointcontents(self.origin) == CONTENT_SOLID){
+		LOG("Removed stuck debris!");
+		remove(self);
+		return;
+	}
+	
+	if (other.classname == "player"){
 		SpawnBlood (self.origin, '0 0 20', 55);
-		SetVModelOverlayOther('0 0 0', "models/overlay.md3", OVERLAY_RAIN, '1 0 0');
+		
+		if (random() < 0.3){
+		SetVModelOverlayOther('0 0 0', "models/overlay.md3", OVERLAY_BLOODSPLAT1, '1 0 0', 0);
+		}
+		else if (random() < 0.5){
+		SetVModelOverlayOther('0 0 0', "models/overlay.md3", OVERLAY_BLOODSPLAT2, '1 0 0', 0);
+		}
+		else if (random() < 0.8){
+		SetVModelOverlayOther('0 0 0', "models/overlay.md3", OVERLAY_BLOODSPLAT3, '1 0 0', 0);
+		}
+		else{
+		SetVModelOverlayOther('0 0 0', "models/overlay.md3", OVERLAY_BLOODSPLAT4, '1 0 0', 0);
+		}
+		
+//		SetVModelOverlayOther('0 0 0', "models/overlay.md3", OVERLAY_RAIN, '1 0 0');
 	//remove(self);
 	}
 	else if (self.velocity >= '10 10 10'){
-	sound (self, CHAN_BODY, "zombie/z_miss.wav", 0.8, ATTN_NORM);
+	sound (self, CHAN_BODY, "zombie/z_miss.wav", 0.5, ATTN_NORM);
 	}
 	else{
 	Gib_Touch();
@@ -132,6 +158,12 @@ void () GibPhysicsThinkRemove =
 
 void () GibPhysicsThinkPreRemove =
 {
+	if (pointcontents(self.origin) == CONTENT_SOLID){
+		LOG("Removed stuck debris!");
+		remove(self);
+		return;
+	}
+			
 	self.solid = SOLID_NOT;
 	self.think = GibPhysicsThinkRemove;
 	self.nextthink = time + GIB_LIFE + random()*10;;
@@ -243,7 +275,7 @@ void(string gibname, float dm, float GibType) ThrowGib =
 	nspawn.avelocity_x = random()*600;
 	nspawn.avelocity_y = random()*600;
 	nspawn.avelocity_z = random()*600;
-	nspawn.think = SUB_Remove;
+	nspawn.think = GibPhysicsThinkPreRemove;
 	nspawn.ltime = time;
 	nspawn.nextthink = time + 10 + random()*10;
 
@@ -254,7 +286,10 @@ void(string gibname, float dm, float GibType) ThrowGib =
 	break;
 		
 	case GIB_FLESH:
+		nspawn.solid = SOLID_TRIGGER;
 		nspawn.modelflags = MF_GIB;
+		nspawn.touch = Gib_Touch_Flesh;
+		nspawn.nextthink = time + 1;
 	break;
 	
 	case GIB_METAL:
@@ -294,7 +329,7 @@ void(entity e, vector org, vector vel, string gibname, float GibType) ThrowDebri
 	e.cnt = 30 * (0.5 + random());
 	setorigin(e, org);
 	setmodel (e, gibname);
-	setsize (e, '0 0 -8', '0 0 -8');
+	setsize (e, '0 0 -2', '0 0 -2');
 	e.velocity = vel + randomvec() * 150;
 	e.movetype = MOVETYPE_BOUNCE;
 	e.avelocity = randomvec()*300;

@@ -262,6 +262,7 @@ entity(vector org) make_waypoint =
 	point.movetype = MOVETYPE_NONE;
 	point.items = -1;
 	setorigin(point, org);
+		if (autocvar_bot_print_waypointcreate == 1)
 		bprint ("dynamic waypoint created\n");
 	setsize(point, VEC_HULL_MIN, VEC_HULL_MAX);
 	waypoints = waypoints + 1;

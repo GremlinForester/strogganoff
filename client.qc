@@ -10,6 +10,61 @@ void (vector org, entity death_owner) spawn_tdeath;
 
 float	modelindex_eyes, modelindex_player;
 
+//MrC: Crouch stuff based on:
+
+//===================
+//Chris
+//Crouch for player '06
+//===================
+
+.float crouch, attemptcrouch;
+float (entity targ) crouchcheck =
+{
+makevectors (self.v_angle);
+//tracebox (self.origin, VEC_HULL_MIN, VEC_HULL_MAX, self.origin + '0 0 16', FALSE, self); 
+tracebox (self.origin, VEC_HULL_MIN, VEC_HULL_MAX, self.origin + '0 0 32', FALSE, self); 
+if (trace_fraction == 1)            //hits nothing go ahead
+	return TRUE;
+
+if (!trace_ent.takedamage)      //hits world or nondamagable object
+	return FALSE;
+
+	return FALSE;
+};
+
+void() crouch_on =
+{
+//if ((!self.flags & FL_DUCKED) && (!self.velocity_z)) //crouch down
+if (!self.flags & FL_DUCKED) //crouch down
+{
+//setsize (self, '-16 -16 -8', '16 16 8');
+setsize (self, '-16 -16 -8', '16 16 16');
+//self.crouch = 1;
+self.flags = self.flags | FL_DUCKED;
+
+self.view_ofs = '0 0 11'; //14
+self.attemptcrouch = 1;
+
+return;
+}
+self.attemptcrouch = 0;
+};
+
+void() crouch_off =
+{
+if (self.flags & FL_DUCKED && /*(!self.velocity_z) &&*/ crouchcheck(self))  //get up
+{
+setsize (self, VEC_HULL_MIN, VEC_HULL_MAX);
+//self.crouch = 0;
+self.flags = self.flags - FL_DUCKED;
+self.origin_z = self.origin_z + 16;
+self.view_ofs = '0 0 22';
+self.attemptcrouch = 0;
+return;
+}
+self.attemptcrouch = 1;
+};
+
 /*
 =============================================================================
 
@@ -219,7 +274,17 @@ void() info_intermission =
 {
 };
 
-
+void(float oth) stripKeys =
+{
+	if (oth){
+		other.items_q2keys = other.items_q2keys - (other.items_q2keys & (IT_KEY_DATACD | IT_KEY_POWERCUBE | IT_KEY_PYRAMID | IT_KEY_DATASPINNER | IT_KEY_PASS | IT_KEY_BLUE | IT_KEY_RED | IT_KEY_HEAD) );
+	}
+	else
+	{
+		self.items_q2keys = self.items_q2keys - (self.items_q2keys & (IT_KEY_DATACD | IT_KEY_POWERCUBE | IT_KEY_PYRAMID | IT_KEY_DATASPINNER | IT_KEY_PASS | IT_KEY_BLUE | IT_KEY_RED | IT_KEY_HEAD) );
+	}
+	
+}
 
 void() SetChangeParms =
 {
@@ -252,6 +317,7 @@ void() SetChangeParms =
 	parm9 = self.armortype * 100;
 	parm10 = self.inv_weapons;
 	parm11 = self.inv_ammo_slugs;
+	parm12 = self.items_q2keys;
 };
 
 void() SetNewParms =
@@ -267,16 +333,17 @@ void() SetNewParms =
 	parm9 = 0;
 	parm10 = WEP_BLASTER;
 	parm11 = 0;
+	parm12 = 0; //self.items_q2keys;
 };
+
+.float resetkeys;
 
 void() DecodeLevelParms =
 {
 	if (serverflags)
 #ifdef opgrade
-	if (!deathmatch)
+	if (!deathmatch){
 #endif
-
-	{
 		if (world.model == "maps/start.bsp")
 			SetNewParms ();		// take away all stuff on starting new episode
 	}
@@ -292,6 +359,7 @@ void() DecodeLevelParms =
 	self.armortype = parm9 * 0.01;
 	self.inv_weapons = self.inv_weapons | parm10;
 	self.inv_ammo_slugs = parm11;
+	self.items_q2keys = parm12;
 };
 
 /*
@@ -769,7 +837,7 @@ void() UpdateTPWeaponFrames =
 	#endif
 	self.frame = self.owner.frame;
 	self.think = UpdateTPWeaponFrames;
-	self.nextthink = time;	
+	self.nextthink = time;
 };
 
 void() AttachTPWeapon =
@@ -1117,6 +1185,11 @@ void() PlayerJump =
 	
 	if (self.flags & FL_WATERJUMP)
 		return;
+	
+	if (self.flags & FL_DUCKED){
+		crouch_off();
+		return;
+	}
 	
 	if (self.waterlevel >= 2)
 	{
@@ -1469,6 +1542,16 @@ void() PlayerPreThink =
 		//if (self.button2) PlayerJump ();
 		//else self.flags = self.flags | FL_JUMPRELEASED;
 	}
+	/*
+	if (self.flags & FL_DUCKED)
+	{
+		if (self.velocity_x > 100)
+			self.velocity_x = 100;
+
+		if (self.velocity_y > 100)
+			self.velocity_y = 100;
+	}
+	*/
 };
 	
 /*
