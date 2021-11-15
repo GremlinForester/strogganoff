@@ -183,7 +183,7 @@ void() hover_deadthink={
 		self.nextthink = time + frametime;
 		return;
 	}
-	BecomeExplosion();
+	gibMonster();
 };
 
 void() hover_dead={
@@ -198,10 +198,11 @@ void() hover_dead={
 void() hover_die={
 	float n;
 	
-	//if(self.health <= -40){
-		//TODO - gib death
-		//return;
-	//}
+	if(self.health <= -40){
+		gibMonster();
+		remove(self);
+		return;
+	}
 	
 	if(self.deadflag == DEAD_DEAD)
 		return;

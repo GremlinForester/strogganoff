@@ -5,6 +5,9 @@ void( ) FRIK_FILE_precaches =
 {
 	local float f;                                      // file handle, basically assigns a number to whatever file is open
 	local string ln;                                    // ln = line of the file being read
+	
+	
+	
 	f = fopen("cache/precache_server.txt" , FILE_READ);        // opens "data/precache.txt" to be read
 
     bprint("loaded cache/precache_server.txt\n");  //DEBUG
@@ -30,6 +33,15 @@ void( ) FRIK_FILE_precaches =
         else if(strstrofs(ln, ".md2",0) != -1){
           precache_model(ln);         // so precache the model
         }
+        else if(strstrofs(ln, ".spr",0) != -1){
+          precache_model(ln);         // so precache the model
+        }
+        else if(strstrofs(ln, ".sp2",0) != -1){
+          precache_model(ln);         // so precache the model
+        }
+        else if(strstrofs(ln, ".spr32",0) != -1){
+          precache_model(ln);         // so precache the model
+        }
         else if(strstrofs(ln, ".md3",0) != -1){
           precache_model(ln);         // so precache the model
         }
@@ -52,9 +64,6 @@ void() main =
 	dprint ("main function\n");
 #endif
 
-	FRIK_FILE_precaches(); //MrC: Thanks goes to Peter Roohr (battleMETAL), precaching with external text files is TIGHT!
-	//But I don't think works for some reason.
-	
 // these are just commands the the prog compiler to copy these files
 
 	precache_file ("progs.dat");
@@ -331,6 +340,8 @@ Quake 2 MP Map ladder volumes
 // player precaches	
 	W_Precache ();			// get weapon precaches
 
+	FRIK_FILE_precaches(); //MrC: Thanks goes to Peter Roohr (battleMETAL), precaching with external text files is TIGHT!
+	
 // sounds used from C physics code
 	precache_sound ("demon/dland2.wav");		// landing thud
 	precache_sound ("misc/h2ohit1.wav");		// landing splash

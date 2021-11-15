@@ -113,24 +113,16 @@ void() q2player_run;
 framer($FRAME_jump1, $FRAME_jump3, q2player_jumpframes, q2player_run, 0.1,
 
 	frame_arb($FRAME_jump1,
-//	self.state = STATE_ATTACKING;
-//	self.weaponframe=5;
-//	self.effects = self.effects | EF_MUZZLEFLASH;
 	);
-
-//	self.weaponframe++;
 );
 
 framer($FRAME_jump4, $FRAME_jump6, q2player_landframes, q2player_run, 0.1,
 
 	frame_arb($FRAME_jump4,
-//	self.state = STATE_ATTACKING;
-//	self.weaponframe=5;
-//	self.effects = self.effects | EF_MUZZLEFLASH;
+	
 	);
-
-//	self.weaponframe++;
 );
+
 
 void()	doQ2PlayerModelStandframes =
 {
@@ -151,11 +143,45 @@ void()	doQ2PlayerModelStandframes =
 	self.walkframe++;
 }
 
+framer($FRAME_crstnd01, $FRAME_crstnd19, q2playeronly_crouchframes, q2player_run, 0.135,
+
+	if (self.velocity_x || self.velocity_y)
+	{
+		self.walkframe=0;
+		q2player_run();
+		return;
+	}
+
+);
+
+framer($FRAME_stand01, $FRAME_stand40, q2playeronly_standframes, q2player_run, 0.135,
+
+	if (self.flags & FL_DUCKED)
+	{
+		q2playeronly_crouchframes();
+	}
+
+	if (self.velocity_x || self.velocity_y)
+	{
+		self.walkframe=0;
+		q2player_run();
+		return;
+	}
+
+);
+
 void()	q2Player_stand =[	$FRAME_stand01,	q2Player_stand	]
 {
 	self.state = STATE_IDLE;
 	player_chatter_idle();
-	doQ2PlayerModelStandframes();
+	if (self.flags & FL_DUCKED)
+	{
+		q2playeronly_crouchframes();
+	}
+	else
+	{
+		q2playeronly_standframes();
+	}
 	self.nextthink = time + 0.135;		
 };
 
@@ -169,14 +195,61 @@ void()	q2player_run =[	$FRAME_run1,	q2player_run	]
 		q2Player_stand();
 		return;
 	}
-	
-	if (self.walkframe == 6)
+
+	if (self.flags & FL_DUCKED)
+	{
+		if (self.walkframe == 6)
+		self.walkframe = 0;
+		self.frame = $FRAME_crwalk1 + self.walkframe;
+	}
+	else
+	{
+		if (self.walkframe == 6)
 		self.walkframe = 0;
 		self.frame = $FRAME_run1 + self.walkframe;
+	}
 
 	self.walkframe = self.walkframe + 1;
 };
 
+
+//TAUNT FLIP
+framer($FRAME_flip01, $FRAME_flip12, q2player_flip, q2player_run, 0.1,
+
+	frame_arb($FRAME_flip01,
+	);
+);
+
+//TAUNT SALUTE
+framer($FRAME_salute01, $FRAME_salute11, q2player_salute, q2player_run, 0.1,
+
+	frame_arb($FRAME_salute01,
+	);
+);
+
+//TAUNT
+framer($FRAME_taunt01, $FRAME_taunt17, q2player_taunt, q2player_run, 0.1,
+
+	frame_arb($FRAME_taunt01,
+	);
+);
+
+//WAVE
+framer($FRAME_wave01, $FRAME_wave11, q2player_wave, q2player_run, 0.1,
+
+	frame_arb($FRAME_wave01,
+	);
+);
+
+
+//POINT
+framer($FRAME_point01, $FRAME_point12, q2player_point, q2player_run, 0.1,
+
+	frame_arb($FRAME_point01,
+	);
+);
+
+//STAND attack 4 frames
 framer($FRAME_attack1, $FRAME_attack4, q2playeronly_4attackframes, q2player_run, 0.1,
 
 	frame_arb($FRAME_attack1,
@@ -184,6 +257,7 @@ framer($FRAME_attack1, $FRAME_attack4, q2playeronly_4attackframes, q2player_run,
 
 );
 
+//CROUCH attack 4 frames
 framer($FRAME_crattak1, $FRAME_crattak4, q2playeronly_4attackframes_crouch, q2player_run, 0.1,
 
 	frame_arb($FRAME_crattak1,
@@ -191,10 +265,32 @@ framer($FRAME_crattak1, $FRAME_crattak4, q2playeronly_4attackframes_crouch, q2pl
 
 );
 
+//STAND attack 8 frames
 framer($FRAME_attack1, $FRAME_attack8, q2playeronly_8attackframes, q2player_run, 0.1,
 
 	frame_arb($FRAME_attack1,
 	);
+);
+
+//CROUCH attack 8 frames
+framer($FRAME_crattak1, $FRAME_crattak8, q2playeronly_8attackframes_crouch, q2player_run, 0.1,
+
+	frame_arb($FRAME_crattak1,
+	);
+);
+
+//CROUCH attack 2 frames
+framer($FRAME_crattak2, $FRAME_crattak3, q2playeronly_2attackframes_crouch, q2playeronly_2attackframes_crouch, 0.075,
+
+	if(self.weaponstate != WEAPON_FIRING) 
+		q2player_run();
+);
+
+//STAND attack 2 frames
+framer($FRAME_attack2, $FRAME_attack3, q2playeronly_2attackframes, q2playeronly_2attackframes, 0.1,
+
+	if(self.weaponstate != WEAPON_FIRING) 
+		q2player_run();
 );
 
 //============================================================================
@@ -308,6 +404,18 @@ void() q2playerPainSound =
 //	return;
 };
 
+//CROUCH PAIN
+
+
+framer($FRAME_crpain1, $FRAME_crpain4, q2player_CRpainFramesA, q2player_run, 0.1,
+
+	frame_arb($FRAME_crpain1,
+	q2playerPainSound();
+	);
+);
+
+//STAND PAIN
+
 framer($FRAME_pain101, $FRAME_pain104, q2player_painFramesA, q2player_run, 0.1,
 
 	frame_arb($FRAME_pain101,
@@ -343,9 +451,16 @@ void() q2player_pain =
 	if (self.invisible_finished > time)
 		return;		// eyes don't have pain frames
 
-	if (r < 1) q2player_painFramesA();
+	if (self.flags & FL_DUCKED)
+	{
+		q2player_CRpainFramesA();
+	}
+	else
+	{
+		if (r < 1) q2player_painFramesA();
 		else if (r < 2) q2player_painFramesB();
 		else            q2player_painFramesC();
+	}
 };
 
 void() q2playerDeathSound =
@@ -419,11 +534,12 @@ void() GibQ2Player =
 
 // Q2 Player Death
 
+//crouch death
+framer($FRAME_crdeath1, $FRAME_crdeath5, q2player_CRdieA, PlayerDead, 0.1,SUB_Null());
+
 framer($FRAME_death101, $FRAME_death106, q2player_dieA, PlayerDead, 0.1,SUB_Null());
 
-
 framer($FRAME_death201, $FRAME_death206, q2player_dieB, PlayerDead, 0.1,SUB_Null());
-
 
 framer($FRAME_death301, $FRAME_death308, q2player_dieC, PlayerDead, 0.1,SUB_Null());
 
@@ -479,11 +595,18 @@ void() q2PlayerDie =
 	self.angles_z = 0;
 	
 	self.f__ = 1 + floor(random()*3);
-	
-	if (self.f__ == 1)
-		q2player_dieA();
-	else if (self.f__ == 2)
-		q2player_dieB();
+
+	if (self.flags & FL_DUCKED)
+	{
+		q2player_CRdieA();
+	}
 	else
-		q2player_dieC();
+	{
+		if (self.f__ == 1)
+			q2player_dieA();
+		else if (self.f__ == 2)
+			q2player_dieB();
+		else
+			q2player_dieC();
+	}
 };

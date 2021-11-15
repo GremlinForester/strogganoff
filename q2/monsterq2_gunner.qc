@@ -146,15 +146,7 @@ void() q2gunner_die =
 
  	if (self.health < -70)
 	{
-		sound (self, CHAN_VOICE, "misc/udeath.wav", 1, ATTN_NORM);
-		
-		for (n= 0; n < 2; n++)
-			ThrowGib ("models/objects/gibs/bone/tris.md2", self.health / 4, GIB_FLESH);
-		for (n= 0; n < 4; n++)
-			ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health / 4, GIB_FLESH);
-		
-		ThrowHead ("models/objects/gibs/head2/tris.md2", self.health / 4);
-		
+		gibMonster();
 		remove(self);
 		return;
 	} 
@@ -169,6 +161,9 @@ void() q2gunner_die =
 	// regular death
 	sound(self, CHAN_VOICE, GUNNER_SOUND_DEATH, 1, ATTN_NORM);
 	self.deadflag = DEAD_DEAD;
+	
+	DropLoot(LOOT_BULLETS, floor(random()*6)+1);
+	
 	q2gunner_die1_frames();
 	}
 };
@@ -329,7 +324,7 @@ void()	q2gunner_select_attack =
 
 void() monster_gunner =
 {
-	self.classname = "q2monster_gunner";
+	self.classname = "monster_gunner";
 	
 	if (deathmatch)
 	{

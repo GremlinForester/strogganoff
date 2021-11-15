@@ -466,20 +466,13 @@ framer($FRAME_death101, $FRAME_death132, tank_move_death, tank_dead, 0.1,
 
 void() tank_die={
 
-// check for gib
-	/*if (self.health <= self->gib_health)
+ 	if (self.health < -35)
 	{
-		sound (self, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
-		for (n= 0; n < 1; n++)	//4
-			ThrowGib (self, "models/objects/gibs/sm_meat/tris.md2", damage, GIB_ORGANIC);
-		for (n= 0; n < 4; n++)
-			ThrowGib (self, "models/objects/gibs/sm_metal/tris.md2", damage, GIB_METALLIC);
-		ThrowGib (self, "models/objects/gibs/chest/tris.md2", damage, GIB_ORGANIC);
-		ThrowHead (self, "models/objects/gibs/gear/tris.md2", damage, GIB_METALLIC);
-		self.deadflag = DEAD_DEAD;
+		gibMonster();
+		remove(self);
 		return;
-	}*/
-
+	}
+	
 	if (self.deadflag == DEAD_DEAD)
 		return;
 
@@ -496,6 +489,8 @@ void() tank_die={
 /*QUAKED monster_tank_commander (1 .5 0) (-32 -32 -16) (32 32 72) Ambush Trigger_Spawn Sight
 */
 void() monster_tank={
+
+	self.classname = "monster_tank";
 	
 	if(deathmatch){
 		remove(self);

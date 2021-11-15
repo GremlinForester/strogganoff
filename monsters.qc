@@ -17,6 +17,108 @@ monster_ projectile stuff, ala Quake 2. These essentially wrap as many shared ge
 For now they mostly just pass parameters but down the road can be used for more monster specific stuff. Quake 2 used this for muzzle flashes for example.
 */
 
+#define GIB_VELOCITY_MUL 1.1
+#define GIB_VELOCITY_FLAMING_MUL random() * 4
+
+void() gibMonster =
+{
+	local float n;
+		
+	sound (self, CHAN_VOICE, "misc/udeath.wav", 1, ATTN_NORM);
+	
+	//everyone gets a little meat	
+	for (n= 0; n < 2; n++)
+		ThrowGib ("models/objects/gibs/bone/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 1);
+	for (n= 0; n < 4; n++)
+		ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 1);
+	for (n= 0; n < 3; n++)
+		ThrowGib ("models/objects/gibs/bone2/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 1);	
+	
+	//Explosive Monsters
+	if (self.classname == "monster_hover"
+	|| self.classname == "monster_brain"
+	|| self.classname == "monster_flyer"
+	|| self.classname == "monster_supertank"
+	|| self.classname == "monster_tank_commander"
+	|| self.classname == "monster_tank")
+	{
+		ThrowGib ("models/objects/debris1/tris.md2", self.health * GIB_VELOCITY_FLAMING_MUL, GIB_FLAMING, 1);
+		ThrowGib ("models/objects/debris2/tris.md2", self.health * GIB_VELOCITY_FLAMING_MUL, GIB_FLAMING, 1);
+		ThrowGib ("models/objects/debris3/tris.md2", self.health * GIB_VELOCITY_FLAMING_MUL, GIB_FLAMING, 1);
+		ThrowGib ("models/objects/gibs/skull/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 1);
+		for (n= 0; n < 2; n++){
+		ThrowGib ("models/objects/gibs/gear/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_METAL, 0.75);
+		}
+		
+		T_RadiusDamage (self, self.owner, 10, other);
+		sound (self, CHAN_BODY, "weapons/r_exp3.wav", 1, ATTN_NORM);
+
+		WriteByte (MSG_BROADCAST, SVC_TEMPENTITY);
+		WriteByte (MSG_BROADCAST, TE_EXPLOSION);
+		WriteCoord (MSG_BROADCAST, self.origin_x);
+		WriteCoord (MSG_BROADCAST, self.origin_y);
+		WriteCoord (MSG_BROADCAST, self.origin_z);
+	}
+	
+	if (self.classname == "monster_floater")
+	{
+		ThrowGib ("models/objects/debris1/tris.md2", self.health * GIB_VELOCITY_FLAMING_MUL, GIB_FLAMING, 1);
+		ThrowGib ("models/objects/debris2/tris.md2", self.health * GIB_VELOCITY_FLAMING_MUL, GIB_FLAMING, 1);
+		ThrowGib ("models/objects/debris3/tris.md2", self.health * GIB_VELOCITY_FLAMING_MUL, GIB_FLAMING, 1);
+		ThrowGib ("models/objects/gibs/skull/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 1);
+		for (n= 0; n < 2; n++){
+		ThrowGib ("models/objects/gibs/gear/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_METAL, 1);
+		}
+		
+		T_RadiusDamage (self, self.owner, 10, other);
+		sound (self, CHAN_BODY, "weapons/r_exp3.wav", 1, ATTN_NORM);
+
+		WriteByte (MSG_BROADCAST, SVC_TEMPENTITY);
+		WriteByte (MSG_BROADCAST, TE_EXPLOSION);
+		WriteCoord (MSG_BROADCAST, self.origin_x);
+		WriteCoord (MSG_BROADCAST, self.origin_y);
+		WriteCoord (MSG_BROADCAST, self.origin_z);
+	}
+	
+	//Non-explosive but with some Strogg pieces (chest, head)
+	if (self.classname == "monster_soldier" 
+	|| self.classname == "monster_soldier_light"
+	|| self.classname == "monster_soldier_ss"
+	|| self.classname == "monster_soldier_ss"
+	|| self.classname == "monster_infantry"
+	|| self.classname == "monster_gladiator"
+	|| self.classname == "monster_gunner"
+	|| self.classname == "monster_berserk"
+	|| self.classname == "monster_chick"
+	|| self.classname == "monster_parasite")
+	{
+		ThrowGib ("models/objects/gibs/chest/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 0.75);
+		ThrowGib ("models/objects/gibs/head2/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 1);
+	}	
+	
+/*
+models/objects/gibs/gear/tris.md2
+
+models/objects/gibs/bone/tris.md2
+models/objects/gibs/bone2/tris.md2
+models/objects/gibs/arm/tris.md2 //flesh arm
+models/objects/gibs/head/tris.md2 //player head
+models/objects/gibs/leg/tris.md2 //player leg
+
+models/objects/gibs/skull/tris.md2 //bloody skull
+models/objects/gibs/sm_meat/tris.md2 //round gib
+models/objects/gibs/sm_metal/tris.md2 //bloody pyramid
+
+models/objects/gibs/chest/tris.md2 //strogg chest
+models/objects/gibs/head2/tris.md2 //strogg head
+	
+monster_flipper
+monster_mutant
+misc_insane
+*/	
+	
+}
+
 //MrC: Unless there's a performance hit with ApplyMultiDamage, this should work fine. 
 //This defaults FireBullets to 1 bullet of configurable damage and spread.
 

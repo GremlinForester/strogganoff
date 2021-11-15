@@ -587,6 +587,12 @@ ImpulseCommands
 void() crouch_on;
 void() crouch_off;
 
+void() q2player_flip;
+void() q2player_salute;
+void() q2player_taunt;
+void() q2player_wave;
+void() q2player_point;
+
 void() ImpulseCommands =
 {
 	if (self.impulse == IMPULSE_TOSS_WEAPON){
@@ -634,6 +640,21 @@ void() ImpulseCommands =
 	if (self.impulse == IMPULSE_CHEAT_QUAD)
 		QuadCheat ();
 #endif
+
+	if(self.impulse == IMPULSE_FLIP)
+		q2player_flip();
+
+	if(self.impulse == IMPULSE_SALUTE)
+		q2player_salute();
+	
+	if(self.impulse == IMPULSE_TAUNT)
+		q2player_taunt();
+
+	if(self.impulse == IMPULSE_WAVE)
+		q2player_wave();
+
+	if(self.impulse == IMPULSE_POINT)
+		q2player_point();
 
 	self.impulse = 0;
 };

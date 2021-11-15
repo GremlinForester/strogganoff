@@ -263,14 +263,7 @@ void() armor_touch =
 		value = 150;
 		bit = IT_ARMOR_COMBAT;
 	}
-	else
-	{
-		type = 0.8;
-		value = 200;
-		bit = IT_ARMOR_BODY;
-	}
-
-	if (self.classname == "item_armor_shard")
+	else if (self.classname == "item_armor_shard")
 	{
 		if (other.items & IT_ARMOR_JACKET){
 			bit = IT_ARMOR_JACKET;
@@ -289,7 +282,13 @@ void() armor_touch =
 			type = 0.3;
 		} 
 		value = 2;
-	}	
+	}
+	else
+	{
+		type = 0.8;
+		value = 200;
+		bit = IT_ARMOR_BODY;
+	}
 	
 //	if (other.armortype*other.armorvalue >= type*value)
 //		return;
@@ -1070,7 +1069,7 @@ void(float lootType, float lootAmt) DropLoot =
 	loot.velocity_z = 200;
 	loot.velocity_x = -50 + (random() * 200);
 	loot.velocity_y = -50 + (random() * 200);
-
+	loot.touch = BackpackTouch;
 	loot.netname = string_null;
 
 	switch (lootType)
@@ -1078,123 +1077,52 @@ void(float lootType, float lootAmt) DropLoot =
 		case LOOT_SHELLS:
 			loot.netname = "Shells";
 			setmodel (loot, "models/items/ammo/shells/medium/tris.md2");
-			setsize (self, '-16 -16 -16', '16 16 16');
+			setsize (loot, '-16 -16 -16', '16 16 16');
 			loot.inv_ammo_shells = lootAmt;
 			break;
 		case LOOT_BULLETS:
 			loot.netname = "Bullets";
 			setmodel (loot, "models/items/ammo/bullets/medium/tris.md2");
-			setsize (self, '-16 -16 -16', '16 16 16');
+			setsize (loot, '-16 -16 -16', '16 16 16');
 			loot.inv_ammo_bullets = lootAmt;
 			break;
 		case LOOT_ROCKETS:
 			loot.netname = "Rockets";
 			setmodel (loot, "models/items/ammo/rockets/medium/tris.md2");
-			setsize (self, '-16 -16 -16', '16 16 16');
+			setsize (loot, '-16 -16 -16', '16 16 16');
 			loot.inv_ammo_rockets = lootAmt;			
 			break;
 		case LOOT_SLUGS:
 			loot.netname = "Slugs";
 			setmodel (loot, "models/items/ammo/slugs/medium/tris.md2");
-			setsize (self, '-16 -16 -16', '16 16 16');
+			setsize (loot, '-16 -16 -16', '16 16 16');
 			loot.inv_ammo_cells = lootAmt;
 			break;
 		case LOOT_CELLS:
 			loot.netname = "Cells";
 			setmodel (loot, "models/items/ammo/cells/medium/tris.md2");
-			setsize (self, '-16 -16 -16', '16 16 16');
+			setsize (loot, '-16 -16 -16', '16 16 16');
 			loot.inv_ammo_cells = lootAmt;
+			break;
+		case LOOT_ARMOR_SHARD:
+			loot.netname = "Armor Shard";
+			loot.classname = "item_armor_shard";
+			setmodel (loot, "models/items/armor/shard/tris.md2");
+			setsize (loot, '-16 -16 -16', '16 16 16');
+			loot.noise = "misc/ar2_pkup.wav";
+//			loot.inv_ammo_cells = lootAmt;
+			loot.modelflags = MF_ROTATE;
+			loot.touch = armor_touch;
 			break;
 	}
 	
 	loot.flags = FL_ITEM;
 	loot.solid = SOLID_TRIGGER;
 	loot.movetype = MOVETYPE_TOSS;
-	loot.touch = BackpackTouch;
 	
 	loot.nextthink = time + 120;	// remove after 2 minutes
 	loot.think = SUB_Remove;
 };
-	
-/*
-void(float lootType, float lootAmt) DropLoot = //works like backpack, set self.weapon on monsters
-{
-	local entity loot;
-
-	if (!(self.inv_ammo_shells + self.inv_ammo_bullets + self.inv_ammo_rockets + self.inv_ammo_cells))
-		return;	// nothing in it
-
-	loot = spawn();
-	loot.origin = self.origin + '0 0 24';
-	setmodel (loot, "progs/backpack.mdl");
-	setsize (loot, '-16 -16 0', '16 16 56');
-	loot.velocity_z = 200;
-	loot.velocity_x = -50 + (random() * 200);
-	loot.velocity_y = -50 + (random() * 200);
-
-	loot.items = self.weapon;
-	if (loot.items == WEP_SHOTGUN){
-		setmodel (loot, "models/items/ammo/shells/medium/tris.md2");
-		setsize (self, '-16 -16 -16', '16 16 16');
-	}
-	else if (loot.items == WEP_SUPERSHOTGUN){
-		loot.netname = "Shells";
-		setmodel (loot, "models/items/ammo/shells/medium/tris.md2");
-		setsize (self, '-16 -16 -16', '16 16 16');
-	}
-	else if (loot.items == WEP_MACHINEGUN){
-		loot.netname = "Bullets";
-		setmodel (loot, "models/items/ammo/bullets/medium/tris.md2");
-		setsize (self, '-16 -16 -16', '16 16 16');
-	}
-	else if (loot.items == WEP_CHAINGUN){
-		loot.netname = "Bullets";
-		setmodel (loot, "models/items/ammo/bullets/medium/tris.md2");
-		setsize (self, '-16 -16 -16', '16 16 16');
-	}
-	else if (loot.items == WEP_GRENADE_LAUNCHER){
-		loot.netname = "Rockets";
-		setmodel (loot, "models/items/ammo/rockets/medium/tris.md2");
-		setsize (self, '-16 -16 -16', '16 16 16');		
-	}
-	else if (loot.items == WEP_ROCKET_LAUNCHER){
-		loot.netname = "Rockets";
-		setmodel (loot, "models/items/ammo/rockets/medium/tris.md2");
-		setsize (self, '-16 -16 -16', '16 16 16');		
-	}
-	else if (loot.items == WEP_HYPERBLASTER){
-		loot.netname = "Cells";
-		setmodel (loot, "models/items/ammo/cells/medium/tris.md2");
-		setsize (self, '-16 -16 -16', '16 16 16');		
-	}
-	else if (loot.items == WEP_RAILGUN){
-		loot.netname = "Slugs";
-		setmodel (loot, "models/items/ammo/slugs/medium/tris.md2");
-		setsize (self, '-16 -16 -16', '16 16 16');
-	}
-	else if (loot.items == WEP_BFG){
-		loot.netname = "Cells";
-		setmodel (loot, "models/items/ammo/cells/medium/tris.md2");
-		setsize (self, '-16 -16 -16', '16 16 16');		
-	}
-	else{
-		loot.netname = string_null;
-	}
-
-	loot.inv_ammo_shells = self.inv_ammo_shells;
-	loot.inv_ammo_bullets = self.inv_ammo_bullets;
-	loot.inv_ammo_rockets = self.inv_ammo_rockets;
-	loot.inv_ammo_cells = self.inv_ammo_cells;
-	
-	loot.flags = FL_ITEM;
-	loot.solid = SOLID_TRIGGER;
-	loot.movetype = MOVETYPE_TOSS;
-	loot.touch = BackpackTouch;
-	
-	loot.nextthink = time + 120;	// remove after 2 minutes
-	loot.think = SUB_Remove;
-};
-*/
 
 /*
 ===============

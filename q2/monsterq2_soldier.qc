@@ -212,8 +212,7 @@ framer($pain401, $pain417, q2soldier_pain4, q2soldier_run1, 0.1,
 
 void() q2Soldier_Random_Pain_Sound =
 {
-	local float r; 
-	r = random() * 3;
+	local float r = random() * 3;
 	
 	if (r < 1) 
 	{ 
@@ -371,40 +370,47 @@ void() q2soldier_seleck_attack =
 
 void() q2soldier_death1fire =
 {
-	local	vector	dir;
-	local	entity	en;
+	local vector dir;
 	local vector org;
 
 	if (!visible (self.enemy))
 	return;
 
-	ai_face();
+	makevectors (self.angles);
 
-	// fire somewhat behind the player, so a dodging player is harder to hit
-	en = self.enemy;
-
-	dir = en.origin - en.velocity*0.2;
-	dir = normalize (dir - self.origin);
-
+	dir = self.origin - v_forward*1000;
+	
 	org = self.origin + v_forward * 30 + v_right * 4 + '0 0 8';
-
+	dir = normalize (org - self.origin);
+	
 	if (self.classname == "monster_soldier_ss")
 	{
+		org = self.origin + v_forward * 30 + v_right * 0 + '0 0 0';
+		dir = normalize (org - self.origin);
 		monster_fire_bullet(org, dir, '0.01 0.01 0', 3);
 		sound (self, CHAN_WEAPON, "soldier/solatck3.wav", 1, ATTN_NORM);
 
 	}
 	else if (self.classname == "monster_soldier")
 	{
+		org = self.origin + v_forward + v_right * 0 + '0 0 0';
+		dir = normalize (org - self.origin);
 		monster_fire_shotgun(8, org, dir, '0.1 0.1 0', WEAPON_DEFAULT_DAMAGE);
 		sound (self, CHAN_WEAPON, "soldier/Solatck1.wav", 1, ATTN_NORM);
 	}
 	else
 	{
-		monster_fire_blaster(org, self.enemy.origin - self.origin, 3, '2 0.2 0.2', MF_TRACER2);
+		monster_fire_blaster(org, v_forward * 2000, 3, '2 0.2 0.2', MF_TRACER2);
 		sound (self, CHAN_WEAPON, "soldier/Solatck2.wav", 1, ATTN_NORM);
 	}
 };
+
+void() q2soldier_dead =
+{
+	setsize (self, '-16 -16 -24', '16 16 -8');
+	self.movetype = MOVETYPE_TOSS;
+	self.solid = SOLID_CORPSE;
+}
 
 // DEATH1
 
@@ -412,7 +418,7 @@ framer($death101, $death136, q2soldier_die1, SUB_Null, 0.1,
 	
 	frame_arb($death103,
 
-		self.solid = SOLID_CORPSE;
+		q2soldier_dead();
 	);
 	
 		frame_arb($death122,
@@ -431,7 +437,7 @@ framer($death201, $death235, q2soldier_die2, SUB_Null, 0.1,
 	
 	frame_arb($death203,
 
-		self.solid = SOLID_CORPSE;
+		q2soldier_dead();
 	);
 );
 
@@ -441,7 +447,7 @@ framer($death301, $death345, q2soldier_die3, SUB_Null, 0.1,
 	
 	frame_arb($death303,
 
-		self.solid = SOLID_CORPSE;
+		q2soldier_dead();
 	);
 );
 
@@ -451,7 +457,7 @@ framer($death401, $death453, q2soldier_die4, SUB_Null, 0.1,
 	
 	frame_arb($death402,
 
-		self.solid = SOLID_CORPSE;
+		q2soldier_dead();
 	);
 );
 
@@ -461,7 +467,7 @@ framer($death501, $death524, q2soldier_die5, SUB_Null, 0.1,
 	
 	frame_arb($death502,
 
-		self.solid = SOLID_CORPSE;
+		q2soldier_dead();
 	);
 );
 
@@ -471,45 +477,9 @@ framer($death601, $death610, q2soldier_die6, SUB_Null, 0.1,
 	
 	frame_arb($death602,
 
-		self.solid = SOLID_CORPSE;
+		q2soldier_dead();
 	);
 );
-
-/*
-void() q2soldier_die =
-{
-	local float r;
-// check for gib
-	if (self.health < -35)
-	{
-		sound (self, CHAN_VOICE, "misc/udeath.wav", 1, ATTN_NORM);
- 		ThrowGib ("models/objects/gibs/arm/tris.md2", self.health);
-		ThrowGib ("models/objects/gibs/chest/tris.md2", self.health);
-		ThrowGib ("models/objects/gibs/head/tris.md2", self.health);
-		ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health);
-		ThrowHead ("progs/h_player.mdl", self.health); 
-		return;
-	}
-
-	if (self.classname == "monster_soldier_light")
-		DropLoot(LOOT_CELLS, floor(random()*6)+1);
-	if (self.classname == "monster_soldier_ss")
-		DropLoot(LOOT_BULLETS, floor(random()*6)+1);
-	if (self.classname == "monster_soldier")
-		DropLoot(LOOT_SHELLS, floor(random()*8)+1);
-
-// regular death
-	sound (self, CHAN_VOICE, "soldier/soldeth2.wav", 1, ATTN_NORM);
-	
-	r = random() * 6;
-		if (r < 1) q2soldier_die1 ();
-		else if (r < 2) q2soldier_die2 ();
-		else if (r < 3) q2soldier_die3 ();
-		else if (r < 4) q2soldier_die4 ();
-		else if (r < 5) q2soldier_die5 ();
-		else            q2soldier_die6 ();
-};
-*/
 
 void() q2soldier_die =
 {
@@ -517,12 +487,8 @@ void() q2soldier_die =
 
  	if (self.health < -35)
 	{
-		sound (self, CHAN_VOICE, "misc/udeath.wav", 1, ATTN_NORM);
- 		ThrowGib ("models/objects/gibs/arm/tris.md2", self.health, GIB_FLESH);
-		ThrowGib ("models/objects/gibs/chest/tris.md2", self.health, GIB_FLESH);
-		ThrowGib ("models/objects/gibs/head/tris.md2", self.health, GIB_FLESH);
-		ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health, GIB_FLESH);
-		ThrowHead ("progs/h_player.mdl", self.health); 
+		gibMonster();
+		remove(self);
 		return;
 	}
 
@@ -538,14 +504,13 @@ void() q2soldier_die =
 	self.deadflag = DEAD_DEAD;
 	
 	if (self.classname == "monster_soldier_light")
-		DropLoot(LOOT_CELLS, floor(random()*6)+1);
+		DropLoot(LOOT_ARMOR_SHARD, 0); //LOOT_ARMOR_SHARD defaults to 2 through special handling.
 	if (self.classname == "monster_soldier_ss")
 		DropLoot(LOOT_BULLETS, floor(random()*6)+1);
 	if (self.classname == "monster_soldier")
 		DropLoot(LOOT_SHELLS, floor(random()*8)+1);
 	
 	r = random() * 6;
-	
 	if (r < 1) q2soldier_die1 ();
 	else if (r < 2) q2soldier_die2 ();
 	else if (r < 3) q2soldier_die3 ();

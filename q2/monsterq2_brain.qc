@@ -168,8 +168,15 @@ void(entity attacker, float damage)	brain_pain =
 		brain_3pain1 ();
 		self.pain_finished = time + 1;
 	}
-
+	SpawnBlood (self.origin, self.origin*0.2, damage * 4);
 };
+
+void() q2brain_dead =
+{
+	setsize (self, '-16 -16 -24', '16 16 -8');
+	self.movetype = MOVETYPE_TOSS;
+	self.solid = SOLID_CORPSE;
+}
 
 // Death 1
 
@@ -177,7 +184,7 @@ framer($FRAME_death101, $FRAME_death118, brain_die1_frames, SUB_Null, 0.1,
 	
 	frame_arb($FRAME_death101,
 
-		self.solid = SOLID_CORPSE;
+		q2brain_dead();
 	//	self.ammo_shells = 5;
 	//	DropBackpack();
 	);
@@ -189,7 +196,7 @@ framer($FRAME_death201, $FRAME_death205, brain_die2_frames, SUB_Null, 0.1,
 	
 	frame_arb($FRAME_death201,
 
-		self.solid = SOLID_CORPSE;
+		q2brain_dead();;
 	//	self.ammo_shells = 5;
 	//	DropBackpack();
 	);
@@ -202,27 +209,17 @@ void() brain_die =
  	if (self.health < -80)
 	{
 		sound (self, CHAN_VOICE, "misc/udeath.wav", 1, ATTN_NORM);
-/* 		for (n= 0; n < 2; n++){
-		ThrowGib ("models/objects/gibs/bone/tris.md2", self.health, GIB_FLESH, 1);
-		}
-		for (n= 0; n < 4; n++){
-		ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health, GIB_FLESH, 1);
-		}
-		ThrowGib ("models/objects/gibs/head2/tris.md2", self.health, GIB_FLESH, 1);
-		ThrowGib ("progs/gib1.mdl", self.health, GIB_FLAMING);
-		ThrowGib ("progs/gib2.mdl", self.health, GIB_FLAMING);
-		ThrowGib ("progs/gib3.mdl", self.health, GIB_FLAMING); */
 		
 		for (n= 0; n < 2; n++)
-			ThrowGib ("models/objects/gibs/bone/tris.md2", self.health, GIB_FLESH);
+			ThrowGib ("models/objects/gibs/bone/tris.md2", self.health / 1.15, GIB_FLESH);
+			ThrowGib ("models/objects/debris1/tris.md2", self.health / 1.25, GIB_FLAMING);
+			ThrowGib ("models/objects/debris2/tris.md2", self.health / 1.25, GIB_FLAMING);
 		for (n= 0; n < 4; n++)
-			ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health, GIB_FLESH);
-		
-		ThrowHead ("models/objects/gibs/head2/tris.md2", self.health);
+			ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health / 1.15, GIB_FLESH);
 		
 		remove(self);
 		return;
-	} 
+	}
 
 	self.takedamage = DAMAGE_YES;
 
@@ -231,7 +228,7 @@ void() brain_die =
 	}
 	else
 	{
-			// regular death
+	// regular death
 	sound (self, CHAN_VOICE, "brain/brndeth1.wav", 1, ATTN_NORM);
 	self.deadflag = DEAD_DEAD;
 	if (random() < 0.5)
@@ -261,6 +258,8 @@ void()	brain_melee =
 */
 void() monster_brain =
 {
+	self.classname = "monster_brain";
+	
 	if (deathmatch)
 	{
 		remove(self);
@@ -282,7 +281,7 @@ void() monster_brain =
 	precache_sound ("brain/melee1.wav");
 	precache_sound ("brain/melee2.wav");
 	precache_sound ("brain/melee3.wav");
-
+	
 	self.solid = SOLID_SLIDEBOX;
 	self.movetype = MOVETYPE_STEP;
 

@@ -580,21 +580,6 @@ void() W_WeaponAnimate={
 	}
 };
 */
-/*
-void() W_WeaponAnimate={
-	if( time > self.weapon_think ){
-		if (self.weaponstate == WEAPON_ACTIVATING || self.weaponstate == WEAPON_DROPPING)
-		{
-			self.weapon_think = time + WEAPON_SWITCH_SPEED;
-		}
-		else
-		{	
-		self.weapon_think = time + 0.1;
-		}
-	self.weapon_update_func();
-	}
-};
-*/
 void() W_WeaponAnimate={
 	if( time > self.weapon_think )
 	{
@@ -662,14 +647,59 @@ void() player_chatter_idle =
 	self.nexttalktime = time + 45;
 }
 
-/*
+void() q2playeronly_2attackframes_crouch;
+void() q2playeronly_4attackframes_crouch;
+void() q2playeronly_8attackframes_crouch;
+void() q2playeronly_2attackframes;
+void() q2playeronly_4attackframes;
+void() q2playeronly_8attackframes;
 
-This is called weapon_generic. 
+/*
+doPlayerframes
+This is called in weapon_generic. 
+It calls the appropriate player animation during weapon WEAPON_READY if WEAPON_FIRING.
+
+*/
+void() doPlayerframes =
+{
+	if (self.weapon == WEP_BLASTER)
+	{
+		if (self.flags & FL_DUCKED){
+		q2playeronly_4attackframes_crouch();
+		}
+		else{
+		q2playeronly_4attackframes();
+		}
+	}
+	else if (self.weapon == WEP_MACHINEGUN
+	|| self.weapon == WEP_CHAINGUN 
+	|| self.weapon == WEP_HYPERBLASTER)
+	{
+		if (self.flags & FL_DUCKED){
+		q2playeronly_2attackframes_crouch();
+		}
+		else{
+		q2playeronly_2attackframes();
+		}
+	}
+	else
+	{
+		if (self.flags & FL_DUCKED){
+		q2playeronly_8attackframes_crouch();
+		}
+		else{
+		q2playeronly_8attackframes();
+		}
+	}
+}
+
+/*
+doWeaponframes
+This is called in weapon_generic. 
 It could be used to call sounds, effects, etc... during a sequence.
 
 */
-
-void() doWeaponframes =
+void() doWeaponfx =
 {
 	switch(self.weapon)
 	{
@@ -683,8 +713,6 @@ void() doWeaponframes =
 	break;
 	}
 }
-
-void() q2playeronly_4attackframes_crouch;
 
 /*
 ================
@@ -801,12 +829,7 @@ void(float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRAME_IDLE_LAST, fl
 				// start the animation
 				//TODO - syncing player model
 				//ent->client->anim_priority = ANIM_ATTACK;
-				if (self.flags & FL_DUCKED)
-				{
-					q2playeronly_4attackframes_crouch();
-				//	ent->client->anim_end = FRAME_crattak9;
-				}
-				
+				doPlayerframes();
 			}
 			else
 			{
@@ -834,7 +857,7 @@ void(float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRAME_IDLE_LAST, fl
 				}
 			}
 			self.weaponframe++;
-			doWeaponframes();
+			doWeaponfx();
 			return;
 		}
 	}
@@ -867,7 +890,7 @@ void(float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRAME_IDLE_LAST, fl
 		if (self.weaponframe == FRAME_IDLE_FIRST+1)
 			self.weaponstate = WEAPON_READY;
 	}
-	doWeaponframes();
+	doWeaponfx();
 }
 
 void() Weapon_Blaster_Fire=
@@ -1109,7 +1132,7 @@ void() weapon_machineg_update={
 void() Weapon_Chaingun_Fire={
 	local float i, shots, damage, kick, r, u, sfx;
 	kick = 2;
-	
+
 	if (deathmatch)
 		damage = 6;
 	else
@@ -1217,9 +1240,9 @@ void() Weapon_Chaingun_Fire={
 
 		//fire_bullet (ent, start, forward, damage, kick, DEFAULT_BULLET_HSPREAD, DEFAULT_BULLET_VSPREAD, MOD_CHAINGUN);
 		self.solid = SOLID_BBOX;
-		fire_bullet_base(self.origin, self.v_angle, '0.02 0.02', damage);
+		//fire_bullet_base(self.origin, self.v_angle, '0.02 0.02', damage);
+		FireBullet(damage);
 		self.solid = SOLID_SLIDEBOX;
-		//FireBullet(damage);
 	}
 	sfx = random() * 1.0;
 	if(sfx < 0.3){

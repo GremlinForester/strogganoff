@@ -17,12 +17,15 @@ float	modelindex_eyes, modelindex_player;
 //Crouch for player '06
 //===================
 
+#define	CROUCH_VEC_HULL_MIN '-16 -16 -24'
+#define	CROUCH_VEC_HULL_MAX '16 16 4'
+
 .float crouch, attemptcrouch;
 float (entity targ) crouchcheck =
 {
 makevectors (self.v_angle);
 //tracebox (self.origin, VEC_HULL_MIN, VEC_HULL_MAX, self.origin + '0 0 16', FALSE, self); 
-tracebox (self.origin, VEC_HULL_MIN, VEC_HULL_MAX, self.origin + '0 0 32', FALSE, self); 
+tracebox (self.origin, CROUCH_VEC_HULL_MIN, CROUCH_VEC_HULL_MAX, self.origin + '0 0 32', FALSE, self); 
 if (trace_fraction == 1)            //hits nothing go ahead
 	return TRUE;
 
@@ -38,11 +41,13 @@ void() crouch_on =
 if (!self.flags & FL_DUCKED) //crouch down
 {
 //setsize (self, '-16 -16 -8', '16 16 8');
-setsize (self, '-16 -16 -8', '16 16 16');
+//setsize (self, '-16 -16 -8', '16 16 16');
+//	setsize (self, '-16 -16 -24', '16 16 -8');
+setsize (self, '-16 -16 -24', '16 16 4');
 //self.crouch = 1;
 self.flags = self.flags | FL_DUCKED;
 
-self.view_ofs = '0 0 11'; //14
+self.view_ofs = '0 0 -2'; //14
 self.attemptcrouch = 1;
 
 return;
@@ -782,8 +787,10 @@ void() UpdateTPWeaponFrames =
 		return;
 	}
 
-	switch (self.owner.weapon)
+	if (autocvar_cl_playertype == PT_MALE)
 	{
+		switch (self.owner.weapon)
+		{
 		case WEP_BLASTER:
 			setmodel (self, "players/male/w_blaster.md2");
 			break;
@@ -814,6 +821,81 @@ void() UpdateTPWeaponFrames =
 		case WEP_BFG:
 			setmodel (self, "players/male/w_bfg.md2");
 			break;
+		}	
+	}
+	
+	if (autocvar_cl_playertype == PT_FEMALE)
+	{
+		switch (self.owner.weapon)
+		{
+		case WEP_BLASTER:
+			setmodel (self, "players/female/w_blaster.md2");
+			break;
+		case WEP_SHOTGUN:
+			setmodel (self, "players/female/w_shotgun.md2");
+			break;
+		case WEP_SUPERSHOTGUN:
+			setmodel (self, "players/female/w_sshotgun.md2");
+			break;
+		case WEP_MACHINEGUN:
+			setmodel (self, "players/female/w_machinegun.md2");
+			break;
+		case WEP_CHAINGUN:
+			setmodel (self, "players/female/w_chaingun.md2");
+			break;
+		case WEP_GRENADE_LAUNCHER:
+			setmodel (self, "players/female/w_glauncher.md2");
+			break;
+		case WEP_ROCKET_LAUNCHER:
+			setmodel (self, "players/female/w_rlauncher.md2");
+			break;
+		case WEP_RAILGUN:
+			setmodel (self, "players/female/w_railgun.md2");
+			break;
+		case WEP_HYPERBLASTER:
+			setmodel (self, "players/female/w_hyperblaster.md2");
+			break;
+		case WEP_BFG:
+			setmodel (self, "players/female/w_bfg.md2");
+			break;
+		}
+	}
+	
+	if (autocvar_cl_playertype == PT_OTHER)
+	{
+		switch (self.owner.weapon)
+		{
+		case WEP_BLASTER:
+			setmodel (self, "players/cyborg/w_blaster.md2");
+			break;
+		case WEP_SHOTGUN:
+			setmodel (self, "players/cyborg/w_shotgun.md2");
+			break;
+		case WEP_SUPERSHOTGUN:
+			setmodel (self, "players/cyborg/w_sshotgun.md2");
+			break;
+		case WEP_MACHINEGUN:
+			setmodel (self, "players/cyborg/w_machinegun.md2");
+			break;
+		case WEP_CHAINGUN:
+			setmodel (self, "players/cyborg/w_chaingun.md2");
+			break;
+		case WEP_GRENADE_LAUNCHER:
+			setmodel (self, "players/cyborg/w_glauncher.md2");
+			break;
+		case WEP_ROCKET_LAUNCHER:
+			setmodel (self, "players/cyborg/w_rlauncher.md2");
+			break;
+		case WEP_RAILGUN:
+			setmodel (self, "players/cyborg/w_railgun.md2");
+			break;
+		case WEP_HYPERBLASTER:
+			setmodel (self, "players/cyborg/w_hyperblaster.md2");
+			break;
+		case WEP_BFG:
+			setmodel (self, "players/cyborg/w_bfg.md2");
+			break;
+		}		
 	}
 
 	if (self.owner.items & IT_INVISIBILITY)
@@ -1228,7 +1310,7 @@ void() PlayerJump =
 //	sound (self, CHAN_VOICE, "player/plyrjmp8.wav", 1, ATTN_NORM);
 	playerVOSound(PLAYER_VOICE_JUMP);
 	q2player_jumpframes();
-	self.velocity_z = self.velocity_z + 270;
+	self.velocity_z = self.velocity_z + 285; //270
 };
 
 
@@ -1814,11 +1896,18 @@ void() PlayerPostThink =
 		}
 		else
 		{
-			q2player_landframes();
-			Generic_FootStep();
-			//playerVOSound(PLAYER_VOICE_LAND2);			
-			//sound (self, CHAN_VOICE, "player/land1.wav", 1, ATTN_NORM);
-			self.jump_flag = 0;
+			if (self.flags & FL_DUCKED)
+			{
+				Generic_FootStep();
+				self.jump_flag = 0;
+			}
+			else
+			{
+				q2player_landframes();
+				Generic_FootStep();
+				//playerVOSound(PLAYER_VOICE_LAND2);
+				self.jump_flag = 0;
+			}
 		}
 			
 		self.jump_flag = 0;
@@ -2218,7 +2307,44 @@ void(entity targ, entity attacker) ClientObituary =
 					bprint (" was scragged by a Scrag\n");
 				if (attacker.classname == "monster_zombie")
 					bprint (" joins the Zombies\n");
-
+				
+				//Quake 2 Monsters
+				if (attacker.classname == "monster_flipper")
+					bprint (" became fish food\n");
+				if (attacker.classname == "monster_berserk")
+					bprint (" was berserked upon\n");
+				if (attacker.classname == "monster_chick")
+					bprint (" was a hit with the ladies\n");
+				if (attacker.classname == "monster_brain")
+					bprint (" was dissected by a brain\n");
+				if (attacker.classname == "monster_soldier_light")
+					bprint (" become blaster fodder for a Strogg Soldier\n");
+				if (attacker.classname == "monster_soldier_ss")
+					bprint (" was target practice for Strogg Soldier\n");
+				if (attacker.classname == "monster_soldier")
+					bprint (" ate Strogg Soldier lead\n");
+				if (attacker.classname == "monster_floater")
+					bprint (" was taken out by a Floater\n");
+				if (attacker.classname == "monster_flyer")
+					bprint (" was air struck by a Flyer\n");
+				if (attacker.classname == "monster_gladiator")
+					bprint (" was not entertained by a Gladiator\n");
+				if (attacker.classname == "monster_gunner")
+					bprint (" was gunnered down by a Gunner\n");
+				if (attacker.classname == "monster_hover")
+					bprint (" was killed by a Hover\n");
+				if (attacker.classname == "monster_infantry")
+					bprint (" obliterated by an Infantry\n");
+				if (attacker.classname == "monster_parasite")
+					bprint (" caught a Parasite\n");
+				if (attacker.classname == "monster_supertank")
+					bprint (" destroyed by a Super Tank\n");
+				if (attacker.classname == "monster_tank")
+					bprint (" soaked up too much damage from a Tank\n");
+				if (attacker.classname == "monster_mutant")
+					bprint (" became mutant poop\n");
+				if (attacker.classname == "monster_medic")
+					bprint (" didn't have Medic insurance\n");
 				return;
 			}
 

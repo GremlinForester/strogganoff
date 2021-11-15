@@ -300,13 +300,8 @@ void () q2boss1_explode =
 	if (self.target)
 		SUB_UseTargets();
 	
-	for (n= 0; n < 10; n++)
-		ThrowGib ("models/objects/gibs/bone/tris.md2", 400, GIB_FLESH);
-	for (n= 0; n < 15; n++)
-		ThrowGib ("models/objects/gibs/sm_meat/tris.md2", 500, GIB_FLESH);
-	for (n= 0; n < 5; n++)
-		ThrowGib ("models/objects/debris1/tris.md2", 500, GIB_FLAMING);
-	
+	gibMonster();
+
 	remove(self);
 }
 

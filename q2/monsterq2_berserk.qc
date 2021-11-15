@@ -250,16 +250,20 @@ void(entity attacker, float damage)	q2berserk_pain =
 	self.bleedcount = 0;
 };
 
+void() q2berserk_dead =
+{
+	setsize (self, '-16 -16 -24', '16 16 -8');
+	self.movetype = MOVETYPE_TOSS;
+	self.solid = SOLID_CORPSE;
+}
+
 // DIE1
-// MrC TODO: Add something to drop. Better yet, add a general function to be called by classname to drop random stuff.
 
 framer($FRAME_death1, $FRAME_death13, q2berserk_die1, SUB_Null, 0.1,
 	
 	frame_arb($FRAME_death2,
 
-		self.solid = SOLID_NOT;
-	//	self.ammo_shells = 5;
-	//	DropBackpack();
+		q2berserk_dead();
 	);
 );
 
@@ -269,9 +273,7 @@ framer($FRAME_deathc1, $FRAME_deathc8, q2berserk_die2, SUB_Null, 0.1,
 	
 	frame_arb($FRAME_deathc2,
 
-		self.solid = SOLID_NOT;
-	//	self.ammo_shells = 5;
-	//	DropBackpack();
+		q2berserk_dead();
 	);
 );
 
@@ -280,23 +282,30 @@ void() q2berserk_die =
 // check for gib
 	if (self.health < -40)
 	{
-/*
-		sound (self, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
-		ThrowHead ("progs/h_knight.mdl", self.health);
-		ThrowGib ("progs/gib1.mdl", self.health);
-		ThrowGib ("progs/gib2.mdl", self.health);
-		ThrowGib ("progs/gib3.mdl", self.health);
-*/
-		gibbs("models/objects/gibs/head2/tris.md2");
+		gibMonster();
+		remove(self);
 		return;
 	}
 
-// regular death
+	self.takedamage = DAMAGE_YES;
+
+ 	if (self.deadflag == DEAD_DEAD){
+		return;
+	}
+	else
+	{
+	// regular death
 	sound (self, CHAN_VOICE, BERSERK_SOUND_DIE, 1, ATTN_NORM);
+	self.deadflag = DEAD_DEAD;
+	
+	DropLoot(LOOT_SHELLS, floor(random()*8)+1);
+	
 	if (random() < 0.5)
 		q2berserk_die1 ();
 	else
 		q2berserk_die2 ();
+
+	}
 };
 
 

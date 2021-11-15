@@ -12,8 +12,6 @@
 		and we'd like to reduce func call jump counts.
 */
 
-.float dmgradius;
-
 void() blaster_base_touch={
 	
 	self.solid = SOLID_NOT;
@@ -71,7 +69,12 @@ void(vector entOrg, vector aimAngle, float speed, float damage, float clr, float
 	newmis.nextthink = time + 5;
 	newmis.think = SUB_Remove;
 
+	if (self.flags & FL_DUCKED){
+	source = G_ProjectSource (self.origin, '20 8 -4', v_forward, v_right, '0 0 0'); //24 -18 22
+	}
+	else{
 	source = G_ProjectSource (self.origin, '20 8 17', v_forward, v_right, '0 0 0'); //24 -18 22
+	}
 	
 	setmodel (newmis, "progs/laser.mdl");
 	setsize (newmis, '4 4 4', '4 4 4');
@@ -88,7 +91,13 @@ void(vector entOrg, vector aimAngle, float speed, float damage, float clr, float
 		rotation_offset_y = 6;					
 		rotation_offset_z = -6 * cos(rotation);
 	
-		source = G_ProjectSource (self.origin, '20 6 10' + rotation_offset, v_forward, v_right, '0 0 0'); //24 -18 22
+		if (self.flags & FL_DUCKED){
+			source = G_ProjectSource (self.origin, '20 8 -14' + rotation_offset, v_forward, v_right, '0 0 0'); //24 -18 22
+		}
+		else{
+			source = G_ProjectSource (self.origin, '20 6 10' + rotation_offset, v_forward, v_right, '0 0 0'); //24 -18 22
+		}	
+
 		setorigin (newmis, source);
 	}
 	
@@ -98,8 +107,8 @@ void(vector entOrg, vector aimAngle, vector spread, float damage) fire_bullet_ba
 	local vector org;
 	local vector dir;
 	
-	makevectors(aimAngle);
-	
+//	makevectors(aimAngle);
+	makevectors (self.v_angle);
 	org = entOrg + v_forward * 10;
 	org_z = self.absmin_z + self.size_z * 0.7;
 
@@ -107,7 +116,6 @@ void(vector entOrg, vector aimAngle, vector spread, float damage) fire_bullet_ba
 	dir = dir + crandom()*spread_x*v_right + crandom()*spread_y*v_up;
 		
 	traceline (org, org + dir*2048, FALSE, self);
-	
 	if (trace_fraction != 1.0)
 	{
 		Q3SurfaceTraceAttack(damage, dir);
@@ -260,7 +268,6 @@ void(vector start, vector end, float damage) fire_railgun_base={
 void(vector start, vector aimdir, float speed, float damage, float damage_radius) fire_bfg_base=
 {
 	local vector source;
-	self.currentammo = self.inv_ammo_cells = self.inv_ammo_cells - 1;
 
 	self.punchangle_x = -8;
 	newmis = spawn ();

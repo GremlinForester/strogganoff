@@ -225,7 +225,7 @@ Death Stuff Starts
 
 void() q2parasite_dead =
 {
-	setsize (self, '-16 -16 0', '16 16 16');
+	setsize (self, '-16 -16 -24', '16 16 -8');
 	self.movetype = MOVETYPE_TOSS;
 	self.solid = SOLID_CORPSE;
 }
@@ -246,15 +246,7 @@ void() q2parasite_die =
 
  	if (self.health < -40)
 	{
-		sound (self, CHAN_VOICE, "misc/udeath.wav", 1, ATTN_NORM);
-		
-		for (n= 0; n < 2; n++)
-			ThrowGib ("models/objects/gibs/bone/tris.md2", self.health / 4, GIB_FLESH);
-		for (n= 0; n < 4; n++)
-			ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health / 4, GIB_FLESH);
-		
-		ThrowHead ("models/objects/gibs/head2/tris.md2", self.health / 4);
-		
+		gibMonster();
 		remove(self);
 		return;
 	} 
@@ -269,6 +261,9 @@ void() q2parasite_die =
 	// regular death
 	sound(self, CHAN_WEAPON2, PARASITE_SOUND_DIE, 1, ATTN_NORM);
 	self.deadflag = DEAD_DEAD;
+	
+	DropLoot(LOOT_BULLETS, floor(random()*6)+1);
+	
 	q2parasite_die1_frames ();
 	}
 };
@@ -283,7 +278,7 @@ End Death Stuff
 */
 void () monster_parasite =
 {
-	self.classname = "q2monster_parasite";
+	self.classname = "monster_parasite";
 	
 	if (deathmatch)
 	{

@@ -273,10 +273,9 @@ DEATH
 
 void() q2chick_dead =
 {
-	setsize (self, '-16 -16 0', '16 16 16');
+	setsize (self, '-16 -16 -24', '16 16 -8');
 	self.movetype = MOVETYPE_TOSS;
 	self.solid = SOLID_CORPSE;
-//	self.nextthink = 0;
 }
 
 // Death 1
@@ -309,15 +308,7 @@ void() q2chick_die =
 
  	if (self.health < -80)
 	{
-		sound (self, CHAN_VOICE, "misc/udeath.wav", 1, ATTN_NORM);
-		
-		for (n= 0; n < 2; n++)
-			ThrowGib ("models/objects/gibs/bone/tris.md2", self.health / 4, GIB_FLESH);
-		for (n= 0; n < 4; n++)
-			ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health / 4, GIB_FLESH);
-		
-		ThrowHead ("models/objects/gibs/head2/tris.md2", self.health / 4);
-		
+		gibMonster();
 		remove(self);
 		return;
 	} 
@@ -399,7 +390,7 @@ void()	q2chick_missile_attack131	=[	$FRAME_attak132,		q2chick_frames_run		] {SUB
 */
 void () monster_chick =
 {
-	self.classname = "q2monster_chick";
+	self.classname = "monster_chick";
 	
 	if (deathmatch)
 	{

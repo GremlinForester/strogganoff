@@ -126,9 +126,6 @@ void(entity attacker, float damage) flyer_pain={
 		flyer_pain3_1();
 		sound(self, CHAN_VOICE, FLYER_SOUND_PAIN2, 1, ATTN_NORM);
 	}
-	
-	self.bIsWounded = 1;
-	self.bleedcount = 0;
 };
 
 //DEFENSE
@@ -266,7 +263,8 @@ void() flyer_nextmove={
 void() flyer_die=
 {
 	sound (self, CHAN_VOICE, FLYER_SOUND_DIE, 1, ATTN_NORM);
-	BecomeExplosion();
+	gibMonster();
+	remove(self);
 };
 
 /*QUAKED monster_flyer (1 .5 0) (-16 -16 -24) (16 16 32) Ambush Trigger_Spawn Sight

@@ -209,25 +209,25 @@ void() floater_melee_select={
 	optimized choice.
 		-Subject9x
 */
+
+void() floater_explode;
+
 //DEATH1
-framer($death01, $death13, floater_die1, SUB_Null, 0.1, frame_arb($death03, self.solid = SOLID_NOT;));
+framer($death01, $death13, floater_die1, SUB_Null, 0.1, 
+frame_arb($death03, self.solid = SOLID_NOT;)
+frame_arb($death09, floater_explode();)
+);
 
 void() floater_die={
 	// check for gib
 	self.movetype = MOVETYPE_TOSS;
 	
-	setsize(self, '-16 -16 -8', '16 16 32');
+	setsize(self, '-32 -32 -8', '32 32 32');
 	setorigin(self, self.origin);
 	
 	if (self.health < -40)
 	{
-		sound (self, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
-		ThrowHead ("progs/h_wizard.mdl", self.health);
-		remove(self);
-		//ThrowGib ("progs/gib2.mdl", self.health);
-		//ThrowGib ("progs/gib2.mdl", self.health);
-		//ThrowGib ("progs/gib2.mdl", self.health);
-		return;
+		floater_explode();
 	}
 	
 	floater_die1 ();
@@ -236,10 +236,10 @@ void() floater_die={
 /*
 	Original Q2 behavior
 */
-void floater_dead(){
+void floater_explode(){
 	sound (self, CHAN_VOICE, FLOATER_SOUND_DEATH1, 1, ATTN_NORM);
-	BecomeExplosion();
-	//TODO - debris / chunks
+	gibMonster();
+	remove(self);
 };
 
 
@@ -278,7 +278,7 @@ void() monster_floater=
 	self.th_missile = floater_attack_start;
 	self.th_melee = floater_melee_select;
 	self.th_pain = floater_pain;
-	self.th_die = floater_dead;
+	self.th_die = floater_die;
 
 	flymonster_start;
 }

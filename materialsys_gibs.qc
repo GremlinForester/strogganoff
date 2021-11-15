@@ -73,6 +73,9 @@ void() GibPhysicsThinkRemove;
 
 void() Gib_Touch =
 {
+	if (other.classname == "gib")
+		return;
+
 	if (self.modelflags == MF_GIB){
 		SpawnBlood (self.origin, '0 0 20', 55);
 	}
@@ -107,6 +110,9 @@ void() Gib_Touch_Metal =
 
 void() Gib_Touch_Flesh =
 {
+	if (other.classname == "gib")
+		return;
+	
 	if (pointcontents(self.origin) == CONTENT_SOLID){
 		LOG("Removed stuck debris!");
 		remove(self);
@@ -114,8 +120,6 @@ void() Gib_Touch_Flesh =
 	}
 	
 	if (other.classname == "player"){
-		SpawnBlood (self.origin, '0 0 20', 55);
-		
 		if (random() < 0.3){
 		SetVModelOverlayOther('0 0 0', "models/overlay.md3", OVERLAY_BLOODSPLAT1, '1 0 0', 0);
 		}
@@ -263,9 +267,10 @@ void(string gibname, float dm) ThrowGibPhysics =
 	//physics_addforce(new, self.origin * 900000 , '500 600 700');
 };
 
-void(string gibname, float dm, float GibType) ThrowGib =
+void(string gibname, float dm, float GibType, float gibScale) ThrowGib =
 {
 	nspawn = spawn();
+	nspawn.classname = "gib";
 	nspawn.origin = self.origin;
 	setmodel (nspawn, gibname);
 	setsize (nspawn, '0 0 0', '0 0 0');
@@ -279,6 +284,14 @@ void(string gibname, float dm, float GibType) ThrowGib =
 	nspawn.ltime = time;
 	nspawn.nextthink = time + 10 + random()*10;
 
+	if (!gibScale){
+	nspawn.scale = 1;
+	}
+	else
+	{
+	nspawn.scale = gibScale;
+	}
+	
 	switch(GibType)
 	{
 	case GIB_NONE:
@@ -300,8 +313,8 @@ void(string gibname, float dm, float GibType) ThrowGib =
 		nspawn.avelocity_x = random()*900;
 		nspawn.avelocity_y = random()*800;
 		nspawn.avelocity_z = random()*700;
-		nspawn.velocity = 3.11 * (VelocityForDamage (dm));
-		nspawn.touch = SUB_Remove;
+		nspawn.velocity = VelocityForDamage(dm);
+		nspawn.touch = Gib_Touch;
 	break;
 		
 	case GIB_GLASS:
@@ -399,10 +412,10 @@ void(string gibname, float dm) ThrowHead =
 	self.avelocity = crandom() * '0 600 0';
 }
 
-void(string model, float dmg, float amt, float gibtype) TossGibs
+void(string model, float dmg, float amt, float gibtype, float gibscale) TossGibs =
 {
 		local float n;
 	
 		for (n = 1; n < amt; n++)
-		ThrowGib (model, dmg, gibtype);
+		ThrowGib (model, dmg, gibtype, gibscale);
 }

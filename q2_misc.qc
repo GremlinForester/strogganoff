@@ -229,23 +229,12 @@ void() misc_deadsoldier_die =
  	if (self.health < -30)
 	{
 		sound (self, CHAN_VOICE, "misc/udeath.wav", 1, ATTN_NORM);
-/* 		for (n= 0; n < 2; n++){
-		ThrowGib ("models/objects/gibs/bone/tris.md2", self.health, GIB_FLESH, 1);
-		}
-		for (n= 0; n < 4; n++){
+
+		TossGibs ("models/objects/gibs/bone/tris.md2", self.health, 5, GIB_FLESH, 1);		
+		TossGibs ("models/objects/gibs/arm/tris.md2", self.health, 2, GIB_FLESH, 1);
+		TossGibs ("models/objects/gibs/leg/tris.md2", self.health, 2, GIB_FLESH, 1);
 		ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health, GIB_FLESH, 1);
-		}
-		ThrowGib ("models/objects/gibs/head2/tris.md2", self.health, GIB_FLESH, 1);
-		ThrowGib ("progs/gib1.mdl", self.health, GIB_FLAMING);
-		ThrowGib ("progs/gib2.mdl", self.health, GIB_FLAMING);
-		ThrowGib ("progs/gib3.mdl", self.health, GIB_FLAMING); */
-		
-		for (n= 0; n < 2; n++)
-			ThrowGib ("models/objects/gibs/bone/tris.md2", self.health, GIB_FLESH);
-		for (n= 0; n < 4; n++)
-			ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health, GIB_FLESH);
-		
-		TossGibs ("models/objects/gibs/bone/tris.md2", self.health, 8, GIB_FLESH);
+		ThrowGib ("models/objects/gibs/head/tris.md2", self.health, GIB_FLESH, 1);
 		
 		remove(self);
 		return;
@@ -290,8 +279,9 @@ void() misc_deadsoldier =
 	else if (self.spawnflags & IMPALED){
 		self.frame = 5;
 	}
-	else
+	else{
 		self.frame = 0;
+	}
 
 	self.th_die = misc_deadsoldier_die;
 	self.takedamage = DAMAGE_AIM;
@@ -458,6 +448,7 @@ void() target_speaker_think =
 	{	// looping sound toggles
 		if (self.noise) 
 		{
+			//pointsound(self.origin, self.noise, self.volume, self.attenuation);
 			sound7(self, CHAN_VOICE, self.noise, self.volume, self.attenuation, self.speed, self.flags);
 			self.nextthink = time + soundlength(self.noise);
 		}
@@ -514,6 +505,8 @@ void target_speaker_use ()
 			else
 				chan = CHAN_VOICE;
 			//gi.sound (activator, chan, ent->noise_index, 1, ATTN_NORM, 0);
+			//void(vector origin, string sample, float volume, float attenuation) pointsound
+			//pointsound(self.origin, self.noise, self.volume, self.attenuation);
 			sound7(self, chan, self.noise, self.volume, self.attenuation, 0, 0);
 		}
 		else
@@ -525,6 +518,7 @@ void target_speaker_use ()
 			// use a positioned_sound, because this entity won't normally be
 			// sent to any clients because it is invisible
 			//gi.positioned_sound (ent->s.origin, ent, chan, ent->noise_index, ent->volume, ent->attenuation, 0);
+			//pointsound(self.origin, self.noise, self.volume, self.attenuation);
 			sound7(self, CHAN_VOICE, self.noise, self.volume, self.attenuation, 100, self.flags);
 		}
 		self.nextthink = time + soundlength(self.noise);

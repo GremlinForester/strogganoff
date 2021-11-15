@@ -102,7 +102,7 @@ void(vector pos, string model, float skinnum, vector ColorMod, float additive) S
 {
 	local entity overlay;
 		
-	if (numoverlays >= 8){
+	if (numoverlays >= 4){
 		return;
 	}
 	

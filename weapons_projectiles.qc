@@ -793,11 +793,23 @@ void() W_FireRocket =
 //	setorigin (newmis, self.origin + v_forward*8 + '0 0 16');
 };
 
+void() bfg_impact_effect_think =
+{
+	if (self.alpha <= 0){
+		remove(self);
+	}
+	FLOG(self.alpha);
+	self.alpha -= 0.1;
+	self.frame++;
+	self.scale++;
+	self.nextthink = time + 0.1;
+//	self.think = bfg_impact_effect_think;
+}
 
 void() T_BFGTouch =
 {
-//	local float	damg;
-
+	local entity bfg_impact_effect;
+	
 	if (other == self.owner)
 		return;		// don't explode on owner
 
@@ -811,35 +823,29 @@ void() T_BFGTouch =
 	{
 		remove(self);
 		return;
-	}	
-
-//	damg = self.dmg;
-
-#ifdef opgrade
-
-	self.origin = self.origin - 8*normalize(self.velocity);
-
-	if (!self.dmg) self.dmg = 120;
-
-// same explode code except for 8 q-unit reposition				- note: other adjust in fn call
-	GrenadeExplode();
-
-#else
-	// don't do radius damage to the other, because all the damage
-	// was done in the impact
+	}
+	
 	T_RadiusDamageRad (self, self.owner, self.dmg, self.owner, self.dmgradius);
 
 //	sound (self, CHAN_WEAPON, "weapons/r_exp3.wav", 1, ATTN_NORM);
 	self.origin = self.origin - 8*normalize(self.velocity);
-
-	WriteByte (MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte (MSG_BROADCAST, TE_EXPLOSION);
-	WriteCoord (MSG_BROADCAST, self.origin_x);
-	WriteCoord (MSG_BROADCAST, self.origin_y);
-	WriteCoord (MSG_BROADCAST, self.origin_z);
-
-	BecomeExplosion ();
-#endif
+	stuffcmd (self.owner, "bf 0 1 0 0.7\n");
+	
+	bfg_impact_effect = spawn();
+	bfg_impact_effect.origin = self.origin;
+	setsize (bfg_impact_effect, '0 0 0', '0 0 0');
+	setorigin (bfg_impact_effect, self.origin);
+	bfg_impact_effect.solid = SOLID_NOT;
+	bfg_impact_effect.movetype = MOVETYPE_NOCLIP;
+	bfg_impact_effect.effects = self.effects | EF_LOWPRECISION | EF_ADDITIVE;
+	setmodel (bfg_impact_effect, "models/objects/r_explode/tris.md2");
+	bfg_impact_effect.scale = 4;
+	bfg_impact_effect.alpha = 1.3;
+	bfg_impact_effect.colormod = '0 100 0';
+	bfg_impact_effect.nextthink = time;
+	bfg_impact_effect.think = bfg_impact_effect_think;
+	
+	remove(self);
 };
 
 void(vector org, vector vec, float dmg, vector colortint, float mflags) monster_fire_blaster;
@@ -1044,7 +1050,7 @@ void() BFGthink =
 	BFGtarget = BFGtarget.chain;
 	}
 	
-	self.nextthink = time + 1;
+	self.nextthink = time + 0.1;
 	self.think = BFGthink;
 }
 

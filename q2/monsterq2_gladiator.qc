@@ -222,14 +222,8 @@ void() q2gladiator_die =
 // check for gib
 	if (self.health < -40)
 	{
-/*
-		sound (self, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
-		ThrowHead ("progs/h_knight.mdl", self.health);
-		ThrowGib ("progs/gib1.mdl", self.health);
-		ThrowGib ("progs/gib2.mdl", self.health);
-		ThrowGib ("progs/gib3.mdl", self.health);
-*/
-		gibbs("models/objects/gibs/head2/tris.md2");
+		gibMonster();
+		remove(self);
 		return;
 	}
 
@@ -252,7 +246,7 @@ void() q2gladiator_die =
 */
 void () monster_gladiator =
 {
-	self.classname = "q2monster_gladiator";
+	self.classname = "monster_gladiator";
 	
 	if (deathmatch)
 	{

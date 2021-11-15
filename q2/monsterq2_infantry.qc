@@ -259,10 +259,9 @@ void() q2infantry_fire =
 
 void() q2infantry_dead =
 {
-	setsize (self, '-16 -16 0', '16 16 16');
+	setsize (self, '-16 -16 -24', '16 16 -8');
 	self.movetype = MOVETYPE_TOSS;
 	self.solid = SOLID_CORPSE;
-	DropLoot(LOOT_BULLETS, floor(random()*12)+1);
 }
 
 // Death 1
@@ -312,28 +311,36 @@ framer($FRAME_death301, $FRAME_death309, q2infantry_frames_die3, SUB_Null, 0.1,
 
 void() q2infantry_die =
 {
-	local float	n;
-	// check for gib
-	if (self.health < -30)
+ 	if (self.health < -35)
 	{
-		sound (self, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
-		for (n= 0; n < 2; n++)
-			ThrowGib ("models/objects/gibs/bone/tris.md2", self.health);
-		for (n= 0; n < 4; n++)
-			ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health);
-		
-		ThrowHead ("models/objects/gibs/head2/tris.md2", self.health);
+		gibMonster();
+		remove(self);
 		return;
 	}
 
-// regular death
-	sound (self, CHAN_VOICE, "infantry/infdeth2.wav", 1, ATTN_NORM);
-	if (random() < 0.4)
-		q2infantry_frames_die1 ();
-	if (random() < 0.7)
-		q2infantry_frames_die2 ();
+	self.takedamage = DAMAGE_YES;
+
+ 	if (self.deadflag == DEAD_DEAD){
+		return;
+	}
 	else
+	{
+	// regular death
+	sound (self, CHAN_VOICE, "soldier/soldeth2.wav", 1, ATTN_NORM);
+	self.deadflag = DEAD_DEAD;
+
+	DropLoot(LOOT_BULLETS, floor(random()*12)+1);
+
+	if (random() < 0.4){
+		q2infantry_frames_die1 ();
+	}
+	if (random() < 0.7){
+		q2infantry_frames_die2 ();
+	}
+	else{
 		q2infantry_frames_die3 ();
+	}
+	}
 };
 
 
@@ -347,7 +354,7 @@ void() monster_infantry =
 		return;
 	}
 	
-	self.classname = "q2monster_infantry";
+	self.classname = "monster_infantry";
 	
 	precache_model ("models/monsters/infantry/tris.md2");
 	precache_model ("progs/h_guard.mdl");

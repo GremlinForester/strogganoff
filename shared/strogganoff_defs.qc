@@ -6,7 +6,7 @@ and switch or loop frames based on player and weapons states. Firing, switching,
 Making a note of it here to help make sense of it for myself or anyone else who might use this.
 
 */
-
+.float dmgradius;
 float numdecors;
 float maxdecors;
 
@@ -311,41 +311,10 @@ Find/Replace, it's time to work!
 #define	IT_SUIT					2097152
 #define	IT_QUAD					4194304
 
-/*
-// .items
-#define	IT_INVISIBILITY			1
-#define	IT_INVULNERABILITY		2
-#define	IT_SUIT					4
-#define	IT_QUAD					8
-#define	IT_SILENCER				16
-#define	IT_BREATHER				32
-#define	IT_POWER_SHIELD			64
-
-#define	IT_SLUGS				128
-#define	IT_SHELLS				256
-#define	IT_BULLETS				512
-#define	IT_ROCKETS				1024
-#define	IT_CELLS				2048
-
-#define IT_EXTRA				4096
-#define	IT_ARMOR_BODY			8192
-#define	IT_ARMOR_COMBAT			16384
-#define	IT_ARMOR_JACKET			32768
-#define	IT_SUPERHEALTH			65536
-
-#define	IT_KEY1					131072
-#define	IT_KEY2					262144
-
-#define	IT_EXTRA				524288 
-#define	IT_EXTRA				1048576
-#define	IT_EXTRA				2097152
-#define	IT_EXTRA				4194304
-*/
-
 .float inv_ammo_bullets;
 .float inv_ammo_shells;
 .float inv_ammo_cells;
-.float inv_ammo_slugs; //Railgun
+.float inv_ammo_slugs;
 .float inv_ammo_rockets;
 .float inv_ammo_grenades;
 
@@ -582,6 +551,12 @@ IMPULSE VALUES
 #define IMPULSE_CROUCH_OFF 34
 
 #define IMPULSE_CHEAT_CMD 99
+
+#define IMPULSE_FLIP 110
+#define IMPULSE_SALUTE 111
+#define IMPULSE_TAUNT 112
+#define IMPULSE_WAVE 113
+#define IMPULSE_POINT 114
 
 //FrikBot Waypoint Edit Impulses
 /*

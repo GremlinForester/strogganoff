@@ -3,11 +3,6 @@
 
 mutant
 
-This version doesn't leap like the demon in Q1.
-Right now it works well as a faster moving melee monster like the demon in Doom.
-Writing this as an afterthought but I recall there were issues with the frames or something.  
-Anyway, a fix for the leap is TODO atm.
-
 ==============================================================================
 */
 
@@ -222,48 +217,56 @@ void(entity attacker, float damage)	q2mutant_pain =
 // DEATH
 //
 
+void() q2mutant_dead =
+{
+	setsize (self, '-16 -16 -24', '16 16 -8');
+	self.movetype = MOVETYPE_TOSS;
+	self.solid = SOLID_CORPSE;
+}
+
 //DIE 1
 framer($FRAME_death101, $FRAME_death109, q2mutant_die1, SUB_Null, 0.1,
 
-	frame_arb($FRAME_death101, self.solid = SOLID_CORPSE, self.movetype = MOVETYPE_TOSS);
+	frame_arb($FRAME_death101, q2mutant_dead(););
 );
 
 //DIE 2
 framer($FRAME_death201, $FRAME_death210, q2mutant_die2, SUB_Null, 0.1,
 
-	frame_arb($FRAME_death201,self.solid = SOLID_CORPSE, self.movetype = MOVETYPE_TOSS);
+	frame_arb($FRAME_death201, q2mutant_dead(););
 );
 
 void() q2mutant_die =
 {
-	local float	n;
-	
-	// check for gib
-	if (self.health < -80)
+ 	if (self.health < -80)
 	{
-		sound (self, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
-		for (n= 0; n < 2; n++)
-			ThrowGib ("models/objects/gibs/bone/tris.md2", self.health, GIB_FLESH);
-		for (n= 0; n < 4; n++)
-			ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health, GIB_FLESH);
+		gibMonster();
 		
-		ThrowHead ("models/objects/gibs/head2/tris.md2", self.health);
+		remove(self);
+		return;
+	} 
+
+	self.takedamage = DAMAGE_YES;
+
+ 	if (self.deadflag == DEAD_DEAD){
 		return;
 	}
-
-// regular death
-	sound (self, CHAN_VOICE, MUTANT_SOUND_DEATH, 1, ATTN_NORM);
+	else
+	{
+	// regular death
+	self.deadflag = DEAD_DEAD;
 	if (random() < 0.5)
 		q2mutant_die1 ();
 	else
 		q2mutant_die2 ();
+	}
 };
 
 /*QUAKED monster_mutant (1 .5 0) (-32 -32 -24) (32 32 32) Ambush Trigger_Spawn Sight
 */
 void() monster_mutant =
 {
-	self.classname = "monsterq2_mutant";
+	self.classname = "monster_mutant";
 	
 	if (deathmatch)
 	{

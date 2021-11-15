@@ -101,7 +101,6 @@ void() flipper_dead =
 {
 	self.movetype = MOVETYPE_TOSS;
 	self.solid = SOLID_CORPSE;
-
 }
 
 framer($FRAME_flpdth01, $FRAME_flpdth56, q2flipper_frames_death, SUB_Null, 0.1,
@@ -118,13 +117,7 @@ void() q2flipper_die =
 // check for gib
  	if (self.health < -20)
 	{
-		sound (self, CHAN_VOICE, "misc/udeath.wav", 1, ATTN_NORM);
-		
-		for (n= 0; n < 2; n++)
-			ThrowGib ("models/objects/gibs/bone/tris.md2", self.health / 4, GIB_FLESH);
-		for (n= 0; n < 4; n++)
-			ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health / 4, GIB_FLESH);
-		
+		gibMonster();
 		remove(self);
 		return;
 	} 

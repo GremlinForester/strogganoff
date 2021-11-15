@@ -69,6 +69,7 @@ void() item_armor_shard =
 	setsize (self, '-16 -16 -16', '16 16 16');
 	self.modelflags = MF_ROTATE;
 	self.netname = "Armor Shard";
+	self.classname = "item_armor_shard";
 	self.noise = "misc/ar2_pkup.wav";
 	StartItem ();
 }
