@@ -50,8 +50,7 @@ void() q2boss2_fire_rockets =
 		dir = normalize(end - org);
 	monster_fire_rocket(org, dir, 50);
 	
-	//TODO: Rocket firing sound
-	//sound(self, CHAN_WEAPON, "", 1, ATTN_NORM);
+	sound(self, CHAN_AUTO, "weapons/ROCKLF1A.wav", 1, ATTN_NORM);
 };
 
 
@@ -275,11 +274,11 @@ void () q2boss2_explode =
 		SUB_UseTargets();
 		
 	for (n= 0; n < 10; n++)
-		ThrowGib ("models/objects/gibs/bone/tris.md2", 400, GIB_FLESH);
+		ThrowGib ("models/objects/gibs/bone/tris.md2", 400, GIB_FLESH, 1);
 	for (n= 0; n < 15; n++)
-		ThrowGib ("models/objects/gibs/sm_meat/tris.md2", 500, GIB_FLESH);
+		ThrowGib ("models/objects/gibs/sm_meat/tris.md2", 500, GIB_FLESH, 1);
 	for (n= 0; n < 5; n++)
-		ThrowGib ("models/objects/debris1/tris.md2", 500, GIB_FLAMING);
+		ThrowGib ("models/objects/debris1/tris.md2", 500, GIB_FLAMING, 1);
 		
 	remove(self);
 }

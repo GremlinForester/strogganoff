@@ -302,11 +302,11 @@ void() finale_4 =
 #endif
 				self.rnd_ = random();
 				if (self.rnd_ < 0.3)				
-					ThrowGib ("progs/gib1.mdl", spat_);
+					ThrowGib ("progs/gib1.mdl", spat_, GIB_FLESH, 1);
 				else if (self.rnd_ < 0.6)
-					ThrowGib ("progs/gib2.mdl", spat_);
+					ThrowGib ("progs/gib2.mdl", spat_, GIB_FLESH, 1);
 				else
-					ThrowGib ("progs/gib3.mdl", spat_);
+					ThrowGib ("progs/gib3.mdl", spat_, GIB_FLESH, 1);
 #ifdef opgrade
 // opg in dp - scale some chunks up
 #ifndef nondp

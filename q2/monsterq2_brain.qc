@@ -208,15 +208,7 @@ void() brain_die =
 
  	if (self.health < -80)
 	{
-		sound (self, CHAN_VOICE, "misc/udeath.wav", 1, ATTN_NORM);
-		
-		for (n= 0; n < 2; n++)
-			ThrowGib ("models/objects/gibs/bone/tris.md2", self.health / 1.15, GIB_FLESH);
-			ThrowGib ("models/objects/debris1/tris.md2", self.health / 1.25, GIB_FLAMING);
-			ThrowGib ("models/objects/debris2/tris.md2", self.health / 1.25, GIB_FLAMING);
-		for (n= 0; n < 4; n++)
-			ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health / 1.15, GIB_FLESH);
-		
+		gibMonster();
 		remove(self);
 		return;
 	}

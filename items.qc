@@ -684,7 +684,7 @@ local float		best;
 	// ammo touch sound
 	sound (self, CHAN_ITEM, "weapons/lock4.wav", 1, ATTN_NORM);
 
-	W_SetCurrentAmmo(); //MrC 13/09/21: had to restore this to update ammo amounts on pickup
+	W_SetCurrentAmmo(); //MrC 13/09/21: had to restore this to update ammo amounts on pickup, TODO: look into this more.
 	self = stemp;
 
 	touched(30);
@@ -716,6 +716,8 @@ void() q2key_touch =
 	sound (other, CHAN_ITEM, self.noise, 1, ATTN_NORM);
 	stuffcmd (other, "bf\n");
 	other.items_q2keys = other.items_q2keys | self.items_q2keys;
+
+	FLOG(self.items_q2keys);
 
 	if (!coop)
 	{	
@@ -801,6 +803,52 @@ void() sigil_touch =
 	self.classname = string_null;		// so rune doors won't find it
 };
 
+
+/*
+===============================================================================
+
+Inventory Items
+
+===============================================================================
+*/
+
+void() inv_item_touch =
+{
+	if (other.classname != "player")
+		return;
+	if (other.health <= 0)
+		return;
+
+	switch (self.classname){
+		case "item_power_screen":
+			other.inv_pickup_invisibility += 1;
+			break;
+		case "item_quad":
+			other.inv_pickup_quad += 1;
+			break;
+		case "item_invulnerability":
+			other.inv_pickup_invulnerability += 1;
+			break;
+		case "item_silencer":
+			other.inv_pickup_silencer += 1;
+			break;
+		case "item_breather":
+			other.inv_pickup_rebreather += 1;
+			break;
+		case "item_enviro":
+			other.inv_pickup_envirosuit += 1;
+			break;
+	}
+
+	sound (other, CHAN_AUTO, self.noise, 1, ATTN_NORM);
+
+	sprint (other, "You got the ");
+	sprint (other, self.netname);
+	sprint (other,"\n");
+
+	touched(0);
+};
+
 /*
 ===============================================================================
 
@@ -855,7 +903,7 @@ void() powerup_touch =
 	if (self.classname == "item_artifact_invisibility")
 	{
 		other.invisible_time = 1;
-		other.invisible_finished = time + 30;
+		other.invisible_finished = time + 10;
 	}
 
 	if (self.classname == "item_artifact_super_damage")
@@ -1069,8 +1117,8 @@ void(float lootType, float lootAmt) DropLoot =
 	loot.velocity_z = 200;
 	loot.velocity_x = -50 + (random() * 200);
 	loot.velocity_y = -50 + (random() * 200);
-	loot.touch = BackpackTouch;
 	loot.netname = string_null;
+	loot.touch = BackpackTouch;	
 
 	switch (lootType)
 	{
@@ -1119,7 +1167,6 @@ void(float lootType, float lootAmt) DropLoot =
 	loot.flags = FL_ITEM;
 	loot.solid = SOLID_TRIGGER;
 	loot.movetype = MOVETYPE_TOSS;
-	
 	loot.nextthink = time + 120;	// remove after 2 minutes
 	loot.think = SUB_Remove;
 };
@@ -1140,6 +1187,8 @@ void() q2_tossWeapon={
 	if(self.weapon == WEP_BLASTER){
 		return;
 	}
+	
+	self.weaponmodel = ""; //quick fix to make weapon vanish when throwing
 		
 	//remove weapon form player inventory
 	self.inv_weapons = self.inv_weapons - (self.inv_weapons & self.weapon);	

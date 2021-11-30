@@ -44,7 +44,7 @@ float		killed_monsters;	// number of monsters killed
 
 // spawnparms are used to encode information about clients across server
 // level changes
-float		parm1, parm2, parm3, parm4, parm5, parm6, parm7, parm8, parm9, parm10, parm11, parm12, parm13, parm14, parm15, parm16;
+float		parm1, parm2, parm3, parm4, parm5, parm6, parm7, parm8, parm9, parm10, parm11, parm12, parm13, parm14, parm15, parm16, parm17, parm18, parm19, parm20, parm21, parm22, parm23, parm24, parm25, parm26, parm27, parm28, parm29, parm30, parm31, parm32;
 
 //
 // global variables set by built in functions

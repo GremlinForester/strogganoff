@@ -398,9 +398,9 @@ void(string hd) gibbs =
 // some code needs to play other sounds - call sound() with the same channel and this will not be heard
 	sound(self, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
 	if (hd) ThrowHead (hd, self.health);
-	ThrowGib ("progs/gib1.mdl", self.health, GIB_FLESH);
-	ThrowGib ("progs/gib2.mdl", self.health, GIB_FLESH);
-	ThrowGib ("progs/gib3.mdl", self.health, GIB_FLESH);
+	ThrowGib ("progs/gib1.mdl", self.health, GIB_FLESH, 1);
+	ThrowGib ("progs/gib2.mdl", self.health, GIB_FLESH, 1);
+	ThrowGib ("progs/gib3.mdl", self.health, GIB_FLESH, 1);
 };
 
 

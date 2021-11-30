@@ -219,7 +219,6 @@ framer($FRAME_painb1, $FRAME_painb20, q2berserk_pain2, q2berserk_run, 0.1,
 
 void(entity attacker, float damage)	q2berserk_pain =
 {
-	local float r;
 	local vector org;
 	org = self.origin + '0 0 24';
 
@@ -229,16 +228,12 @@ void(entity attacker, float damage)	q2berserk_pain =
 	if (self.pain_finished > time)
 		return;
 
-	r = random();
-
-	if (r < 0.5)
-	{
+	if ((damage < 20) || (random() < 0.5)){
 		self.pain_finished = time + 0.4;
 		q2berserk_pain1 ();
 		sound (self, CHAN_VOICE, BERSERK_SOUND_PAIN, 1, ATTN_NORM);
 	}
-	else
-	{
+	else{
 		self.pain_finished = time + 2;
 		q2berserk_pain2 ();
 		sound (self, CHAN_VOICE, BERSERK_SOUND_PAIN, 1, ATTN_NORM);

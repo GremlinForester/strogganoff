@@ -385,9 +385,9 @@ void() insane_die=
 	{
 		sound (self, CHAN_VOICE, "misc/udeath.wav", 1, ATTN_IDLE);
 		for (n= 0; n < 2; n++)
-			ThrowGib ("models/objects/gibs/bone/tris.md2", self.health, GIB_FLESH);
+			ThrowGib ("models/objects/gibs/bone/tris.md2", self.health, GIB_FLESH, 1);
 		for (n= 0; n < 4; n++)
-			ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health, GIB_FLESH);
+			ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health, GIB_FLESH, 1);
 		ThrowHead ("models/objects/gibs/head2/tris.md2", self.health);
 		self.deadflag = DEAD_DEAD;
 		return;

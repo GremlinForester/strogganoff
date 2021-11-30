@@ -81,13 +81,13 @@ model="models/items/armor/screen/"
 //MrC: This item went apparently unused in Q2, how about an invisibility cloak?
 void() item_power_screen =
 {
-	self.touch = powerup_touch;
+	self.touch = inv_item_touch;
 	precache_model ("models/items/armor/screen/tris.md2");
 	precache_sound ("misc/ar3_pkup.wav");
 	self.noise = "misc/ar3_pkup.wav";
 	setmodel (self, "models/items/armor/screen/tris.md2");
 	self.netname = "Power Screen";
-	self.items = IT_INVISIBILITY;
+//	self.items = IT_INVISIBILITY;
 	self.modelflags = MF_ROTATE;
 	setsize (self, '-16 -16 -16', '16 16 16');
 	StartItem ();
@@ -123,7 +123,7 @@ model="models/items/quaddama/"
 */
 void() item_quad =
 {
-	self.touch = powerup_touch;
+	self.touch = inv_item_touch;
 	precache_model ("models/items/quaddama/tris.md2");
 	precache_sound ("items/damage.wav");
 	precache_sound ("items/damage2.wav");
@@ -131,7 +131,7 @@ void() item_quad =
 	self.noise = "items/damage.wav";
 	setmodel (self, "models/items/quaddama/tris.md2");
 	self.netname = "Quad Damage";
-	self.items = IT_QUAD;
+//	self.items = IT_QUAD;
 	self.modelflags = MF_ROTATE;
 	setsize (self, '-16 -16 -16', '16 16 16');
 	StartItem ();
@@ -149,10 +149,10 @@ void() item_invulnerability =
 	self.noise = "items/pkup.wav";
 	setmodel (self, "models/items/invulner/tris.md2");
 	self.netname = "Invulnerability";
-	self.items = IT_INVULNERABILITY;
+//	self.items = IT_INVULNERABILITY;
 	self.modelflags = MF_ROTATE;
 	setsize (self, '-16 -16 -16', '16 16 16');
-	self.touch = powerup_touch;
+	self.touch = inv_item_touch;
 	StartItem();
 };
 
@@ -161,13 +161,13 @@ model="models/items/silencer/"
 */
 void() item_silencer =
 {
-	self.touch = powerup_touch;
+	self.touch = inv_item_touch;
 	precache_model ("models/items/silencer/tris.md2");
 	precache_sound ("misc/ar3_pkup.wav");
 	self.noise = "misc/ar3_pkup.wav";
 	setmodel (self, "models/items/silencer/tris.md2");
 	self.netname = "Silencer";
-	self.items = IT_SILENCER;
+//	self.items = IT_SILENCER;
 	self.modelflags = MF_ROTATE;
 	setsize (self, '-16 -16 -16', '16 16 16');
 	StartItem ();
@@ -178,13 +178,13 @@ model="models/items/breather/"
 */
 void() item_breather =
 {
-	self.touch = powerup_touch;
+	self.touch = inv_item_touch;
 	precache_model ("models/items/breather/tris.md2");
 	precache_sound ("misc/ar3_pkup.wav");
 	self.noise = "misc/ar3_pkup.wav";
 	setmodel (self, "models/items/breather/tris.md2");
 	self.netname = "Rebreather";
-	self.items = IT_BREATHER;
+//	self.items = IT_BREATHER;
 	self.modelflags = MF_ROTATE;
 	setsize (self, '-16 -16 -16', '16 16 16');
 	StartItem ();
@@ -195,13 +195,13 @@ model="models/items/enviro/"
 */
 void() item_enviro =
 {
-	self.touch = powerup_touch;
+	self.touch = inv_item_touch;
 	precache_model ("models/items/enviro/tris.md2");
 	precache_sound ("misc/ar3_pkup.wav");
 	self.noise = "misc/ar3_pkup.wav";
 	setmodel (self, "models/items/enviro/tris.md2");
 	self.netname = "Environment Suit";
-	self.items = IT_SUIT;
+//	self.items = IT_SUIT;
 	self.modelflags = MF_ROTATE;
 	setsize (self, '-16 -16 -16', '16 16 16');
 	StartItem ();

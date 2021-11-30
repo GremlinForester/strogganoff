@@ -27,18 +27,18 @@ void() breakable_glass_die =
 		//self.skin = 2;
 		
 		for (n= 0; n < 6; n++)
-			ThrowGib ("models/glass_debris_shard2.md3", self.health, GIB_GLASS);
+			ThrowGib ("models/glass_debris_shard2.md3", self.health, GIB_GLASS, 1);
 		for (n= 0; n < 4; n++)
-			ThrowGib ("models/glass_debris_shard1.md3", self.health, GIB_GLASS);
+			ThrowGib ("models/glass_debris_shard1.md3", self.health, GIB_GLASS, 1);
 		for (n= 0; n < 2; n++)
-			ThrowGib ("models/glass_debris1.md3", self.health, GIB_GLASS);
+			ThrowGib ("models/glass_debris1.md3", self.health, GIB_GLASS, 1);
 		
 		self.solid = SOLID_NOT;
 		self.takedamage = DAMAGE_NO;
 		pointparticles(particleeffectnum("TE_GLASS_SHATTER"), self.origin, '0 0 0', 1);
-		pointparticles(particleeffectnum("TE_GLASS_SHATTER"), (self.origin + '0 32 0'), '0 32 0', 1);
+		pointparticles(particleeffectnum("glass_break"), (self.origin + '0 32 0'), '0 32 0', 1);
 		pointparticles(particleeffectnum("TE_GLASS_SHATTER"), (self.origin + '0 -32 0'), '0 -32 0', 1);
-		pointparticles(particleeffectnum("TE_GLASS_SHATTER"), (self.origin + '0 32 -32'), '0 32 0', 1);
+		pointparticles(particleeffectnum("glass_break"), (self.origin + '0 32 -32'), '0 32 0', 1);
 		pointparticles(particleeffectnum("TE_GLASS_SHATTER"), (self.origin + '0 -32 20'), '0 -32 0', 1);			
 	}
 	SUB_UseTargets();
@@ -439,11 +439,11 @@ void() model_static_die =
 		sound (self, CHAN_VOICE, "world/brkglas.wav", 1, ATTN_NORM);
 		
 		for (n= 0; n < 2; n++)
-			ThrowGib ("models/objects/debris1/tris.md2", self.health, GIB_GLASS);
+			ThrowGib ("models/objects/debris1/tris.md2", self.health, GIB_GLASS, 1);
 		for (n= 0; n < 3; n++)
-			ThrowGib ("models/objects/debris2/tris.md2", self.health, GIB_GLASS);
+			ThrowGib ("models/objects/debris2/tris.md2", self.health, GIB_GLASS, 1);
 		for (n= 0; n < 4; n++)
-			ThrowGib ("models/objects/debris3/tris.md2", self.health, GIB_GLASS);
+			ThrowGib ("models/objects/debris3/tris.md2", self.health, GIB_GLASS, 1);
 		
 		self.solid = SOLID_NOT;
 		self.takedamage = DAMAGE_NO;

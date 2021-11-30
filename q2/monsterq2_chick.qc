@@ -358,34 +358,6 @@ framer($FRAME_attak101, $FRAME_attak132, q2chick_missile_attack, q2chick_frames_
 	ai_face();
 );
 
-// Framer not compiling, so good 'ol frame functions to the rescue! NM fixed it. I think.
-/*
-void()	q2chick_missile_attack101	=[	$FRAME_attak101,		q2chick_missile_attack102	] {ai_face();sound (self, CHAN_VOICE, CHICK_SOUND_MISSILE_PRELAUNCH, 1, ATTN_NORM);};
-void()	q2chick_missile_attack102	=[	$FRAME_attak102,		q2chick_missile_attack103	] {ai_face();};
-void()	q2chick_missile_attack103	=[	$FRAME_attak103,		q2chick_missile_attack104	] {ai_face();};
-void()	q2chick_missile_attack104	=[	$FRAME_attak104,		q2chick_missile_attack105	] {ai_face();};
-void()	q2chick_missile_attack105	=[	$FRAME_attak105,		q2chick_missile_attack106	] {ai_face();};
-void()	q2chick_missile_attack106	=[	$FRAME_attak106,		q2chick_missile_attack107	] {ai_face();};
-void()	q2chick_missile_attack107	=[	$FRAME_attak107,		q2chick_missile_attack108	] {ai_face();};
-void()	q2chick_missile_attack108	=[	$FRAME_attak108,		q2chick_missile_attack109	] {ai_face();};
-void()	q2chick_missile_attack109	=[	$FRAME_attak109,		q2chick_missile_attack110	] {ai_face();};
-void()	q2chick_missile_attack110	=[	$FRAME_attak110,		q2chick_missile_attack111	] {ai_face();};
-void()	q2chick_missile_attack111	=[	$FRAME_attak111,		q2chick_missile_attack112	] {ai_face();};
-void()	q2chick_missile_attack112	=[	$FRAME_attak112,		q2chick_missile_attack113	] {ai_face();};
-void()	q2chick_missile_attack113	=[	$FRAME_attak113,		q2chick_missile_attack114	] {ai_face();sound (self, CHAN_BODY, CHICK_SOUND_MISSILE_LAUNCH, 1, ATTN_NORM);};
-void()	q2chick_missile_attack114	=[	$FRAME_attak114,		q2chick_missile_attack115	] {ai_face();self.effects = self.effects | EF_MUZZLEFLASH;q2chick_fire();};
-void()	q2chick_missile_attack115	=[	$FRAME_attak115,		q2chick_missile_attack116	] {ai_face();};
-void()	q2chick_missile_attack116	=[	$FRAME_attak116,		q2chick_missile_attack117	] {ai_face();};
-void()	q2chick_missile_attack117	=[	$FRAME_attak117,		q2chick_missile_attack118	] {ai_face();};
-void()	q2chick_missile_attack118	=[	$FRAME_attak118,		q2chick_missile_attack119	] {ai_face();};
-void()	q2chick_missile_attack119	=[	$FRAME_attak119,		q2chick_missile_attack120	] {ai_face();};
-void()	q2chick_missile_attack120	=[	$FRAME_attak127,		q2chick_missile_attack127	] {ai_face();};
-void()	q2chick_missile_attack127	=[	$FRAME_attak128,		q2chick_missile_attack128	] {ai_face();};
-void()	q2chick_missile_attack128	=[	$FRAME_attak129,		q2chick_missile_attack129	] {ai_face();};
-void()	q2chick_missile_attack129	=[	$FRAME_attak130,		q2chick_missile_attack130	] {ai_face();};
-void()	q2chick_missile_attack130	=[	$FRAME_attak131,		q2chick_missile_attack131	] {ai_face();};
-void()	q2chick_missile_attack131	=[	$FRAME_attak132,		q2chick_frames_run		] {SUB_AttackFinished(4);};
-*/
 /*QUAKED monster_chick (1 .5 0) (-16 -16 -24) (16 16 32) Ambush Trigger_Spawn Sight
 */
 void () monster_chick =

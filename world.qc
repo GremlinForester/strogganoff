@@ -457,6 +457,30 @@ Quake 2 MP Map ladder volumes
 	precache_model ("players/male/w_bfg.md2");
 	precache_model ("players/male/tris.md2");
 	
+	precache_model ("players/female/w_blaster.md2");
+	precache_model ("players/female/w_shotgun.md2");
+	precache_model ("players/female/w_sshotgun.md2");
+	precache_model ("players/female/w_machinegun.md2");
+	precache_model ("players/female/w_chaingun.md2");
+	precache_model ("players/female/w_glauncher.md2");
+	precache_model ("players/female/w_rlauncher.md2");
+	precache_model ("players/female/w_railgun.md2");
+	precache_model ("players/female/w_hyperblaster.md2");
+	precache_model ("players/female/w_bfg.md2");
+	precache_model ("players/female/tris.md2");
+
+	precache_model ("players/cyborg/w_blaster.md2");
+	precache_model ("players/cyborg/w_shotgun.md2");
+	precache_model ("players/cyborg/w_sshotgun.md2");
+	precache_model ("players/cyborg/w_machinegun.md2");
+	precache_model ("players/cyborg/w_chaingun.md2");
+	precache_model ("players/cyborg/w_glauncher.md2");
+	precache_model ("players/cyborg/w_rlauncher.md2");
+	precache_model ("players/cyborg/w_railgun.md2");
+	precache_model ("players/cyborg/w_hyperblaster.md2");
+	precache_model ("players/cyborg/w_bfg.md2");
+	precache_model ("players/cyborg/tris.md2");
+	
 	precache_model ("models/objects/flash/tris.md2");
 	
 	precache_model ("models/weapons/v_blast/tris.md2");
@@ -486,6 +510,11 @@ Quake 2 MP Map ladder volumes
 	precache_model ("progs/zom_gib.mdl");
 
 	precache_model ("progs/v_light.mdl");
+	
+	precache_model ("models/objects/r_explode/tris.md2");
+
+	precache_model ("models/objects/grenade/tris.md2");
+	precache_model ("sprites/s_bfg1.sp2");
 	
 	// player foot sounds
 
@@ -544,6 +573,7 @@ Quake 2 MP Map ladder volumes
 	precache_sound ("player/footsteps/pl_snow4.wav");
 	
 	precache_sound ("weapons/HGRENT1A.WAV");
+	precache_sound ("weapons/ROCKLF1A.wav");
 
 //
 // Setup light animation tables. 'a' is total darkness, 'z' is maxbright.

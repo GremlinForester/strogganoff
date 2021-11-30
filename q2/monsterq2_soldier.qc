@@ -7,12 +7,6 @@ monster_soldier_light
 monster_soldier
 monster_soldier_ss
 
-TODO: 
-Fix q2monster classname and deathfire stuff.
-X Machine gun attack is currently only a single frame and not a multi-shot attack.
-Corpse stuff and death.
-Wow this needs work!
-
 ==============================================================================
 */
 

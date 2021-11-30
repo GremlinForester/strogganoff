@@ -11,12 +11,6 @@
 // };
 
 
-/*
-monster_ projectile stuff, ala Quake 2. These essentially wrap as many shared general weapon projectile functions as possible, also used by the player.
-
-For now they mostly just pass parameters but down the road can be used for more monster specific stuff. Quake 2 used this for muzzle flashes for example.
-*/
-
 #define GIB_VELOCITY_MUL 1.1
 #define GIB_VELOCITY_FLAMING_MUL random() * 4
 
@@ -119,6 +113,12 @@ misc_insane
 	
 }
 
+/*
+monster_ projectile stuff, ala Quake 2. These essentially wrap as many shared general weapon projectile functions as possible, also used by the player.
+
+For now they mostly just pass parameters but down the road can be used for more monster specific stuff. Quake 2 used this for muzzle flashes for example.
+*/
+
 //MrC: Unless there's a performance hit with ApplyMultiDamage, this should work fine. 
 //This defaults FireBullets to 1 bullet of configurable damage and spread.
 
@@ -130,13 +130,6 @@ void (vector start, vector aim, vector spread, float dmg) monster_fire_bullet =
 void (float shotcount, vector start, vector aim, vector spread, float dmg) monster_fire_shotgun =
 {
 	FireBullets(shotcount, start, aim, spread, dmg);
-
-/* Quake 2 uses a for loop and a single shot fire_lead function to simulate shotguns. Leaving this here to experiment with later. 
-	local float i;
-	
-	for (i = 0; i < shotcount; i++)
-		fire_lead(start, aim, spread, dmg);
-*/
 }
 
 // Blaster and rocket spawns a new entity for monsters for now, can expose more parms if needed, like speed etc...
@@ -152,7 +145,6 @@ void(vector org, vector vec, float damage, vector colortint, float mflags) monst
 	mlaser.modelflags = mflags; //MF_TRACER2;
 	mlaser.effects = EF_FULLBRIGHT;
 	mlaser.colormod = colortint;
-//	mlaser.glow_color = colortint;
 	mlaser.glow_size = 100;
 	mlaser.light_lev = 200;
 	mlaser.color = colortint; // color (does not affect radius), typical value '1 1 1' (bright white), can be up to '255 255 255' (nuclear blast)

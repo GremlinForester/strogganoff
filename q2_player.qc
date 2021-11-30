@@ -1,6 +1,3 @@
-
-void() bubble_bob;
-
 /*
 ==============================================================================
 
@@ -10,84 +7,50 @@ PLAYER
 */
 #include "q2/q2_player.qh"
 
-/*
-==============================================================================
-PLAYER
-==============================================================================
-*/
-
-void() make_bubbles;
-
-void() DeathBubblesSpawn =
+//MrC: This will eventually go elsewhere. Here for testing.
+void() player_chatter_idle =
 {
-//local entity	bubble;
+	local float r;
+	r = random() * 4;
 
-#ifndef opgrade
-	if (self.owner.health > 1) // was a previous opgrade - not sure of intent, removes spawner after respawn
-	if (self.owner.waterlevel != 3)
-		{
-#ifdef codefix
-			remove(self);	// remove bubble spawner
-#endif
-			return;
-		}
-#endif
-/*
-	bubble = spawn();
-	setmodel (bubble, "progs/s_bubble.spr");
-	setorigin (bubble, self.owner.origin + '0 0 24');
-	bubble.movetype = MOVETYPE_NOCLIP;
-	bubble.solid = SOLID_NOT;
-	bubble.velocity = '0 0 15';
-	bubble.nextthink = time + 0.5;
-	bubble.think = bubble_bob;
-	bubble.classname = "bubble";
-	bubble.frame = 0;
-	bubble.cnt = 0;
-	setsize (bubble, '-8 -8 -8', '8 8 8');
-*/
-// note: fn sets think - the calling code below always resets it
-	make_bubbles();
-	nspawn.touch = SUB_Null;
-#ifndef opgrade
-	setorigin (nspawn, self.owner.origin + '0 0 24'); // can eliminate this step by setting it below
-#endif
+	//self.nexttalktime = time + 10.35 + random() * 0.1;
 
-	self.nextthink = time + 0.1;
 
-	self.think = DeathBubblesSpawn;
-	self.air_finished = self.air_finished + 1;
-	if (self.air_finished >= self.bubble_count)
-		remove(self);
-};
+	if (autocvar_cl_idletalk <= 0)
+		return;
 
-void(float num_bubbles) DeathBubbles =
-{
-#define bubble_spawner newmis
-//local entity	bubble_spawner;
+	if (coop || deathmatch)
+	{
+		return;
+	}
 	
-	bubble_spawner = spawn();
-	setorigin (bubble_spawner, self.origin
-#ifdef opgrade
-																					 + '0 0 24'
-#endif
-	);
-//	bubble_spawner.movetype = MOVETYPE_NONE;
-//	bubble_spawner.solid = SOLID_NOT;
-	bubble_spawner.nextthink = time
-#ifdef opgrade
-									 			+ 0.01;
-#else
-												 + 0.1;
-#endif
-	bubble_spawner.think = DeathBubblesSpawn;
-//	bubble_spawner.air_finished = 0;
-	bubble_spawner.owner = self;
-	bubble_spawner.bubble_count = num_bubbles;
-//	return;
+	if (time < self.nexttalktime)
+	return;
 
-#undef bubble_spawner
-};
+	if (self.deadflag)
+		return;
+	if (!(self.flags & FL_ONGROUND))
+		return;
+	if (vlen(self.velocity) > 10)
+		return;
+	if (self.movetype == MOVETYPE_NOCLIP || self.movetype == MOVETYPE_FLY)
+		return;
+  	if (self.waterlevel >= 3)
+	{
+		return;
+	}
+	
+	if (r < 1) {sound(self, CHAN_VOICE, PLAYER_IDLECOMMENT_1, 0.5, ATTN_IDLE);
+	}
+	else if (r < 2) {sound(self, CHAN_VOICE, PLAYER_IDLECOMMENT_2, 0.5, ATTN_IDLE);
+	}
+	else if (r < 3) {sound(self, CHAN_VOICE, PLAYER_IDLECOMMENT_3, 0.5, ATTN_IDLE);
+	}
+	else            {sound(self, CHAN_VOICE, PLAYER_IDLECOMMENT_4, 0.5, ATTN_IDLE);
+	}
+	
+	self.nexttalktime = time + 45;
+}
 
 void() PlayerDead =
 {
@@ -96,19 +59,7 @@ void() PlayerDead =
 	self.deadflag = DEAD_DEAD;
 };
 
-void() set_suicide_frame =
-{	// used by klill command and diconnect command
-	if (self.model != "progs/player.mdl")
-		return;	// allready gibbed
-	self.frame = $FRAME_death106;
-	self.solid = SOLID_NOT;
-	self.movetype = MOVETYPE_TOSS;
-	self.deadflag = DEAD_DEAD;
-	self.nextthink = -1;
-};
-
 void() q2player_run;
-
 
 framer($FRAME_jump1, $FRAME_jump3, q2player_jumpframes, q2player_run, 0.1,
 
@@ -312,10 +263,7 @@ void() q2playerPainSound =
 	if (self.watertype == CONTENT_WATER && self.waterlevel == 3)
 	{
 		DeathBubbles(1);
-		if (random() > 0.5)
-			sound (self, CHAN_VOICE, "player/drown1.wav", 1, ATTN_NORM);
-		else
-			sound (self, CHAN_VOICE, "player/drown2.wav", 1, ATTN_NORM);
+			playerVOSound(PLAYER_VOICE_GURP);
 		return;
 	}
 
@@ -351,9 +299,7 @@ void() q2playerPainSound =
 	}
 	self.pain_finished = time + 0.5;
 
-// don't make multiple pain sounds right after each other
-
-// ax pain sound
+	// ax pain sound
 	if (self.axhitme == 1)
 	{
 		self.axhitme = 0;
@@ -361,47 +307,23 @@ void() q2playerPainSound =
 		return;
 	}
 	
-	/*
-	self.rnd_ = rint((random() * 5) + 1);
-
-	self.noise = string_null;
-	if (self.rnd_ == 1)
-		self.noise = "player/pain1.wav";
-	else if (self.rnd_ == 2)
-		self.noise = "player/pain2.wav";
-	else if (self.rnd_ == 3)
-		self.noise = "player/pain3.wav";
-	else if (self.rnd_ == 4)
-		self.noise = "player/pain4.wav";
-	else if (self.rnd_ == 5)
-		self.noise = "player/pain5.wav";
-	else
-		self.noise = "player/pain6.wav";
-
-	sound (self, CHAN_VOICE, self.noise, 1, ATTN_NORM);
-*/	
 	if (self.health > 75){
 		playerVOSound(PLAYER_VOICE_PAIN75);
-	//		LOG("OUCH 75");
 	//		SetVModelOverlaySelf('0 0 0', "models/overlay.md3", OVERLAY_RAIN, '1 0 0', 0.1);
 	}
 	else if (self.health > 50){
 		playerVOSound(PLAYER_VOICE_PAIN50);
-	//		LOG("OUCH 50");
 	//		SetVModelOverlaySelf('0 0 0', "models/overlay.md3", OVERLAY_RAIN, '0 1 0', 0.1);
 	}
 	else if (self.health > 25){
 		playerVOSound(PLAYER_VOICE_PAIN25);
-	//		LOG("OUCH 25");
 	//		SetVModelOverlaySelf('0 0 0', "models/overlay.md3", OVERLAY_FACE, '0 1 0', 0.1);
 	}
 	else
 	{
 		playerVOSound(PLAYER_VOICE_PAIN100);
-	//		LOG("OUCH 100?");
 	//		SetVModelOverlaySelf('0 0 0', "models/overlay.md3", OVERLAY_RAIN, '5 1 1', 0.1);
 	}
-//	return;
 };
 
 //CROUCH PAIN
@@ -471,7 +393,7 @@ void() q2playerDeathSound =
 	if (self.waterlevel == 3)
 	{
 		DeathBubbles(20);
-		sound (self, CHAN_VOICE, "player/h2odeath.wav", 1, ATTN_NONE);
+		playerVOSound(PLAYER_VOICE_DROWN);
 		return;
 	}
 /*	
@@ -503,13 +425,7 @@ void() q2PlayerDead =
 
 void() GibQ2Player =
 {
-/*
-	ThrowHead ("progs/h_player.mdl", self.health);
-	ThrowGib ("progs/gib1.mdl", self.health);
-	ThrowGib ("progs/gib2.mdl", self.health);
-	ThrowGib ("progs/gib3.mdl", self.health);
-*/
-// gibbs plays a sound that we take over below				
+	// gibbs plays a sound that we take over below				
 	gibbs("progs/h_player.mdl");
 
 	self.deadflag = DEAD_DEAD;
@@ -547,16 +463,12 @@ void() q2PlayerDie =
 {
 //	local	float	i;
 	
-	self.items = self.items - (self.items & IT_INVISIBILITY
-
-#ifdef opgrade
-					| IT_INVULNERABILITY | IT_SUIT | IT_QUAD
-#endif
-																				 );
-	self.invisible_finished = 0;	// don't die as eyes
+	self.items = self.items - (self.items & IT_INVISIBILITY	| IT_INVULNERABILITY | IT_SUIT | IT_QUAD | IT_SILENCER);
+	self.invisible_finished = 0;
 	self.invincible_finished = 0;
 	self.super_damage_finished = 0;
 	self.radsuit_finished = 0;
+	self.silencer_finished = 0;
 
 #ifdef opgrade
 
@@ -571,8 +483,29 @@ void() q2PlayerDie =
 
 	self.modelindex = modelindex_player;	// don't use eyes
 
-	if (deathmatch || coop)
-		DropBackpack();
+	if (deathmatch || coop) //just added this for now, savepack stuff might go here or just for coop?
+	{
+	//	DropBackpack();
+		if (self.weapon == WEP_SHOTGUN || self.weapon == WEP_SUPERSHOTGUN){
+			DropLoot(LOOT_SHELLS, ceil(self.inv_ammo_shells / 4));
+		}
+		
+		if (self.weapon == WEP_MACHINEGUN || self.weapon == WEP_CHAINGUN){
+		DropLoot(LOOT_BULLETS, ceil(self.inv_ammo_bullets / 4));
+		}
+		
+		if (self.weapon == WEP_GRENADE_LAUNCHER || self.weapon == WEP_ROCKET_LAUNCHER){
+		DropLoot(LOOT_ROCKETS, ceil(self.inv_ammo_rockets / 4));
+		}
+		
+		if (self.weapon == WEP_HYPERBLASTER || self.weapon == WEP_BFG){
+		DropLoot(LOOT_CELLS, ceil(self.inv_ammo_cells / 4));
+		}
+		
+		if (self.weapon == WEP_RAILGUN){
+		DropLoot(LOOT_SLUGS, ceil(self.inv_ammo_slugs / 4));
+		}
+	}
 	
 	self.weaponmodel=string_null;
 	self.view_ofs = '0 0 -8';

@@ -312,9 +312,9 @@ void() dog_die =
 	if (self.health < -35)
 	{
 		sound (self, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
-		ThrowGib ("progs/gib3.mdl", self.health, GIB_FLESH);
-		ThrowGib ("progs/gib3.mdl", self.health, GIB_FLESH);
-		ThrowGib ("progs/gib3.mdl", self.health, GIB_FLESH);
+		ThrowGib ("progs/gib3.mdl", self.health, GIB_FLESH, 1);
+		ThrowGib ("progs/gib3.mdl", self.health, GIB_FLESH, 1);
+		ThrowGib ("progs/gib3.mdl", self.health, GIB_FLESH, 1);
 		ThrowHead ("progs/h_dog.mdl", self.health);
 		return;
 	}

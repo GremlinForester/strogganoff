@@ -80,9 +80,6 @@ void(vector entOrg, vector aimAngle, float speed, float damage, float clr, float
 	setsize (newmis, '4 4 4', '4 4 4');
 	setorigin (newmis, source);
 	
-	SpawnMuzzleFlash(WEP_BLASTER_MFLASH_OFFSET_FP, WEP_BLASTER_MFLASH_SCALE, 0.5);
-	SpawnMuzzleFlashTP(WEP_BLASTER_MFLASH_OFFSET_TP, 0.5);
-	
 	if (self.weapon == WEP_HYPERBLASTER)
 	{
 		rotation = (self.weaponframe - 5) * 2*PI/6;
@@ -107,8 +104,6 @@ void(vector entOrg, vector aimAngle, vector spread, float damage) fire_bullet_ba
 	local vector org;
 	local vector dir;
 	
-//	makevectors(aimAngle);
-	makevectors (self.v_angle);
 	org = entOrg + v_forward * 10;
 	org_z = self.absmin_z + self.size_z * 0.7;
 
@@ -121,7 +116,6 @@ void(vector entOrg, vector aimAngle, vector spread, float damage) fire_bullet_ba
 		Q3SurfaceTraceAttack(damage, dir);
 	}
 };
-
 
 void(vector entOrg, vector aimAngle, float pellets, vector spread, float damage) fire_shotgun_base={
 
@@ -185,8 +179,15 @@ void(vector start, vector aimdir, float damage, vector speed, float timer, float
 	newmis.nextthink = time + timer;
 	newmis.think = GrenadeExplode;
 
-	source = G_ProjectSource (start, '20 8 17', v_forward, v_right, '0 0 0');
-
+	//source = G_ProjectSource (start, '20 8 17', v_forward, v_right, '0 0 0');
+	
+	if (self.flags & FL_DUCKED){
+	source = G_ProjectSource (self.origin, '20 8 -4', v_forward, v_right, '0 0 0'); //24 -18 22
+	}
+	else{
+	source = G_ProjectSource (self.origin, '20 8 17', v_forward, v_right, '0 0 0'); //24 -18 22
+	}
+	
 	setmodel (newmis, "models/objects/grenade/tris.md2");
 	setsize (newmis, '0 0 0', '0 0 0');
 	setorigin (newmis, source);
@@ -217,8 +218,13 @@ void(vector start, vector aimdir, float damage, vector speed, float timer, float
 	newmis.nextthink = time + timer;
 	newmis.think = SUB_Remove;
 	
-	source = G_ProjectSource (start, '20 8 17', v_forward, v_right, '0 0 0');
-	
+	//source = G_ProjectSource (start, '20 8 17', v_forward, v_right, '0 0 0');
+	if (self.flags & FL_DUCKED){
+	source = G_ProjectSource (self.origin, '20 8 -4', v_forward, v_right, '0 0 0'); //24 -18 22
+	}
+	else{
+	source = G_ProjectSource (self.origin, '20 8 17', v_forward, v_right, '0 0 0'); //24 -18 22
+	}	
 	setmodel (newmis, "models/objects/rocket/tris.md2");
 	setsize (newmis, '0 0 0', '0 0 0');
 	setorigin (newmis, source);	
@@ -287,13 +293,13 @@ void(vector start, vector aimdir, float speed, float damage, float damage_radius
 	newmis.touch = T_BFGTouch;
 	newmis.nextthink = time + 0.1;
 	newmis.think = BFGthink;
-	newmis.colormod = '0 4 0';
-	newmis.scale = 40;
-	newmis.alpha = .2;
+	newmis.colormod = '0 0.5 0';
+	newmis.scale = 1;
+	newmis.alpha = .5;
 	
 	source = G_ProjectSource (self.origin, '20 8 17', v_forward, v_right, '0 0 0');
 
-	setmodel (newmis, "models/objects/flash/tris.md2");
+	setmodel (newmis, "sprites/s_bfg1.sp2");
 	setsize (newmis, '0 0 0', '0 0 0');
 	setorigin (newmis, source);
 //	setorigin (newmis, self.origin + v_forward*8 + '0 0 16');	

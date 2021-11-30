@@ -48,26 +48,27 @@ setsize (self, '-16 -16 -24', '16 16 4');
 self.flags = self.flags | FL_DUCKED;
 
 self.view_ofs = '0 0 -2'; //14
-self.attemptcrouch = 1;
+//self.attemptcrouch = 1;
 
 return;
 }
-self.attemptcrouch = 0;
+//self.attemptcrouch = 0;
 };
 
 void() crouch_off =
 {
-if (self.flags & FL_DUCKED && /*(!self.velocity_z) &&*/ crouchcheck(self))  //get up
+if (self.flags & FL_DUCKED && (!self.velocity_z) && crouchcheck(self))  //get up
 {
 setsize (self, VEC_HULL_MIN, VEC_HULL_MAX);
 //self.crouch = 0;
-self.flags = self.flags - FL_DUCKED;
+//self.flags = self.flags - FL_DUCKED; 
+self.flags = self.flags - (self.flags & FL_DUCKED);
 self.origin_z = self.origin_z + 16;
 self.view_ofs = '0 0 22';
-self.attemptcrouch = 0;
+//self.attemptcrouch = 0;
 return;
 }
-self.attemptcrouch = 1;
+//self.attemptcrouch = 1;
 };
 
 /*
@@ -152,6 +153,18 @@ void(float plrVO) playerVOSound =
 				else
 					playerVO = "players/male/death4.wav";
 			break;
+			
+			case PLAYER_VOICE_GURP:
+				r = rint(random() * 2);
+				if (r == 1)
+					playerVO = "players/male/gurp1.wav";
+				else
+					playerVO = "players/male/gurp2.wav";
+			break;
+			
+			case PLAYER_VOICE_DROWN:
+				playerVO = "players/male/drown1.wav";
+			break;
 		}
 	}
 	else if (self.playerType == PT_FEMALE)
@@ -208,6 +221,18 @@ void(float plrVO) playerVOSound =
 					playerVO = "players/female/death3.wav";
 				else
 					playerVO = "players/female/death4.wav";
+			break;
+			
+			case PLAYER_VOICE_GURP:
+				r = rint(random() * 2);
+				if (r == 1)
+					playerVO = "players/female/gurp1.wav";
+				else
+					playerVO = "players/female/gurp2.wav";
+			break;
+			
+			case PLAYER_VOICE_DROWN:
+				playerVO = "players/female/drown.wav";
 			break;
 		}
 	}
@@ -266,6 +291,18 @@ void(float plrVO) playerVOSound =
 				else
 					playerVO = "players/cyborg/death4.wav";
 			break;
+			
+			case PLAYER_VOICE_GURP:
+				r = rint(random() * 2);
+				if (r == 1)
+					playerVO = "players/cyborg/gurp1.wav";
+				else
+					playerVO = "players/cyborg/gurp2.wav";
+			break;
+			
+			case PLAYER_VOICE_DROWN:
+				playerVO = "players/cyborg/drown1.wav";
+			break;
 		}		
 	}
 	sound(self, CHAN_VOICE, playerVO, 1, ATTN_IDLE);
@@ -301,7 +338,7 @@ void() SetChangeParms =
 
 // remove items
 	self.items = self.items - (self.items & 
-	(IT_KEY1 | IT_KEY2 | IT_INVISIBILITY | IT_INVULNERABILITY | IT_SUIT | IT_QUAD) );
+	(IT_KEY1 | IT_KEY2 | IT_INVISIBILITY | IT_INVULNERABILITY | IT_SUIT | IT_QUAD | IT_SILENCER) );
 	
 // cap super health
 	if (self.health > 100)
@@ -323,6 +360,12 @@ void() SetChangeParms =
 	parm10 = self.inv_weapons;
 	parm11 = self.inv_ammo_slugs;
 	parm12 = self.items_q2keys;
+	parm13 = self.inv_pickup_quad;
+	parm14 = self.inv_pickup_rebreather;
+	parm15 = self.inv_pickup_invisibility; //power screen
+	parm16 = self.inv_pickup_silencer;
+	parm17 = self.inv_pickup_invulnerability;
+	parm18 = self.inv_pickup_envirosuit;
 };
 
 void() SetNewParms =
@@ -331,7 +374,7 @@ void() SetNewParms =
 	parm2 = 100;
 	parm3 = 0;
 	parm4 = 0;
-	parm5 = 50;
+	parm5 = 0;
 	parm6 = 0;
 	parm7 = 0;
 	parm8 = WEP_BLASTER;
@@ -339,6 +382,12 @@ void() SetNewParms =
 	parm10 = WEP_BLASTER;
 	parm11 = 0;
 	parm12 = 0; //self.items_q2keys;
+	parm13 = 0;
+	parm14 = 0;
+	parm15 = 0;
+	parm16 = 0;
+	parm17 = 0;
+	parm18 = 0;	
 };
 
 .float resetkeys;
@@ -365,6 +414,12 @@ void() DecodeLevelParms =
 	self.inv_weapons = self.inv_weapons | parm10;
 	self.inv_ammo_slugs = parm11;
 	self.items_q2keys = parm12;
+	self.inv_pickup_quad = parm13;
+	self.inv_pickup_rebreather = parm14;
+	self.inv_pickup_invisibility = parm15; 
+	self.inv_pickup_silencer = parm16;
+	self.inv_pickup_invulnerability = parm17;
+	self.inv_pickup_envirosuit = parm18;
 };
 
 /*
@@ -635,8 +690,6 @@ void() trigger_changelevel =
 =============================================================================
 */
 
-void() set_suicide_frame;
-
 // called by ClientKill and DeadThink
 void() respawn =
 {
@@ -664,6 +717,7 @@ void() respawn =
 	}
 };
 
+void() gibMonster;
 
 /*
 ============
@@ -680,8 +734,10 @@ void() ClientKill =
 #endif
 	bprint (self.netname);
 	bprint (" suicides\n");
-	set_suicide_frame ();
-	self.modelindex = modelindex_player;
+//	set_suicide_frame ();
+	gibMonster();
+	ThrowHead ("models/objects/gibs/skull/tris.md2", self.health);
+//	self.modelindex = modelindex_player;
 	self.frags = self.frags - 2;	// extra penalty
 	respawn ();
 };
@@ -777,7 +833,7 @@ entity() SelectSpawnPoint =
 	return spot;
 };
 
-// MrC: Thanks goes to Quake 1.5 for pointing me in the right direction on this. 
+// MrC: Thanks goes to Quake 1.5 for pointing me in the right direction on this.
 
 void() UpdateTPWeaponFrames =
 {
@@ -898,10 +954,14 @@ void() UpdateTPWeaponFrames =
 		}		
 	}
 
-	if (self.owner.items & IT_INVISIBILITY)
-		self.alpha = .01;
-	else
+	if (self.owner.items & IT_INVISIBILITY){
+		self.alpha = .05;
+		self.owner.alpha = 0.05;
+	}
+	else{
 		self.alpha = 1;
+		self.owner.alpha = 1; //yea this is sort of dumb putting this here, didn't work in CheckPowerups and I've reached fuckit.
+	}
 		
 	if (self.owner.items & IT_QUAD)
 		self.effects = EF_NOSHADOW;
@@ -912,7 +972,8 @@ void() UpdateTPWeaponFrames =
 	#ifndef q2model_lighting
 			self.effects = 0;
 	#endif
-
+	
+	SetVModelHUDSelf('25 0 -15', "models/items/quaddama/tris.md2", 0, '1 1 1', 1, 0.15);
 
 	#ifdef q2model_lighting
 	self.colormod = getlight(self.owner.origin); //MrC Lightgrid workaround
@@ -997,9 +1058,12 @@ void() PutClientInServer =
 	self.radsuit_finished = 0;
 	self.invisible_finished = 0;
 	self.invincible_finished = 0;
+	self.silencer_finished = 0;	
 	self.effects = 0;
 	self.invincible_time = 0;
 	self.onladder = 0;
+	self.alpha = 1.0;
+	self.player_pickup_itemnum = 0;
 	#ifdef q2model_lighting
 	self.effects = EF_FULLBRIGHT; //MrC Lightgrid workaround
 	#endif
@@ -1052,6 +1116,7 @@ void() PutClientInServer =
 	setPlayerModel();
 	q2Player_stand();
 	AttachTPWeapon();
+	createHUDPowerup('25 21 -17', "", 0, '1 1 1', 10, 0.15);
 	
 	//setup player v_wep state machine
 	self.weapon_next = self.weapon;
@@ -1335,7 +1400,8 @@ void() WaterMove =
 		if (self.air_finished < time)
 			sound (self, CHAN_VOICE, "player/gasp2.wav", 1, ATTN_NORM);
 		else if (self.air_finished < time + 9)
-			sound (self, CHAN_VOICE, "player/gasp1.wav", 1, ATTN_NORM);
+			sound (self, CHAN_VOICE, "player/gasp2.wav", 1, ATTN_NORM); 
+		//changed to more generic gasp2 because of player types
 		self.air_finished = time + 12;
 		self.dmg = 2;
 	}
@@ -1570,6 +1636,9 @@ void() PlayerPreThink =
 
 	if (self.button2)
 	{
+		if (self.flags & FL_DUCKED)
+			return;
+		
 		PlayerJump ();
 	}
 	else
@@ -1663,7 +1732,7 @@ void() CheckPowerups =
 		{
 			if (self.invisible_time == 1)
 			{
-				sprint (self, "Ring of Shadows magic is fading\n");
+				sprint (self, "Cloak is failing\n");
 				stuffcmd (self, "bf\n");
 				sound (self, CHAN_AUTO, "items/inv2.wav", 1, ATTN_NORM);
 				self.invisible_time = time + 1;
@@ -1673,6 +1742,7 @@ void() CheckPowerups =
 			{
 				self.invisible_time = time + 1;
 				stuffcmd (self, "bf\n");
+
 			}
 		}
 
@@ -1681,11 +1751,13 @@ void() CheckPowerups =
 			self.items = self.items - IT_INVISIBILITY;
 			self.invisible_finished = 0;
 			self.invisible_time = 0;
+		//	self.alpha = 1.0;
 		}
 		
 	// use the eyes
-		self.frame = 0;
-		self.modelindex = modelindex_eyes;
+		//self.frame = 0;
+		//self.modelindex = modelindex_eyes;
+	//	self.alpha = 0.05;
 	}
 	else
 		self.modelindex = modelindex_player;	// don't use eyes
@@ -1762,8 +1834,9 @@ void() CheckPowerups =
 	if (self.radsuit_finished)
 	{
 		self.air_finished = time + 12;		// don't drown
-
+		
 // sound and screen flash when items starts to run out
+		
 		if (self.radsuit_finished < time + 3)
 		{
 			if (self.rad_time == 1)
@@ -1787,7 +1860,38 @@ void() CheckPowerups =
 			self.rad_time = 0;
 			self.radsuit_finished = 0;
 		}
-	}	
+	}
+	
+	// "silencer" / doubler actually it's 25%
+	if (self.silencer_finished)
+	{
+
+// sound and screen flash when items starts to run out
+
+		if (self.silencer_finished < time + 3)
+		{
+			if (self.silencer_time == 1)
+			{
+				sprint (self, "Silencer is wearing off\n");
+				stuffcmd (self, "bf\n");
+				sound (self, CHAN_AUTO, "items/inv2.wav", 1, ATTN_NORM);
+				self.silencer_time = time + 1;
+			}	  
+			
+			if (self.silencer_time < time)
+			{
+				self.silencer_time = time + 1;
+				stuffcmd (self, "bf\n");
+			}
+		}
+
+		if (self.silencer_finished < time)
+		{	// just stopped
+			self.items = self.items - IT_SILENCER;
+			self.silencer_finished = 0;
+			self.silencer_time = 0;
+		}
+	}
 
 };
 
@@ -1801,27 +1905,6 @@ Called every frame after physics are run
 */
 
 void() q2player_landframes;
-/*
-void() CheckLadder =
-{
-	if (self.movetype == MOVETYPE_NOCLIP)
-		return;
-	
-	if (self.onladder == 1)
-	{
-		bprint ("Ladder Touch");
-		bprint ("\n");
-		self.movetype = MOVETYPE_FLY;
-	}
-	else
-	{
-		bprint ("No Ladder");
-		bprint ("\n");
-		self.onladder = 0;
-		self.movetype = MOVETYPE_WALK;
-	}
-}
-*/
 
 void() W_surfaceSniffer =
 {
@@ -2091,19 +2174,6 @@ void() ClientDisconnect =
 
 	ClientDisconnected();
 
-/*
-	if ( CamDisconnect () )
-	{
-	// let everyone else know
-	bprint (self.netname);
-	bprint (" left the game with ");
-	bprint (ftos(self.frags));
-	bprint (" frags\n");
-	sound (self, CHAN_BODY, "player/tornoff2.wav", 1, ATTN_NONE);
-	set_suicide_frame ();
-	}
-*/
-
 #endif
 
 	if (gameover)
@@ -2117,7 +2187,10 @@ void() ClientDisconnect =
 	bprint (ftos(self.frags));
 	bprint (" frags\n");
 	sound (self, CHAN_BODY, "player/tornoff2.wav", 1, ATTN_NONE);
-	set_suicide_frame ();
+//	set_suicide_frame ();
+	self.health = 0; //used to remove attachments, hud models, etc...
+	gibMonster();
+	ThrowHead ("models/objects/gibs/skull/tris.md2", self.health);
 };
 
 /*

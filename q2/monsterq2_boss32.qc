@@ -423,9 +423,9 @@ void() makron_torso_die =
 		sound (self, CHAN_VOICE, "misc/udeath.wav", 1, ATTN_NORM);
 		
 		for (n= 0; n < 2; n++)
-			ThrowGib ("models/objects/gibs/bone/tris.md2", self.health / 4, GIB_FLESH);
+			ThrowGib ("models/objects/gibs/bone/tris.md2", self.health / 4, GIB_FLESH, 1);
 		for (n= 0; n < 4; n++)
-			ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health / 4, GIB_FLESH);
+			ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health / 4, GIB_FLESH, 1);
 		
 		remove(self);
 	}
@@ -464,9 +464,9 @@ void() makron_die =
 		sound (self, CHAN_VOICE, "misc/udeath.wav", 1, ATTN_NORM);
 		
 		for (n= 0; n < 2; n++)
-			ThrowGib ("models/objects/gibs/bone/tris.md2", self.health / 4, GIB_FLESH);
+			ThrowGib ("models/objects/gibs/bone/tris.md2", self.health / 4, GIB_FLESH, 1);
 		for (n= 0; n < 4; n++)
-			ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health / 4, GIB_FLESH);
+			ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health / 4, GIB_FLESH, 1);
 		
 		remove(self);
 	} 

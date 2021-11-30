@@ -22,19 +22,12 @@ void() W_Precache =
 	precache_sound ("weapons/shotgn2.wav");	// super shotgun
 };
 
-#ifndef opgrade
-//replaced with define
-float() crandom =
-{
-	return 2*(random() - 0.5);
-};
-#endif
 /*
 ================
-W_FireAxe
+W_FireMelee
 ================
 */
-void() W_FireAxe =
+void() W_FireMelee =
 {
 	local	vector	source;
 	local	vector	org;
@@ -58,93 +51,6 @@ void() W_FireAxe =
 			
 };
 
-
-//============================================================================
-
-
-
-vector() wall_velocity =
-{
-	local vector	vel;
-	
-	vel = normalize (self.velocity);
-	vel = normalize(vel + v_up*(random()- 0.5) + v_right*(random()- 0.5));
-	vel = vel + 2*trace_plane_normal;
-	vel = vel * 200;
-	
-	return vel;
-};
-
-
-/*
-================
-SpawnMeatSpray
-================
-*/
-void(vector org, vector vel) SpawnMeatSpray =
-{
-#define missile 	newmis
-//	local	entity missile;//, mpuff;	// fx_warning
-//	local	vector	org;
-
-	missile = spawn ();
-	missile.owner = self;
-	missile.movetype = MOVETYPE_BOUNCE;
-//	missile.solid = SOLID_NOT;
-
-	makevectors (self.angles);
-
-	missile.velocity = vel;
-	missile.velocity_z = missile.velocity_z + 250 + 50*random();
-
-	missile.avelocity = '3000 1000 2000';
-	
-// set missile duration
-	missile.nextthink = time + 1;
-	missile.think = SUB_Remove;
-
-	setmodel (missile, "progs/zom_gib.mdl");
-	setsize (missile, '0 0 0', '0 0 0');		
-	setorigin (missile, org);
-#undef missile
-};
-
-/*
-================
-SpawnBlood
-================
-*/
-void(vector org, vector vel, float damage) SpawnBlood =
-{
-	particle (org, vel*0.1, 73, damage*2);
-};
-
-/*
-================
-spawn_touchblood
-================
-*/
-void(float damage) spawn_touchblood =
-{
-	local vector	vel;
-
-	vel = wall_velocity () * 0.2;
-	SpawnBlood (self.origin + vel*0.01, vel, damage);
-};
-
-
-/*
-================
-SpawnChunk
-================
-*/
-#ifdef unused
-void(vector org, vector vel) SpawnChunk =
-{
-	particle (org, vel*0.02, 0, 10);
-};
-
-#endif
 /*
 ==============================================================================
 
@@ -227,71 +133,6 @@ void() blasterTouch =
 	remove(self);
 };
 
-
-/*
-=================
-fire_rail
-=================
-
-void fire_rail (vector start, vector aimdir, int damage)
-{
-	vector		from;
-	vector		end;
-	trace_t		tr;
-	edict_t		*ignore;
-	float			mask;
-	qboolean	water;
-
-	VectorMA (start, 8192, aimdir, end);
-	VectorCopy (start, from);
-	ignore = self;
-	water = false;
-	mask = MASK_SHOT|CONTENTS_SLIME|CONTENTS_LAVA;
-	while (ignore)
-	{
-		tr = gi.trace (from, NULL, NULL, end, ignore, mask);
-
-		if (tr.contents & (CONTENTS_SLIME|CONTENTS_LAVA))
-		{
-			mask &= ~(CONTENTS_SLIME|CONTENTS_LAVA);
-			water = true;
-		}
-		else
-		{
-			//ZOID--added so rail goes through SOLID_BBOX entities (gibs, etc)
-			if ((tr.ent->svflags & SVF_MONSTER) || (tr.ent->client) ||
-				(tr.ent->solid == SOLID_BBOX))
-				ignore = tr.ent;
-			else
-				ignore = NULL;
-
-			if ((tr.ent != self) && (tr.ent->takedamage))
-				T_Damage (tr.ent, self, self, aimdir, tr.endpos, tr.plane.normal, damage, kick, 0, MOD_RAILGUN);
-		}
-
-		VectorCopy (tr.endpos, from);
-	}
-
-	// send gun puff / flash
-	gi.WriteByte (svc_temp_entity);
-	gi.WriteByte (TE_RAILTRAIL);
-	gi.WritePosition (start);
-	gi.WritePosition (tr.endpos);
-	gi.multicast (self->s.origin, MULTICAST_PHS);
-//	gi.multicast (start, MULTICAST_PHS);
-	if (water)
-	{
-		gi.WriteByte (svc_temp_entity);
-		gi.WriteByte (TE_RAILTRAIL);
-		gi.WritePosition (start);
-		gi.WritePosition (tr.endpos);
-		gi.multicast (tr.endpos, MULTICAST_PHS);
-	}
-
-	if (self->client)
-		PlayerNoise(self, tr.endpos, PNOISE_IMPACT);
-}
-*/
 /*
 ================
 Fire Rilgun
@@ -379,8 +220,14 @@ void(float damage) FireBullet =
 	local	vector	org;
 	local	entity	impact_point;
 
-//	makevectors (self.v_angle);
-	source = self.origin + '0 0 24';
+	if (self.flags & FL_DUCKED)
+	{
+		source = self.origin;
+	}
+	else
+	{
+		source = self.origin + '0 0 24';
+	}
 	
  	nep_traceline (source, source + v_forward*4096, FALSE, self);
 	if (trace_fraction == 1.0)
@@ -439,13 +286,10 @@ void(float damage) FireBullet =
 	
 	if (self.weapon == WEP_CHAINGUN)
 	{
-		fireBulletSound();
-		self.currentammo = self.inv_ammo_bullets = self.inv_ammo_bullets - 1;
-		#ifndef new_weapon_generic
-		//self.weaponstate = WEAPON_SPINDOWN;
-		#endif
-		SpawnMuzzleFlash(WEP_MACHINEGUN_MFLASH_OFFSET_FP, 2, 0.5);
-		sound (self, CHAN_WEAPON2, "weapons/chngnl1a.wav", 0.5, ATTN_NORM); //spinning
+	//	fireBulletSound();
+	//	self.currentammo = self.inv_ammo_bullets = self.inv_ammo_bullets - 1;
+
+	//	sound (self, CHAN_WEAPON2, "weapons/chngnl1a.wav", 0.5, ATTN_NORM); //spinning
 	}
 };
 
@@ -494,33 +338,6 @@ void(float damage, vector dir) Q3SurfaceTraceAttack =
 		AddMultiDamage (trace_ent, damage);
 		Q3Surface_Impact_Ent(impact_point);
 	}
-};
-
-/*
-================
-Fire_Lead
-================
-*/
-void(vector org, vector dir, vector spread, float damage) fire_lead =
-{
-	local	vector direction;
-	local	vector	src;
-
-	direction = dir + crandom()*spread_x*v_right + crandom()*spread_y*v_up;
-
-	traceline (org, org + direction*2048, FALSE, self);
-		
-	if (trace_fraction != 1.0)
-	{
-		if (self.weapon == WEP_SHOTGUN)
-		{
-			Q3SurfaceTraceAttack(WEAPON_SHOTGUN_DAMAGE, direction);
-		}
-		else
-		{
-			Q3SurfaceTraceAttack(damage, direction);				
-		}	
-	}	
 };
 
 /*
@@ -595,65 +412,6 @@ void(float damage, vector dir) TraceAttack =
 		WriteCoord (MSG_BROADCAST, org_y);
 		WriteCoord (MSG_BROADCAST, org_z);
 	}
-};
-
-/*
-================
-W_FireShotgun
-================
-*/
-void() W_FireShotgun =
-{
-	local vector dir;
-	local vector src;
-	
-	makevectors(self.v_angle);
-
-	src = self.origin + v_forward*10;
-	src_z = self.absmin_z + self.size_z * 0.7;	
-	
-	sound (self, CHAN_WEAPON, "weapons/Shotgf1b.wav", 1, ATTN_NORM);		
-	self.punchangle_x = -2;
-	
-	self.currentammo = self.inv_ammo_shells = self.inv_ammo_shells - 1;
-	dir = aim (self, 100000);
-	self.solid = SOLID_BBOX;
-	FireBullets (6, src, dir, '0.04 0.04 0', WEAPON_SHOTGUN_DAMAGE);
-	self.solid = SOLID_SLIDEBOX;
-};
-
-
-/*
-================
-W_FireSuperShotgun
-================
-*/
-void() W_FireSuperShotgun =
-{
-	local vector dir;
-	local vector src;
-	
-//	makevectors(self.v_angle);
-
-	src = self.origin + v_forward*10;
-	src_z = self.absmin_z + self.size_z * 0.7;	
-	
-	if (self.currentammo == 1)
-	{
-		W_FireShotgun ();
-		return;
-	}
-		
-	//sound (self ,CHAN_WEAPON, "weapons/shotgn2.wav", 1, ATTN_NORM);	
-
-	self.punchangle_x = -4;
-	
-	self.currentammo = self.inv_ammo_shells = self.inv_ammo_shells - 2;
-	dir = aim (self, 100000);
-	
-	self.solid = SOLID_BBOX;
-	FireBullets (14, src, dir, '0.14 0.08 0', WEAPON_SUPERSHOTGUN_DAMAGE);
-	self.solid = SOLID_SLIDEBOX;
 };
 
 /*
@@ -746,65 +504,6 @@ void() T_MissileTouch =
 
 
 void(vector org, vector dir) launch_spike;
-/*
-================
-W_FireRocket
-================
-*/
-void() W_FireRocket =
-{
-	local vector source;
-	self.currentammo = self.inv_ammo_rockets = self.inv_ammo_rockets - 1;
-	
-	sound (self, CHAN_WEAPON, "weapons/sgun1.wav", 1, ATTN_NORM);
-
-	self.punchangle_x = -2;
-
-//	launch_spike(self.origin + v_forward*8 + '0 0 16', aim(self, PLAYER_ROCKET_SPEED));
-
-	newmis = spawn ();
-	newmis.owner = self;
-	newmis.movetype = MOVETYPE_FLYMISSILE;
-	newmis.solid = SOLID_BBOX;
-	newmis.dmg = WEAPON_ROCKET_DAMAGE;
-	newmis.modelflags = MF_ROCKET;
-
-	newmis.classname = "missile";
-		
-// set missile speed	
-
-//	makevectors (self.v_angle);
-	newmis.velocity = aim(self, PLAYER_ROCKET_SPEED);
-	newmis.velocity = newmis.velocity * PLAYER_ROCKET_SPEED;
-	newmis.angles = vectoangles(newmis.velocity);
-
-	newmis.touch = T_MissileTouch;
-	
-// set missile duration
-
-	newmis.nextthink = time + 5;
-	newmis.think = SUB_Remove;
-
-	source = G_ProjectSource (self.origin, '20 8 17', v_forward, v_right, '0 0 0');
-
-	setmodel (newmis, "models/objects/rocket/tris.md2");
-	setsize (newmis, '0 0 0', '0 0 0');
-	setorigin (newmis, source);	
-//	setorigin (newmis, self.origin + v_forward*8 + '0 0 16');
-};
-
-void() bfg_impact_effect_think =
-{
-	if (self.alpha <= 0){
-		remove(self);
-	}
-	FLOG(self.alpha);
-	self.alpha -= 0.1;
-	self.frame++;
-	self.scale++;
-	self.nextthink = time + 0.1;
-//	self.think = bfg_impact_effect_think;
-}
 
 void() T_BFGTouch =
 {
@@ -830,114 +529,11 @@ void() T_BFGTouch =
 //	sound (self, CHAN_WEAPON, "weapons/r_exp3.wav", 1, ATTN_NORM);
 	self.origin = self.origin - 8*normalize(self.velocity);
 	stuffcmd (self.owner, "bf 0 1 0 0.7\n");
-	
-	bfg_impact_effect = spawn();
-	bfg_impact_effect.origin = self.origin;
-	setsize (bfg_impact_effect, '0 0 0', '0 0 0');
-	setorigin (bfg_impact_effect, self.origin);
-	bfg_impact_effect.solid = SOLID_NOT;
-	bfg_impact_effect.movetype = MOVETYPE_NOCLIP;
-	bfg_impact_effect.effects = self.effects | EF_LOWPRECISION | EF_ADDITIVE;
-	setmodel (bfg_impact_effect, "models/objects/r_explode/tris.md2");
-	bfg_impact_effect.scale = 4;
-	bfg_impact_effect.alpha = 1.3;
-	bfg_impact_effect.colormod = '0 100 0';
-	bfg_impact_effect.nextthink = time;
-	bfg_impact_effect.think = bfg_impact_effect_think;
-	
+	pointparticles(particleeffectnum("cthon_fireball"), self.origin, '0 0 0', 1);
 	remove(self);
 };
 
 void(vector org, vector vec, float dmg, vector colortint, float mflags) monster_fire_blaster;
-/*
-void() bfg_think =
-{
-	local entity ent;
-	local entity ignore;
-	local vector point;
-	local vector dir;
-	local vector start;
-	local vector end;
-	local float	dmg;
-
-	if (deathmatch)
-		dmg = sk_bfg_damage2_dm->value; //was 5
-	else
-		dmg = sk_bfg_damage2->value; //was 10
-
-	ent = 0;
-	while ((ent = findradius(ent, self.origin, 500)) != NULL)
-	{
-		if (ent == self)
-			continue;
-
-		if (ent == self.owner)
-			continue;
-
-		if (!ent.takedamage)
-			continue;
-
-		if (!(ent.flags & FL_MONSTER) && (!ent.client) && (strcmp(ent.classname, "misc_explobox") != 0))
-			continue;
-
-
-	//ZOID
-		//don't target friendly players in CTF
-		if (ctf->value && ent->client &&
-			self->owner->client &&
-			ent->client->resp.ctf_team == self->owner->client->resp.ctf_team)
-			continue;
-	//ZOID
-
-		VectorMA (ent->absmin, 0.5, ent->size, point);
-
-		VectorSubtract (point, self->s.origin, dir);
-		VectorNormalize (dir);
-
-		ignore = self;
-		VectorCopy (self->s.origin, start);
-		VectorMA (start, 2048, dir, end);
-		while(1)
-		{
-			tr = gi.trace (start, NULL, NULL, end, ignore, CONTENTS_SOLID|CONTENTS_MONSTER|CONTENTS_DEADMONSTER);
-
-			if (!tr.ent)
-				break;
-
-			// hurt it if we can
-			if ((tr.ent->takedamage) && !(tr.ent->flags & FL_IMMUNE_LASER) && (tr.ent != self->owner))
-				T_Damage (tr.ent, self, self->owner, dir, tr.endpos, vec3_origin, dmg, 1, DAMAGE_ENERGY, MOD_BFG_LASER);
-
-			// if we hit something that's not a monster or player we're done
-			if (!(tr.ent->svflags & SVF_MONSTER) && (!tr.ent->client))
-			{
-				gi.WriteByte (svc_temp_entity);
-				gi.WriteByte (TE_LASER_SPARKS);
-				gi.WriteByte (4);
-				gi.WritePosition (tr.endpos);
-				gi.WriteDir (tr.plane.normal);
-				gi.WriteByte (self->s.skinnum);
-				gi.multicast (tr.endpos, MULTICAST_PVS);
-				break;
-			}
-
-			ignore = tr.ent;
-			VectorCopy (tr.endpos, start);
-		}
-
-		gi.WriteByte (svc_temp_entity);
-		gi.WriteByte (TE_BFG_LASER);
-		gi.WritePosition (self->s.origin);
-		gi.WritePosition (tr.endpos);
-		gi.multicast (self->s.origin, MULTICAST_PHS);
-
-		if(level.num_reflectors)
-			ReflectTrail(TE_BFG_LASER,self->s.origin,tr.endpos);
-	}
-
-	self->nextthink = level.time + FRAMETIME;
-}
-*/
 
 void(vector start, vector aimdir, float damage) fireBFGtrail =
 {
@@ -1017,7 +613,20 @@ void() BFGthink =
 	BFGdist = 500;
 	local float BFGTargetCount, BFGFireCount;
 
+	local vector rotation_offset;
+	local float rotation;
+
 	dir = normalize(self.origin - BFGtarget.origin);
+
+	self.frame++;
+
+	rotation = (self.frame - 10) * 2*PI/6;
+		
+	rotation_offset_x = -20 * sin(rotation);
+	rotation_offset_y = -12 * cos(rotation);					
+	rotation_offset_z = -6 * cos(rotation);
+	
+	pointparticles(particleeffectnum("slimesplash_small"), self.origin + rotation_offset, '0 0 0', 1);
 	
 	BFGtarget = findradius(self.origin, BFGdist);
 	BFGTargetCount = 0;
@@ -1264,12 +873,12 @@ void() W_FireGrenade =
 	newmis.nextthink = time + 2.5;
 	newmis.think = GrenadeExplode;
 
-	source = G_ProjectSource (self.origin, '20 8 17', v_forward, v_right, '0 0 0');
+//	source = G_ProjectSource (self.origin, '20 8 17', v_forward, v_right, '0 0 0');
 
 	setmodel (newmis, "progs/grenade.mdl");
 	setsize (newmis, '0 0 0', '0 0 0');		
-//	setorigin (newmis, self.origin);
-	setorigin (newmis, source);
+	setorigin (newmis, self.origin);
+//	setorigin (newmis, source);
 };
 
 /*

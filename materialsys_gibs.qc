@@ -170,7 +170,7 @@ void () GibPhysicsThinkPreRemove =
 			
 	self.solid = SOLID_NOT;
 	self.think = GibPhysicsThinkRemove;
-	self.nextthink = time + GIB_LIFE + random()*10;;
+	self.nextthink = time + GIB_LIFE + random()*1;
 }
 
 void () GibPhysicsThink =
@@ -315,6 +315,7 @@ void(string gibname, float dm, float GibType, float gibScale) ThrowGib =
 		nspawn.avelocity_z = random()*700;
 		nspawn.velocity = VelocityForDamage(dm);
 		nspawn.touch = Gib_Touch;
+		nspawn.nextthink = time + 1 + random()*2;
 	break;
 		
 	case GIB_GLASS:

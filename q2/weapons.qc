@@ -594,58 +594,17 @@ void() W_WeaponAnimate={
 				self.weapon_think = time + 0.1;
 			}
 		}
-		else
+		else if (self.items & IT_SILENCER && self.weaponstate == WEAPON_FIRING)
+		{
+			self.weapon_think = time + 0.075;
+		}	
+		else 
 		{
 			self.weapon_think = time + 0.1;
 		}
 	self.weapon_update_func();
 	}
 };
-
-//MrC: This will eventually go elsewhere. Here for testing.
-void() player_chatter_idle =
-{
-	local float r;
-	r = random() * 4;
-
-	//self.nexttalktime = time + 10.35 + random() * 0.1;
-
-
-	if (autocvar_cl_idletalk <= 0)
-		return;
-
-	if (coop || deathmatch)
-	{
-		return;
-	}
-	
-	if (time < self.nexttalktime)
-	return;
-
-	if (self.deadflag)
-		return;
-	if (!(self.flags & FL_ONGROUND))
-		return;
-	if (vlen(self.velocity) > 10)
-		return;
-	if (self.movetype == MOVETYPE_NOCLIP || self.movetype == MOVETYPE_FLY)
-		return;
-  	if (self.waterlevel >= 3)
-	{
-		return;
-	}
-	
-	if (r < 1) {sound(self, CHAN_VOICE, PLAYER_IDLECOMMENT_1, 0.5, ATTN_IDLE);
-	}
-	else if (r < 2) {sound(self, CHAN_VOICE, PLAYER_IDLECOMMENT_2, 0.5, ATTN_IDLE);
-	}
-	else if (r < 3) {sound(self, CHAN_VOICE, PLAYER_IDLECOMMENT_3, 0.5, ATTN_IDLE);
-	}
-	else            {sound(self, CHAN_VOICE, PLAYER_IDLECOMMENT_4, 0.5, ATTN_IDLE);
-	}
-	
-	self.nexttalktime = time + 45;
-}
 
 void() q2playeronly_2attackframes_crouch;
 void() q2playeronly_4attackframes_crouch;
@@ -811,23 +770,6 @@ void(float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRAME_IDLE_LAST, fl
 				self.weaponframe = FRAME_FIRE_FIRST;
 				self.weaponstate = WEAPON_FIRING;
 
-				// start the animation
-				//TODO - syncing player model
-				/*ent->client->anim_priority = ANIM_ATTACK;
-				if (ent->client->ps.pmove.pm_flags & PMF_DUCKED)
-				{
-					ent->s.frame = FRAME_crattak1-1;
-					ent->client->anim_end = FRAME_crattak9;
-				}
-				else
-				{
-					ent->s.frame = FRAME_attack1-1;
-					ent->client->anim_end = FRAME_attack8;
-				}*/
-				
-				
-				// start the animation
-				//TODO - syncing player model
 				//ent->client->anim_priority = ANIM_ATTACK;
 				doPlayerframes();
 			}
@@ -840,6 +782,7 @@ void(float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRAME_IDLE_LAST, fl
 					//ent->pain_debounce_time = level.time + 1;
 				//}
 				W_NoAmmoWeaponChange();
+				return;
 			}
 		}
 		else
@@ -901,9 +844,11 @@ void() Weapon_Blaster_Fire=
 		damage = 15;
 	else
 		damage = 10;
+
+	fire_blaster_base(self.origin, self.v_angle, 800, damage, 200, 100, 200);	
 	
-	fire_blaster_base(self.origin, self.v_angle, 800, damage, 200, 100, 200);
-	
+	SpawnMuzzleFlash(WEP_BLASTER_MFLASH_OFFSET_FP, WEP_BLASTER_MFLASH_SCALE, 0.5);
+	SpawnMuzzleFlashTP(WEP_BLASTER_MFLASH_OFFSET_TP, 0.5);
 	sound (self, CHAN_WEAPON, "weapons/BLASTF1A.WAV", 1, ATTN_NORM);
 	self.weaponframe++;
 }
@@ -953,6 +898,7 @@ void() Weapon_Shotgun_Fire={
 	//gi.WriteByte (MZ_SHOTGUN | is_silenced);
 	//gi.multicast (ent->s.origin, MULTICAST_PVS);
 
+	SpawnMuzzleFlash(WEP_MACHINEGUN_MFLASH_OFFSET_FP, 1, 0.75);
 	sound(self, CHAN_WEAPON, "weapons/Shotgf1b.wav", 1, ATTN_NORM);
 	self.weaponframe++;
 
@@ -980,10 +926,11 @@ void() Weapon_SuperShotgun={
 		damage *= 4;
 		kick *= 4;
 	}
-	//TODO - muzzle flash
+
+	SpawnMuzzleFlash(WEP_MACHINEGUN_MFLASH_OFFSET_FP, 2, 0.75);
 	sound (self ,CHAN_WEAPON, "weapons/Sshotf1b.wav", 1, ATTN_NORM);
 	
-	makevectors(self.v_angle);
+//	makevectors(self.v_angle);
 	left = self.origin + (v_right * -5);
 	right = self.origin + (v_right * 5);
 
@@ -998,7 +945,6 @@ void() Weapon_SuperShotgun={
 	//if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
 	self.inv_ammo_shells = max(self.inv_ammo_shells - 2,0);
 	self.currentammo = self.inv_ammo_shells;
-	//TODO - ammo decrementing
 };
 void() weapon_supershotg_update={
 
@@ -1010,7 +956,7 @@ void() Weapon_MachineGun_Fire={
 	//local vector start, offset;
 	local float i, damage, kick, cone, sfx;
 	
-	damage = 8;
+	damage = WEAPON_MACHINEGUN_DAMAGE;
 	kick = 2;
 	
 	if (!self.button0)
@@ -1071,7 +1017,6 @@ void() Weapon_MachineGun_Fire={
 	cone = self.machinegun_shots / 9;
 	
 	//Aim is all over the place? Reverted back to FireBullet for now.
-	
 //	fire_bullet_base(self.origin, self.v_angle, '0.02 0.02 0' * cone, damage);
 	self.solid = SOLID_BBOX;
 	FireBullet(damage);
@@ -1127,7 +1072,6 @@ void() weapon_machineg_update={
 
 	Weapon_Generic (3, 5, 45, 49, Weapon_MachineGun_Fire);
 };
-
 
 void() Weapon_Chaingun_Fire={
 	local float i, shots, damage, kick, r, u, sfx;
@@ -1243,6 +1187,7 @@ void() Weapon_Chaingun_Fire={
 		//fire_bullet_base(self.origin, self.v_angle, '0.02 0.02', damage);
 		FireBullet(damage);
 		self.solid = SOLID_SLIDEBOX;
+		SpawnMuzzleFlash(WEP_MACHINEGUN_MFLASH_OFFSET_FP, 2, 0.5);
 	}
 	sfx = random() * 1.0;
 	if(sfx < 0.3){
@@ -1365,7 +1310,6 @@ void() Weapon_Hyperblaster_Fire={
 //	local vector offset;
 
 	//ent->client->weapon_sound = gi.soundindex("weapons/hyprbl1a.wav");
-	
 
 	if (!self.button0)
 	{
@@ -1400,7 +1344,8 @@ void() Weapon_Hyperblaster_Fire={
 				damage = 20;
 			
 			fire_blaster_base(self.origin, self.v_angle, 800, damage, 200, 100, 200);
-			
+			SpawnMuzzleFlash(WEP_BLASTER_MFLASH_OFFSET_FP, WEP_BLASTER_MFLASH_SCALE, 0.5);
+			SpawnMuzzleFlashTP(WEP_BLASTER_MFLASH_OFFSET_TP, 0.5);
 			sound (self, CHAN_WEAPON, "weapons/Hyprbf1a.wav", 1, ATTN_NORM);
 			sound (self, CHAN_WEAPON2, "weapons/Hyprbl1a.wav", 1, ATTN_NORM);
 			
@@ -1461,14 +1406,15 @@ void() Weapon_Railgun_Fire={
 
 	self.punchangle_x = -3;
 
-	makevectors(self.v_angle);
+//	makevectors(self.v_angle);
 	//start = self.origin + v_forward*10;
 	start = self.origin + (v_forward * 10) + (v_right * 20) + (v_up * 15);
 	start_z = self.absmin_z + self.size_z * 0.7;
+	
 	self.solid = SOLID_BBOX;
 	fire_railgun_base(start, self.origin + (v_forward * 4096)+ PlayerViewOrg(v_up), damage);
 	self.solid = SOLID_SLIDEBOX;
-
+	
 	// send muzzle flash
 
 	self.weaponframe++;

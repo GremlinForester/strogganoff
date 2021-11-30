@@ -512,9 +512,9 @@ void() ogre_die =
 	{
 		sound (self, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
 		ThrowHead ("progs/h_ogre.mdl", self.health);
-		ThrowGib ("progs/gib3.mdl", self.health);
-		ThrowGib ("progs/gib3.mdl", self.health);
-		ThrowGib ("progs/gib3.mdl", self.health);
+		ThrowGib ("progs/gib3.mdl", self.health, GIB_FLESH, 1);
+		ThrowGib ("progs/gib3.mdl", self.health, GIB_FLESH, 1);
+		ThrowGib ("progs/gib3.mdl", self.health, GIB_FLESH, 1);
 		return;
 	}
 

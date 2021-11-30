@@ -126,14 +126,6 @@ float() W_CheckNoAmmo =
 	return FALSE;
 };
 
-/*
-============
-W_Attack
-
-An attack impulse can be triggered now
-============
-*/
-
 void()	q2playeronly_8attackframes;
 void()	q2playeronly_4attackframes;
 
@@ -152,7 +144,7 @@ uses the full 8 frames.
 
 void() W_Attack =
 {
-	local float r;
+//	local float r;
 	
 	//if (!W_CheckNoAmmo ())
 		//return;
@@ -187,9 +179,11 @@ void() W_ImpulseChangeWeapon =
 		self.impulse = 0;	//consume events
 		return;
 	}
+	if (cvar("developer")){
 	bprint("W_ChangeWeapon state = ");	//debug
 	bprint(ftos(self.weaponstate));	//debug
 	bprint("\n");	//debug
+	}
 		
 	switch (self.impulse){
 		case IMPULSE_USE_WEAPON1:
@@ -225,9 +219,11 @@ void() W_ImpulseChangeWeapon =
 	}
 
 	self.impulse = 0;	//consume events
+	if (cvar("developer")){
 	bprint("\n W_ImpulseChangeWeapon()->wep = ");	//debug
 	bprint(ftos(wep));
 	bprint("\n");
+	}
 
 	//reverting W_ChangeWeapon back to mostly quake standard,
 		//this is a different case from 'running out of ammo'
@@ -541,6 +537,213 @@ void() CycleWeaponPrev =
 
 /*
 ============
+Items are handled like weapons with cycle prev/next but will need activating via an impulse.
+============
+*/
+
+void() switchItemNum =
+{
+		local string itname;
+		
+		switch (self.player_pickup_itemnum){
+		case INV_PICKUP_QUAD:
+			itname = "Quad Damage";
+			bprint("ITEM: ");
+			bprint(itname);
+			bprint(" ");	
+			bprint(ftos(self.inv_pickup_quad));
+			bprint("\n");
+			break;
+		case INV_PICKUP_REBREATHER:
+			itname = "Rebreather";
+			bprint("ITEM: ");
+			bprint(itname);
+			bprint(" ");	
+			bprint(ftos(self.inv_pickup_rebreather));
+			bprint("\n");
+			break;
+		case INV_PICKUP_INVISIBILITY:
+			itname = "Invisibility";
+			bprint("ITEM: ");
+			bprint(itname);
+			bprint(" ");	
+			bprint(ftos(self.inv_pickup_invisibility));
+			bprint("\n");			
+			break;
+		case INV_PICKUP_SILENCER:
+			itname = "Silencer";
+			bprint("ITEM: ");
+			bprint(itname);
+			bprint(" ");	
+			bprint(ftos(self.inv_pickup_silencer));
+			bprint("\n");			
+			break;
+		case INV_PICKUP_INVULNERABILITY:
+			itname = "Invulnerability";
+			bprint("ITEM: ");
+			bprint(itname);
+			bprint(" ");	
+			bprint(ftos(self.inv_pickup_invulnerability));
+			bprint("\n");		
+			break;
+		case INV_PICKUP_ENVIROSUIT:
+			itname = "Envirosuit";
+			bprint("ITEM: ");
+			bprint(itname);
+			bprint(" ");	
+			bprint(ftos(self.inv_pickup_envirosuit));
+			bprint("\n");			
+			break;
+	}
+}
+
+/*
+============
+CycleItemNext
+
+Go to the next item with ammo
+============
+*/
+
+void() CycleItemNext =
+{
+	self.player_pickup_itemnum += 1;
+
+	if (self.player_pickup_itemnum > 6)
+		self.player_pickup_itemnum = 0;
+
+	switchItemNum();
+};
+
+/*
+============
+CycleItemPrev
+
+Go to the previous item with ammo
+============
+*/
+
+void() CycleItemPrev =
+{
+	self.player_pickup_itemnum -= 1;
+
+	if (self.player_pickup_itemnum < 0)
+		self.player_pickup_itemnum = 6;
+	
+	switchItemNum();
+};
+
+void() UseInventoryItem =
+{
+	local string itname;	
+
+	switch (self.player_pickup_itemnum){
+		case INV_PICKUP_QUAD:
+			itname = "Quad Damage";
+			
+			if (self.inv_pickup_quad > 0){
+			self.inv_pickup_quad -= 1;
+			self.super_time = 1;
+			self.super_damage_finished = time + 30;
+			self.items = self.items | IT_QUAD;
+			SetVModelHUDSelf('25 15 -15', "models/items/quaddama/tris.md2", 0, '1 1 1', 30, 0.15);			
+			}
+			else{
+					sprint (self, "out of item ");
+					sprint (self, itname);
+					sprint (self, "\n");
+			}
+			
+			break;
+		case INV_PICKUP_REBREATHER:
+			itname = "Rebreather";
+			if (self.inv_pickup_rebreather > 0){
+			self.inv_pickup_rebreather -= 1;
+			self.rad_time = 1;
+			self.radsuit_finished = time + 60;
+			self.items = self.items | IT_SUIT;
+			SetVModelHUDSelf('25 11 -15', "models/items/breather/tris.md2", 0, '1 1 1', 60, 0.15);
+			}
+			else{
+					sprint (self, "out of item ");
+					sprint (self, itname);
+					sprint (self, "\n");
+			}
+			
+			break;
+		case INV_PICKUP_INVISIBILITY:
+			itname = "Invisibility";
+			
+			if (self.inv_pickup_invisibility > 0){
+			self.inv_pickup_invisibility -= 1;
+			self.invisible_time = 1;
+			self.invisible_finished = time + 30;
+			self.items = self.items | IT_INVISIBILITY;
+			SetVModelHUDSelf('25 7 -15', "models/items/armor/screen/tris.md2", 0, '1 1 1', 30, 0.15);
+			}
+			else{
+					sprint (self, "out of item ");
+					sprint (self, itname);
+					sprint (self, "\n");
+			}
+			
+			break;
+		case INV_PICKUP_SILENCER:
+			itname = "Silencer";
+
+			if (self.inv_pickup_silencer > 0){
+			self.inv_pickup_silencer -= 1;
+			self.silencer_time = 1;
+			self.silencer_finished = time + 30;
+			self.items = self.items | IT_SILENCER;
+			SetVModelHUDSelf('25 3 -15', "models/items/silencer/tris.md2", 0, '1 1 1', 30, 0.15);
+			}
+			else{
+					sprint (self, "out of item ");
+					sprint (self, itname);
+					sprint (self, "\n");
+			}
+			
+			break;
+		case INV_PICKUP_INVULNERABILITY:
+			itname = "Invulnerability";
+
+			if (self.inv_pickup_invulnerability > 0){
+			self.inv_pickup_invulnerability -= 1;
+			self.invincible_time = 1;
+			self.invincible_finished = time + 30;
+			self.items = self.items | IT_INVULNERABILITY;
+			SetVModelHUDSelf('25 -1 -15', "models/items/invulner/tris.md2", 0, '1 1 1', 30, 0.15);
+			}
+			else{
+					sprint (self, "out of item ");
+					sprint (self, itname);
+					sprint (self, "\n");
+			}
+			
+			break;
+		case INV_PICKUP_ENVIROSUIT:
+			itname = "Envirosuit";
+			
+			if (self.inv_pickup_envirosuit > 0){
+			self.inv_pickup_envirosuit -= 1;				
+			self.rad_time = 1;
+			self.radsuit_finished = time + 30;
+			self.items = self.items | IT_SUIT;
+			SetVModelHUDSelf('25 -5 -15', "models/items/enviro/tris.md2", 0, '1 1 1', 30, 0.15);
+			}
+			else{
+					sprint (self, "out of item ");
+					sprint (self, itname);
+					sprint (self, "\n");
+			}
+			
+			break;
+	}	
+};
+
+/*
+============
 ServerflagsCommand
 
 Just for development
@@ -550,22 +753,17 @@ Just for development
 
 void() ServerflagsCommand =
 {
-// opgrade blocks this cheat in DM - which only affects the start hub 4 rune floor gate
-#ifdef opgrade
 	if (deathmatch)
 		return;
-#endif
+	
 	serverflags = serverflags * 2 + 1;
 };
 
 void() QuadCheat =
 {
-	if (deathmatch
-// note: opgrade has this cheat enabled in coop
-#ifndef opgrade
-						|| coop
-#endif
-									)		return;
+	if (deathmatch || coop)		
+		return;
+	
 	self.super_time = 1;
 	self.super_damage_finished = time + 30;
 	self.items = self.items | IT_QUAD;
@@ -617,13 +815,19 @@ void() ImpulseCommands =
 		if(self.weaponstate == WEAPON_READY)
 			CycleWeaponPrev();
 	}
-
-	if (self.impulse == IMPULSE_CROUCH_ON){
-		crouch_on ();
+	
+	if (self.impulse == IMPULSE_ITEM_NEXT)
+	{
+			CycleItemNext();
 	}
-
-	if (self.impulse == IMPULSE_CROUCH_OFF){
-		crouch_off ();
+	if (self.impulse == IMPULSE_ITEM_PREV)
+	{
+			CycleItemPrev();
+	}
+	
+	if (self.impulse == IMPULSE_USE_ITEM)
+	{
+			UseInventoryItem();
 	}
 
 #ifdef debug
@@ -641,20 +845,40 @@ void() ImpulseCommands =
 		QuadCheat ();
 #endif
 
-	if(self.impulse == IMPULSE_FLIP)
+	if(self.impulse == IMPULSE_FLIP){
+		if (self.flags & FL_DUCKED)
+			return;
+		
 		q2player_flip();
+	}
 
-	if(self.impulse == IMPULSE_SALUTE)
+	if(self.impulse == IMPULSE_SALUTE){
+		if (self.flags & FL_DUCKED)
+			return;
+		
 		q2player_salute();
+	}
 	
-	if(self.impulse == IMPULSE_TAUNT)
+	if(self.impulse == IMPULSE_TAUNT){
+		if (self.flags & FL_DUCKED)
+			return;
+		
 		q2player_taunt();
+	}
 
-	if(self.impulse == IMPULSE_WAVE)
+	if(self.impulse == IMPULSE_WAVE){
+		if (self.flags & FL_DUCKED)
+			return;
+		
 		q2player_wave();
+	}
 
-	if(self.impulse == IMPULSE_POINT)
+	if(self.impulse == IMPULSE_POINT){
+		if (self.flags & FL_DUCKED)
+			return;
+		
 		q2player_point();
+	}
 
 	self.impulse = 0;
 };
@@ -684,6 +908,21 @@ void() W_WeaponFrame =
 			SuperDamageSound ();
 			W_Attack ();
 		}
+	}
+	
+	if (self.button3 && self.weapon == WEP_RAILGUN){
+		self.viewzoom = 0.15;
+	}
+	else{
+		self.viewzoom = 1.0;
+	}
+	
+	if (self.button4){
+			crouch_on ();
+	}
+	else
+	{
+		crouch_off ();
 	}
 };
 

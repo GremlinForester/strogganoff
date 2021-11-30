@@ -306,13 +306,6 @@ void() army_die =
 // check for gib
 	if (self.health < -35)
 	{
-/*
-		sound (self, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
-		ThrowHead ("progs/h_guard.mdl", self.health);
-		ThrowGib ("progs/gib1.mdl", self.health);
-		ThrowGib ("progs/gib2.mdl", self.health);
-		ThrowGib ("progs/gib3.mdl", self.health);
-*/
 		gibbs("progs/h_guard.mdl");
 		return;
 	}

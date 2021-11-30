@@ -1,11 +1,24 @@
-/*
+#ifndef opgrade
+//replaced with define
+float() crandom =
+{
+	return 2*(random() - 0.5);
+};
+#endif
 
-The largest change is the weapons code, which is handled in a similar fashion to Quake 2. Weapon_Generic is a function that will check the state of all weapons 
-and switch or loop frames based on player and weapons states. Firing, switching, idle animation loops and spin downs for the chaingun and hyperblaster.
+enum
+{
+	INV_PICKUP_NONE = 0,
+	INV_PICKUP_QUAD = 1,
+	INV_PICKUP_REBREATHER = 2,
+	INV_PICKUP_INVISIBILITY = 3,
+	INV_PICKUP_SILENCER = 4,
+	INV_PICKUP_INVULNERABILITY = 5,
+	INV_PICKUP_ENVIROSUIT = 6
+}; //6
 
-Making a note of it here to help make sense of it for myself or anyone else who might use this.
+.float player_pickup_itemnum;
 
-*/
 .float dmgradius;
 float numdecors;
 float maxdecors;
@@ -45,7 +58,9 @@ enum
 	PLAYER_VOICE_PAIN100,
 	PLAYER_VOICE_DEATH,
 	PLAYER_VOICE_LAND1,
-	PLAYER_VOICE_LAND2
+	PLAYER_VOICE_LAND2,
+	PLAYER_VOICE_GURP,
+	PLAYER_VOICE_DROWN
 };
 
 enum
@@ -198,14 +213,22 @@ vector(vector vUp) PlayerViewOrg={
 //MrC: Items can be added like health, powerups, etc...
 enum
 {
-	LOOT_NONE,
 	LOOT_SHELLS,
 	LOOT_BULLETS,
 	LOOT_ROCKETS,
 	LOOT_SLUGS,
 	LOOT_CELLS,
 	LOOT_ARMOR_SHARD,
-	LOOT_HEALTH_SMALL
+	LOOT_HEALTH_SMALL,
+	LOOT_SHOTGUN,
+	LOOT_SUPERSHOTGUN,
+	LOOT_MACHINEGUN,
+	LOOT_CHAINGUN,
+	LOOT_GRENADE_LAUNCHER,
+	LOOT_ROCKET_LAUNCHER,
+	LOOT_HYPERBLASTER,
+	LOOT_RAILGUN,
+	LOOT_BFG
 };
 
 //Q2 weapon impl flattened down to player
@@ -271,15 +294,17 @@ Find/Replace, it's time to work!
 #define WEP_GRENADE 			1024
 
 .float items_q2keys;
-#define	IT_KEY_DATACD			1 //still used by self.items
-#define	IT_KEY_POWERCUBE		2 //still used by self.items
-#define	IT_KEY_PYRAMID			4 //still used by self.items
-#define	IT_KEY_DATASPINNER		8 //still used by self.items
-#define	IT_KEY_PASS				16 //still used by self.items
-#define	IT_KEY_BLUE				32 //still used by self.items
-#define	IT_KEY_RED				64 //still used by self.items
-#define	IT_KEY_HEAD				128 //still used by self.items
+#define	IT_KEY_DATACD			1
+#define	IT_KEY_POWERCUBE		2
+#define	IT_KEY_PYRAMID			4
+#define	IT_KEY_DATASPINNER		8
+#define	IT_KEY_PASS				16
+#define	IT_KEY_BLUE				32
+#define	IT_KEY_RED				64
+#define	IT_KEY_HEAD				128
 
+.float silencer_time;
+.float silencer_finished;
 
 //used self.items (powerups seem to be hard coded?)
 //#define	IT_EXTRA			1
@@ -318,6 +343,15 @@ Find/Replace, it's time to work!
 .float inv_ammo_rockets;
 .float inv_ammo_grenades;
 
+.float inv_pickup_quad;
+.float inv_pickup_rebreather;
+.float inv_pickup_invisibility; //power screen
+.float inv_pickup_silencer;
+.float inv_pickup_invulnerability;
+.float inv_pickup_envirosuit;
+
+#define MAX_ITEMS = 10;
+
 .float anim_end;
 .float anim_priority;
 
@@ -338,7 +372,7 @@ enum
 	WEAPON_ACTIVATING,//2
 	WEAPON_DROPPING,	//3
 	WEAPON_SPINDOWN,	//4
-	WEAPON_FIRING,		//5
+	WEAPON_FIRING		//5
 };
 
 enum 
@@ -547,8 +581,9 @@ IMPULSE VALUES
 #define IMPULSE_WEAPON_NEXT 30
 #define IMPULSE_WEAPON_PREV 31
 
-#define IMPULSE_CROUCH_ON 33
-#define IMPULSE_CROUCH_OFF 34
+#define IMPULSE_ITEM_NEXT 32
+#define IMPULSE_ITEM_PREV 33
+#define IMPULSE_USE_ITEM 34
 
 #define IMPULSE_CHEAT_CMD 99
 
