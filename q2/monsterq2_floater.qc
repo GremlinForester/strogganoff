@@ -242,6 +242,18 @@ void floater_explode(){
 	remove(self);
 };
 
+void() precache_floater =
+{
+	precache_model("models/monsters/float/tris.md2");
+	
+	precache_sound (FLOATER_SOUND_ATTACK2);
+	precache_sound (FLOATER_SOUND_ATTACK3);
+	precache_sound (FLOATER_SOUND_DEATH1);
+	precache_sound (FLOATER_SOUND_IDLE);
+	precache_sound (FLOATER_SOUND_PAIN1);
+	precache_sound (FLOATER_SOUND_PAIN2);
+	precache_sound (FLOATER_SOUND_SIGHT);
+}
 
 /*QUAKED monster_floater (1 .5 0) (-16 -16 -16) (16 16 40) Ambush Trigger_Spawn Sight
 */
@@ -253,15 +265,8 @@ void() monster_floater=
 		remove(self);
 		return;
 	}
-	precache_model("models/monsters/float/tris.md2");
-	
-	precache_sound (FLOATER_SOUND_ATTACK2);
-	precache_sound (FLOATER_SOUND_ATTACK3);
-	precache_sound (FLOATER_SOUND_DEATH1);
-	precache_sound (FLOATER_SOUND_IDLE);
-	precache_sound (FLOATER_SOUND_PAIN1);
-	precache_sound (FLOATER_SOUND_PAIN2);
-	precache_sound (FLOATER_SOUND_SIGHT);
+
+	precache_floater();
 	
 	self.solid = SOLID_SLIDEBOX;
 	self.movetype = MOVETYPE_STEP;

@@ -319,20 +319,8 @@ void()	q2gunner_select_attack =
 	}
 };
 
-/*QUAKED monster_gunner (1 .5 0) (-16 -16 -24) (16 16 32) Ambush Trigger_Spawn Sight
-*/
-
-void() monster_gunner =
+void() precache_gunner =
 {
-	self.classname = "monster_gunner";
-	
-	if (deathmatch)
-	{
-		remove(self);
-		return;
-	}
-	
-	// pre-caches
 	precache_model ("models/monsters/gunner/tris.md2");
 	
 	precache_sound (GUNNER_SOUND_PAIN);	
@@ -343,7 +331,22 @@ void() monster_gunner =
 	precache_sound (GUNNER_SOUND_SEARCH);	
 	precache_sound (GUNNER_SOUND_SIGHT);	
 	precache_sound (GUNNER_SOUND_ATTACK2);	
-	precache_sound (GUNNER_SOUND_ATTACK3);
+	precache_sound (GUNNER_SOUND_ATTACK3);	
+}
+
+/*QUAKED monster_gunner (1 .5 0) (-16 -16 -24) (16 16 32) Ambush Trigger_Spawn Sight
+*/
+void() monster_gunner =
+{
+	self.classname = "monster_gunner";
+	
+	if (deathmatch)
+	{
+		remove(self);
+		return;
+	}
+	
+	precache_gunner();
 
 	self.solid = SOLID_SLIDEBOX;
 	self.movetype = MOVETYPE_STEP;

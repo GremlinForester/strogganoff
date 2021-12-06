@@ -209,6 +209,8 @@ void(entity attacker, float damage)	army_pain =
 
 	self.rnd_ = random();
 
+	SpawnBlood (self.origin + '0 0 24', '0 0 0', 15);
+
 	if (self.rnd_ < 0.2)
 	{
 		self.pain_finished = time + 0.6;
@@ -232,20 +234,25 @@ void(entity attacker, float damage)	army_pain =
 
 void() army_fire =
 {
-//	local	vector	dir;
-//	local	entity	en;
+	local	vector	dir;
+	local	entity	en;
+	local vector org;
+	
+	if (!visible (self.enemy))
+	return;
 	
 	ai_face();
-	
-	sound (self, CHAN_WEAPON, "soldier/sattck1.wav", 1, ATTN_NORM);	
 
 // fire somewhat behind the player, so a dodging player is harder to hit
-//	en = self.enemy;
+	en = self.enemy;
+
+	dir = en.origin - en.velocity*0.2;
+	dir = normalize (dir - self.origin);
+
+	org = self.origin + v_forward * 30 + v_right * -8.5 + '0 0 16';
 	
-	self.v__ = self.enemy.origin - self.enemy.velocity*0.2;
-	self.v__ = normalize (self.v__ - self.origin);
-	
-	FireBullets (4, self.v__, '0.1 0.1 0');
+	sound (self, CHAN_WEAPON, "soldier/sattck1.wav", 1, ATTN_NORM);	
+	monster_fire_shotgun(4, org, dir, '0.1 0.1 0', 2);
 };
 
 
@@ -309,7 +316,7 @@ void() army_die =
 		gibbs("progs/h_guard.mdl");
 		return;
 	}
-
+	SpawnBlood (self.origin + '0 0 24', '0 0 0', 15);
 // regular death
 	sound (self, CHAN_VOICE, "soldier/death1.wav", 1, ATTN_NORM);
 	if (random() < 0.5)

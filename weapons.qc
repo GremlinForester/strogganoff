@@ -253,6 +253,12 @@ void() CheatCommand =
 #endif
 									)		return;
 
+	self.inv_pickup_invisibility = 5;
+	self.inv_pickup_quad = 5;
+	self.inv_pickup_invulnerability = 5;
+	self.inv_pickup_silencer = 5;
+	self.inv_pickup_rebreather = 5;	
+	self.inv_pickup_envirosuit = 5;	
 	self.inv_ammo_rockets = 100;
 	self.inv_ammo_bullets = 200;
 	self.inv_ammo_shells = 100;

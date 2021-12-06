@@ -262,17 +262,8 @@ void() q2mutant_die =
 	}
 };
 
-/*QUAKED monster_mutant (1 .5 0) (-32 -32 -24) (32 32 32) Ambush Trigger_Spawn Sight
-*/
-void() monster_mutant =
+void() precache_mutant =
 {
-	self.classname = "monster_mutant";
-	
-	if (deathmatch)
-	{
-		remove(self);
-		return;
-	}
 	precache_model ("models/monsters/mutant/tris.md2");
 
 	precache_sound ("mutant/mutatck1.wav");
@@ -287,7 +278,22 @@ void() monster_mutant =
 	precache_sound ("mutant/step1.wav");
 	precache_sound ("mutant/step2.wav");
 	precache_sound ("mutant/step3.wav");
-	precache_sound ("mutant/thud1.wav");
+	precache_sound ("mutant/thud1.wav");	
+}
+
+/*QUAKED monster_mutant (1 .5 0) (-32 -32 -24) (32 32 32) Ambush Trigger_Spawn Sight
+*/
+void() monster_mutant =
+{
+	self.classname = "monster_mutant";
+	
+	if (deathmatch)
+	{
+		remove(self);
+		return;
+	}
+
+	precache_mutant();
 
 	self.solid = SOLID_SLIDEBOX;
 	self.movetype = MOVETYPE_STEP;

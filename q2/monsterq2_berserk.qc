@@ -303,6 +303,18 @@ void() q2berserk_die =
 	}
 };
 
+void() precache_berserk =
+{
+	// pre-caches
+	precache_model ("models/monsters/berserk/tris.md2");
+	
+	precache_sound ("berserk/berpain2.wav");
+	precache_sound ("berserk/berdeth2.wav");
+	precache_sound ("berserk/beridle1.wav");
+	precache_sound ("berserk/attack.wav");
+	precache_sound ("berserk/bersrch1.wav");
+	precache_sound ("berserk/sight.wav");	
+}
 
 /*QUAKED monster_berserk (1 .5 0) (-16 -16 -24) (16 16 32) Ambush Trigger_Spawn Sight
 */
@@ -314,18 +326,9 @@ void () monster_berserk =
 		remove(self);
 		return;
 	}
-	
-	// pre-caches
-	precache_model ("models/monsters/berserk/tris.md2");
-	
-	precache_sound ("berserk/berpain2.wav");
-	precache_sound ("berserk/berdeth2.wav");
-	precache_sound ("berserk/beridle1.wav");
-	precache_sound ("berserk/attack.wav");
-	precache_sound ("berserk/bersrch1.wav");
-	precache_sound ("berserk/sight.wav");
 
-
+	precache_berserk();
+	
 	self.solid = SOLID_SLIDEBOX;
 	self.movetype = MOVETYPE_STEP;
 

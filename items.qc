@@ -1,4 +1,3 @@
-void() W_SetCurrentAmmo;
 void() W_ChangeWeapon;
 float() W_CheckNoAmmo;
 
@@ -12,6 +11,35 @@ void() weapon_rocketlauncher;
 void() weapon_hyperblaster;
 void() weapon_railgun;
 void() weapon_bfg;
+
+//MrC: this might be moved somewhere else eventually
+void(entity ent) W_updateCurrentAmmo =
+{
+	if (ent.weapon == WEP_SHOTGUN || ent.weapon == WEP_SUPERSHOTGUN){
+		ent.currentammo = ent.inv_ammo_shells;
+		return;
+	}
+	
+	if (ent.weapon == WEP_MACHINEGUN || ent.weapon == WEP_CHAINGUN){
+		ent.currentammo = ent.inv_ammo_bullets;
+		return;
+	}	
+
+	if (ent.weapon == WEP_GRENADE_LAUNCHER || ent.weapon == WEP_ROCKET_LAUNCHER){
+		ent.currentammo = ent.inv_ammo_rockets;
+		return;
+	}
+
+	if (ent.weapon == WEP_HYPERBLASTER || ent.weapon == WEP_BFG){
+		ent.currentammo = ent.inv_ammo_cells;
+		return;
+	}
+
+	if (ent.weapon == WEP_RAILGUN){
+		ent.currentammo = ent.inv_ammo_slugs;
+		return;
+	}
+};
 
 /* ALL LIGHTS SHOULD BE 0 1 0 IN COLOR ALL OTHER ITEMS SHOULD
 BE .8 .3 .4 IN COLOR */
@@ -684,7 +712,7 @@ local float		best;
 	// ammo touch sound
 	sound (self, CHAN_ITEM, "weapons/lock4.wav", 1, ATTN_NORM);
 
-	W_SetCurrentAmmo(); //MrC 13/09/21: had to restore this to update ammo amounts on pickup, TODO: look into this more.
+	W_updateCurrentAmmo(self);
 	self = stemp;
 
 	touched(30);
@@ -888,29 +916,21 @@ void() powerup_touch =
 	other.items = other.items | self.items;
 
 // do the apropriate action
-	if (self.classname == "item_artifact_envirosuit")
+	if (self.classname == "item_pack")
 	{
-		other.rad_time = 1;
-		other.radsuit_finished = time + 30;
-	}
-	
-	if (self.classname == "item_artifact_invulnerability")
-	{
-		other.invincible_time = 1;
-		other.invincible_finished = time + 30;
-	}
-	
-	if (self.classname == "item_artifact_invisibility")
-	{
-		other.invisible_time = 1;
-		other.invisible_finished = time + 10;
+		other.inv_ammo_shells += 10;
+		sprint (other, "You got 10 shells\n");		
+		other.inv_ammo_bullets += 50;
+		sprint (other, "You got 50 bullets\n");			
+		other.inv_ammo_rockets += 5;
+		sprint (other, "You got 5 rockets\n");			
+		other.inv_ammo_cells += 50;
+		sprint (other, "You got 50 cells\n");			
+		other.inv_ammo_slugs += 10;
+		sprint (other, "You got 10 slugs\n");
+		W_updateCurrentAmmo(other);		
 	}
 
-	if (self.classname == "item_artifact_super_damage")
-	{
-		other.super_time = 1;
-		other.super_damage_finished = time + 30;
-	}	
 };
 
 /*
@@ -1036,8 +1056,6 @@ void() BackpackTouch =
 	else
 		Deathmatch_Weapon(new);
 	
-	//W_SetCurrentAmmo ();
-
 #undef stemp
 #undef acount
 };

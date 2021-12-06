@@ -242,6 +242,23 @@ void() q2gladiator_die =
 		q2gladiator_death_frames ();
 	}
 };
+
+void() precache_gladiator =
+{
+	precache_model ("models/monsters/gladiatr/tris.md2");
+	
+	precache_sound ("gladiator/pain.wav");
+	precache_sound ("gladiator/gldpain2.wav");
+	precache_sound ("gladiator/glddeth2.wav");
+	precache_sound ("gladiator/railgun.wav");
+	precache_sound ("gladiator/melee1.wav");
+	precache_sound ("gladiator/melee2.wav");
+	precache_sound ("gladiator/melee3.wav");
+	precache_sound ("gladiator/gldidle1.wav");
+	precache_sound ("gladiator/gldsrch1.wav");
+	precache_sound ("gladiator/sight.wav");	
+}
+
 /*QUAKED monster_gladiator (1 .5 0) (-32 -32 -24) (32 32 64) Ambush Trigger_Spawn Sight
 */
 void () monster_gladiator =
@@ -254,19 +271,7 @@ void () monster_gladiator =
 		return;
 	}
 	
-	// pre-caches
-	precache_model ("models/monsters/gladiatr/tris.md2");
-	
-	precache_sound ("gladiator/pain.wav");
-	precache_sound ("gladiator/gldpain2.wav");
-	precache_sound ("gladiator/glddeth2.wav");
-	precache_sound ("gladiator/railgun.wav");
-	precache_sound ("gladiator/melee1.wav");
-	precache_sound ("gladiator/melee2.wav");
-	precache_sound ("gladiator/melee3.wav");
-	precache_sound ("gladiator/gldidle1.wav");
-	precache_sound ("gladiator/gldsrch1.wav");
-	precache_sound ("gladiator/sight.wav");
+	precache_gladiator();
 
 	self.solid = SOLID_SLIDEBOX;
 	self.movetype = MOVETYPE_STEP;

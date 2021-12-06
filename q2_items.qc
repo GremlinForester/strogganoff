@@ -207,24 +207,6 @@ void() item_enviro =
 	StartItem ();
 }
 
-/*QUAKED item_adrenaline (.3 .3 1) (-16 -16 -16) (16 16 16)
-gives +1 to maximum health
-model="models/items/adrenal/"
-*/
-void() item_adrenaline =
-{
-	self.touch = powerup_touch;
-	precache_model ("models/items/adrenal/tris.md2");
-	precache_sound ("items/pkup.wav");
-	self.noise = "items/pkup.wav";
-	setmodel (self, "models/items/adrenal/tris.md2");
-	self.netname = "Adrenaline";
-	self.modelflags = MF_ROTATE;
-//	self.items = IT_QUAD;
-	setsize (self, '-16 -16 -16', '16 16 16');
-	StartItem ();
-}
-
 /*QUAKED item_bandolier (.3 .3 1) (-16 -16 -16) (16 16 16)
 model="models/items/band/"
 */

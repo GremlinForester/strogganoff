@@ -1,7 +1,6 @@
 
 // prototypes
 void () W_WeaponFrame;
-void() W_SetCurrentAmmo;
 void() W_ChangeWeapon;
 void() q2player_pain;
 //void() q2player_stand1;
@@ -337,8 +336,7 @@ void() SetChangeParms =
 	}
 
 // remove items
-	self.items = self.items - (self.items & 
-	(IT_KEY1 | IT_KEY2 | IT_INVISIBILITY | IT_INVULNERABILITY | IT_SUIT | IT_QUAD | IT_SILENCER) );
+	self.items = self.items - (self.items & (IT_KEY1 | IT_KEY2 | IT_INVISIBILITY | IT_INVULNERABILITY | IT_SUIT | IT_QUAD | IT_SILENCER) );
 	
 // cap super health
 	if (self.health > 100)
@@ -1648,13 +1646,6 @@ void() PlayerPreThink =
 	if (time < self.pausetime)
 		self.velocity = '0 0 0';
 
-	//if(time > self.attack_finished && ! self.currentammo /* == 0 */ && self.weapon != WEP_BLASTER)
-	//{
-   // self.weapon_next = W_BestWeapon ();
-  //  self.weaponstate_next = WEAPON_DROPPING;
-	//	//W_SetCurrentAmmo ();
-	//}
-	
 	//----------------------------------------------------------------------
 	// Rubicon Ladder Code - johnfitz
 	// Modified by me to support diff climb sounds and on/off/toggle states

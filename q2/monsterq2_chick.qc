@@ -358,18 +358,8 @@ framer($FRAME_attak101, $FRAME_attak132, q2chick_missile_attack, q2chick_frames_
 	ai_face();
 );
 
-/*QUAKED monster_chick (1 .5 0) (-16 -16 -24) (16 16 32) Ambush Trigger_Spawn Sight
-*/
-void () monster_chick =
+void() precache_chick =
 {
-	self.classname = "monster_chick";
-	
-	if (deathmatch)
-	{
-		remove(self);
-		return;
-	}
-	
 	// pre-caches
 	precache_model ("models/monsters/bitch/tris.md2");
 	
@@ -387,7 +377,22 @@ void () monster_chick =
 	precache_sound ("chick/chkpain2.wav");	
 	precache_sound ("chick/chkpain3.wav");	
 	precache_sound ("chick/chksght1.wav");	
-	precache_sound ("chick/chksrch1.wav");
+	precache_sound ("chick/chksrch1.wav");	
+}
+
+/*QUAKED monster_chick (1 .5 0) (-16 -16 -24) (16 16 32) Ambush Trigger_Spawn Sight
+*/
+void () monster_chick =
+{
+	if (deathmatch)
+	{
+		remove(self);
+		return;
+	}
+	
+	self.classname = "monster_chick";
+	
+	precache_chick();
 	
 	self.solid = SOLID_SLIDEBOX;
 	self.movetype = MOVETYPE_STEP;

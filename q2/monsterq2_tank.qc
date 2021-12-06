@@ -484,19 +484,8 @@ void() tank_die={
 	tank_move_death();
 }
 
-/*QUAKED monster_tank (1 .5 0) (-32 -32 -16) (32 32 72) Ambush Trigger_Spawn Sight
-*/
-/*QUAKED monster_tank_commander (1 .5 0) (-32 -32 -16) (32 32 72) Ambush Trigger_Spawn Sight
-*/
-void() monster_tank={
-
-	self.classname = "monster_tank";
-	
-	if(deathmatch){
-		remove(self);
-		return;
-	}
-	
+void() precache_tank =
+{
 	precache_model("models/monsters/tank/tris.md2");
 	
 	precache_sound (TANK_SOUND_PAIN);
@@ -515,6 +504,22 @@ void() monster_tank={
 	precache_sound ("tank/tnkatk2d.wav");
 	precache_sound ("tank/tnkatk2e.wav");
 	precache_sound ("tank/tnkatck3.wav");
+}
+
+/*QUAKED monster_tank (1 .5 0) (-32 -32 -16) (32 32 72) Ambush Trigger_Spawn Sight
+*/
+/*QUAKED monster_tank_commander (1 .5 0) (-32 -32 -16) (32 32 72) Ambush Trigger_Spawn Sight
+*/
+void() monster_tank={
+	
+	if(deathmatch){
+		remove(self);
+		return;
+	}
+	
+	self.classname = "monster_tank";
+	
+	precache_tank();
 	
 	self.solid = SOLID_BBOX;
 	self.movetype = MOVETYPE_STEP;

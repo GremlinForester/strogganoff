@@ -80,7 +80,7 @@ q2/monsterq2_boss2.qc
 //q2/monsterq2_boss3.qc //more of a prop than a monster
 q2/monsterq2_boss32.qc //do this first so jorg can spawn makron
 q2/monsterq2_boss31.qc
-
+q2/monsterq2_spawner.qc
 
 q1/ogre.qc
 q1/demon.qc

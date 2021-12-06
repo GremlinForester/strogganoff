@@ -267,6 +267,19 @@ void() flyer_die=
 	remove(self);
 };
 
+void() precache_flyer =
+{
+	precache_model("models/monsters/flyer/tris.md2");
+	
+	precache_sound (FLYER_SOUND_SIGHT);
+	precache_sound (FLYER_SOUND_IDLE);
+	precache_sound (FLYER_SOUND_PAIN1);
+	precache_sound (FLYER_SOUND_PAIN2);
+	precache_sound (FLYER_SOUND_SPLASH);
+	precache_sound (FLYER_SOUND_SPROING);
+	precache_sound (FLYER_SOUND_DIE);	
+}
+
 /*QUAKED monster_flyer (1 .5 0) (-16 -16 -24) (16 16 32) Ambush Trigger_Spawn Sight
 */
 void() monster_flyer=
@@ -278,15 +291,7 @@ void() monster_flyer=
 		return;
 	}
 	
-	precache_model("models/monsters/flyer/tris.md2");
-	
-	precache_sound (FLYER_SOUND_SIGHT);
-	precache_sound (FLYER_SOUND_IDLE);
-	precache_sound (FLYER_SOUND_PAIN1);
-	precache_sound (FLYER_SOUND_PAIN2);
-	precache_sound (FLYER_SOUND_SPLASH);
-	precache_sound (FLYER_SOUND_SPROING);
-	precache_sound (FLYER_SOUND_DIE);
+	precache_flyer();
 	
 	self.solid = SOLID_BBOX;
 	self.movetype = MOVETYPE_STEP;

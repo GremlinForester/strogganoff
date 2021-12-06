@@ -20,6 +20,35 @@ void() W_Precache =
 	precache_sound ("weapons/grenade.wav");	// grenade launcher
 	precache_sound ("weapons/bounce.wav");		// grenade bounce
 	precache_sound ("weapons/shotgn2.wav");	// super shotgun
+
+//Quake 2
+	precache_sound ("weapons/BLASTF1A.WAV");
+	precache_sound ("weapons/HGRENT1A.WAV");
+	precache_sound ("weapons/noammo.wav");
+	precache_sound ("weapons/BLASTF1A.WAV");
+	precache_sound ("weapons/Shotgr1b.wav");
+	precache_sound ("weapons/Shotgf1b.wav");
+	precache_sound ("weapons/Sshotf1b.wav");
+	precache_sound ("weapons/Machgf1b.wav");
+	precache_sound ("weapons/Machgf2b.wav");
+	precache_sound ("weapons/Machgf3b.wav");
+	precache_sound ("weapons/Machgf4b.wav");
+	precache_sound ("weapons/Machgf5b.wav");
+	precache_sound ("weapons/chngnu1a.wav");
+	precache_sound ("weapons/chngnd1a.wav");
+	precache_sound ("weapons/chngnl1a.wav");
+	precache_sound ("weapons/Grenlr1b.WAV");
+	precache_sound ("weapons/GRENLF1A.WAV");
+	precache_sound ("weapons/Rocklr1b.wav");
+	precache_sound ("weapons/ROCKLF1A.WAV");
+	precache_sound ("weapons/Hyprbf1a.wav");
+	precache_sound ("weapons/Hyprbl1a.wav");
+	precache_sound ("weapons/hyprbd1a.wav");
+	precache_sound ("weapons/RAILGF1A.WAV");
+	precache_sound ("weapons/Bfg__f1y.wav");
+
+	precache_sound ("misc/ar1_pkup.wav");
+	
 };
 
 /*
@@ -719,6 +748,7 @@ void(vector p1, vector p2, entity from, float damage) LightningDamage =
 	}
 };
 
+void() W_SetCurrentAmmo;
 
 void() W_FireLightning =
 {

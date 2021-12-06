@@ -75,20 +75,6 @@ void(float damage) spawn_touchblood =
 	SpawnBlood (self.origin + vel*0.01, vel, damage);
 };
 
-
-/*
-================
-SpawnChunk
-================
-*/
-#ifdef unused
-void(vector org, vector vel) SpawnChunk =
-{
-	particle (org, vel*0.02, 0, 10);
-};
-
-#endif
-
 void() DeathBubblesSpawn =
 {
 //local entity	bubble;

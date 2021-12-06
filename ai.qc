@@ -627,11 +627,7 @@ float()	WizardCheckAttack;
 float() CheckAnyAttack =
 {
 	if (!enemy_vis)
-		return 
-#ifdef codefix 
-				FALSE
-#endif 
-				;
+		return FALSE;
 
 // qc++ check attack code boiled down to multi* & demon*
 

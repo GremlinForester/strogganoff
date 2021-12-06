@@ -152,7 +152,7 @@ framer($attak101, $attak112, q2soldier_atk1, q2soldier_run1, 0.1, ai_face();
 	);
 	
 	frame_arb($attak108,
-		sound (self, CHAN_VOICE, "infantry/infatck3.wav", 1, ATTN_IDLE);
+		sound (self, CHAN_VOICE, "soldier/Solatck3.wav", 1, ATTN_IDLE);
 	);
 );
 
@@ -305,17 +305,17 @@ void() q2soldier_fire =
 
 	if (self.classname == "monster_soldier")
 	{
+		sound (self, CHAN_WEAPON, "soldier/Solatck1.wav", 1, ATTN_NORM);		
 		monster_fire_shotgun(8, org, dir, '0.1 0.1 0', WEAPON_DEFAULT_DAMAGE);
-		sound (self, CHAN_WEAPON, "soldier/solatck3.wav", 1, ATTN_NORM);
-
 	}
 	else if (self.classname == "monster_soldier_ss")
 	{
+		sound (self, CHAN_WEAPON, "soldier/Solatck3.wav", 1, ATTN_NORM);		
 		monster_fire_bullet(org, dir, '0.01 0.01 0', 3);
-		sound (self, CHAN_WEAPON, "soldier/Solatck1.wav", 1, ATTN_NORM);
 	}
 	else
 	{
+		sound (self, CHAN_WEAPON, "soldier/Solatck2.wav", 1, ATTN_NORM);		
 		monster_fire_blaster(org, self.enemy.origin - self.origin, 5, '2 0.2 0.2', MF_TRACER2);
 	}
 };
@@ -381,21 +381,23 @@ void() q2soldier_death1fire =
 	{
 		org = self.origin + v_forward * 30 + v_right * 0 + '0 0 0';
 		dir = normalize (org - self.origin);
+
+		sound (self, CHAN_WEAPON, "soldier/Solatck3.wav", 1, ATTN_NORM);
 		monster_fire_bullet(org, dir, '0.01 0.01 0', 3);
-		sound (self, CHAN_WEAPON, "soldier/solatck3.wav", 1, ATTN_NORM);
 
 	}
 	else if (self.classname == "monster_soldier")
 	{
 		org = self.origin + v_forward + v_right * 0 + '0 0 0';
 		dir = normalize (org - self.origin);
-		monster_fire_shotgun(8, org, dir, '0.1 0.1 0', WEAPON_DEFAULT_DAMAGE);
+
 		sound (self, CHAN_WEAPON, "soldier/Solatck1.wav", 1, ATTN_NORM);
+		monster_fire_shotgun(8, org, dir, '0.1 0.1 0', WEAPON_DEFAULT_DAMAGE);		
 	}
 	else
 	{
-		monster_fire_blaster(org, v_forward * 2000, 3, '2 0.2 0.2', MF_TRACER2);
 		sound (self, CHAN_WEAPON, "soldier/Solatck2.wav", 1, ATTN_NORM);
+		monster_fire_blaster(org, v_forward * 2000, 3, '2 0.2 0.2', MF_TRACER2);
 	}
 };
 
@@ -539,6 +541,24 @@ void()	q2soldier_selectwalk =
 /*QUAKED monster_soldier_light (1 .5 0) (-16 -16 -24) (16 16 32) Ambush Trigger_Spawn Sight
 */
 
+void() precache_soldier =
+{
+	precache_model ("models/monsters/soldier/tris.md2");
+	precache_sound ("soldier/Solatck1.wav");
+	precache_sound ("soldier/Solatck2.wav");
+	precache_sound ("soldier/Solatck3.wav");
+	precache_sound ("soldier/soldeth1.wav");
+	precache_sound ("soldier/soldeth2.wav");
+	precache_sound ("soldier/soldeth3.wav");
+	precache_sound ("soldier/solidle1.wav");
+	precache_sound ("soldier/solpain1.wav");
+	precache_sound ("soldier/solpain2.wav");
+	precache_sound ("soldier/solpain3.wav");
+	precache_sound ("soldier/solsght1.wav");
+	precache_sound ("soldier/solsrch1.wav");
+	precache_sound ("infantry/infatck3.wav");	
+}
+
 void () monster_soldier_light =
 {
 	self.classname = "monster_soldier_light";
@@ -547,20 +567,9 @@ void () monster_soldier_light =
 		remove(self);
 		return;
 	}
-	precache_model ("models/monsters/soldier/tris.md2");
-	precache_model ("progs/h_guard.mdl");
-	precache_model ("progs/gib1.mdl");
-	precache_model ("progs/gib2.mdl");
-	precache_model ("progs/gib3.mdl");
 
-	// SHARED SOUNDS
-	precache_sound ("soldier/solidle1.wav");
-	precache_sound ("soldier/solsght1.wav");
-	precache_sound ("soldier/solsrch1.wav");
-	precache_sound ("infantry/infatck3.wav");
-
-	precache_sound ("misc/udeath.wav");		// gib death
-
+	precache_soldier();
+	
 	self.solid = SOLID_SLIDEBOX;
 	self.movetype = MOVETYPE_STEP;
 
@@ -577,16 +586,8 @@ void () monster_soldier_light =
 	self.th_die = q2soldier_die;
 
 	self.sightSound = "soldier/solsght1.wav";
-
-	walkmonster_start;
-
-	precache_sound ("soldier/solpain2.wav");
-	precache_sound ("soldier/soldeth2.wav");
-	precache_model ("models/objects/laser/tris.md2");
-	precache_sound("misc/lasfly.wav");
-	precache_sound("soldier/solatck2.wav");
-
 	self.skin = 0; //laser
+	walkmonster_start;
 }
 
 /*QUAKED monster_soldier (1 .5 0) (-16 -16 -24) (16 16 32) Ambush Trigger_Spawn Sight
@@ -599,19 +600,8 @@ void () monster_soldier =
 		remove(self);
 		return;
 	}
-	precache_model ("models/monsters/soldier/tris.md2");
-	precache_model ("progs/h_guard.mdl");
-	precache_model ("progs/gib1.mdl");
-	precache_model ("progs/gib2.mdl");
-	precache_model ("progs/gib3.mdl");
 
-	// SHARED SOUNDS
-	precache_sound ("soldier/solidle1.wav");
-	precache_sound ("soldier/solsght1.wav");
-	precache_sound ("soldier/solsrch1.wav");
-	precache_sound ("infantry/infatck3.wav");
-
-	precache_sound ("misc/udeath.wav");		// gib death
+	precache_soldier();
 
 	self.solid = SOLID_SLIDEBOX;
 	self.movetype = MOVETYPE_STEP;
@@ -629,14 +619,9 @@ void () monster_soldier =
 	self.th_die = q2soldier_die;
 
 	self.sightSound = "soldier/solsght1.wav";
-
-	walkmonster_start;
-
-	precache_sound ("soldier/solpain1.wav");
-	precache_sound ("soldier/soldeth1.wav");
-	precache_sound ("soldier/solatck1.wav");
-
 	self.skin = 2; //shotgun
+	
+	walkmonster_start;
 }
 
 /*QUAKED monster_soldier_ss (1 .5 0) (-16 -16 -24) (16 16 32) Ambush Trigger_Spawn Sight
@@ -649,24 +634,9 @@ void () monster_soldier_ss =
 		remove(self);
 		return;
 	}
-	precache_model ("models/monsters/soldier/tris.md2");
-	precache_model ("progs/h_guard.mdl");
-	precache_model ("progs/gib1.mdl");
-	precache_model ("progs/gib2.mdl");
-	precache_model ("progs/gib3.mdl");
-
-	// SHARED SOUNDS
-	precache_sound ("soldier/solidle1.wav");
-	precache_sound ("soldier/solsght1.wav");
-	precache_sound ("soldier/solsrch1.wav");
-	precache_sound ("infantry/infatck3.wav");
-
-	precache_sound ("soldier/solpain3.wav");
-	precache_sound ("soldier/soldeth3.wav");
-	precache_sound ("soldier/solatck3.wav");
-
-	precache_sound ("misc/udeath.wav");		// gib death
-
+	
+	precache_soldier();
+	
 	self.solid = SOLID_SLIDEBOX;
 	self.movetype = MOVETYPE_STEP;
 

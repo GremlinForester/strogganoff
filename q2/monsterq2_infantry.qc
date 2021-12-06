@@ -326,22 +326,41 @@ void() q2infantry_die =
 	else
 	{
 	// regular death
-	sound (self, CHAN_VOICE, "soldier/soldeth2.wav", 1, ATTN_NORM);
 	self.deadflag = DEAD_DEAD;
-
+	
 	DropLoot(LOOT_BULLETS, floor(random()*12)+1);
 
 	if (random() < 0.4){
+		sound (self, CHAN_VOICE, "infantry/infdeth2.wav", 1, ATTN_NORM);
 		q2infantry_frames_die1 ();
 	}
-	if (random() < 0.7){
+	else if (random() < 0.7){
+		sound (self, CHAN_VOICE, "infantry/infdeth1.wav", 1, ATTN_NORM);
 		q2infantry_frames_die2 ();
 	}
 	else{
+		sound (self, CHAN_VOICE, "infantry/infdeth2.wav", 1, ATTN_NORM);
 		q2infantry_frames_die3 ();
 	}
 	}
 };
+
+void() precache_infantry =
+{
+	precache_model ("models/monsters/infantry/tris.md2");
+
+	precache_sound ("infantry/infdeth1.wav");
+	precache_sound ("infantry/infdeth2.wav");
+	precache_sound ("infantry/infidle1.wav");
+	precache_sound ("infantry/infpain1.wav");
+	precache_sound ("infantry/infpain2.wav");
+	precache_sound ("infantry/infatck1.wav");
+	precache_sound ("infantry/infatck2.wav");
+	precache_sound ("infantry/infatck3.wav");
+	precache_sound ("infantry/infsrch1.wav");
+	precache_sound ("infantry/INFSGHT1.wav");
+	precache_sound ("infantry/melee2.wav");	
+}
 
 
 /*QUAKED monster_infantry(1 0 0) (-16 -16 -24) (16 16 40) Ambush
@@ -356,21 +375,7 @@ void() monster_infantry =
 	
 	self.classname = "monster_infantry";
 	
-	precache_model ("models/monsters/infantry/tris.md2");
-	precache_model ("progs/h_guard.mdl");
-	precache_model ("progs/gib1.mdl");
-	precache_model ("progs/gib2.mdl");
-	precache_model ("progs/gib3.mdl");
-
-	precache_sound ("infantry/infdeth1.wav");
-	precache_sound ("infantry/infdeth2.wav");
-	precache_sound ("infantry/infidle1.wav");
-	precache_sound ("infantry/infpain1.wav");
-	precache_sound ("infantry/infpain2.wav");
-	precache_sound ("soldier/sattck1.wav");
-	precache_sound ("infantry/infsrch1.wav");
-	precache_sound ("infantry/INFSGHT1.wav");
-
+	precache_infantry();
 
 	precache_sound ("player/udeath.wav");		// gib death
 

@@ -131,18 +131,8 @@ void() q2flipper_die =
 	q2flipper_frames_death();
 }
 
-/*QUAKED monster_flipper (1 .5 0) (-16 -16 -24) (16 16 32) Ambush Trigger_Spawn Sight
-*/
-void () monster_flipper =
+void() precache_flipper =
 {
-	self.classname = "monster_flipper";
-	
-	if (deathmatch)
-	{
-		remove(self);
-		return;
-	}
-	
 	// pre-caches
 	precache_model ("models/monsters/flipper/tris.md2");
 	
@@ -153,7 +143,22 @@ void () monster_flipper =
 	precache_sound (FLIPPER_SOUND_ATTACK);	
 	precache_sound (FLIPPER_SOUND_IDLE);	
 	precache_sound (FLIPPER_SOUND_SEARCH);	
-	precache_sound (FLIPPER_SOUND_SIGHT);	
+	precache_sound (FLIPPER_SOUND_SIGHT);
+}
+
+/*QUAKED monster_flipper (1 .5 0) (-16 -16 -24) (16 16 32) Ambush Trigger_Spawn Sight
+*/
+void () monster_flipper =
+{
+	self.classname = "monster_flipper";
+	
+	if (deathmatch)
+	{
+		remove(self);
+		return;
+	}	
+	
+	precache_flipper();
 	
 	self.solid = SOLID_SLIDEBOX;
 	self.movetype = MOVETYPE_STEP;

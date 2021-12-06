@@ -30,6 +30,9 @@ void( ) FRIK_FILE_precaches =
         else if(strstrofs(ln, ".ogg",0) != -1){
           precache_sound(ln);
         }
+        else if(strstrofs(ln, ".mdl",0) != -1){
+          precache_model(ln);         // so precache the model
+        }		
         else if(strstrofs(ln, ".md2",0) != -1){
           precache_model(ln);         // so precache the model
         }

@@ -246,17 +246,8 @@ void()	brain_melee =
 	}
 };
 
-/*QUAKED monster_brain (1 .5 0) (-16 -16 -24) (16 16 32) Ambush Trigger_Spawn Sight
-*/
-void() monster_brain =
+void() precache_brain =
 {
-	self.classname = "monster_brain";
-	
-	if (deathmatch)
-	{
-		remove(self);
-		return;
-	}
 	precache_model ("models/monsters/brain/tris.md2");
 
 	precache_sound ("brain/brnatck1.wav");
@@ -272,7 +263,22 @@ void() monster_brain =
 	precache_sound ("brain/brnsrch1.wav");
 	precache_sound ("brain/melee1.wav");
 	precache_sound ("brain/melee2.wav");
-	precache_sound ("brain/melee3.wav");
+	precache_sound ("brain/melee3.wav");	
+}
+
+/*QUAKED monster_brain (1 .5 0) (-16 -16 -24) (16 16 32) Ambush Trigger_Spawn Sight
+*/
+void() monster_brain =
+{
+	self.classname = "monster_brain";
+	
+	if (deathmatch)
+	{
+		remove(self);
+		return;
+	}
+
+	precache_brain();
 	
 	self.solid = SOLID_SLIDEBOX;
 	self.movetype = MOVETYPE_STEP;

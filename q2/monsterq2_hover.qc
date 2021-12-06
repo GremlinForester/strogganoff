@@ -126,7 +126,7 @@ void() hover_fire_blaster={
 	end_z = end_z + self.enemy.view_ofs_z;
 	
 	dir = normalize(end - org);
-	
+	sound (self, CHAN_AUTO, HOVER_SOUND_ATTACK1, 1, ATTN_NORM);
 	monster_fire_blaster(org, dir, 1, '0.1 2 0.1', MF_TRACER);
 };
 
@@ -231,13 +231,13 @@ void() q2hoverSound_think =
 	self.nextthink = time + soundlength("hover/hovidle1.wav");
 }
 
-void() attachq2hoverSound =
+void(entity ent) attachq2hoverSound =
 {
 	local entity q2hoverSound;
 	
 	q2hoverSound = spawn();
-	setorigin (q2hoverSound, self.owner.origin);
-	q2hoverSound.owner = self;
+	setorigin (q2hoverSound, ent.owner.origin);
+	q2hoverSound.owner = ent;
 	q2hoverSound.netname = "q2hoverSound";
 	setmodel (q2hoverSound, "");
 	q2hoverSound.solid = SOLID_NOT;
@@ -245,19 +245,11 @@ void() attachq2hoverSound =
 	q2hoverSound.think = q2hoverSound_think;
 	q2hoverSound.nextthink = time;
 
-	setattachment(q2hoverSound, self, "");
+	setattachment(q2hoverSound, ent, "");
 };
 
-/*QUAKED monster_hover (1 .5 0) (-16 -16 -24) (16 16 32) Ambush Trigger_Spawn Sight
-*/
-void() monster_hover=
+void() precache_hover =
 {
-	self.classname = "monster_hover";
-	
-	if(deathmatch){
-		remove(self);
-		return;
-	}
 	precache_model("models/monsters/hover/tris.md2");
 	
 	precache_sound (HOVER_SOUND_ATTACK1);
@@ -268,7 +260,21 @@ void() monster_hover=
 	precache_sound (HOVER_SOUND_PAIN2);
 	precache_sound (HOVER_SOUND_SIGHT1);
 	precache_sound (HOVER_SOUND_SRCH1);
-	precache_sound (HOVER_SOUND_SRCH2);
+	precache_sound (HOVER_SOUND_SRCH2);	
+}
+
+/*QUAKED monster_hover (1 .5 0) (-16 -16 -24) (16 16 32) Ambush Trigger_Spawn Sight
+*/
+void() monster_hover=
+{
+	if(deathmatch){
+		remove(self);
+		return;
+	}
+
+	self.classname = "monster_hover";
+
+	precache_hover();
 	
 	self.solid = SOLID_SLIDEBOX;
 	self.movetype = MOVETYPE_STEP;
@@ -286,7 +292,7 @@ void() monster_hover=
 	self.th_pain = hover_pain;
 	self.th_die = hover_die;
 
-	attachq2hoverSound();
+	attachq2hoverSound(self);
 
 	flymonster_start;
 }
