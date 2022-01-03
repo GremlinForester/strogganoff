@@ -1,3 +1,18 @@
+const float STAT_Q2WEAPONS = 32;
+const float STAT_AMMO_SHELLS = 33;
+const float STAT_AMMO_BULLETS = 34;	
+const float STAT_AMMO_ROCKETS = 35;
+const float STAT_AMMO_CELLS = 36;
+const float STAT_AMMO_SLUGS = 37;
+const float STAT_Q2KEYS = 38;
+const float STAT_PICKUP = 39;
+const float STAT_INV_QUAD = 40;
+const float STAT_INV_REBREATHER = 41;
+const float STAT_INV_INVIS = 42;
+const float STAT_INV_SILENCER = 43;
+const float STAT_INVINVUL = 44;
+const float STAT_ENVIRO = 45;	
+
 #ifndef opgrade
 //replaced with define
 float() crandom =
@@ -20,6 +35,8 @@ enum
 .float player_pickup_itemnum;
 
 .float dmgradius;
+
+//Currently used for debris
 float numdecors;
 float maxdecors;
 
@@ -48,7 +65,7 @@ float maxdecors;
 #define DOOR_KEY_COMMANDER_HEAD		16384
 #define DOOR_KEY_POWER_CUBE			32768
 
-//used by playerVOSound to select a sound of the following conditions
+//used by playerVOSound to select a sound under the following conditions
 enum
 {
 	PLAYER_VOICE_JUMP,
@@ -63,13 +80,13 @@ enum
 	PLAYER_VOICE_DROWN
 };
 
+//player types OTHER is cyborg atm, more could be added, be sure to extend playerVOSound  
 enum
 {
 	PT_MALE,
 	PT_FEMALE,
 	PT_OTHER
 };
-
 .float playerType;
 
 /*
@@ -273,11 +290,8 @@ enum
 
 /*
 Quake used ammo_ for inventory tracking but Quake 2 used ammo_ as the pickup item name. 
-For compatibility with Quake 2 maps (especially MP),
-all variables pertaining to the player's inventory were renamed to 
-inv_ammo_ instead of ammo_. 
-
-Find/Replace, it's time to work!
+For compatibility with Quake 2 maps (especially MP), all variables pertaining to the player's inventory were renamed to 
+inv_ammo_ instead of ammo_. I would like to thank Find/Replace for all its hard work.
 */
 
 .float inv_weapons;
@@ -349,8 +363,6 @@ Find/Replace, it's time to work!
 .float inv_pickup_silencer;
 .float inv_pickup_invulnerability;
 .float inv_pickup_envirosuit;
-
-#define MAX_ITEMS = 10;
 
 .float anim_end;
 .float anim_priority;
@@ -511,7 +523,6 @@ float FULL_DYN	= 16;
 .float bIsWounded;
 .float bleedcount;
 
-// added for Dark Places
 float CHAN_SPEECH             = 5;
 float CHAN_FOOT               = 6;
 float CHAN_WEAPON2            = 7;

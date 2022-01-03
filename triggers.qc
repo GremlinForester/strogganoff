@@ -926,7 +926,7 @@ void() trigger_stripkeys_touch =
 	if (other.classname != "player")
 		return;
 	
-	stripKeys(1); //other
+	stripKeys(other); //other
 	
 //	remove(self); //TODO: Add spawnflag to remove or not, maybe a delay to go non-solid?
 };

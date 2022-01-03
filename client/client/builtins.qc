@@ -9,6 +9,8 @@ CSQC core builtins
 // sound is overridden on the server
 void (entity e, float chan, string samp, float vol, float atten)	sound = #8;
 
+float(float stnum) getstatf = #330;
+
 // CSQC Builtins
 float()									ReadByte = #360;
 float()									ReadChar = #361;

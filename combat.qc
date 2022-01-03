@@ -9,34 +9,48 @@ void() monster_death_use;
 
 // Thanks Preach from func_messageboard
 
-//.float nexttalktime;
+float(entity ent) playerRemarkCheckClass=
+{
+	if (ent.classname == "monster_soldier_light" && ent.health < -20 
+		|| ent.classname == "monster_soldier_ss" && ent.health < -10
+		|| ent.classname == "monster_soldier" && ent.health < -10
+		|| ent.classname == "monster_infantry" && ent.health < -10){
+		return TRUE;
+		}
 
-void(entity player, entity monster) PlayerRemarkOnKill =
+		return FALSE;
+};
+
+void(entity e, entity monster) PlayerRemarkOnKill =
 {
 	local float r;
 
-	//self.nexttalktime = time + 5 + random() * 0.1;
+	if (e.classname != "player")
+		return;
 
-	if (time < player.nextsmacktalktime)
-	return;
-
+	if (time < e.nextsmacktalktime)
+		return;
+/*
 		if (monster.classname == "monster_soldier_light" && monster.health < -20 
 		|| monster.classname == "monster_soldier_ss" && monster.health < -10
 		|| monster.classname == "monster_soldier" && monster.health < -10
 		|| monster.classname == "monster_infantry" && monster.health < -10)
+*/	
+		if (playerRemarkCheckClass(monster))
 		{
-			player.nextsmacktalktime = time + 2;
-			r = random() * 15;
-			if (r < 1) sound(player, CHAN_VOICE, PLAYER_KILLCOMMENT_1, 0.5, ATTN_IDLE);
-			else if (r < 2) sound(player, CHAN_VOICE, PLAYER_KILLCOMMENT_2, 0.5, ATTN_IDLE);
-			else if (r < 3) sound(player, CHAN_VOICE, PLAYER_KILLCOMMENT_3, 0.5, ATTN_IDLE);
-			else if (r < 7) sound(player, CHAN_VOICE, PLAYER_KILLCOMMENT_4, 0.5, ATTN_IDLE);
-			else if (r < 9) sound(player, CHAN_VOICE, PLAYER_KILLCOMMENT_5, 0.5, ATTN_IDLE);
-			else if (r < 10) sound(player, CHAN_VOICE, PLAYER_KILLCOMMENT_6, 0.5, ATTN_IDLE);
-			else sound(player, CHAN_VOICE, "", 0.5, ATTN_IDLE);
+			e.nextsmacktalktime = time + 2;
+			r = random() * 7;
+			if (r < 1) sound(e, CHAN_VOICE, PLAYER_KILLCOMMENT_1, 1, ATTN_IDLE);
+			else if (r < 2) sound(e, CHAN_VOICE, PLAYER_KILLCOMMENT_2, 1, ATTN_IDLE);
+			else if (r < 3) sound(e, CHAN_VOICE, PLAYER_KILLCOMMENT_3, 1, ATTN_IDLE);
+			else if (r < 4) sound(e, CHAN_VOICE, PLAYER_KILLCOMMENT_4, 1, ATTN_IDLE);
+			else if (r < 5) sound(e, CHAN_VOICE, PLAYER_KILLCOMMENT_5, 1, ATTN_IDLE);
+			else if (r < 6) sound(e, CHAN_VOICE, PLAYER_KILLCOMMENT_6, 1, ATTN_IDLE);
+			else sound(e, CHAN_VOICE, "", 1, ATTN_IDLE);
+			LOG("Talked smack!");
 		}
 		
-		player.nextsmacktalktime = time + 15;
+		e.nextsmacktalktime = time + 15;
 		return;
 };
 
@@ -114,12 +128,14 @@ void(entity targ, entity attacker) Killed =
 		WriteByte (MSG_ALL, SVC_KILLEDMONSTER);
 	}
 	
+	if (random() < 0.5){	
 	if (autocvar_cl_smacktalk >= 1)
 	{
 		if (attacker.classname == "player")
 		{
 			PlayerRemarkOnKill(attacker, self);
 		}
+	}
 	}
 
 	ClientObituary(self, attacker);

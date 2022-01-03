@@ -14,7 +14,7 @@ shared/dpextensions.qc
 //shared/m_flash.qc
 shared/strogganoff_defs.qc
 
-//material crap went here before frik
+extras/extras_defs.qc   // pOx - additions
 
 effects.qc //muzzle flashes, shell casings, etc...
 
@@ -97,5 +97,12 @@ q1/fish.qc			// registered
 q1/shalrath.qc		// registered
 q1/enforcer.qc		// registered
 q1/oldone.qc		// registered
+
+// pOx  - additions (see each file for info)
+extras/extras_subs.qc
+extras/extras_emitters.qc
+extras/extras_water.qc
+extras/extras_triggers.qc
+extras/extras_misc.qc
 
 debug.qc

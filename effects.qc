@@ -75,6 +75,9 @@ void(float damage) spawn_touchblood =
 	SpawnBlood (self.origin + vel*0.01, vel, damage);
 };
 
+//MrC: TODO: deathbubbles and other built-in particle effects should be replaced by a generic particle spawner that uses effectinfo
+//need particle spawner like particle_spawner for level designers
+
 void() DeathBubblesSpawn =
 {
 //local entity	bubble;
@@ -272,6 +275,8 @@ void() SetVModelOverlay_fade =
 	self.nextthink = time + 0.1;
 };
 
+//MrC: Pass entity to one of these for self/other.
+
 void(vector pos, string model, float skinnum, vector ColorMod, float additive) SetVModelOverlayOther =
 {
 	local entity overlay;
@@ -331,88 +336,4 @@ void(vector pos, string model, float skinnum, vector ColorMod, float tim, float 
 	self.numoverlays++;
 	overlay.think = SetVModelOverlay_fade;
 	overlay.nextthink = time + tim;
-};
-
-void(vector pos, string model, float skinnum, vector ColorMod, float tim, float scl) SetVModelHUDSelf =
-{
-	local entity overlay;
-		
-	overlay = spawn();
-	overlay.movetype = MOVETYPE_NONE;
-	overlay.solid = SOLID_NOT;
-	overlay.effects = overlay.effects + EF_NOGUNBOB + EF_NODEPTHTEST + EF_FULLBRIGHT;
-	overlay.viewmodelforclient = self;
-	overlay.owner = self;
-	overlay.classname = "hud_model";
-	overlay.alpha = 1;
-	overlay.colormod = ColorMod;
-	overlay.skin = skinnum;
-	overlay.scale = scl;
-	setmodel(overlay, model);
-	setorigin(overlay, pos);
-	overlay.think = SetVModelOverlay_fade_fast;
-	overlay.nextthink = time + tim;
-};
-
-void() UpdateHUDPowerup =
-{
-	if (self.owner.health <= 0)
-	{
-		remove(self);
-		return;
-	}
-	
-	switch (self.owner.player_pickup_itemnum){
-		case INV_PICKUP_NONE:
-				setmodel(self, "");
-			break;		
-		case INV_PICKUP_QUAD:
-				setmodel(self, "models/items/quaddama/tris.md2");
-			break;
-		case INV_PICKUP_REBREATHER:
-				setmodel(self, "models/items/breather/tris.md2");
-			break;
-		case INV_PICKUP_INVISIBILITY:
-				setmodel(self, "models/items/armor/screen/tris.md2");			
-			break;
-		case INV_PICKUP_SILENCER:
-				setmodel(self, "models/items/silencer/tris.md2");		
-			break;
-		case INV_PICKUP_INVULNERABILITY:
-				setmodel(self, "models/items/invulner/tris.md2");			
-			break;
-		case INV_PICKUP_ENVIROSUIT:
-				setmodel(self, "models/items/enviro/tris.md2");			
-			break;
-	}
-	self.avelocity = '0 100 0';
-	self.think = UpdateHUDPowerup;
-	self.nextthink = time;
-};
-
-.float bCreateHUDPowerup;
-
-void(vector pos, string model, float skinnum, vector ColorMod, float tim, float scl) createHUDPowerup =
-{
-	local entity overlay;
-	
-	if (self.bCreateHUDPowerup == 1)
-		return; //coop bug to remove duplicate hud models
-	
-	overlay = spawn();
-	overlay.movetype = MOVETYPE_NOCLIP;
-	overlay.solid = SOLID_NOT;
-	overlay.effects = overlay.effects + EF_NOGUNBOB + EF_NODEPTHTEST + EF_FULLBRIGHT;
-	overlay.viewmodelforclient = self;
-	overlay.owner = self;
-	overlay.classname = "hud_model";
-	overlay.alpha = 1;
-	overlay.colormod = ColorMod;
-	overlay.skin = skinnum;
-	overlay.scale = scl;
-	setmodel(overlay, model);
-	setorigin(overlay, pos);
-	overlay.think = UpdateHUDPowerup;
-	overlay.nextthink = time;
-	self.bCreateHUDPowerup = 1;
 };

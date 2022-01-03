@@ -10,7 +10,7 @@ void() rt_lights_editor_help =
 	{
 		v_x = vid_conwidth - ( 320 - 75 );
 		v_y = vid_conheight - 245;
-		drawpic(v, "gfx/blacktile", '245 168', VEC_1, 0.7, DRAWFLAG_NORMAL); v_x = v_x + 5;
+//		drawpic(v, "gfx/blacktile", '3345 168', VEC_1, 0.7, DRAWFLAG_NORMAL); v_x = v_x + 5;
 		
 		drawstring(v,"==================================", '7 7', '1 1 1', 1, DRAWFLAG_NORMAL); v_y = v_y + 7;
 		drawstring(v,"      or        Tick: x1 x10 x100 ", '7 7', '1 1 1', 1, DRAWFLAG_NORMAL); drawstring(v,"Wheel    Mouse3", '7 7', '1 1 0', 1, DRAWFLAG_NORMAL); v_y = v_y + 7;

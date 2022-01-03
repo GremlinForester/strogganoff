@@ -285,7 +285,7 @@ float(float ammoIdx) W_Ammo_Amount={
 	This could be seen in the old W_SetCurrentAmmo() func in v1.06
 */
 void(float ammoIdx) W_Ammo_toItems={
-	self.items = self.items - (self.items & (IT_SHELLS | IT_BULLETS | IT_CELLS | IT_ROCKETS));
+	self.items = self.items - (self.items & (IT_SHELLS | IT_BULLETS | IT_CELLS | IT_ROCKETS | IT_SLUGS));
 	switch(ammoIdx){
 		case AMMO_IDX_SHELLS:
 			self.items = self.items | IT_SHELLS;
@@ -300,7 +300,7 @@ void(float ammoIdx) W_Ammo_toItems={
 			return;
 		
 		case AMMO_IDX_SLUGS:
-			self.items = self.items | IT_BULLETS;
+			self.items = self.items | IT_SLUGS;
 			return;
 		
 		case AMMO_IDX_CELLS:

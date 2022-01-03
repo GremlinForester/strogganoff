@@ -14,6 +14,7 @@ void() q2player_run;
 			W_ChangeWeapon()
 			W_BestWeapon()
 */
+/*
 void() W_SetCurrentAmmo =
 {
 // idea: check frame set & only do for fire frames
@@ -78,6 +79,7 @@ void() W_SetCurrentAmmo =
 			break;
 	}
 };
+*/
 
 float() W_BestWeapon =
 {
@@ -287,7 +289,11 @@ void() CheatCommand =
 		IT_KEY_HEAD;
 	self.items = self.items | 
 		IT_KEY1 | IT_KEY2 | IT_ARMOR_JACKET;
-
+	self.armorvalue = 100;
+	self.armortype = 0.3;
+	
+	W_updateCurrentAmmo(self);
+	
 	self.impulse = 0;
 };
 
@@ -652,7 +658,6 @@ void() UseInventoryItem =
 			self.super_time = 1;
 			self.super_damage_finished = time + 30;
 			self.items = self.items | IT_QUAD;
-			SetVModelHUDSelf('25 15 -15', "models/items/quaddama/tris.md2", 0, '1 1 1', 30, 0.15);			
 			}
 			else{
 					sprint (self, "out of item ");
@@ -666,9 +671,8 @@ void() UseInventoryItem =
 			if (self.inv_pickup_rebreather > 0){
 			self.inv_pickup_rebreather -= 1;
 			self.rad_time = 1;
-			self.radsuit_finished = time + 60;
-			self.items = self.items | IT_SUIT;
-			SetVModelHUDSelf('25 11 -15', "models/items/breather/tris.md2", 0, '1 1 1', 60, 0.15);
+			self.rebreather_finished = time + 60;
+			self.items = self.items | IT_BREATHER;
 			}
 			else{
 					sprint (self, "out of item ");
@@ -685,7 +689,6 @@ void() UseInventoryItem =
 			self.invisible_time = 1;
 			self.invisible_finished = time + 30;
 			self.items = self.items | IT_INVISIBILITY;
-			SetVModelHUDSelf('25 7 -15', "models/items/armor/screen/tris.md2", 0, '1 1 1', 30, 0.15);
 			}
 			else{
 					sprint (self, "out of item ");
@@ -702,7 +705,6 @@ void() UseInventoryItem =
 			self.silencer_time = 1;
 			self.silencer_finished = time + 30;
 			self.items = self.items | IT_SILENCER;
-			SetVModelHUDSelf('25 3 -15', "models/items/silencer/tris.md2", 0, '1 1 1', 30, 0.15);
 			}
 			else{
 					sprint (self, "out of item ");
@@ -719,7 +721,6 @@ void() UseInventoryItem =
 			self.invincible_time = 1;
 			self.invincible_finished = time + 30;
 			self.items = self.items | IT_INVULNERABILITY;
-			SetVModelHUDSelf('25 -1 -15', "models/items/invulner/tris.md2", 0, '1 1 1', 30, 0.15);
 			}
 			else{
 					sprint (self, "out of item ");
@@ -736,7 +737,6 @@ void() UseInventoryItem =
 			self.rad_time = 1;
 			self.radsuit_finished = time + 30;
 			self.items = self.items | IT_SUIT;
-			SetVModelHUDSelf('25 -5 -15', "models/items/enviro/tris.md2", 0, '1 1 1', 30, 0.15);
 			}
 			else{
 					sprint (self, "out of item ");

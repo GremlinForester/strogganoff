@@ -17,6 +17,8 @@ nonstatic void(mitem_frame m) addmenuback =
 		m.add(spawn (mitem_pic, item_text:"menutint", item_alpha:0.5),
 												RS_X_MIN_PARENT_MIN|RS_Y_MIN_PARENT_MIN | RS_X_MAX_PARENT_MAX|RS_Y_MAX_PARENT_MAX, [0, 0], [0, 0]);
 	else
+		m.add(spawn (mitem_pic, item_text:"gfx/menu/background.tga", item_alpha:1), 
+												RS_X_MIN_PARENT_MIN|RS_Y_MIN_PARENT_MIN | RS_X_MAX_PARENT_MAX|RS_Y_MAX_PARENT_MAX, [0, 0], [0, 0]);	
 		m.add(spawn (mitem_fill, item_rgb:'0 0 0.01', item_alpha:0.5),
 												RS_X_MIN_PARENT_MIN|RS_Y_MIN_PARENT_MIN | RS_X_MAX_PARENT_MAX|RS_Y_MAX_PARENT_MAX, [0, 0], [0, 0]);
 };
@@ -62,13 +64,14 @@ nonstatic void(mitem_desktop desktop) M_Main =
 	//create a fullscreen frame
 	m = spawn(mitem_exmenu, item_text:_("Main Menu"), item_flags:IF_SELECTABLE);
 	desktop.add(m, RS_X_MIN_PARENT_MIN|RS_Y_MIN_PARENT_MIN | RS_X_MAX_PARENT_MAX|RS_Y_MAX_PARENT_MAX, '0 0', '0 0');
-	desktop.item_focuschange(m, IF_KFOCUSED);
+//	desktop.item_focuschange(m, IF_KFOCUSED);
 	m.totop();
 
 //	m.item_flags |= IF_NOKILL;
 	m.adda(menuitempic_spawn ("gfx/qplaque.lmp", 	'32 144'), 	'16 4');
 
 	y = 7*-16/2; //0;
+	y = 0;
 
 	//draw title art above the options
 	mitem_pic banner = spawn(mitem_pic, item_text:"gfx/ttl_main.lmp", item_size_y:24, item_flags:IF_CENTERALIGN);
@@ -88,7 +91,10 @@ nonstatic void(mitem_desktop desktop) M_Main =
  	{
 		menuitemtext_cladd16(m, _("Join Server"),			"m_pop;m_servers",	y); y += 16;
 	}
-	if (assumetruecheckcommand("map"))	{menuitemtext_cladd16(m, _("New Game"), "m_pop;m_newgame",	y); y += 16;}
+	if (assumetruecheckcommand("map")){
+		menuitemtext_cladd16(m, _("New Game"), "m_pop;m_newgame", y); 
+		y += 16;
+	}
 	if (assumefalsecheckcommand("menu_demo"))				{menuitemtext_cladd16(m, _("Demos"),				"m_pop;menu_demo",	y); y += 16;}
 	if (assumetruecheckcommand("save") && (isserver()||dp_workarounds))	{menuitemtext_cladd16(m, _("Save"),				"m_pop;m_save",		y); y += 16;}
 	if (assumetruecheckcommand("load"))					{menuitemtext_cladd16(m, _("Load"),				"m_pop;m_load",		y); y += 16;}

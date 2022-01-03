@@ -74,7 +74,7 @@ framer($FRAME_land01, $FRAME_land01, hover_move_land, SUB_Null, 0.1, SUB_Null();
 framer($FRAME_forwrd01, $FRAME_forwrd35, hover_move_forward, SUB_Null, 0.1, ai_charge(0););
 
 //WALK
-framer($FRAME_forwrd01, $FRAME_forwrd35, hover_move_walk, SUB_Null, 0.1, ai_walk(4););
+framer($FRAME_forwrd01, $FRAME_forwrd35, hover_move_walk, hover_move_walk, 0.1, ai_walk(4););
 
 //RUN
 framerloop($FRAME_forwrd01, $FRAME_forwrd35, hover_move_run, 0.1, ai_run(10););

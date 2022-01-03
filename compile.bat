@@ -7,7 +7,7 @@ win64-fteqcc.exe -srcfile menu.src
 @echo compiling client
 @echo ================
 cd ..\client
-fteqcc.exe -Wno-mundane -srcfile client.src
+win64-fteqcc.exe -Wno-mundane -srcfile client.src
 @echo ================
 @echo compiling server
 @echo ================

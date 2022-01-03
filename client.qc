@@ -1,13 +1,8 @@
-
-// prototypes
 void () W_WeaponFrame;
 void() W_ChangeWeapon;
 void() q2player_pain;
-//void() q2player_stand1;
 void (vector org) spawn_tfog;
 void (vector org, entity death_owner) spawn_tdeath;
-
-float	modelindex_eyes, modelindex_player;
 
 //MrC: Crouch stuff based on:
 
@@ -22,52 +17,39 @@ float	modelindex_eyes, modelindex_player;
 .float crouch, attemptcrouch;
 float (entity targ) crouchcheck =
 {
-makevectors (self.v_angle);
-//tracebox (self.origin, VEC_HULL_MIN, VEC_HULL_MAX, self.origin + '0 0 16', FALSE, self); 
-tracebox (self.origin, CROUCH_VEC_HULL_MIN, CROUCH_VEC_HULL_MAX, self.origin + '0 0 32', FALSE, self); 
-if (trace_fraction == 1)            //hits nothing go ahead
-	return TRUE;
+	makevectors (self.v_angle);
+	tracebox (self.origin, CROUCH_VEC_HULL_MIN, CROUCH_VEC_HULL_MAX, self.origin + '0 0 32', FALSE, self); 
 
-if (!trace_ent.takedamage)      //hits world or nondamagable object
-	return FALSE;
+	if (trace_fraction == 1)            //hits nothing go ahead
+		return TRUE;
+
+	if (!trace_ent.takedamage)      //hits world or nondamagable object
+		return FALSE;
 
 	return FALSE;
 };
 
 void() crouch_on =
 {
-//if ((!self.flags & FL_DUCKED) && (!self.velocity_z)) //crouch down
-if (!self.flags & FL_DUCKED) //crouch down
-{
-//setsize (self, '-16 -16 -8', '16 16 8');
-//setsize (self, '-16 -16 -8', '16 16 16');
-//	setsize (self, '-16 -16 -24', '16 16 -8');
-setsize (self, '-16 -16 -24', '16 16 4');
-//self.crouch = 1;
-self.flags = self.flags | FL_DUCKED;
-
-self.view_ofs = '0 0 -2'; //14
-//self.attemptcrouch = 1;
-
-return;
-}
-//self.attemptcrouch = 0;
+	if (!self.flags & FL_DUCKED) //crouch down
+	{
+		setsize (self, '-16 -16 -24', '16 16 4');
+		self.flags = self.flags | FL_DUCKED;
+		self.view_ofs = '0 0 -2';
+		return;
+	}
 };
 
 void() crouch_off =
 {
-if (self.flags & FL_DUCKED && (!self.velocity_z) && crouchcheck(self))  //get up
-{
-setsize (self, VEC_HULL_MIN, VEC_HULL_MAX);
-//self.crouch = 0;
-//self.flags = self.flags - FL_DUCKED; 
-self.flags = self.flags - (self.flags & FL_DUCKED);
-self.origin_z = self.origin_z + 16;
-self.view_ofs = '0 0 22';
-//self.attemptcrouch = 0;
-return;
-}
-//self.attemptcrouch = 1;
+	if (self.flags & FL_DUCKED && (!self.velocity_z) && crouchcheck(self))  //get up
+	{
+		setsize (self, VEC_HULL_MIN, VEC_HULL_MAX);
+		self.flags = self.flags - (self.flags & FL_DUCKED);
+		self.origin_z = self.origin_z + 16;
+		self.view_ofs = '0 0 22';
+		return;
+	}
 };
 
 /*
@@ -315,16 +297,9 @@ void() info_intermission =
 {
 };
 
-void(float oth) stripKeys =
+void(entity ent) stripKeys =
 {
-	if (oth){
-		other.items_q2keys = other.items_q2keys - (other.items_q2keys & (IT_KEY_DATACD | IT_KEY_POWERCUBE | IT_KEY_PYRAMID | IT_KEY_DATASPINNER | IT_KEY_PASS | IT_KEY_BLUE | IT_KEY_RED | IT_KEY_HEAD) );
-	}
-	else
-	{
-		self.items_q2keys = self.items_q2keys - (self.items_q2keys & (IT_KEY_DATACD | IT_KEY_POWERCUBE | IT_KEY_PYRAMID | IT_KEY_DATASPINNER | IT_KEY_PASS | IT_KEY_BLUE | IT_KEY_RED | IT_KEY_HEAD) );
-	}
-	
+	ent.items_q2keys = ent.items_q2keys - (ent.items_q2keys & (IT_KEY_DATACD | IT_KEY_POWERCUBE | IT_KEY_PYRAMID | IT_KEY_DATASPINNER | IT_KEY_PASS | IT_KEY_BLUE | IT_KEY_RED | IT_KEY_HEAD) );
 }
 
 void() SetChangeParms =
@@ -336,7 +311,7 @@ void() SetChangeParms =
 	}
 
 // remove items
-	self.items = self.items - (self.items & (IT_KEY1 | IT_KEY2 | IT_INVISIBILITY | IT_INVULNERABILITY | IT_SUIT | IT_QUAD | IT_SILENCER) );
+	self.items = self.items - (self.items & (IT_KEY1 | IT_KEY2 | IT_INVISIBILITY | IT_INVULNERABILITY | IT_BREATHER | IT_SUIT | IT_QUAD | IT_SILENCER) );
 	
 // cap super health
 	if (self.health > 100)
@@ -970,8 +945,6 @@ void() UpdateTPWeaponFrames =
 	#ifndef q2model_lighting
 			self.effects = 0;
 	#endif
-	
-	SetVModelHUDSelf('25 0 -15', "models/items/quaddama/tris.md2", 0, '1 1 1', 1, 0.15);
 
 	#ifdef q2model_lighting
 	self.colormod = getlight(self.owner.origin); //MrC Lightgrid workaround
@@ -1019,19 +992,16 @@ void() setPlayerModel =
 	if(self.playerType == PT_MALE)
 	{
 		setmodel (self, "players/male/tris.md2");
-		modelindex_player = self.modelindex;
 		setsize (self, VEC_HULL_MIN, VEC_HULL_MAX);
 	}
 	else if (self.playerType == PT_FEMALE)
 	{
 		setmodel (self, "players/female/tris.md2");
-		modelindex_player = self.modelindex;
 		setsize (self, VEC_HULL_MIN, VEC_HULL_MAX);		
 	}
 	else
 	{
 		setmodel (self, "players/cyborg/tris.md2");
-		modelindex_player = self.modelindex;
 		setsize (self, VEC_HULL_MIN, VEC_HULL_MAX);
 	}
 }
@@ -1041,7 +1011,7 @@ void() PutClientInServer =
 	local	entity spot;
 
 	spot = SelectSpawnPoint ();
-
+	
 	self.classname = "player";
 	self.health = 100;
 	self.takedamage = DAMAGE_AIM;
@@ -1054,6 +1024,7 @@ void() PutClientInServer =
 	self.dmg = 2;   		// initial water damage
 	self.super_damage_finished = 0;
 	self.radsuit_finished = 0;
+	self.rebreather_finished = 0;	
 	self.invisible_finished = 0;
 	self.invincible_finished = 0;
 	self.silencer_finished = 0;	
@@ -1099,11 +1070,8 @@ void() PutClientInServer =
 	self.fixangle = TRUE;		// turn this way immediately
 
 // oh, this is a hack!
-	setmodel (self, "progs/eyes.mdl");
-	modelindex_eyes = self.modelindex;
-
-//	setmodel (self, "players/male/tris.md2");
-//	modelindex_player = self.modelindex;
+//	setmodel (self, "progs/eyes.mdl");
+//	modelindex_eyes = self.modelindex;
 
 	self.view_ofs = '0 0 22';
 
@@ -1114,7 +1082,6 @@ void() PutClientInServer =
 	setPlayerModel();
 	q2Player_stand();
 	AttachTPWeapon();
-	createHUDPowerup('25 21 -17', "", 0, '1 1 1', 10, 0.15);
 	
 	//setup player v_wep state machine
 	self.weapon_next = self.weapon;
@@ -1127,6 +1094,11 @@ void() PutClientInServer =
 		spawn_tfog (self.origin + v_forward*20);
 	}
 	spawn_tdeath (self.origin, self);
+	
+	// pOx - START - func_water support
+//	self.fwatershift = TRUE;// catch runaway cshifts (changlevel/respawn while in func_water)
+//	self.oldgravity = 0;// use unmodified sv_gravity
+	// pOx - END - func_water support
 };
 
 
@@ -1293,6 +1265,9 @@ void() PlayerDeathThink =
 //	local entity	old_self;	// fx_warning
 	local float		forward;
 
+	// pOx - func_water support
+	CheckFuncWaterDeath();//check cshift for dead players in func_water	
+	
 	if ((self.flags & FL_ONGROUND))
 	{
 		forward = vlen (self.velocity);
@@ -1617,6 +1592,22 @@ void() PlayerPreThink =
 
 	makevectors (self.v_angle);		// is this still used
 
+	// pOx - START - func_water & func_ladder support
+	// Set cshift back to normal if eyes are out of func_water
+	if (self.fwatershifttime < time) {
+		if (self.fwatershift) {
+			stuffcmd(self, "v_cshift 130 80 50 0\n");
+			self.fwatershift = FALSE;
+		}
+	}
+	// Both func_water and func_ladder require zero G to work properly.
+	// Lucky for us, the Mission Pack build of Quake has a gravity modifier we can exploit.
+	if (self.zerogtime < time)
+		self.gravity = self.oldgravity;// reset normal gravity
+	else
+		self.gravity = 0.0001;// zero G (0 OR 1 is normal)
+	// pOx - END  - func_water & func_ladder support	
+	
 	CheckRules ();
 	WaterMove ();
 
@@ -1750,8 +1741,6 @@ void() CheckPowerups =
 		//self.modelindex = modelindex_eyes;
 	//	self.alpha = 0.05;
 	}
-	else
-		self.modelindex = modelindex_player;	// don't use eyes
 
 // invincibility
 	if (self.invincible_finished)
@@ -1852,6 +1841,38 @@ void() CheckPowerups =
 			self.radsuit_finished = 0;
 		}
 	}
+	
+// rebreather	
+	if (self.rebreather_finished)
+	{
+		self.air_finished = time + 12;		// don't drown
+		
+// sound and screen flash when items starts to run out
+		
+		if (self.rebreather_finished < time + 3)
+		{
+			if (self.rad_time == 1)
+			{
+				sprint (self, "Rebreather expiring\n");
+				stuffcmd (self, "bf\n");
+				sound (self, CHAN_AUTO, "items/suit2.wav", 1, ATTN_NORM);
+				self.rad_time = time + 1;
+			}
+			
+			if (self.rad_time < time)
+			{
+				self.rad_time = time + 1;
+				stuffcmd (self, "bf\n");
+			}
+		}
+
+		if (self.rebreather_finished < time)
+		{	// just stopped
+			self.items = self.items - IT_BREATHER;
+			self.rad_time = 0;
+			self.rebreather_finished = 0;
+		}
+	}	
 	
 	// "silencer" / doubler actually it's 25%
 	if (self.silencer_finished)

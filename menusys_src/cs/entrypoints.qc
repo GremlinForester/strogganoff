@@ -88,7 +88,7 @@ class mydesktop : mitem_desktop
 {
 	virtual void(float seat, vector minpos, vector size) drawgame =
 	{
-		setproperty(VF_DRAWENGINESBAR, TRUE);
+//		setproperty(VF_DRAWENGINESBAR, TRUE);
 /*
 		entity playerent = findfloat(world, entnum, player_localentnum);
 		if (playerent)

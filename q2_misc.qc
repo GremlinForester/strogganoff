@@ -449,8 +449,10 @@ void() target_speaker_think =
 		if (self.noise) 
 		{
 			//pointsound(self.origin, self.noise, self.volume, self.attenuation);
-			sound7(self, CHAN_VOICE, self.noise, self.volume, self.attenuation, self.speed, self.flags);
-			self.nextthink = time + soundlength(self.noise);
+			//sound7(self, CHAN_VOICE, self.noise, self.volume, self.attenuation, self.speed, self.flags);
+			//self.nextthink = time + soundlength(self.noise);
+			ambientsound (self.origin, self.noise, self.volume, self.attenuation);
+			self.nextthink = -1;
 		}
 		else 
 		{
@@ -580,83 +582,6 @@ check either the X_AXIS or Y_AXIS box to change that.
 REVERSE will cause the it to rotate in the opposite direction.
 STOP mean it will stop moving instead of pushing entities
 */
-/*
-#define ROTATING_ACCEL	0x2000
-void rotating_accel (edict_t *self)
-{
-	float	current_speed;
-
-	current_speed = VectorLength (self->avelocity);
-	if(current_speed >= (self->speed - self->accel))		// done
-	{
-		VectorScale (self->movedir, self->speed, self->avelocity);
-		G_UseTargets (self, self);
-	}
-	else
-	{
-		current_speed += self->accel;
-		VectorScale (self->movedir, current_speed, self->avelocity);
-		self->think = rotating_accel;
-		self->nextthink = level.time + FRAMETIME;
-	}
-}
-
-void rotating_decel (edict_t *self)
-{
-	float	current_speed;
-
-	current_speed = VectorLength (self->avelocity);
-	if(current_speed <= self->decel)		// done
-	{
-		VectorClear (self->avelocity);
-		G_UseTargets (self, self);
-		self->touch = NULL;
-	}
-	else
-	{
-		current_speed -= self->decel;
-		VectorScale (self->movedir, current_speed, self->avelocity);
-		self->think = rotating_decel;
-		self->nextthink = level.time + FRAMETIME;
-	}
-}
-
-void rotating_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf)
-{
-	if (self->avelocity[0] || self->avelocity[1] || self->avelocity[2])
-		T_Damage (other, self, self, vec3_origin, other->s.origin, vec3_origin, self->dmg, 1, 0, MOD_CRUSH);
-}
-
-void rotating_use (edict_t *self, edict_t *other, edict_t *activator)
-{
-	if (!VectorCompare (self->avelocity, vec3_origin))
-	{
-		self->s.sound = 0;
-		if (self->spawnflags & ROTATING_ACCEL)	// decelerate
-			rotating_decel (self);
-		else {
-			VectorClear (self->avelocity);
-			G_UseTargets (self, self);
-			self->touch = NULL;
-		}
-	}
-	else
-	{
-		self->s.sound = self->moveinfo.sound_middle;
-#ifdef LOOP_SOUND_ATTENUATION
-		self->s.attenuation = self->attenuation;
-#endif
-		if (self->spawnflags & ROTATING_ACCEL)	// accelerate
-			rotating_accel (self);
-		else {
-			VectorScale (self->movedir, self->speed, self->avelocity);
-			G_UseTargets (self, self);
-		}
-		if (self->spawnflags & 16)
-			self->touch = rotating_touch;
-	}
-}
-*/
 
 void () rotating_blocked =
 {
@@ -697,29 +622,6 @@ void() func_rotating =
 
 	if (self.dmg)
 		self.blocked = rotating_blocked;
-	
-	/*
-	ent->use = rotating_use;
-
-
-	if (ent->spawnflags & 1)
-		ent->use (ent, NULL, NULL);
-
-	if (ent->spawnflags & 64)
-		ent->s.effects |= EF_ANIM_ALL;
-	if (ent->spawnflags & 128)
-		ent->s.effects |= EF_ANIM_ALLFAST;
-
-	if(ent->spawnflags & ROTATING_ACCEL) {	// accel/decel
-		if (ent->accel == 0) ent->accel = 1;
-		else ent->accel = min(ent->accel, ent->speed);
-		if (ent->decel == 0) ent->decel = 1;
-		else ent->decel = min(ent->decel, ent->speed);
-	}
-
-	gi.setmodel (ent, ent->model);
-	gi.linkentity (ent);
-	*/
 }
 
 /*
@@ -755,132 +657,7 @@ REVERSE will cause the door to rotate in the opposite direction.
 2-4		not used
 5-99	custom sound- e.g. doors/dr05_strt.wav, doors/dr05_mid.wav, doors/dr05_end.wav
 */
-/*
-void () func_door_rotating =
-{
-	self.classname = "func_door_rotating";
 
-	// set the axis of rotation
-	if (self.spawnflags & DOOR_X_AXIS)
-		self.avelocity_z = 1.0;
-	else if (ent->spawnflags & DOOR_Y_AXIS)
-		ent->movedir[0] = 1.0;
-	else // Z_AXIS
-		ent->movedir[1] = 1.0;
-
-	// check for reverse rotation
-	if (ent->spawnflags & DOOR_REVERSE)
-		VectorNegate (ent->movedir, ent->movedir);
-
-	if (!st.distance)
-	{
-		gi.dprintf("%s at %s with no distance set\n", ent->classname, vtos(ent->s.origin));
-		st.distance = 90;
-	}
-
-	VectorCopy (ent->s.angles, ent->pos1);
-	VectorMA (ent->s.angles, st.distance, ent->movedir, ent->pos2);
-	ent->moveinfo.distance = st.distance;
-
-	ent->movetype = MOVETYPE_PUSH;
-	ent->solid = SOLID_BSP;
-	gi.setmodel (ent, ent->model);
-
-	ent->blocked = door_blocked;
-	ent->use = door_use;
-
-	if (!ent->speed)
-		ent->speed = 100;
-	if (!ent->accel)
-		ent->accel = ent->speed;
-	if (!ent->decel)
-		ent->decel = ent->speed;
-
-	if (!ent->wait && !(ent->flags & FL_REVOLVING))	// OK for revolving doors to have 0 wait
-		ent->wait = 3;
-	if (!ent->dmg)
-		ent->dmg = 2;
-
-	if (ent->sounds > 4 && ent->sounds < 100) // custom sounds
-	{
-		ent->moveinfo.sound_start = gi.soundindex  (va("doors/dr%02i_strt.wav", ent->sounds));
-		ent->moveinfo.sound_middle = gi.soundindex  (va("doors/dr%02i_mid.wav", ent->sounds));
-		ent->moveinfo.sound_end = gi.soundindex  (va("doors/dr%02i_end.wav", ent->sounds));
-	}
-	else if (ent->sounds != 1)
-	{
-		ent->moveinfo.sound_start = gi.soundindex  ("doors/dr1_strt.wav");
-		ent->moveinfo.sound_middle = gi.soundindex  ("doors/dr1_mid.wav");
-		ent->moveinfo.sound_end = gi.soundindex  ("doors/dr1_end.wav");
-	}
-	else
-	{
-		ent->moveinfo.sound_start = 0;
-		ent->moveinfo.sound_middle = 0;
-		ent->moveinfo.sound_end = 0;
-	}
-
-	if (ent->attenuation <= 0)
-		ent->attenuation = ATTN_STATIC;
-
-	// if it starts open, switch the positions
-	if (ent->spawnflags & DOOR_START_OPEN)
-	{
-		VectorCopy (ent->pos2, ent->s.angles);
-		VectorCopy (ent->pos1, ent->pos2);
-		VectorCopy (ent->s.angles, ent->pos1);
-		VectorNegate (ent->movedir, ent->movedir);
-	}
-
-	if (ent->health)
-	{
-		ent->takedamage = DAMAGE_YES;
-		// Lazarus: negative health means "damage kills me" rather than "damage opens me"
-		if (ent->health < 0)
-		{
-			PrecacheDebris(ent->gib_type);
-			ent->die = door_destroyed;
-			ent->health = -ent->health;
-		}
-		else
-			ent->die = door_killed;
-		ent->max_health = ent->health;
-	}
-	
-	if (ent->targetname && ent->message)
-	{
-		gi.soundindex ("misc/talk.wav");
-		ent->touch = door_touch;
-	}
-
-	ent->moveinfo.state = STATE_BOTTOM;
-	ent->moveinfo.speed = ent->speed;
-	ent->moveinfo.accel = ent->accel;
-	ent->moveinfo.decel = ent->decel;
-	ent->moveinfo.wait = ent->wait;
-	VectorCopy (ent->s.origin, ent->moveinfo.start_origin);
-	VectorCopy (ent->pos1, ent->moveinfo.start_angles);
-	VectorCopy (ent->s.origin, ent->moveinfo.end_origin);
-	VectorCopy (ent->pos2, ent->moveinfo.end_angles);
-
-	if (ent->spawnflags & 16)
-		ent->s.effects |= EF_ANIM_ALL;
-
-	// to simplify logic elsewhere, make non-teamed doors into a team of one
-	if (!ent->team)
-		ent->teammaster = ent;
-
-	gi.linkentity (ent);
-
-	ent->nextthink = level.time + FRAMETIME;
-	if (ent->health || ent->targetname)
-		ent->think = Think_CalcMoveSpeed;
-	else
-		ent->think = Think_SpawnDoorTrigger;
-}
-*/
-
-/*
 void() rotatingdoor_touch;
 void() rotatingdoor_go_down;
 void() rotatingdoor_go_up;
@@ -890,7 +667,7 @@ void() rotatingdoor_use;
 void() rotating_door_blocked =
 {
 	local entity t;
-
+/*
 	if (self.link)
 	{
 		t = self;
@@ -898,7 +675,7 @@ void() rotating_door_blocked =
 		self.blocked();
 		self = t;
 	}
-
+*/
 	T_Damage (other, self, self, self.dmg);
 	
 // if a door has a negative wait, it would never come back if blocked,
@@ -1058,7 +835,7 @@ Prints messages and opens key doors
 ================
 */
 
-/*
+
 void() rotatingdoor_touch =
 {
 	local entity finder_ent, te;
@@ -1101,7 +878,7 @@ void() rotatingdoor_touch =
 		}
 	}
 };
-*/
+
 float DOOR_REVERSE		= 2;
 float DOOR_X_AXIS		= 64;
 float DOOR_Y_AXIS		= 128;
@@ -1169,7 +946,6 @@ void() func_door_rotating =
 		self.noise2 = "doors/ddoor1.wav";
 	}
 
-
 	if (self.spawnflags & DOOR_X_AXIS)
 		self.movedir_z = 1.0;
 	else if (self.spawnflags & DOOR_Y_AXIS)
@@ -1191,8 +967,8 @@ void() func_door_rotating =
 	
 	self.classname = "door_rotating";
 
-//	self.blocked = rotating_door_blocked;
-//	self.use = rotatingdoor_use;
+	self.blocked = rotating_door_blocked;
+	self.use = rotatingdoor_use;
 	
 	if (self.spawnflags & DOOR_SILVER_KEY)
 		self.items = IT_KEY1;
@@ -1208,16 +984,16 @@ void() func_door_rotating =
 	if (!self.dmg)
 		self.dmg = 2;
 
-/*
+
 	self.pos1 = self.angles;
 	self.pos2 = self.angles + self.movedir * self.distance;
-*/
+
 // DOOR_START_OPEN is to allow an entity to be lighted in the closed position
 // but spawn in the open position
 	if (self.spawnflags & DOOR_START_OPEN)
 	{
 		self.pos1 = self.angles;
-	}
+	}	
 
 	self.state = STATE_BOTTOM;
 
@@ -1230,7 +1006,7 @@ void() func_door_rotating =
 	if (self.items)
 		self.wait = -1;
 		
-//	self.touch = rotatingdoor_touch;
+	self.touch = rotatingdoor_touch;
 
 	if (self.targetname) {		// Door is locked if it must be triggered
 		self.touch = SUB_Null;

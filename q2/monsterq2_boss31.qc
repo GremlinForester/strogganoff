@@ -254,7 +254,8 @@ void (entity targ) jorg_tossmakron =
 	monster_q2makron.solid = SOLID_SLIDEBOX;
 	monster_q2makron.movetype = MOVETYPE_STEP;
 	monster_q2makron.fixangle = TRUE;
-	monster_q2makron.enemy = targ;	
+	monster_q2makron.enemy = targ;
+	monster_q2makron.target = self.target;	
 
 	setsize (monster_q2makron, '-30 -30 0', '30 30 90');
 	monster_q2makron.health = 300;

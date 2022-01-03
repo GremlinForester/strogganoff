@@ -495,6 +495,7 @@ float		skill;
 .float		invisible_finished;
 .float		super_damage_finished;
 .float		radsuit_finished;
+.float		rebreather_finished;
 
 .float		invincible_time, invincible_sound;
 .float		invisible_time, invisible_sound;
@@ -578,11 +579,9 @@ float		skill;
 // sounds
 //
 .float		waitmin;
-#ifdef unused
 .float		waitmax;																														// qc++ - seems not used in v1.06
-.float		distance;
+.float 		distance;
 .float		volume;
-#endif
 
 
 
@@ -728,9 +727,6 @@ void(entity client, string s) centerprint = #73;	// sprint, but in middle
 #endif
 
 void(vector pos, string samp, float vol, float atten) ambientsound = #74;
-
-
-//MrC: Prefer precaching. Will leave this in if wanting to restore to default.
 
 string(string s) precache_sound		= #19;
 string(string s) precache_model		= #20;

@@ -276,9 +276,10 @@ void(entity attacker, float damage) insane_pain=
 {
 	float	l,r;
 
-//	if (self->health < (self->max_health / 2))
-//		self->s.skinnum = 1;
+	if (self.health < (self->max_health / 2))
+		self.skin = 1;
 
+	SpawnBlood (self.origin, '0 0 0', 20);
 	
 	if (time < self.pain_finished)
 		return;
@@ -364,6 +365,8 @@ void() insane_stand=
 
 void() insane_dead=
 {
+	self.solid = SOLID_CORPSE;	
+	
 	if ((self.spawnflags & 8))
 	{
 		self.flags = self.flags | FL_FLY;
@@ -374,7 +377,7 @@ void() insane_dead=
 		self.movetype = MOVETYPE_TOSS;
 	}
 	//self->svflags |= SVF_DEADMONSTER;
-	self.nextthink = 0;
+//	self.nextthink = 0;
 };
 
 void() insane_die=
@@ -414,6 +417,50 @@ void() insane_die=
 	}
 };
 
+/*
+void() insane_die =
+{
+	float		n;
+
+	if (self.health <= -50)
+	{
+		sound (self, CHAN_VOICE, "misc/udeath.wav", 1, ATTN_IDLE);
+		for (n= 0; n < 2; n++)
+			ThrowGib ("models/objects/gibs/bone/tris.md2", self.health, GIB_FLESH, 1);
+		for (n= 0; n < 4; n++)
+			ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health, GIB_FLESH, 1);
+		ThrowHead ("models/objects/gibs/head2/tris.md2", self.health);
+		self.deadflag = DEAD_DEAD;
+		return;
+	}
+
+	self.takedamage = DAMAGE_YES;
+
+ 	if (self.deadflag == DEAD_DEAD){
+		return;
+	}
+	else
+	{
+	// regular death
+	sound (self, CHAN_VOICE, sprintf("player/male/death%s.wav", ftos(rint((random()*4) + 1))), 1, ATTN_IDLE);
+
+	self.deadflag = DEAD_DEAD;
+	self.takedamage = DAMAGE_YES;
+
+	if ((self.spawnflags & 8))
+	{
+		insane_dead ();
+	}
+	else
+	{
+		if ( ((self.frame >= $FRAME_crawl1) && (self.frame <= $FRAME_crawl9)) || ((self.frame >= $FRAME_stand99) && (self.frame <= $FRAME_stand160)) )		
+			insane_move_crawl_death();
+		else
+			insane_move_stand_death();
+	}
+	}
+};
+*/
 /*QUAKED misc_insane (1 .5 0) (-16 -16 -24) (16 16 32) Ambush Trigger_Spawn CRAWL CRUCIFIED STAND_GROUND ALWAYS_STAND
 */
 void() misc_insane =

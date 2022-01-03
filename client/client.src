@@ -1,10 +1,9 @@
 ../../csprogs.dat
 
 ../shared/defs.qc
-//../shared/dpextensions.qc
 
 client/defs.qc
-
+client/builtins.qc
 client/constants.qc
 //common/constants.qc
 client/extensions.qc
@@ -18,7 +17,8 @@ client/kleshikstuff.qc
 
 client/leditor.qc
 
-client/sbar.qc
+//client/sbar.qc
+client/hud.qc
 client/main.qc
 
 //client/triggers.qc

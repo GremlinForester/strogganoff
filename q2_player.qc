@@ -463,7 +463,7 @@ void() q2PlayerDie =
 {
 //	local	float	i;
 	
-	self.items - (self.items & (IT_KEY1 | IT_KEY2 | IT_INVISIBILITY | IT_INVULNERABILITY | IT_SUIT | IT_QUAD | IT_SILENCER | IT_INVISIBILITY) );
+	self.items - (self.items & (IT_KEY1 | IT_KEY2 | IT_INVISIBILITY | IT_INVULNERABILITY | IT_SUIT | IT_BREATHER | IT_QUAD | IT_SILENCER | IT_INVISIBILITY) );
 	self.invisible_finished = 0;
 	self.invincible_finished = 0;
 	self.super_damage_finished = 0;
@@ -481,7 +481,7 @@ void() q2PlayerDie =
 
 #endif
 
-	self.modelindex = modelindex_player;	// don't use eyes
+//	self.modelindex = modelindex_player;	// don't use eyes
 
 	if (deathmatch || coop) //just added this for now, savepack stuff might go here or just for coop?
 	{

@@ -10,7 +10,16 @@
 3 = soldier_shotgun
 4 = soldier_machinegun
 5 = soldier(random)
-
+6 = berserk
+7 = brain
+8 = chick
+9 = floater
+10 = flyer
+11 = gladiator
+12 = gunner
+13 = hover
+14 = mutant
+15 = tank
 */
 void() monster_strogg_spawn =
 {
@@ -31,24 +40,6 @@ void() monster_strogg_spawn =
 	}
 	
 	e = spawn();
-
-/*
-1 = infantry
-2 = soldier_light
-3 = soldier_shotgun
-4 = soldier_machinegun
-5 = soldier(random)
-6 = berserk
-7 = brain
-8 = chick
-9 = floater
-10 = flyer
-11 = gladiator
-12 = gunner
-13 = hover
-14 = mutant
-15 = tank
-*/
 
 	switch (self.strogg_type)
 	{
@@ -315,10 +306,13 @@ void() monster_strogg_spawn =
 			e.sightSound = TANK_SOUND_SIGHT;
 			break;				
 	}
-	
+
+	if (self.target)
+	{
+		e.goalentity = e.movetarget = find(world, targetname, self.target);
+	}	
 
 	e.origin = self.origin;
-//	e.origin_z = e.origin_z + 16;
 	e.solid = SOLID_SLIDEBOX;
 	e.movetype = MOVETYPE_STEP;
 	e.fixangle = TRUE;
@@ -328,34 +322,13 @@ void() monster_strogg_spawn =
 	e.max_health = e.health;
 	e.flags = e.flags | FL_MONSTER;
 	e.takedamage = DAMAGE_AIM;
+	e.think = e.th_walk;
 	e.nextthink = time + 0.1;
-			
-	if (self.target)
-	{
-		e.goalentity = e.movetarget = find(world, targetname, self.target);
-		
-		if (!(e.flags & FL_FLY))
-			e.ideal_yaw = vectoyaw(e.goalentity.origin - e.origin);
-
-		if (!e.movetarget)
-		{
-			e.think = e.th_walk;
-		}
-
-		if ((e.flags & FL_SWIM) || e.movetarget.classname == "path_corner")
-		{
-			e.pausetime = 0;
-			e.think = e.th_walk;
-		}
-	}
-	else{
-			e.think = e.th_walk;	
-	}
 	
 	if (e.classname == "monster_hover"){
 		attachq2hoverSound(e);
 	}
-		
+	
 	WriteByte (MSG_BROADCAST, SVC_TEMPENTITY);
 	WriteByte (MSG_BROADCAST, TE_TELEPORT);
 	WriteCoord (MSG_BROADCAST, self.origin_x);
@@ -367,8 +340,6 @@ void() monster_strogg_spawn =
 	self.spawn_count = self.spawn_count + 1;
 	total_monsters = total_monsters + 1;
 }
-
-
 
 /*QUAKED monster_strogg_spawner (1 .5 0) (-16 -16 -24) (16 16 32)
 

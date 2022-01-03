@@ -329,10 +329,10 @@ void() armor_touch =
 
 	other.armorvalue = other.armorvalue += value;
 	other.armortype = type;
+
 	
-	if (other.armorvalue >= 200){
+	if (other.armorvalue >= 200)
 		other.armorvalue = 200;
-	}
 
 	other.items = other.items - (other.items & (IT_ARMOR_JACKET | IT_ARMOR_COMBAT | IT_ARMOR_BODY)) + bit;
 	

@@ -34,6 +34,14 @@ typedef struct
 	float	parm14;
 	float	parm15;
 	float	parm16;
+	float	parm16;
+	float	parm17;
+	float	parm18;
+	float	parm19;
+	float	parm21;
+	float	parm22;
+	float	parm23;
+	float	parm24;	
 	vec3_t	v_forward;
 	vec3_t	v_up;
 	vec3_t	v_right;

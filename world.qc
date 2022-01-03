@@ -237,6 +237,21 @@ void() worldspawn =
 	lastspawn = world;
 	InitBodyQue ();
 
+	addstat (STAT_Q2WEAPONS, 2, inv_weapons);
+	addstat (STAT_AMMO_SHELLS, 2, inv_ammo_shells);
+	addstat (STAT_AMMO_BULLETS, 2, inv_ammo_bullets);	
+	addstat (STAT_AMMO_ROCKETS, 2, inv_ammo_rockets);
+	addstat (STAT_AMMO_CELLS, 2, inv_ammo_cells);
+	addstat (STAT_AMMO_SLUGS, 2, inv_ammo_slugs);
+	addstat (STAT_Q2KEYS, 2, items_q2keys);
+	addstat (STAT_PICKUP, 2, player_pickup_itemnum);
+	addstat (STAT_INV_QUAD, 2, inv_pickup_quad);
+	addstat (STAT_INV_REBREATHER, 2, inv_pickup_rebreather);
+	addstat (STAT_INV_INVIS, 2, inv_pickup_invisibility);
+	addstat (STAT_INV_SILENCER, 2, inv_pickup_silencer);
+	addstat (STAT_INVINVUL, 2, inv_pickup_invulnerability);
+	addstat (STAT_ENVIRO,2, inv_pickup_envirosuit);
+	
 #ifndef cv_setdef
 // set cv defaults if set def package not used
 

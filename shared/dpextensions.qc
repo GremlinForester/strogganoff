@@ -2558,7 +2558,7 @@ string(string search, string replace, string subject) strireplace = #485;
 //void SV_Shutdown();
 
 //EXT_CSQC
-// #232 void(float index, float type, .void field) SV_AddStat (EXT_CSQC)
+//#232 void(float index, float type, .void field) SV_AddStat (EXT_CSQC)
 void(float index, float type, ...) addstat = #232;
 
 //ZQ_PAUSE
