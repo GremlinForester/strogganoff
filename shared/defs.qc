@@ -769,6 +769,7 @@ void(entity e) setspawnparms		= #78;		// set parm1... to the
 //
 // subs.qc
 //
+
 void(vector tdest, float tspeed, void() func) SUB_CalcMove;
 #ifdef unused
 void(entity ent, vector tdest, float tspeed, void() func) SUB_CalcMoveEnt;

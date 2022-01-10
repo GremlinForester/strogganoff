@@ -7,7 +7,7 @@ nonstatic void(mitem_desktop desktop) M_Options_Audio =
 	desktop.item_focuschange(m, IF_KFOCUSED);
 	m.totop();
 
-	float h = 200 * 0.5;
+	float h = 200 * 0.4;
 	//draw title art above the options
 	mitem_pic banner = spawn(mitem_pic, item_text:"gfx/p_option.lmp", item_size_y:24, item_flags:IF_CENTERALIGN);
 	m.add(banner, RS_X_MIN_PARENT_MID|RS_Y_MIN_PARENT_MID | RS_X_MAX_PARENT_MID|RS_Y_MAX_PARENT_MID, [banner.item_size_x*-0.5, -h-32], [banner.item_size_x*0.5, -h-8]);

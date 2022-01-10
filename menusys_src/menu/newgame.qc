@@ -20,6 +20,9 @@ nonstatic void(mitem_desktop desktop) M_NewGame =
 	string gametype = argv(1);
 	local float pos;
 	mitem_exmenu m;
+	
+	float fl = RS_X_MIN_PARENT_MIN|RS_Y_MIN_PARENT_MIN | RS_X_MAX_PARENT_MAX|RS_Y_MAX_OWN_MIN;
+	
 	if (gametype == "sp")
 	{
 		//single player has no options. the start map itself gives skill+episode options.
@@ -33,12 +36,13 @@ nonstatic void(mitem_desktop desktop) M_NewGame =
 		cvar_set("coop", 		infoget(newgameinfo, "coop"));
 		cvar_set("teamplay", 		infoget(newgameinfo, "teamplay"));
 		cvar_set("sv_public", 	infoget(newgameinfo, "sv_public"));
-		cvar_set("maxclients", 	infoget(newgameinfo, "maxclients"));
+		cvar_set("maxplayers", 	infoget(newgameinfo, "maxplayers"));
 		cvar_set("timelimit", 	infoget(newgameinfo, "timelimit"));
 		cvar_set("fraglimit", 	infoget(newgameinfo, "fraglimit"));
+		cvar_set("map", 	infoget(newgameinfo, "map"));		
 		string map = 			infoget(newgameinfo, "map");
 		if (map == "")
-			map = sprintf("dm%g", floor(random(1, 6)));
+			map = sprintf("q2dm%g", floor(random(1, 8)));
 		localcmd(sprintf("\nmap \"%s\"\n", map));
 		return;
 	}
@@ -50,9 +54,10 @@ nonstatic void(mitem_desktop desktop) M_NewGame =
 	newgameinfo = infoadd(newgameinfo, "deathmatch", cvar_string("deathmatch"));
 	newgameinfo = infoadd(newgameinfo, "teamplay", cvar_string("teamplay"));
 	newgameinfo = infoadd(newgameinfo, "sv_public", cvar_string("sv_public"));
-	newgameinfo = infoadd(newgameinfo, "maxclients", cvar_string("maxclients"));
-	newgameinfo = infoadd(newgameinfo, "timelimit", cvar_string("timelimit"));
+	newgameinfo = infoadd(newgameinfo, "maxplayers", cvar_string("maxplayers"));
+	newgameinfo = infoadd(newgameinfo, "timelimit", cvar_string("timelimit"));	
 	newgameinfo = infoadd(newgameinfo, "fraglimit", cvar_string("fraglimit"));
+	newgameinfo = infoadd(newgameinfo, "map", cvar_string("map"));	
 	newgameinfo = strzone(newgameinfo);
 
 	m = spawn(mitem_newgame, item_text:_("New Game"), item_flags:IF_SELECTABLE, item_command:"m_main");
@@ -76,12 +81,6 @@ nonstatic void(mitem_desktop desktop) M_NewGame =
 		m.addm(spawn(mitem_text, item_text:"Cooperative", item_command:"m_pop;m_newgame coop", item_scale:16, item_flags:IF_CENTERALIGN), [0, pos], [160, pos+16]);	pos += 16;
 		m.addm(spawn(mitem_text, item_text:"Deathmatch", item_command:"m_pop;m_newgame dm", item_scale:16, item_flags:IF_CENTERALIGN), [0, pos], [160, pos+16]);	pos += 16;
 		m.addm(spawn(mitem_text, item_text:"Team Deathmatch", item_command:"m_pop;m_newgame tdm", item_scale:16, item_flags:IF_CENTERALIGN), [0, pos], [160, pos+16]);	pos += 16;
-
-#if 1//def CSQC
-		m.add(spawn (mitem_spinnymodel, item_text: "progs/soldier.mdl",firstframe:73, framecount:8, shootframe:81, shootframes:9), RS_X_MIN_PARENT_MID|RS_Y_MIN_PARENT_MID | RS_X_MAX_PARENT_MID|RS_Y_MAX_PARENT_MID, [-160, 12*-16/2], [0, 12*16/2]);
-#else
-		//need some art for menuqc
-#endif
 		return;
 	}
 	
@@ -92,7 +91,7 @@ nonstatic void(mitem_desktop desktop) M_NewGame =
 
 	m.addm(menuitemeditt_spawn(_("Hostname"), 		"hostname", '280 8'), 					[-160, pos], [160, pos+8]); pos += 8;
 	m.addm(menuitemcheck_spawn(_("Public"),			"sv_public", 					'280 8'),	[-160, pos], [160, pos+8]); pos += 8;
-	m.addm(menuitemcombo_spawn(_("Max Clients"),	"maxclients",				'280 8', _(
+	m.addm(menuitemcombo_spawn(_("Max Players"),	"maxplayers",				'280 8', _(
 																			"2	\"Two\" "
 																			"3	\"Three\" "
 																			"4	\"Four\" "
@@ -100,7 +99,6 @@ nonstatic void(mitem_desktop desktop) M_NewGame =
 																			"16	\"Sixteen\" "
 																			"32	\"Thirty Two\" "
 																			)),	[-160, pos], [160, pos+8]); pos += 8;
-
 	if (gametype == "dm" || gametype == "tdm")
 	{
 		if (m.get("deathmatch") == "0")
@@ -156,6 +154,7 @@ nonstatic void(mitem_desktop desktop) M_NewGame =
 																			"55	\"55 minutes\" "
 																			"60	\"1 hour\" "
 																			)),	[-160, pos], [160, pos+8]); pos += 8;
+		
 		m.addm(menuitemcombo_spawn(_("Frag Limit"),	"fraglimit",					'280 8', _(
 																			"0	\"No Limit\" "
 																			"10	\"10 frags\" "

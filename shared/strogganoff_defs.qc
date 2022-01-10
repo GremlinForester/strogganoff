@@ -11,7 +11,8 @@ const float STAT_INV_REBREATHER = 41;
 const float STAT_INV_INVIS = 42;
 const float STAT_INV_SILENCER = 43;
 const float STAT_INVINVUL = 44;
-const float STAT_ENVIRO = 45;	
+const float STAT_ENVIRO = 45;
+const float STAT_FRAGS = 46;
 
 #ifndef opgrade
 //replaced with define

@@ -234,6 +234,9 @@ World Types:
 //=======================
 void() worldspawn =
 {
+//	local	float		fraglimit;
+//	fraglimit = ;
+	
 	lastspawn = world;
 	InitBodyQue ();
 
@@ -251,6 +254,7 @@ void() worldspawn =
 	addstat (STAT_INV_SILENCER, 2, inv_pickup_silencer);
 	addstat (STAT_INVINVUL, 2, inv_pickup_invulnerability);
 	addstat (STAT_ENVIRO,2, inv_pickup_envirosuit);
+	addstat (STAT_FRAGS,2, frags);
 	
 #ifndef cv_setdef
 // set cv defaults if set def package not used

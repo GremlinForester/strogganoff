@@ -176,7 +176,7 @@ for all variable in the bot...
 */
 
 // ----- entity fields ---
-.float	wallhug, keys, oldkeys, ishuman;
+.float	wallhug, keys, oldkeys, ishuman, isbot;
 .float	b_frags, b_clientno, b_shirt, b_pants; 
 .float	priority, ai_time, b_sound, missile_speed;
 .float	portal_time, b_skill, switch_wallhug;
@@ -1110,6 +1110,7 @@ void(float whichteam, float whatbot, float whatskill) BotConnect =
 	UpdateClient(self);
 	SetNewParms();
 	self.ishuman = 2;
+	self.isbot = 1;	
 	ClientConnect();
 	PutClientInServer();
 

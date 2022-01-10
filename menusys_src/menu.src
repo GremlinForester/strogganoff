@@ -120,8 +120,8 @@ void() m_init =
 	else
 		print("No hardware cursors\n");
 
-	if (clientstate() == 1)	//disconnected==1, supposedly
-		m_toggle(1);
+//	if (clientstate() == 1)	//disconnected==1, supposedly
+//		m_toggle(1);
 };
 void(string cstr) GameCommand =
 {

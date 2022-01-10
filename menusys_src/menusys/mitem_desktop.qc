@@ -264,8 +264,8 @@ void(vector pos) mitem_desktop::item_draw =
 
 
 var string autocvar_cl_cursor = "gfx/cursor.lmp";
-var float autocvar_cl_cursorsize = 32;
-var float autocvar_cl_cursorbias = 4;
+var float autocvar_cl_cursorsize = 16; //32
+var float autocvar_cl_cursorbias = 2; //4
 
 static var float oldgrabstate;	//to work around a DP bug (as well as unnecessary spam)
 

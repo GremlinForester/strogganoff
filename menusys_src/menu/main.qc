@@ -13,14 +13,7 @@ In DP, we just tint it black.
 */
 nonstatic void(mitem_frame m) addmenuback =
 {
-	if (iscachedpic("menutint"))	//fte internal hacks! meh, admit it. its cool.
-		m.add(spawn (mitem_pic, item_text:"menutint", item_alpha:0.5),
-												RS_X_MIN_PARENT_MIN|RS_Y_MIN_PARENT_MIN | RS_X_MAX_PARENT_MAX|RS_Y_MAX_PARENT_MAX, [0, 0], [0, 0]);
-	else
-		m.add(spawn (mitem_pic, item_text:"gfx/menu/background.tga", item_alpha:1), 
-												RS_X_MIN_PARENT_MIN|RS_Y_MIN_PARENT_MIN | RS_X_MAX_PARENT_MAX|RS_Y_MAX_PARENT_MAX, [0, 0], [0, 0]);	
-		m.add(spawn (mitem_fill, item_rgb:'0 0 0.01', item_alpha:0.5),
-												RS_X_MIN_PARENT_MIN|RS_Y_MIN_PARENT_MIN | RS_X_MAX_PARENT_MAX|RS_Y_MAX_PARENT_MAX, [0, 0], [0, 0]);
+	m.add(spawn (mitem_fill, item_rgb:'0.0 0.05 0.0', item_alpha:0.65),	RS_X_MIN_PARENT_MIN|RS_Y_MIN_PARENT_MIN | RS_X_MAX_PARENT_MAX|RS_Y_MAX_PARENT_MAX, [0, 0], [0, 0]);
 };
 
 /*

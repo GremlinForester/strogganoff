@@ -115,7 +115,8 @@ void(float type, vector pos, float drawback) Hud_DrawAmmoCount =
 	float value;
 	float len;
 	float c;
-	value = GetStat_FLOAT_TRUNCATED(type);
+//	value = GetStat_FLOAT_TRUNCATED(type);
+	value = getstati(type);
 	if (value < 0)
 		value = 0;	//hrm
 	if (value>999)
@@ -257,6 +258,34 @@ void Hud_DrawIBar(vector pos)
 		drawpic(pos+'312 8 0', "gfx/sb_sigil4", '8 16 0', '1 1 1', 1, 0);
 };
 
+const float		STAT_FRAGLIMIT					= 235;
+
+void(vector pos) Hud_DeathmatchScores_SBar =
+{
+	string s;
+	float secs;
+	float mins;
+	
+	//When you press tab in single player/coop, you get some replacement info over the sbar
+	vector sbar = screensize_y * ' 0 1 0' - '0 24 0';
+
+	Hud_DrawIBar(pos - '0 48 0'); //0 48 0
+	
+//	drawpic(sbar, "scorebar", '320 24 0', '1 1 1', 0.333, 0);
+
+	s = strcat("Frags:", FormatFloat(getstati(STAT_FRAGS), 3, " "), "/", FormatFloat(getstatf(STAT_FRAGLIMIT), 3, " "));
+	drawstring(sbar + '8 4', s, '8 8 0', '1 1 1', 1, 0);
+	s = strcat("Secrets :", FormatFloat(getstati(STAT_SECRETS), 3, " "), "/", FormatFloat(getstati(STAT_TOTALSECRETS), 3, " "));
+	drawstring(sbar + '8 12', s, '8 8 0', '1 1 1', 1, 0);
+
+	mins = floor(time/60);
+	secs = floor(time - mins*60);
+	s = strcat("Time :", FormatFloat(mins, 3, " "), ":", FormatFloat(secs, 2, "0"));
+	drawstring(sbar + '184 4', s, '8 8 0', '1 1 1', 1, 0);
+
+	drawstring(sbar + '232 12' - strlen(mapname)*'4 0', mapname, '8 8 0', '1 1 1', 1, 0);
+};
+
 void(vector pos) Hud_CoopScores_SBar =
 {
 	string s;
@@ -280,6 +309,31 @@ void(vector pos) Hud_CoopScores_SBar =
 	drawstring(sbar + '184 4', s, '8 8 0', '1 1 1', 1, 0);
 
 	drawstring(sbar + '232 12' - strlen(mapname)*'4 0', mapname, '8 8 0', '1 1 1', 1, 0);
+//	drawstring(sbar + '252 12' - strlen(g_strMapDisplayName)*'4 0', g_strMapDisplayName, '8 8 0', '1 1 1', 1, 0);
+};
+
+void Hud_DrawIntermission(vector pos)
+{
+	string s;
+//	drawpic(pos, "sbar", '320 24 0', '1 1 1', 0.333, 0);
+
+	//Hud_DrawIntermissionNumber(pos+'144 64 0', sprintf("%3.0f:%02.0f", intermission_time/60, intermission_time%60));
+	//Hud_DrawLargeValue(pos+'144 64 0', getstati(STAT_HEALTH), 25);
+
+	drawpic(pos+'224 0 0', "pics/a_shells", '24 24 0', '1 1 1', 1, 0);	
+		drawpic(pos+[0,56], "gfx/inter.lmp", [160,144],[1,1,1],1,0);
+	//Hud_DrawIntermissionNumber(pos+'144 104 0', sprintf("%3.0f/%.0f", getstatf(STAT_FOUNDSECRETS), getstatf(STAT_TOTALSECRETS)));
+	Hud_DrawLargeValue(pos+'144 64 0', getstati(STAT_HEALTH), 25);
+	
+	//Hud_DrawIntermissionNumber(pos+'144 144 0', sprintf("%3.0f/%.0f", getstatf(STAT_KILLEDMONSTERS), getstatf(STAT_TOTALMONSTERS)));
+	Hud_DrawLargeValue(pos+'144 64 0', getstati(STAT_HEALTH), 25);
+	
+	s = strcat("Monsters:", FormatFloat(getstati(STAT_MONSTERS), 3, " "), "/", FormatFloat(getstati(STAT_TOTALMONSTERS), 3, " "));
+	drawstring(pos+'144 64 0', s, '8 8 0', '1 1 1', 1, 0);
+	s = strcat("Secrets :", FormatFloat(getstati(STAT_SECRETS), 3, " "), "/", FormatFloat(getstati(STAT_TOTALSECRETS), 3, " "));
+	drawstring(pos+'144 64 0', s, '8 8 0', '1 1 1', 1, 0);
+	
+	R_RenderScene();
 };
 
 void Hud_DrawSBar(vector pos)
@@ -306,8 +360,116 @@ void Hud_DrawSBar(vector pos)
 			drawpic(pos, "pics/i_jacketarmor", '24 24 0', '1 1 1', 1, 0);
 		}
 	}
+	
+	if (cvar("cl_playertype") == 0)
+	{
+	switch (cvar("skin"))
+		{
+		case 0:
+			drawpic(pos+'106 0 0', "players/male/grunt_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 1:
+			drawpic(pos+'106 0 0', "players/male/cipher_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 2:
+			drawpic(pos+'106 0 0', "players/male/claymore_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 3:
+			drawpic(pos+'106 0 0', "players/male/flak_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 4:
+			drawpic(pos+'106 0 0', "players/male/howitzer_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 5:
+			drawpic(pos+'106 0 0', "players/male/major_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 6:
+			drawpic(pos+'106 0 0', "players/male/nightops_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 7:
+			drawpic(pos+'106 0 0', "players/male/pointman_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 8:
+			drawpic(pos+'106 0 0', "players/male/psycho_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 9:
+			drawpic(pos+'106 0 0', "players/male/rampage_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 10:
+			drawpic(pos+'106 0 0', "players/male/razor_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 11:
+			drawpic(pos+'106 0 0', "players/male/recon_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 12:
+			drawpic(pos+'106 0 0', "players/male/scout_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 13:
+			drawpic(pos+'106 0 0', "players/male/sniper_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 14:
+			drawpic(pos+'106 0 0', "players/male/viper_i", '0 24 0', '1 1 1', 1, 0);
+			break;			
+		}
+	}
+	else if (cvar("cl_playertype") == 1)
+	{
+	switch (cvar("skin"))
+		{
+		case 0:
+			drawpic(pos+'106 0 0', "players/female/athena_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 1:
+			drawpic(pos+'106 0 0', "players/female/brianna_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 2:
+			drawpic(pos+'106 0 0', "players/female/cobalt_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 3:
+			drawpic(pos+'106 0 0', "players/female/ensign_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 4:
+			drawpic(pos+'106 0 0', "players/female/jezebel_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 5:
+			drawpic(pos+'106 0 0', "players/female/jungle_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 6:
+			drawpic(pos+'106 0 0', "players/female/lotus_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 7:
+			drawpic(pos+'106 0 0', "players/female/stiletto_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 8:
+			drawpic(pos+'106 0 0', "players/female/venus_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 9:
+			drawpic(pos+'106 0 0', "players/female/voodoo_i", '0 24 0', '1 1 1', 1, 0);
+			break;			
+		}
+	}
+	else if (cvar("cl_playertype") == 2)
+	{
+	switch (cvar("skin"))
+		{
+		case 0:
+			drawpic(pos+'106 0 0', "players/cyborg/oni911_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 1:
+			drawpic(pos+'106 0 0', "players/cyborg/ps9000_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 2:
+			drawpic(pos+'106 0 0', "players/cyborg/tyr574_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		}
+	}
+	else
+	{
+		drawpic(pos+'112 0 0', "pics/i_health", '0 24 0', '1 1 1', 1, 0);
+	}
+	
+	//drawpic(pos+'112 0 0', "pics/i_health", '0 24 0', '1 1 1', 1, 0);
 
-	drawpic(pos+'112 0 0', "pics/i_health", '0 24 0', '1 1 1', 1, 0);
 	Hud_DrawLargeValue(pos+'136 0 0', getstati(STAT_HEALTH), 25);
 
 	if (stat_items & IT_SHELLS)
@@ -376,12 +538,16 @@ void Hud_DrawSBar(vector pos)
 		drawpic(pos+'176 -20 0', "pics/p_quad", '16 16 0', '1 1 1', 1, 0);
 };
 
+float intermission_time;	/* when the intermission started */
+
 nonstatic void Hud_Draw(float hudtype, float scoreboard, float width, float height)
 {
 	vector pos;
 	screensize_x = width;
 	screensize_y = height;
 	screensize_z = 0;
+
+	local float intermission_time = time;	//make a guess at the intermission time...
 
 	pos_x = (screensize_x-320)/2;
 	pos_y = screensize_y;
@@ -392,9 +558,18 @@ nonstatic void Hud_Draw(float hudtype, float scoreboard, float width, float heig
 	//if hudtype == 0 then the engine already drew it.
 	if (hudtype == 2)
 	{
+		if (intermission)
+			return;
+
 		if (scoreboard)
 		{
+			if (deathmatch){
+			Hud_DeathmatchScores_SBar(pos - '0 0 0'); //0 24 0
+			}
+			else
+			{
 			Hud_CoopScores_SBar(pos - '0 0 0'); //0 24 0
+			}
 		}
 		else
 		{
@@ -402,9 +577,31 @@ nonstatic void Hud_Draw(float hudtype, float scoreboard, float width, float heig
 		}
 	}
 	
-	if (hudtype == 1)
+	if (hudtype == 3)
 	{
-		//intermission?
-		Hud_DrawSBar(pos - '0 -96 0');
+		if (intermission)	
+			{
+				string s;
+				//float mins;
+				//float secs;
+				
+				//mins = floor(time/60);
+				//secs = floor(time - mins*60);
+	
+				drawpic(pos+'75 -220 0', "gfx/complete", '192 24 0', '1 1 1', 1, 0);
+
+				s = strcat("Monsters:", FormatFloat(getstati(STAT_MONSTERS), 3, " "), "/", FormatFloat(getstati(STAT_TOTALMONSTERS), 3, " "));
+				drawstring(pos+'25 -180 0', s, '16 16 0', '1 1 1', 1, 0);
+				
+				s = strcat("Secrets :", FormatFloat(getstati(STAT_SECRETS), 3, " "), "/", FormatFloat(getstati(STAT_TOTALSECRETS), 3, " "));
+				drawstring(pos+'25 -160 0', s, '16 16 0', '1 1 1', 1, 0);
+				
+
+				//s = strcat("Time :", FormatFloat(mins, 3, " "), ":", FormatFloat(secs, 2, "0"));
+				//drawstring('120 96 0', s, '16 16 0', '1 1 1', 1, 0);
+			
+				//intermission?
+				//Hud_DrawSBar(pos - '0 -96 0')	
+			}
 	}
 };

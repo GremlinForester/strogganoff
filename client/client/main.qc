@@ -88,7 +88,11 @@ void() CSQC_UpdateView =
 	
 	if (showscores)
 	{
-	Hud_Draw(2, 1, vid_conwidth, vid_conheight);
+	//	if (deathmatch){
+	//		Hud_DeathmatchScoreboard(vid_conwidth, vid_conheight);
+	//	}
+				
+		Hud_Draw(2, 1, vid_conwidth, vid_conheight);
 	}
 	else
 	{
@@ -108,7 +112,9 @@ void() CSQC_UpdateView =
 		R_SetView(VF_ORIGIN, viewpos);
 		R_SetView(VF_ANGLES, viewang);
 
-		Hud_Draw(1, 0, vid_conwidth, vid_conheight);	
+		R_RenderScene(); //so the view sways?
+
+		Hud_Draw(3, 0, vid_conwidth, vid_conheight);	
 	}
 
 	if (cvar("r_editlights")){				

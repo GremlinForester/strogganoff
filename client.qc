@@ -989,21 +989,30 @@ void() q2Player_stand;
 
 void() setPlayerModel =
 {
+	if (self.isbot == 1)
+	{
+		self.playerType = PT_OTHER;
+	}
+	
 	if(self.playerType == PT_MALE)
 	{
 		setmodel (self, "players/male/tris.md2");
 		setsize (self, VEC_HULL_MIN, VEC_HULL_MAX);
+		
 	}
 	else if (self.playerType == PT_FEMALE)
 	{
 		setmodel (self, "players/female/tris.md2");
-		setsize (self, VEC_HULL_MIN, VEC_HULL_MAX);		
+		setsize (self, VEC_HULL_MIN, VEC_HULL_MAX);
+	
 	}
 	else
 	{
 		setmodel (self, "players/cyborg/tris.md2");
 		setsize (self, VEC_HULL_MIN, VEC_HULL_MAX);
+
 	}
+	self.skin = cvar("skin");	
 }
 
 void() PutClientInServer =
@@ -1046,7 +1055,7 @@ void() PutClientInServer =
 	self.deadflag = DEAD_NO;
 // paustime is set by teleporters to keep the player from moving a while
 	self.pausetime = 0;
-	
+
 	if (autocvar_cl_playertype == PT_MALE)
 	{
 		self.playerType = PT_MALE;
