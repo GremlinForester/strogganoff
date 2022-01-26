@@ -236,7 +236,10 @@ void() worldspawn =
 {
 //	local	float		fraglimit;
 //	fraglimit = ;
-	
+
+//	local string s;
+//	s = strcat("maxplayers ", ftos(autocvar_howmanyplayers), "\n");
+
 	lastspawn = world;
 	InitBodyQue ();
 
@@ -307,7 +310,7 @@ void() worldspawn =
 		#endif
 	
 	#endif
-
+	
 // an alternate that saves global vars is to place these commands in default.cfg
 // and comment out the lines of code
 

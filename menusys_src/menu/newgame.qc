@@ -14,12 +14,18 @@ class mitem_newgame : mitem_exmenu
 	};
 };
 
+var float autocvar_howmanyplayers;
+var string autocvar_whatmap;
+
 nonstatic void(mitem_desktop desktop) M_NewGame =
 {
 	mitem_pic banner;
 	string gametype = argv(1);
 	local float pos;
 	mitem_exmenu m;
+
+	local string s;
+	s = strcat("maxplayers ", ftos(autocvar_howmanyplayers), "\n");
 	
 	float fl = RS_X_MIN_PARENT_MIN|RS_Y_MIN_PARENT_MIN | RS_X_MAX_PARENT_MAX|RS_Y_MAX_OWN_MIN;
 	
@@ -36,14 +42,16 @@ nonstatic void(mitem_desktop desktop) M_NewGame =
 		cvar_set("coop", 		infoget(newgameinfo, "coop"));
 		cvar_set("teamplay", 		infoget(newgameinfo, "teamplay"));
 		cvar_set("sv_public", 	infoget(newgameinfo, "sv_public"));
-		cvar_set("maxplayers", 	infoget(newgameinfo, "maxplayers"));
+		cvar_set("howmanyplayers", 	infoget(newgameinfo, "howmanyplayers"));
 		cvar_set("timelimit", 	infoget(newgameinfo, "timelimit"));
-		cvar_set("fraglimit", 	infoget(newgameinfo, "fraglimit"));
-		cvar_set("map", 	infoget(newgameinfo, "map"));		
-		string map = 			infoget(newgameinfo, "map");
-		if (map == "")
-			map = sprintf("q2dm%g", floor(random(1, 8)));
-		localcmd(sprintf("\nmap \"%s\"\n", map));
+		cvar_set("fraglimit", 	infoget(newgameinfo, "fraglimit"));	
+		string whatmap = 			infoget(newgameinfo, "whatmap");
+		if (whatmap == "")
+			whatmap = sprintf("q2dm%g", floor(random(1, 8)));
+		//localcmd ("maxplayers 32\n");
+		//localcmd(s);
+		localcmd(sprintf("\nmaxplayers \"%s\"\n", ftos(autocvar_howmanyplayers)));
+		localcmd(sprintf("\nmap \"%s\"\n", whatmap));
 		return;
 	}
 
@@ -54,7 +62,7 @@ nonstatic void(mitem_desktop desktop) M_NewGame =
 	newgameinfo = infoadd(newgameinfo, "deathmatch", cvar_string("deathmatch"));
 	newgameinfo = infoadd(newgameinfo, "teamplay", cvar_string("teamplay"));
 	newgameinfo = infoadd(newgameinfo, "sv_public", cvar_string("sv_public"));
-	newgameinfo = infoadd(newgameinfo, "maxplayers", cvar_string("maxplayers"));
+	newgameinfo = infoadd(newgameinfo, "howmanyplayers", cvar_string("howmanyplayers"));
 	newgameinfo = infoadd(newgameinfo, "timelimit", cvar_string("timelimit"));	
 	newgameinfo = infoadd(newgameinfo, "fraglimit", cvar_string("fraglimit"));
 	newgameinfo = infoadd(newgameinfo, "map", cvar_string("map"));	
@@ -91,14 +99,17 @@ nonstatic void(mitem_desktop desktop) M_NewGame =
 
 	m.addm(menuitemeditt_spawn(_("Hostname"), 		"hostname", '280 8'), 					[-160, pos], [160, pos+8]); pos += 8;
 	m.addm(menuitemcheck_spawn(_("Public"),			"sv_public", 					'280 8'),	[-160, pos], [160, pos+8]); pos += 8;
-	m.addm(menuitemcombo_spawn(_("Max Players"),	"maxplayers",				'280 8', _(
+	
+	m.addm(menuitemcombo_spawn(_("Max Players"),	"howmanyplayers",				'280 8', _(
 																			"2	\"Two\" "
 																			"3	\"Three\" "
 																			"4	\"Four\" "
+																			"5	\"Five\" "
+																			"6	\"Six\" "
+																			"7	\"Seven\" "																			
 																			"8	\"Eight\" "
-																			"16	\"Sixteen\" "
-																			"32	\"Thirty Two\" "
 																			)),	[-160, pos], [160, pos+8]); pos += 8;
+
 	if (gametype == "dm" || gametype == "tdm")
 	{
 		if (m.get("deathmatch") == "0")
@@ -168,70 +179,22 @@ nonstatic void(mitem_desktop desktop) M_NewGame =
 																			"90	\"90 frags\" "
 																			"100	\"100 frags\" "
 																			)),	[-160, pos], [160, pos+8]); pos += 8;
-
-		m.set("map", "");
-		m.addm(menuitemcombo_spawn(_("Initial Map"),	"map",					'280 8', _(
-																			"dm1		\"DM1 (dm1)\" "
-																			"dm2		\"DM2 (dm2)\" "
-																			"dm3		\"DM3 (dm3)\" "
-																			"dm4		\"DM4 (dm4)\" "
-																			"dm5		\"DM5 (dm5)\" "
-																			"dm6		\"DM6 (dm6)\" "
-																			"start	\"Start (Introduction)\" "
-																			"e1m1		\"E1M1 (The Slipgate Complex)\" "
-																			"e1m2		\"E1M2 (Castle Of The Damned)\" "
-																			"e1m3		\"E1M3 (The Necropolis)\" "
-																			"e1m4		\"E1M4 (The Grisly Grotto)\" "
-																			"e1m5		\"E1M5 (Gloom Keep)\" "
-																			"e1m6		\"E1M6 (The Door To Chthon)\" "
-																			"e1m7		\"E1M7 (The House Of Chthon)\" "
-																			"e1m8		\"E1M8 (Ziggarat Vertigo)\" "
-																			"e2m1		\"E2M1 (The Installation)\" "
-																			"e2m2		\"E2M2 (The Ogre Citadel)\" "
-																			"e2m3		\"E2M3 (The Crypt Of Decay)\" "
-																			"e2m4		\"E2M4 (The Ebon Fortress)\" "
-																			"e2m5		\"E2M5 (The Wizard's Manse)\" "
-																			"e2m6		\"E2M6 (The Dismal Oubliette\" "
-																			"e2m7		\"E2M7 (The Underearth)\" "
-																			"e3m1		\"E3M1 (Termination Central)\" "
-																			"e3m2		\"E3M2 (The Vaults Of Zin)\" "
-																			"e3m3		\"E3M3 (The Tomb Of Terror)\" "
-																			"e3m4		\"E3M4 (Satan's Dark Delight)\" "
-																			"e3m5		\"E3M5 (The Wind Tunnels)\" "
-																			"e3m6		\"E3M6 (Chambers Of Torment)\" "
-																			"e3m7		\"E3M7 (Tha Haunted Halls)\" "
-																			"e4m1		\"E4M1 (The Sewage System)\" "
-																			"e4m2		\"E4M2 (The Tower Of Despair)\" "
-																			"e4m3		\"E4M3 (The Elder God Shrine)\" "
-																			"e4m4		\"E4M4 (The Palace Of Hate)\" "
-																			"e4m5		\"E4M5 (Hell's Atrium)\" "
-																			"e4m6		\"E4M6 (The Pain Maze)\" "
-																			"e4m7		\"E4M7 (Azure Agony)\" "
-																			"e4m8		\"E4M8 (The Nameless City)\" "
-																			"end		\"End (Shub-Niggurath's Pit)\" "
-																			)),	[-160, pos], [160, pos+8]); pos += 8;
+																			
+		m.set("whatmap", "");
+		m.addm(menuitemcombo_spawn(_("Initial Map"),	"whatmap",					'280 8', _(
+																			"q2dm1		\"Q2DM1 (The Edge)\" "
+																			"q2dm2		\"Q2DM2 (Tokay's Towers)\" "
+																			"q2dm3		\"Q2DM3 (The Frag Pipe)\" "
+																			"q2dm4		\"Q2DM4 (Lost Hallways)\" "
+																			"q2dm5		\"Q2DM5 (The Pits)\" "
+																			"q2dm6		\"Q2DM6 (Lava Tomb)\" "
+																			"q2dm7		\"Q2DM7 (The Slimy Place)\" "
+																			"q2dm8		\"Q2DM8 (WareHouse)\" "																
+																			)),	[-160, pos], [160, pos+8]); pos += 8;																			
+																		
 	}
 
 	m.addm(spawn(mitem_text, item_text:"BEGIN!", item_command:"m_pop;m_newgame begin", item_scale:16, item_flags:IF_CENTERALIGN), [-160, pos], [160, pos+16]);
-
-	if (gametype == "coop")
-	{
-		//random art for style
-#if 1//def CSQC
-		m.add(spawn (mitem_spinnymodel, item_text: "progs/soldier.mdl", firstframe:73, framecount:8, shootframe:81, shootframes:9), RS_X_MIN_PARENT_MID|RS_Y_MIN_PARENT_MID | RS_X_MAX_PARENT_MID|RS_Y_MAX_PARENT_MID, [-160, -240/2], [0, 240/2]);
-#else
-		//need some art for menuqc
-#endif
-	}
-	else
-	{
-		//random art for style
-#if 1//def CSQC
-		m.add(spawn (mitem_spinnymodel, item_text: "progs/player.mdl", firstframe:0, framecount:6, shootframe:119, shootframes:6), RS_X_MIN_PARENT_MID|RS_Y_MIN_PARENT_MID | RS_X_MAX_PARENT_MID|RS_Y_MAX_PARENT_MID, [-160, 12*-16/2], [0, 12*16/2]);
-#else
-		//need some art for menuqc
-#endif
-	}
 
 	addmenuback(m);
 };

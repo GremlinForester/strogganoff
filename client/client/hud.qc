@@ -1,3 +1,5 @@
+string(float playernum, string keyname) getplayerkeyvalue = #348;
+
 string number[10] = {
 	"pics/num_0",
 	"pics/num_1",
@@ -68,6 +70,147 @@ void() Hud_Init
 
 vector screensize;
 float stat_items, stat_items2;
+
+//Deathmatch and Coop scoreboards are the same for now. May just integrate into one with checks later one depending on different stat tracking.
+
+vector(string picname, float height) Hud_AspectSize =
+{
+	vector sz = drawgetimagesize(picname);
+	return [sz_x * height/sz_y, height];
+};
+void(string picname, float screenwidth, vector pos, float height) Hud_CentrePic =
+{
+	vector sz = Hud_AspectSize(picname, height);
+	pos_x += (screenwidth-sz_x)/2;
+	drawpic(pos, picname, sz, [1,1,1],1,0);
+};
+void(vector virtmin, vector virtsize) Hud_DeathmatchScoreboard =
+{
+	vector pos = virtmin;
+	if not (getplayerkeyvalue(-16, "name"))
+		pos_y += (virtsize_y-200)/2;
+
+	if not (getplayerkeyvalue(-24, "name"))
+	{	//and only draw the header when its not a really big game
+		pos_y += 8;
+		Hud_CentrePic("gfx/ranking.lmp", virtsize_x, pos, 24);	pos_y += 24;
+		pos_y += 10;
+	}
+
+	if (autocvar(cg_woot, 0))	//I added this mostly just to demonstrate that you're actually using the csqc version...
+		pos_x = (virtsize_x-320)/2 * (1+sin(time));
+	else
+		pos_x += (virtsize_x-320)/2;
+
+	pos_x += 80;
+
+	//negative numbers are players sorted by frags.
+	for (float i = -1; ; i--, pos_y += 10)
+	{
+		string name = getplayerkeyvalue(i, "name");
+		if not (name)
+			break;
+		float isspec = stof(getplayerkeyvalue(i, "*spectator"));
+		string frags = getplayerkeyvalue(i, "frags");
+		string ping = getplayerkeyvalue(i, "ping");
+		vector top = stov(getplayerkeyvalue(i, "topcolor_rgb"));
+		vector bot = stov(getplayerkeyvalue(i, "bottomcolor_rgb"));
+		name = strconv(0,2,2, name);
+		//FIXME: string team = getplayerkeyvalue(i, "team");	//QW team names do NOT match player colours.
+		/*Other interesting fields
+			pl 			- for packetloss
+			activetime	- how long the player has been on the server.
+			chat 		- to check if someone is at the console/tabbed out
+			userid		- for easy banning etc, assuming you're the server.
+			ignored		- text from this player will be dropped clientside.
+			vignored	- voicechat from this player will be dropped (clientside and hopefully serverside too).
+			voipspeaking- whether they're speaking or not
+			voiploudness- the player's average voip volume.
+			also any other networked userinfo
+		*/
+
+		drawstring(pos-[8*5	,0], strpad(-4, ping), [8,8], [1,1,1],1,0);
+		if (isspec)
+			drawstring(pos+[4,0], "spec", [8,8], [1,1,1],1,0);
+		else
+		{
+			drawfill(pos+[0,0], [40,4], top, 0.75, 0);
+			drawfill(pos+[0,4], [40,4], bot, 0.75, 0);
+			drawstring(pos+[8,0], strpad(-3, frags), [8,8], [1,1,1],1,0);
+			if (player_localentnum == stof(getplayerkeyvalue(i, "viewentity")))
+			{
+//				drawcharacter(pos-[8,0], 0xe00d, [8,8], [1,1,1],1, 0);
+				drawcharacter(pos+[ 0,0], 0xe010, [8,8], [1,1,1],1, 0);
+				drawcharacter(pos+[32,0], 0xe011, [8,8], [1,1,1],1, 0);
+			}
+		}
+		drawstring(pos+[64,0], name, [8,8], [1,1,1],1,0);
+	}
+};
+
+void(vector virtmin, vector virtsize) Hud_CoopScoreboard =
+{
+	vector pos = virtmin;
+	if not (getplayerkeyvalue(-16, "name"))
+		pos_y += (virtsize_y-200)/2;
+
+	if not (getplayerkeyvalue(-24, "name"))
+	{	//and only draw the header when its not a really big game
+		pos_y += 8;
+		Hud_CentrePic("gfx/ranking.lmp", virtsize_x, pos, 24);	pos_y += 24;
+		pos_y += 10;
+	}
+
+	if (autocvar(cg_woot, 0))	//I added this mostly just to demonstrate that you're actually using the csqc version...
+		pos_x = (virtsize_x-320)/2 * (1+sin(time));
+	else
+		pos_x += (virtsize_x-320)/2;
+
+	pos_x += 80;
+
+	//negative numbers are players sorted by frags.
+	for (float i = -1; ; i--, pos_y += 10)
+	{
+		string name = getplayerkeyvalue(i, "name");
+		if not (name)
+			break;
+		float isspec = stof(getplayerkeyvalue(i, "*spectator"));
+		string frags = getplayerkeyvalue(i, "frags");
+		string ping = getplayerkeyvalue(i, "ping");
+		vector top = stov(getplayerkeyvalue(i, "topcolor_rgb"));
+		vector bot = stov(getplayerkeyvalue(i, "bottomcolor_rgb"));
+		name = strconv(0,2,2, name);
+		//FIXME: string team = getplayerkeyvalue(i, "team");	//QW team names do NOT match player colours.
+		/*Other interesting fields
+			pl 			- for packetloss
+			activetime	- how long the player has been on the server.
+			chat 		- to check if someone is at the console/tabbed out
+			userid		- for easy banning etc, assuming you're the server.
+			ignored		- text from this player will be dropped clientside.
+			vignored	- voicechat from this player will be dropped (clientside and hopefully serverside too).
+			voipspeaking- whether they're speaking or not
+			voiploudness- the player's average voip volume.
+			also any other networked userinfo
+		*/
+
+		drawstring(pos-[8*5	,0], strpad(-4, ping), [8,8], [1,1,1],1,0);
+		if (isspec)
+			drawstring(pos+[4,0], "spec", [8,8], [1,1,1],1,0);
+		else
+		{
+			drawfill(pos+[0,0], [40,4], top, 0.75, 0);
+			drawfill(pos+[0,4], [40,4], bot, 0.75, 0);
+			drawstring(pos+[8,0], strpad(-3, frags), [8,8], [1,1,1],1,0);
+			if (player_localentnum == stof(getplayerkeyvalue(i, "viewentity")))
+			{
+//				drawcharacter(pos-[8,0], 0xe00d, [8,8], [1,1,1],1, 0);
+				drawcharacter(pos+[ 0,0], 0xe010, [8,8], [1,1,1],1, 0);
+				drawcharacter(pos+[32,0], 0xe011, [8,8], [1,1,1],1, 0);
+			}
+		}
+		drawstring(pos+[64,0], name, [8,8], [1,1,1],1,0);
+	}
+};
 
 void(vector pos, float value, float threshhold) Hud_DrawLargeValue =
 {
@@ -565,10 +708,12 @@ nonstatic void Hud_Draw(float hudtype, float scoreboard, float width, float heig
 		{
 			if (deathmatch){
 			Hud_DeathmatchScores_SBar(pos - '0 0 0'); //0 24 0
+			Hud_DeathmatchScoreboard(pos - '-120 175 0', '100 100 0');
 			}
 			else
 			{
 			Hud_CoopScores_SBar(pos - '0 0 0'); //0 24 0
+			Hud_CoopScoreboard(pos - '-120 175 0', '100 100 0');			
 			}
 		}
 		else
@@ -582,26 +727,21 @@ nonstatic void Hud_Draw(float hudtype, float scoreboard, float width, float heig
 		if (intermission)	
 			{
 				string s;
-				//float mins;
-				//float secs;
-				
-				//mins = floor(time/60);
-				//secs = floor(time - mins*60);
-	
-				drawpic(pos+'75 -220 0', "gfx/complete", '192 24 0', '1 1 1', 1, 0);
 
+				if (deathmatch)
+				{
+					Hud_DeathmatchScoreboard(pos - '-120 175 0', '100 100 0');
+				}
+				else
+				{
+				drawpic(pos+'75 -220 0', "gfx/complete", '192 24 0', '1 1 1', 1, 0);	
+					
 				s = strcat("Monsters:", FormatFloat(getstati(STAT_MONSTERS), 3, " "), "/", FormatFloat(getstati(STAT_TOTALMONSTERS), 3, " "));
 				drawstring(pos+'25 -180 0', s, '16 16 0', '1 1 1', 1, 0);
 				
 				s = strcat("Secrets :", FormatFloat(getstati(STAT_SECRETS), 3, " "), "/", FormatFloat(getstati(STAT_TOTALSECRETS), 3, " "));
 				drawstring(pos+'25 -160 0', s, '16 16 0', '1 1 1', 1, 0);
-				
-
-				//s = strcat("Time :", FormatFloat(mins, 3, " "), ":", FormatFloat(secs, 2, "0"));
-				//drawstring('120 96 0', s, '16 16 0', '1 1 1', 1, 0);
-			
-				//intermission?
-				//Hud_DrawSBar(pos - '0 -96 0')	
+				}
 			}
 	}
 };

@@ -1408,7 +1408,7 @@ void() Weapon_Railgun_Fire={
 
 //	makevectors(self.v_angle);
 	//start = self.origin + v_forward*10;
-	start = self.origin + (v_forward * 10) + (v_right * 20) + (v_up * 15);
+	start = self.origin + (v_forward * 10) + (v_right * 5) + (v_up * 5);
 	start_z = self.absmin_z + self.size_z * 0.7;
 	
 	self.solid = SOLID_BBOX;

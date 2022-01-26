@@ -950,6 +950,7 @@ void() UpdateTPWeaponFrames =
 	self.colormod = getlight(self.owner.origin); //MrC Lightgrid workaround
 	#endif
 	self.frame = self.owner.frame;
+	
 	self.think = UpdateTPWeaponFrames;
 	self.nextthink = time;
 };
@@ -989,9 +990,23 @@ void() q2Player_stand;
 
 void() setPlayerModel =
 {
+	local float i;
+
+	self.skin = cvar("skin");
+	
 	if (self.isbot == 1)
 	{
 		self.playerType = PT_OTHER;
+		
+		if (random() > 0.8){
+			self.skin = 2;
+		}
+		else if (random() > 0.5){
+			self.skin = 1;
+		}
+		else{
+			self.skin = 0;
+		}
 	}
 	
 	if(self.playerType == PT_MALE)
@@ -1012,12 +1027,12 @@ void() setPlayerModel =
 		setsize (self, VEC_HULL_MIN, VEC_HULL_MAX);
 
 	}
-	self.skin = cvar("skin");	
 }
 
 void() PutClientInServer =
 {
 	local	entity spot;
+	local float i;
 
 	spot = SelectSpawnPoint ();
 	
@@ -1108,6 +1123,11 @@ void() PutClientInServer =
 //	self.fwatershift = TRUE;// catch runaway cshifts (changlevel/respawn while in func_water)
 //	self.oldgravity = 0;// use unmodified sv_gravity
 	// pOx - END - func_water support
+	
+	if (world.fadein == 1)
+	{
+		stuffcmd(self, "bf 0 0 0 1\n");
+	}
 };
 
 
@@ -1241,6 +1261,7 @@ void() CheckRules =
 {
 	local	float		timelimit;
 	local	float		fraglimit;
+	local string s;
 	
 	if (gameover)	// someone else quit the game already
 		return;
@@ -2242,7 +2263,7 @@ void(entity targ, entity attacker) ClientObituary =
 
 		if (attacker.classname == "teledeath2")
 		{
-			bprint ("Satan's power deflects ");
+			bprint ("Power screen deflects ");
 			bprint (targ.netname);
 			bprint ("'s telefrag\n");
 
