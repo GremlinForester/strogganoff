@@ -58,7 +58,13 @@
 @PointClass base(PlayerClass) = info_player_start : "Player 1 start" []
 @PointClass base(PlayerClass) = info_player_start2 : "Player episode return point" []
 @PointClass base(PlayerClass) = info_player_deathmatch : "Player deathmatch start" []
-@PointClass base(PlayerClass) = info_player_coop : "Player cooperative start" []
+@PointClass base(PlayerClass) = info_player_coop : "Player cooperative start" [
+  coopId(integer) : "Coop Player Id" : 0
+  isActive(integer) : "isActive" : 0
+  spawnflags(Flags) = [
+    1 : "Start InActive"
+  ]
+]
 @PointClass base(PlayerClass) = info_player_intermission : "Deathmatch intermission point"
 [
 	angles(string) : "pitch yaw roll"

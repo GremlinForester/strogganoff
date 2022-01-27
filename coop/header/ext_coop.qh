@@ -1,0 +1,91 @@
+/*
+  Strogganoff
+    co-op system
+  
+    an effort to create a truly co-op dedicated set of QuakeC.
+    
+    Using Co-op standards as of 2022, this api assumes a co-op server
+      of ONLY 1-4 players. Contemporary co-op shooters use this as a golden number 
+      range, and it only makes sense to use it here too. If players want uncapped
+      Co-op experiences, then vanilla Quake games are where they want to be.
+      
+      A capped player count allows us to do some wild stuff with the QuakeC, which
+      will be shown here.
+*/
+
+
+void(string trgVar, string srcVal) sv_coop_strzone={
+  if(srcVal != "" && strlen(srcVal) > 0){
+    if (trgVar != "" && strlen(srcVal) > 0){
+      strunzone(trgVar);
+    }
+    trgVar = strzone(srcVal);
+  }
+};
+void(string trgVar) sv_coop_strunzone={
+  if(trgVar != "" && strlen(trgVar) > 0){
+    strunzone(trgVar);
+    trgVar = "";
+  }
+};
+
+.float isActive;
+
+#define SV_PLAYER_MAX 4
+float SV_PLAYER_COUNT;
+
+entity SV_PLAYERS_LIST[4];  //array 4 players together for iterable ops.
+
+#define SV_PLAYER1_ID 1
+#define SV_PLAYER2_ID 2
+#define SV_PLAYER3_ID 3
+#define SV_PLAYER4_ID 4
+entity SV_PLAYER1;
+entity SV_PLAYER2;
+entity SV_PLAYER3;
+entity SV_PLAYER4;
+.float coopId;
+
+//caching player slots, so on a re-connect we might be able to restore their original
+//state?
+float SV_CACHE_TIMEOUT = 1800;  //30min to hold player data should be really robust.
+.float playerCache;
+.float isNewCache;
+entity PLAYER_CACHE_ENTS[4];  //ID = player netname, NOT coopId (which can change.)
+
+string SV_PLAYER1_NAME;
+string SV_PLAYER2_NAME;
+string SV_PLAYER3_NAME;
+string SV_PLAYER4_NAME;
+
+void() sv_coop_client_connect_iniCache;
+void(entity srcCache, entity dstCache) sv_coop_client_setCache;
+void() sv_coop_client_disconnect_saveCache;
+void() sv_coop_player_cache_timeout;
+
+
+#define CLIENT_STATE_CONNECT 1
+#define CLIENT_STATE_ACTIVE 2
+#define CLIENT_STATE_DEAD 3
+#define CLIENT_STATE_DISCONNECT 4
+.float player_connect_state;  //set by the various client.qc functions as players connect / join / disconnect etc.
+
+float() sv_coop_client_connect;
+void() sv_coop_client_disconnect;
+//void() sv_coop_client_slide_player_slots; //see comment in ext_coop.qc
+
+
+
+/*
+  Player save pack system
+    (disabled for now, not needed)
+#define IMPULSE_USE_SAVEPACK 14
+
+.float savePack_dropped;
+.float savePack_version;
+.float savePack_coopId;
+
+void savePack_drop(entity targetPlayer);
+void savePack_touch();
+void savePack_search_map(entity targetPlayer);
+*/
