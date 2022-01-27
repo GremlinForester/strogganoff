@@ -507,6 +507,14 @@ void() q2PlayerDie =
 		}
 	}
 	
+  //Stroggannoff EXT-COOP / playerCache ops
+  local entity cache;
+  cache = PLAYER_CACHE_ENTS[self.playerCache];
+  if(cache && self){
+    sv_coop_client_setCache(self, cache);
+  }
+  
+  
 	self.weaponmodel=string_null;
 	self.view_ofs = '0 0 -8';
 	self.deadflag = DEAD_DYING;

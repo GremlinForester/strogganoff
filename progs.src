@@ -28,6 +28,9 @@ materialsys_surface.qc
 materialsys_gibs.qc
 materialsys_breakable.qc
 
+//Co-op
+coop/ext_coop.qc
+
 subs.qc
 fight.qc
 ai.qc

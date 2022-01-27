@@ -711,7 +711,15 @@ void() ClientKill =
 	gibMonster();
 	ThrowHead ("models/objects/gibs/skull/tris.md2", self.health);
 //	self.modelindex = modelindex_player;
-	self.frags = self.frags - 2;	// extra penalty
+	self.frags = self.frags - 2;	// extra penalty  
+  
+  //Stroggannoff EXT-COOP / playerCache ops
+  local entity cache;
+  cache = PLAYER_CACHE_ENTS[self.playerCache];
+  if(cache && self){
+    sv_coop_client_setCache(self, cache);
+  }
+  
 	respawn ();
 };
 
@@ -723,6 +731,31 @@ float(vector v) CheckSpawnPoint =
 
 #endif
 
+
+/*
+  Stroggannoff co-op
+    info_player_coop now has 2 specific fields
+      isActive
+      coopId
+      
+    these spawn points are controlled by map-logic and player coopID
+      giving the map high-level control over player spawn locations.
+*/
+entity() selectCoopSpawnPoint={
+  local entity point;
+  
+  point = findchain(classname, "info_player_coop");
+  while(point){
+    if(point.isActive){
+      if(point.coopId == self.coopId){
+        return point;
+      }
+    }
+    point = point.chain;
+  }
+  
+  return point;
+};
 /*
 ============
 SelectSpawnPoint
@@ -744,11 +777,21 @@ entity() SelectSpawnPoint =
 // choose a info_player_deathmatch point
 	if (coop)
 	{
-		lastspawn = find(lastspawn, classname, "info_player_coop");
-		if (! lastspawn)// == world)
-			lastspawn = find (lastspawn, classname, "info_player_start");
-		if (lastspawn) // != world)
-			return lastspawn;
+    //Stroggannoff - check for cool new co-op spawns.
+    spot = selectCoopSpawnPoint();
+    if(spot){
+      return spot;
+    }
+    else{
+      //Stroggannoff - we didn't find hip new co-op spawns, defaulting behavior.
+      lastspawn = find(lastspawn, classname, "info_player_coop");
+      if (! lastspawn){// == world)
+        lastspawn = find (lastspawn, classname, "info_player_start");
+      }
+      if (lastspawn){ // != world)
+        return lastspawn;
+      }
+    }
 	}
 	else if (deathmatch)
 	{
@@ -1017,6 +1060,7 @@ void() setPlayerModel =
 
 void() PutClientInServer =
 {
+  
 	local	entity spot;
 
 	spot = SelectSpawnPoint ();
@@ -1046,7 +1090,22 @@ void() PutClientInServer =
 	self.effects = EF_FULLBRIGHT; //MrC Lightgrid workaround
 	#endif
 	
-	DecodeLevelParms ();
+  
+  //Stroggannoff EXT-COOP / playerCache ops
+  local entity cache;
+  cache = PLAYER_CACHE_ENTS[self.playerCache];
+  if(self.isNewCache){
+    DecodeLevelParms ();
+    if(cache && self){
+      sv_coop_client_setCache(self, cache);
+      self.isNewCache = FALSE;
+    }
+  }
+  else{
+    if(cache && self){
+      sv_coop_client_setCache(cache, self);
+    }
+  }
 
 	self.attack_finished = time;
 	self.th_pain = q2player_pain;
@@ -1094,7 +1153,10 @@ void() PutClientInServer =
 	
 	//setup player v_wep state machine
 	self.weapon_next = self.weapon;
-	self.inv_weapons = self.inv_weapons | WEP_BLASTER;
+  if(!(self.inv_weapons & WEP_BLASTER)){
+    self.inv_weapons = self.inv_weapons | WEP_BLASTER;
+  }
+  
 	W_ChangeWeapon();
   
 	if (deathmatch || coop)
@@ -1103,7 +1165,7 @@ void() PutClientInServer =
 		spawn_tfog (self.origin + v_forward*20);
 	}
 	spawn_tdeath (self.origin, self);
-	
+  
 	// pOx - START - func_water support
 //	self.fwatershift = TRUE;// catch runaway cshifts (changlevel/respawn while in func_water)
 //	self.oldgravity = 0;// use unmodified sv_gravity
@@ -1153,11 +1215,27 @@ void() info_player_deathmatch =
 {
 };
 
+
+/*
+  Allow trigger system to toggle info_player_coop entities.
+    This lets maps unlock player_coop zones sequentially, or at-will.
+*/
+void() infoPlayerCoop_toggle={
+  self.isActive = !self.isActive;
+};
+
 /*QUAKED info_player_coop (1 0 1) (-16 -16 -24) (16 16 24)
 potential spawning position for coop games
+
+  .coopID = player with matching coopID will spawn here.
+  
+  .isActive = player can only spawn at active spawn positions.
 */
 void() info_player_coop =
-{
+{  
+  if(!self.use){
+    self.use = infoPlayerCoop_toggle;
+  }
 };
 
 /*
@@ -2156,6 +2234,9 @@ void() ClientConnect =
 
 	ClientInRankings();
 
+  //Stroggannoff - ext_coop
+  sv_coop_client_connect();
+
 /*
    if ( ((self.netname == "CamClient") || (self.netname == "")) )
 	{
@@ -2196,7 +2277,9 @@ void() ClientDisconnect =
 	ClientDisconnected();
 
 #endif
-
+  
+  sv_coop_client_disconnect();
+  
 	if (gameover)
 		return;
 	// if the level end trigger has been activated, just return
