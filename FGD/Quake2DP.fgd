@@ -1006,3 +1006,7 @@
 	]
 	angles(string) : "pitch yaw roll"
 ]
+
+@SolidClass base(Target,Appearflags,trigger_once) = trigger_coop_checkpoint : "Activates TARGET info_player_coop. \n Deactivates KILLTARGET info_player_coop."
+[
+]
