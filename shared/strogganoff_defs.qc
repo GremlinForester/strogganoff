@@ -14,6 +14,13 @@ const float STAT_INVINVUL = 44;
 const float STAT_ENVIRO = 45;
 const float STAT_FRAGS = 46;
 
+.float fadein;
+
+var float autocvar_howmanyplayers;
+
+//Monster Customization/Debugging
+var vector autocvar_q2soldier_shotgun_accuracy = '0.2 0.2 0.05';
+
 #ifndef opgrade
 //replaced with define
 float() crandom =

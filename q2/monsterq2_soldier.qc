@@ -156,6 +156,22 @@ framer($attak101, $attak112, q2soldier_atk1, q2soldier_run1, 0.1, ai_face();
 	);
 );
 
+framer($attak201, $attak218, q2soldier_atk2, q2soldier_run1, 0.1, ai_face();
+	
+	frame_arb($attak205,
+		q2soldier_fire();
+		self.effects = self.effects | EF_MUZZLEFLASH;
+	);
+	
+	frame_arb($attak208,
+		SUB_CheckRefire (q2soldier_atk2);
+	);
+	
+	frame_arb($attak211,
+		sound (self, CHAN_VOICE, "infantry/infatck3.wav", 1, ATTN_IDLE);
+	);
+);
+
 // PAIN1
 
 framer($pain101, $pain105, q2soldier_pain1, q2soldier_run1, 0.1, 
@@ -290,8 +306,8 @@ void() q2soldier_fire =
 	local	entity	en;
 	local vector org;
 	
-	if (!visible (self.enemy))
-	return;
+//	if (!visible (self.enemy))
+//	return;
 	
 	ai_face();
 
@@ -306,7 +322,7 @@ void() q2soldier_fire =
 	if (self.classname == "monster_soldier")
 	{
 		sound (self, CHAN_WEAPON, "soldier/Solatck1.wav", 1, ATTN_NORM);		
-		monster_fire_shotgun(8, org, dir, '0.1 0.1 0', WEAPON_DEFAULT_DAMAGE);
+		monster_fire_shotgun(8, org, dir, autocvar_q2soldier_shotgun_accuracy, WEAPON_DEFAULT_DAMAGE);
 	}
 	else if (self.classname == "monster_soldier_ss")
 	{
@@ -349,7 +365,7 @@ void() q2soldier_seleck_attack =
 {
 	if (self.classname == "monster_soldier")
 	{
-		q2soldier_atk1();
+		q2soldier_atk2();
 
 	}
 	else if (self.classname == "monster_soldier_ss")
@@ -367,8 +383,8 @@ void() q2soldier_death1fire =
 	local vector dir;
 	local vector org;
 
-	if (!visible (self.enemy))
-	return;
+//	if (!visible (self.enemy))
+//	return;
 
 	makevectors (self.angles);
 

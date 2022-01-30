@@ -11,7 +11,7 @@
 // 	Q2DP differs a bit from regular Q2 as it's based on Quake 1 and takes advantage of Q3 BSP.
 // 	This FGD reflects those differences (lights, misc_model) as well as adds support for some extra features.
 // 	Q2DP additions/changes by MrC (so you know who to blame if this doesn't work well)
-//	10.18.21 (MM.DD.YY)
+//	01.23.22 (MM.DD.YY)
 
 
 //
@@ -235,8 +235,6 @@
 	_minlight(integer) : "Minimum light (optional)"
 ]
 
-// not visible in DM mode
-//
 // 0221 - added "_minlight" key (even tho you dont want it to stand out)
 @SolidClass base(Appearflags, Targetname, Target) color(0 128 204) = func_explosive : "Exploding/Breakable brush"
 [
@@ -668,6 +666,13 @@
 	spawnflags(Flags) =
 	[
 		1 : "Crucified" : 0
+		2 : "Ambush" : 0
+	]
+]
+@PointClass base(Monsters) size(-16 -16 -24, 16 16 32) model({ "path": ":progs/zombie.mdl" }) = monster_stroggzombie : "Strogg Zombie"
+[
+	spawnflags(Flags) =
+	[
 		2 : "Ambush" : 0
 	]
 ]

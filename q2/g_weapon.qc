@@ -22,6 +22,7 @@ void() blaster_base_touch={
 	self.nextthink = time + 0.01;
 	
 	if(!other.takedamage){
+		pointparticles(particleeffectnum("TE_BLASTERIMPACT"), self.origin, '0 0 0', 1);
 		return;
 	}
 	
@@ -31,7 +32,6 @@ void() blaster_base_touch={
 	
 	makevectors(self.angles);
 	traceline(self.origin, self.origin + (v_forward * self.maxs_x), FALSE, self);
-	
 	
 	T_Damage (other, self, self.owner, self.dmg);
 	
@@ -65,19 +65,20 @@ void(vector entOrg, vector aimAngle, float speed, float damage, float clr, float
 	newmis.touch = blaster_base_touch;
 
 // set missile duration
-
 	newmis.nextthink = time + 5;
 	newmis.think = SUB_Remove;
+	
+	newmis.scale = 0.5;	
 
 	if (self.flags & FL_DUCKED){
-	source = G_ProjectSource (self.origin, '20 8 -4', v_forward, v_right, '0 0 0'); //24 -18 22
+	source = G_ProjectSource (self.origin, '10 8 -4', v_forward, v_right, '0 0 0'); //20 8 -4
 	}
 	else{
-	source = G_ProjectSource (self.origin, '20 8 17', v_forward, v_right, '0 0 0'); //24 -18 22
+	source = G_ProjectSource (self.origin, '10 8 17', v_forward, v_right, '0 0 0'); //20 8 17
 	}
 	
 	setmodel (newmis, "progs/laser.mdl");
-	setsize (newmis, '4 4 4', '4 4 4');
+	setsize (newmis, '0 0 0', '0 0 0');
 	setorigin (newmis, source);
 	
 	if (self.weapon == WEP_HYPERBLASTER)
@@ -94,10 +95,8 @@ void(vector entOrg, vector aimAngle, float speed, float damage, float clr, float
 		else{
 			source = G_ProjectSource (self.origin, '20 6 10' + rotation_offset, v_forward, v_right, '0 0 0'); //24 -18 22
 		}	
-
 		setorigin (newmis, source);
 	}
-	
 };
 
 void(vector entOrg, vector aimAngle, vector spread, float damage) fire_bullet_base={
@@ -238,7 +237,7 @@ void(vector start, vector end, float damage) fire_railgun_base={
 //	if (trace_fraction == 1.0)
 //		return;
 
-	org = trace_endpos - end*4;
+	org = trace_endpos;
 
 	trailparticles(self, particleeffectnum("TR_KNIGHTSPIKE"), start, end);
 	trailparticles(self, particleeffectnum("TR_AFRITSPIKE_RED"), start, end);

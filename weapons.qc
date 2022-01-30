@@ -560,51 +560,63 @@ void() switchItemNum =
 		switch (self.player_pickup_itemnum){
 		case INV_PICKUP_QUAD:
 			itname = "Quad Damage";
+			/*
 			bprint("ITEM: ");
 			bprint(itname);
 			bprint(" ");	
 			bprint(ftos(self.inv_pickup_quad));
 			bprint("\n");
+			*/
 			break;
 		case INV_PICKUP_REBREATHER:
 			itname = "Rebreather";
+			/*			
 			bprint("ITEM: ");
 			bprint(itname);
 			bprint(" ");	
 			bprint(ftos(self.inv_pickup_rebreather));
 			bprint("\n");
+			*/			
 			break;
 		case INV_PICKUP_INVISIBILITY:
 			itname = "Invisibility";
+			/*			
 			bprint("ITEM: ");
 			bprint(itname);
 			bprint(" ");	
 			bprint(ftos(self.inv_pickup_invisibility));
-			bprint("\n");			
+			bprint("\n");
+			*/			
 			break;
 		case INV_PICKUP_SILENCER:
 			itname = "Silencer";
+			/*			
 			bprint("ITEM: ");
 			bprint(itname);
 			bprint(" ");	
 			bprint(ftos(self.inv_pickup_silencer));
-			bprint("\n");			
+			bprint("\n");
+			*/			
 			break;
 		case INV_PICKUP_INVULNERABILITY:
 			itname = "Invulnerability";
+			/*			
 			bprint("ITEM: ");
 			bprint(itname);
 			bprint(" ");	
 			bprint(ftos(self.inv_pickup_invulnerability));
-			bprint("\n");		
+			bprint("\n");
+			*/			
 			break;
 		case INV_PICKUP_ENVIROSUIT:
 			itname = "Envirosuit";
+			/*			
 			bprint("ITEM: ");
 			bprint(itname);
 			bprint(" ");	
 			bprint(ftos(self.inv_pickup_envirosuit));
-			bprint("\n");			
+			bprint("\n");
+			*/			
 			break;
 	}
 }
@@ -852,37 +864,47 @@ void() ImpulseCommands =
 #endif
 
 	if(self.impulse == IMPULSE_FLIP){
-		if (self.flags & FL_DUCKED)
+		if (self.flags & FL_DUCKED){
 			return;
+		}
 		
+		sprint (self, "FLIP OFF");
 		q2player_flip();
 	}
 
 	if(self.impulse == IMPULSE_SALUTE){
-		if (self.flags & FL_DUCKED)
+		if (self.flags & FL_DUCKED){
 			return;
-		
+		}
+
+		sprint (self, "SALUTE");		
 		q2player_salute();
 	}
 	
 	if(self.impulse == IMPULSE_TAUNT){
-		if (self.flags & FL_DUCKED)
+		if (self.flags & FL_DUCKED){
 			return;
-		
+		}
+
+		sprint (self, "TAUNT");		
 		q2player_taunt();
 	}
 
 	if(self.impulse == IMPULSE_WAVE){
-		if (self.flags & FL_DUCKED)
+		if (self.flags & FL_DUCKED){
 			return;
-		
+		}
+
+		sprint (self, "WAVE");		
 		q2player_wave();
 	}
 
 	if(self.impulse == IMPULSE_POINT){
-		if (self.flags & FL_DUCKED)
+		if (self.flags & FL_DUCKED){
 			return;
-		
+		}
+
+		sprint (self, "POINT");		
 		q2player_point();
 	}
 

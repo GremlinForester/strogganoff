@@ -124,7 +124,14 @@ void(entity targ, entity attacker) Killed =
 // bump the monster counter
 	if (self.flags & FL_MONSTER)
 	{
-		killed_monsters = killed_monsters + 1;
+		if (coop)
+		{
+			if (attacker.classname = "player"){
+				attacker.frags = attacker.frags + 1;
+			}
+		}			
+
+		killed_monsters = killed_monsters + 1;			
 		WriteByte (MSG_ALL, SVC_KILLEDMONSTER);
 	}
 	
@@ -133,7 +140,7 @@ void(entity targ, entity attacker) Killed =
 	{
 		if (attacker.classname == "player")
 		{
-			PlayerRemarkOnKill(attacker, self);
+			PlayerRemarkOnKill(attacker, self);		
 		}
 	}
 	}
