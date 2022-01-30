@@ -30,6 +30,7 @@ materialsys_breakable.qc
 
 //Co-op
 coop/ext_coop.qc
+coop/ext_hub.qc
 
 subs.qc
 fight.qc
@@ -57,6 +58,7 @@ doors.qc
 q2_doors.qc
 buttons.qc
 triggers.qc
+ext_trig.qc
 plats.qc
 misc.qc
 

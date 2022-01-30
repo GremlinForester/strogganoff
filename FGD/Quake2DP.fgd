@@ -28,6 +28,7 @@
 	gravity(integer) : "Gravity" : 800
 	message(string) : "Level name"
 	nextmap(string) : "Next map (DM only)"
+  isHub(integer) : "Marks map as a Hub map (coop only)" : 0
 ]
 
 //
@@ -1007,6 +1008,33 @@
 	angles(string) : "pitch yaw roll"
 ]
 
-@SolidClass base(Target,Appearflags,trigger_once) = trigger_coop_checkpoint : "Activates TARGET info_player_coop. \n Deactivates KILLTARGET info_player_coop."
+@SolidClass base(Target,Appearflags,trigger_once) = trigger_coop_checkpoint : "Activates TARGET info_player_coop. Deactivates KILLTARGET info_player_coop."
 [
+]
+
+@SolidClass base(Target,Appearflags,trigger_once) = trigger_hub_set_state : "Set SV_HUB_STATE cvar to the trigger's value. This will cause trigger_on_hub_state triggers in the hub map to fire their conditional checks on hub map-load."
+[
+  hubState(integer) : "cvar(HUB_STATE) set to this value." : 0
+]
+
+@SolidClass base(Target,Appearflags,trigger_once) = trigger_hub_set_map : "Set SV_HUB_MAP string to this value. Whenever a trigger returns player to SV_HUB_MAP, its this value."
+[
+  map(string) : ""
+]
+
+@SolidClass base(Target,Appearflags,trigger_once) = trigger_hub_changelevel : "Specifically change map to cvar(HUB_MAP)."
+[
+]
+
+@SolidClass base(Target,Appearflags,trigger_once) = trigger_hub_on_state : "Fire TARGET triggers when map loads and the hubState has changed. REMOVE_TARGETS will remove any matching ent.hub_target value."
+[
+  hubState(integer) : "target hubState to compare to the cvar(SV_HUB_STATE) value." : 0 
+  spawnflags(Flags) =
+  [
+    1 : "EQUAL_TO" : 0 : "self.hubState == SV_HUBSTATE."
+    2 : "HUB_LESS_THAN" : 0 : "self.hubState > SV_HUBSTATE."
+    4 : "HUB_MORE_THAN" : 0 : "self.hubState < SV_HUBSTATE."
+    8 : "NOT_EQUAL" : 0 : "self.hubState != SV_HUBSTATE."
+    16 : "REMOVE_TARGETS" : 0 : "Removes targets when CONDITION flags fail."
+  ]
 ]
