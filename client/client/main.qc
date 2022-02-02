@@ -96,7 +96,7 @@ void() CSQC_UpdateView =
 	}
 	else
 	{
-	Hud_Draw(2, 0, vid_conwidth, vid_conheight);
+		Hud_Draw(2, 0, vid_conwidth, vid_conheight);
 	}
 	
 	if (intermission){

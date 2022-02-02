@@ -258,6 +258,8 @@
 	_minlight(integer) : "Minimum light (optional)"
 ]
 
+
+
 //@SolidClass base(Appearflags, Targetname) color(255 0 0) = func_killbox : "Instant death" []
 
 // 0221 - added "_minlight" key
@@ -932,6 +934,36 @@
 @PointClass base(Weapons) model({ "path": ":models/weapons/g_rail/tris.md2" }) = weapon_railgun : "Rail gun" []
 @PointClass base(Weapons) model({ "path": ":models/weapons/g_bfg/tris.md2" }) = weapon_bfg : "Big Freakin Gun!" []
 
+@PointClass model({ "path" : model}) = model_static : "General purpose entity for adding static models to a level without baking them into geometry like misc_model."
+[
+    model(string) : "subdir path/to/model.md3" : "models/portals/portal_generic.md3"
+	angle(integer) : "Yaw Angle" : 45
+	angles(string) : "Pitch Yaw Roll" : "0 0 0"
+	scale(integer) : "Uniform Scale" : 1
+	target(string) : "target" : "Will use its target(s) upon being triggered."
+	avelocity(string) : "Spin vector and speed" : "0 0 0"
+	health(integer) : "Health" : 20
+	anim_startframe(integer) : "Sequence start frame." : 0
+	anim_lastframe(integer) : "Sequence end frame." : 0
+	anim_lastframe_hold(integer) : "Need to set LOOP to one, overrides and stops animation on Last Frame." : 0
+	holo_color(color1) : "RGB Color" : "1 1 0.5"
+	bAnimLoop(integer) : "Set to 1 to loop animation." : 0
+	bUseEnable(integer) : "Enable use for this entity if targeted by a trigger. Will fire its target(s) upon use." : 20	
+	delay(integer) : "Offset starting animation time." : 0
+	material(Choices) : "Material" : 0 =
+	[
+		1 : "None"
+		2 : "Flesh"
+		3 : "Metal"
+		4 : "Flaming"
+		5 : "Glass"
+		6 : "Wood"
+	]	
+	spawnflags(flags) =
+	[
+		1 : "HOLOGRAM" : 0 : "Render as Hologram"	
+	]
+]
 
 @PointClass model({ "path" : model}) = misc_model : "Generic placeholder for inserting static models to map. Model triangles are baked to map geometry. Uses ASE, MD3, etc..."
 [

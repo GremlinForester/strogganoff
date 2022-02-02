@@ -330,8 +330,6 @@ void() q2chick_die =
 	}
 };
 
-//MrC: FIXME ai_run in missile attack?
-
 framer($FRAME_attak101, $FRAME_attak132, q2chick_missile_attack, q2chick_frames_run, 0.1,
 	
 	frame_arb($FRAME_attak101,

@@ -38,9 +38,23 @@ void() monster_strogg_spawn =
 		bprint("\n");
 		return;
 	}
+
+	if (self.strogg_type < 1 || self.strogg_type > 15)
+	{
+		bprint("Unknown Strogg_type set.");
+		bprint("\n");
+		return;
+	}	
 	
 	e = spawn();
+	
+	if (self.target)
+	{
+		e.goalentity = e.movetarget = find(world, targetname, self.target);
+	}	
 
+	total_monsters = total_monsters + 1;
+	
 	switch (self.strogg_type)
 	{
 		case 1:
@@ -305,11 +319,6 @@ void() monster_strogg_spawn =
 			
 			e.sightSound = TANK_SOUND_SIGHT;
 			break;				
-	}
-
-	if (self.target)
-	{
-		e.goalentity = e.movetarget = find(world, targetname, self.target);
 	}	
 
 	e.origin = self.origin;
@@ -338,7 +347,6 @@ void() monster_strogg_spawn =
 	self.think = monster_strogg_spawn;
 	self.nextthink = time + self.delay;
 	self.spawn_count = self.spawn_count + 1;
-	total_monsters = total_monsters + 1;
 }
 
 /*QUAKED monster_strogg_spawner (1 .5 0) (-16 -16 -24) (16 16 32)

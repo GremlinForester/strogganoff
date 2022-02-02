@@ -47,7 +47,7 @@ void(entity e, entity monster) PlayerRemarkOnKill =
 			else if (r < 5) sound(e, CHAN_VOICE, PLAYER_KILLCOMMENT_5, 1, ATTN_IDLE);
 			else if (r < 6) sound(e, CHAN_VOICE, PLAYER_KILLCOMMENT_6, 1, ATTN_IDLE);
 			else sound(e, CHAN_VOICE, "", 1, ATTN_IDLE);
-			LOG("Talked smack!");
+		//	LOG("Talked smack!");
 		}
 		
 		e.nextsmacktalktime = time + 15;
@@ -121,28 +121,49 @@ void(entity targ, entity attacker) Killed =
 
 	self.enemy = attacker;
 
-// bump the monster counter
+	// bump the monster counter and award points/frags if coop
 	if (self.flags & FL_MONSTER)
 	{
 		if (coop)
 		{
-			if (attacker.classname = "player"){
-				attacker.frags = attacker.frags + 1;
+			if (attacker.classname == "player")
+			{
+				if (self.solid == SOLID_CORPSE)
+				{
+					attacker.frags = attacker.frags + 0;
+				}
+				else
+				{
+					attacker.frags = attacker.frags + 1;
+					killed_monsters = killed_monsters + 1;			
+					WriteByte (MSG_ALL, SVC_KILLEDMONSTER);
+				}
 			}
 		}			
-
-		killed_monsters = killed_monsters + 1;			
-		WriteByte (MSG_ALL, SVC_KILLEDMONSTER);
+		else
+		{
+			if (self.solid == SOLID_CORPSE)
+			{
+				//CORPSE'S DON'T COUNT
+			}
+			else
+			{
+				killed_monsters = killed_monsters + 1;			
+				WriteByte (MSG_ALL, SVC_KILLEDMONSTER);
+			}
+		}
+//			killed_monsters = killed_monsters + 1;			
+//			WriteByte (MSG_ALL, SVC_KILLEDMONSTER);
 	}
 	
 	if (random() < 0.5){	
-	if (autocvar_cl_smacktalk >= 1)
-	{
-		if (attacker.classname == "player")
+		if (autocvar_cl_smacktalk >= 1)
 		{
-			PlayerRemarkOnKill(attacker, self);		
+			if (attacker.classname == "player")
+			{
+				PlayerRemarkOnKill(attacker, self);		
+			}
 		}
-	}
 	}
 
 	ClientObituary(self, attacker);

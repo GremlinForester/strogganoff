@@ -236,6 +236,25 @@ void(entity attacker, float damage)	q2infantry_pain =
 	}
 };
 
+void() q2infantry_deathfire =
+{
+	local vector start;
+	local vector end;
+	local vector dir;
+	local vector org_offset;
+	local float flashId;
+
+	makevectors(self.angles);
+
+	flashId = self.frame - $FRAME_death211;
+	org_offset = MZ2_INFANTRY_MACHINEGUN[flashId];
+	
+	start = self.origin + (v_forward * org_offset_x) + (v_right * org_offset_y) + (v_up * org_offset_z);
+	dir = normalize (start - self.origin);	
+	
+	sound (self, CHAN_AUTO, "infantry/infatck1.wav", 1, ATTN_NORM);
+	monster_fire_bullet(start, dir, '0.01 0.01 0', 3);	
+};
 
 void() q2infantry_fire =
 {
@@ -259,14 +278,16 @@ void() q2infantry_fire =
 
 void() q2infantry_dead =
 {
-	setsize (self, '-16 -16 -24', '16 16 -8');
+//	setsize (self, '-16 -16 -24', '16 16 -8');
 	self.movetype = MOVETYPE_TOSS;
 	self.solid = SOLID_CORPSE;
+	
+	if (self.frame == $FRAME_death120 || self.frame == $FRAME_death225 || self.frame == $FRAME_death309)
+			setsize (self, '-16 -16 -24', '16 16 -8');
 }
 
 // Death 1
 
-//LOOK MA NO HEAD
 framer($FRAME_death101, $FRAME_death120, q2infantry_frames_die1, SUB_Null, 0.1,
 	
 	frame_arb($FRAME_death101,
@@ -285,16 +306,53 @@ framer($FRAME_death101, $FRAME_death120, q2infantry_frames_die1, SUB_Null, 0.1,
 	frame_arb($FRAME_death117,
 		SpawnBlood (self.origin, '0 0 10', 10);
 	);
+	
+	frame_arb($FRAME_death120,
+		q2infantry_dead();
+	);	
 );
 
-// Death 2
+void() q2infantry_frames_die2a;
+void() q2infantry_frames_die2b;
 
+// Death 2
+/*
 framer($FRAME_death201, $FRAME_death225, q2infantry_frames_die2, SUB_Null, 0.1,
 	
 	frame_arb($FRAME_death201,
 		SpawnBlood (self.origin + '0 0 16', '0 -15 40', 30);
 		q2infantry_dead();
 
+	);
+	
+	frame_arb($FRAME_death225,
+		q2infantry_dead();
+	);
+);
+*/
+
+framer($FRAME_death201, $FRAME_death210, q2infantry_frames_die2, q2infantry_frames_die2a, 0.1,
+	
+	frame_arb($FRAME_death201,
+		SpawnBlood (self.origin + '0 0 16', '0 -15 40', 30);
+		q2infantry_dead();
+
+	);
+);
+
+framer($FRAME_death211, $FRAME_death222, q2infantry_frames_die2a, q2infantry_frames_die2b, 0.1,
+	
+	q2infantry_deathfire();
+);
+
+framer($FRAME_death223, $FRAME_death225, q2infantry_frames_die2b, SUB_Null, 0.1,
+	
+	frame_arb($FRAME_death223,
+		SpawnBlood (self.origin + '0 0 16', '0 -15 40', 30);
+	);
+	
+	frame_arb($FRAME_death225,
+		q2infantry_dead();
 	);
 );
 
@@ -307,6 +365,11 @@ framer($FRAME_death301, $FRAME_death309, q2infantry_frames_die3, SUB_Null, 0.1,
 		q2infantry_dead();
 
 	);
+	
+	frame_arb($FRAME_death309,
+		q2infantry_dead();
+	);	
+	
 );
 
 void() q2infantry_die =
@@ -330,18 +393,19 @@ void() q2infantry_die =
 	
 	DropLoot(LOOT_BULLETS, floor(random()*12)+1);
 
-	if (random() < 0.4){
-		sound (self, CHAN_VOICE, "infantry/infdeth2.wav", 1, ATTN_NORM);
-		q2infantry_frames_die1 ();
-	}
-	else if (random() < 0.7){
-		sound (self, CHAN_VOICE, "infantry/infdeth1.wav", 1, ATTN_NORM);
-		q2infantry_frames_die2 ();
-	}
-	else{
-		sound (self, CHAN_VOICE, "infantry/infdeth2.wav", 1, ATTN_NORM);
-		q2infantry_frames_die3 ();
-	}
+
+		if (random() < 0.4){
+			sound (self, CHAN_VOICE, "infantry/infdeth2.wav", 1, ATTN_NORM);
+			q2infantry_frames_die1 ();
+		}
+		else if (random() < 0.7){
+			sound (self, CHAN_VOICE, "infantry/infdeth1.wav", 1, ATTN_NORM);
+			q2infantry_frames_die2 ();
+		}
+		else{
+			sound (self, CHAN_VOICE, "infantry/infdeth2.wav", 1, ATTN_NORM);
+			q2infantry_frames_die3 ();
+		}
 	}
 };
 

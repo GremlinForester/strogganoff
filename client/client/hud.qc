@@ -87,6 +87,9 @@ void(string picname, float screenwidth, vector pos, float height) Hud_CentrePic 
 void(vector virtmin, vector virtsize) Hud_DeathmatchScoreboard =
 {
 	vector pos = virtmin;
+	
+	drawstring('0 0 0', "Deathmatch Scores", '8 8 0', '0 0 1', 1, 0);		
+	
 	if not (getplayerkeyvalue(-16, "name"))
 		pos_y += (virtsize_y-200)/2;
 
@@ -96,12 +99,15 @@ void(vector virtmin, vector virtsize) Hud_DeathmatchScoreboard =
 		Hud_CentrePic("gfx/ranking.lmp", virtsize_x, pos, 24);	pos_y += 24;
 		pos_y += 10;
 	}
-
+	/*
 	if (autocvar(cg_woot, 0))	//I added this mostly just to demonstrate that you're actually using the csqc version...
 		pos_x = (virtsize_x-320)/2 * (1+sin(time));
 	else
 		pos_x += (virtsize_x-320)/2;
-
+	*/
+	
+	pos_x += (virtsize_x-320)/2;	
+	
 	pos_x += 80;
 
 	//negative numbers are players sorted by frags.
@@ -151,6 +157,9 @@ void(vector virtmin, vector virtsize) Hud_DeathmatchScoreboard =
 void(vector virtmin, vector virtsize) Hud_CoopScoreboard =
 {
 	vector pos = virtmin;
+	
+	drawstring('0 0 0', "Coop Scores", '8 8 0', '0 0 1', 1, 0);	
+	
 	if not (getplayerkeyvalue(-16, "name"))
 		pos_y += (virtsize_y-200)/2;
 
@@ -160,12 +169,15 @@ void(vector virtmin, vector virtsize) Hud_CoopScoreboard =
 		Hud_CentrePic("gfx/ranking.lmp", virtsize_x, pos, 24);	pos_y += 24;
 		pos_y += 10;
 	}
-
+	/*
 	if (autocvar(cg_woot, 0))	//I added this mostly just to demonstrate that you're actually using the csqc version...
 		pos_x = (virtsize_x-320)/2 * (1+sin(time));
 	else
 		pos_x += (virtsize_x-320)/2;
+	*/
 
+	pos_x += (virtsize_x-320)/2;
+	
 	pos_x += 80;
 
 	//negative numbers are players sorted by frags.
@@ -710,8 +722,8 @@ nonstatic void Hud_Draw(float hudtype, float scoreboard, float width, float heig
 			Hud_DeathmatchScores_SBar(pos - '0 0 0'); //0 24 0
 			Hud_DeathmatchScoreboard(pos - '-120 175 0', '100 100 0');
 			}
-			else
-			{
+			
+			if (coop){
 			Hud_CoopScores_SBar(pos - '0 0 0'); //0 24 0
 			Hud_CoopScoreboard(pos - '-120 175 0', '100 100 0');			
 			}

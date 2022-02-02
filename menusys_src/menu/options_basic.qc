@@ -101,6 +101,8 @@ class options_basic : mitem_exmenu
 	};
 };
 
+.float playerType;
+
 nonstatic void(mitem_desktop desktop) M_Options_Basic =
 {
 	mitem_exmenu m;

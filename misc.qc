@@ -572,7 +572,6 @@ void() func_illusionary =
 This bmodel will appear if the episode has allready been completed, so players can't reenter it.
 */
 void() func_episodegate =
-
 {
 	if (!(serverflags & self.spawnflags))
 		return;			// can still enter episode
