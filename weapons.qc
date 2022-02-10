@@ -621,6 +621,66 @@ void() switchItemNum =
 	}
 }
 
+.float isHub;
+
+/*
+============
+CycleItemNext
+
+Go to the next item with ammo
+============
+*/
+
+void() CycleSkinNext =
+{
+	if (world.isHub == 1){
+	self.skin += 1;
+
+	if (self.playerType == PT_OTHER){
+		if (self.skin > 2){
+			self.skin = 0;
+		}
+	}
+	
+	if (self.playerType == PT_MALE){
+		if (self.skin > 14){
+			self.skin = 0;
+		}
+	}
+
+	if (self.playerType == PT_FEMALE){
+		if (self.skin > 9){
+			self.skin = 0;
+		}
+	}
+	}
+	else
+	{
+		LOG("Skin can only be changed in HUB maps.");
+	}
+
+//	switchItemNum();
+};
+
+/*
+============
+CycleItemPrev
+
+Go to the previous item with ammo
+============
+*/
+
+void() CycleSkinPrev =
+{
+	self.skin -= 1;
+
+	if (self.player_pickup_itemnum < 0)
+		self.player_pickup_itemnum = 6;
+	
+//	switchItemNum();
+};
+
+
 /*
 ============
 CycleItemNext
@@ -636,7 +696,7 @@ void() CycleItemNext =
 	if (self.player_pickup_itemnum > 6)
 		self.player_pickup_itemnum = 0;
 
-	switchItemNum();
+//	switchItemNum();
 };
 
 /*
@@ -654,7 +714,7 @@ void() CycleItemPrev =
 	if (self.player_pickup_itemnum < 0)
 		self.player_pickup_itemnum = 6;
 	
-	switchItemNum();
+//	switchItemNum();
 };
 
 void() UseInventoryItem =
@@ -846,6 +906,11 @@ void() ImpulseCommands =
 	if (self.impulse == IMPULSE_USE_ITEM)
 	{
 			UseInventoryItem();
+	}
+
+	if (self.impulse == IMPULSE_SKIN_NEXT)
+	{
+			CycleSkinNext();
 	}
 
 #ifdef debug

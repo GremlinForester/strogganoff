@@ -15,7 +15,7 @@ class mitem_playerpreview : mitem_spinnymodel
 	};
 //#endif
 };
-
+/*
 static string() skinopts =
 {
 	local float s;
@@ -43,6 +43,7 @@ static string() skinopts =
 	}
 	return opts;
 };
+*/
 
 var float autocvar_m_pitch = 0.022;
 class options_basic : mitem_exmenu
@@ -146,13 +147,13 @@ nonstatic void(mitem_desktop desktop) M_Options_Basic =
 //	fr.add(menuitemslider_spawn(_("Player Type"), "cl_playertype", '0.0 2 1', '280 8'),	fl, [0, pos], [0, 2]); pos += 8;
 //	fr.add(menuitemslider_spawn(_("Skin"), "skin", '0.0 2 1', '280 8'),	fl, [0, pos], [0, 8]); pos += 2;	
 	
-	fr.add(menuitemcombo_spawn(_("Player Type"),	"cl_playertype", '280 8', _(
+	fr.add(menuitemcombo_spawn(_("Player Type"),	"set self.playerType", '280 8', _(
 																		"0	\"Male\" "
 																		"1	\"Female\" "
 																		"2	\"Cyborg\" "
 																		)),	fl, [0, pos], [0, 8]); pos += 8;
 
-	if (cvar("cl_playertype") == 0){
+	if (self.playerType == 0){
 	fr.add(menuitemcombo_spawn(_("Skin"),	"skin", '280 8', _(
 																		"0	\"Grunt\" "
 																		"1	\"Cipher\" "
@@ -171,7 +172,7 @@ nonstatic void(mitem_desktop desktop) M_Options_Basic =
 																		"14	\"Viper\" "
 																		)),	fl, [0, pos], [0, 8]); pos += 8;
 	}
-	if (cvar("cl_playertype") == 1){
+	if (self.playerType == 1){
 	fr.add(menuitemcombo_spawn(_("Skin"),	"skin", '280 8', _(
 																		"0	\"Athena\" "
 																		"1	\"Brianna\" "
@@ -185,7 +186,7 @@ nonstatic void(mitem_desktop desktop) M_Options_Basic =
 																		"9	\"Voodoo\" "																	
 																		)),	fl, [0, pos], [0, 8]); pos += 8;
 	}
-	if (cvar("cl_playertype") == 2){
+	if (self.playerType == 2){
 	fr.add(menuitemcombo_spawn(_("Skin"),	"skin", '280 8', _(
 																		"0	\"Oni911\" "
 																		"1	\"Ps9000\" "

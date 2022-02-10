@@ -948,7 +948,7 @@
 	anim_lastframe_hold(integer) : "Need to set LOOP to one, overrides and stops animation on Last Frame." : 0
 	holo_color(color1) : "RGB Color" : "1 1 0.5"
 	bAnimLoop(integer) : "Set to 1 to loop animation." : 0
-	bUseEnable(integer) : "Enable use for this entity if targeted by a trigger. Will fire its target(s) upon use." : 20	
+	bUseEnable(integer) : "Enable use for this entity if targeted by a trigger. Will fire its target(s) upon use." : 1	
 	delay(integer) : "Offset starting animation time." : 0
 	material(Choices) : "Material" : 0 =
 	[

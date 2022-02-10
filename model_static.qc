@@ -43,7 +43,7 @@ void() model_static_think =
 		self.alpha = 0.75 + random();
 		
 		if (random() < 0.2){
-			self.scale = self.oscale + (random() / 8);
+			self.scale = self.oscale + (random() / 16);
 		}
 		else{
 			self.scale = self.oscale;
@@ -218,6 +218,9 @@ void() model_static_init =
 		self.solid = SOLID_BBOX;		
 		self.takedamage = DAMAGE_YES;
 	}
+	
+	if (!self.scale)
+		self.scale = 1.0;
 	self.nextthink = time + self.delay;
 	self.think = model_static_think;
 }
@@ -226,7 +229,14 @@ void() model_static =
 {
 	self.classname = "model_static";	
 	makevectors(self.angles);
-	self.solid = SOLID_BSP;
+	if (self.spawnflags & HOLOGRAM)
+	{
+		self.solid = SOLID_NOT;
+	}
+	else
+	{
+		self.solid = SOLID_BSP;
+	}
 	self.movetype = MOVETYPE_NOCLIP;
 	precache_model(self.model);
 	setorigin (self, self.origin);

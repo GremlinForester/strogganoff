@@ -29,6 +29,7 @@ materialsys_gibs.qc
 materialsys_breakable.qc
 
 model_static.qc
+particle_spawner.qc
 
 //Co-op
 coop/ext_coop.qc

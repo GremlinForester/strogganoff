@@ -14,6 +14,8 @@ const float STAT_INVINVUL = 44;
 const float STAT_ENVIRO = 45;
 const float STAT_FRAGS = 46;
 
+.float isHub;
+
 .float fadein;
 
 var float autocvar_howmanyplayers;
@@ -211,7 +213,7 @@ var float autocvar_cl_smacktalk = 0;
 var float autocvar_cl_idletalk = 0;
 var float autocvar_cl_printpos = 0;
 var float autocvar_cl_printstate = 0;
-var float autocvar_cl_playertype = 0;
+//var float autocvar_cl_playertype = 0;
 var float autocvar_bot_print_waypointcreate = 0;
 
 /*
@@ -618,6 +620,8 @@ IMPULSE VALUES
 #define IMPULSE_ITEM_NEXT 32
 #define IMPULSE_ITEM_PREV 33
 #define IMPULSE_USE_ITEM 34
+
+#define IMPULSE_SKIN_NEXT 35
 
 #define IMPULSE_CHEAT_CMD 99
 

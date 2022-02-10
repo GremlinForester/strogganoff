@@ -339,6 +339,7 @@ void() SetChangeParms =
 	parm16 = self.inv_pickup_silencer;
 	parm17 = self.inv_pickup_invulnerability;
 	parm18 = self.inv_pickup_envirosuit;
+	parm19 = self.playerType;	
 };
 
 void() SetNewParms =
@@ -360,7 +361,8 @@ void() SetNewParms =
 	parm15 = 0;
 	parm16 = 0;
 	parm17 = 0;
-	parm18 = 0;	
+	parm18 = 0;
+	parm19 = 0;
 };
 
 .float resetkeys;
@@ -393,6 +395,7 @@ void() DecodeLevelParms =
 	self.inv_pickup_silencer = parm16;
 	self.inv_pickup_invulnerability = parm17;
 	self.inv_pickup_envirosuit = parm18;
+	self.playerType = parm19;
 };
 
 /*
@@ -859,7 +862,7 @@ void() UpdateTPWeaponFrames =
 		return;
 	}
 
-	if (autocvar_cl_playertype == PT_MALE)
+	if (self.owner.playerType == PT_MALE)
 	{
 		switch (self.owner.weapon)
 		{
@@ -896,7 +899,7 @@ void() UpdateTPWeaponFrames =
 		}	
 	}
 	
-	if (autocvar_cl_playertype == PT_FEMALE)
+	if (self.owner.playerType == PT_FEMALE)
 	{
 		switch (self.owner.weapon)
 		{
@@ -933,7 +936,7 @@ void() UpdateTPWeaponFrames =
 		}
 	}
 	
-	if (autocvar_cl_playertype == PT_OTHER)
+	if (self.owner.playerType == PT_OTHER)
 	{
 		switch (self.owner.weapon)
 		{
@@ -1013,7 +1016,8 @@ void() AttachTPWeapon =
 	
 	#ifdef q2model_lighting
 	playerTPWeapon.effects = EF_FULLBRIGHT; //MrC Lightgrid workaround
-	#endif
+	#endif	
+	
 	playerTPWeapon.think = UpdateTPWeaponFrames;
 	playerTPWeapon.nextthink = time;
 
@@ -1031,43 +1035,43 @@ void() DecodeLevelParms;
 void() q2PlayerDie;
 void() q2Player_stand;
 
-void() setPlayerModel =
+void(entity ent) setPlayerModel =
 {
 	local float i;
 
-	self.skin = cvar("skin");
+	ent.skin = cvar("skin");
 	
-	if (self.isbot == 1)
+	if (ent.isbot == 1)
 	{
-		self.playerType = PT_OTHER;
+		ent.playerType = PT_OTHER;
 		
 		if (random() > 0.8){
-			self.skin = 2;
+			ent.skin = 2;
 		}
 		else if (random() > 0.5){
-			self.skin = 1;
+			ent.skin = 1;
 		}
 		else{
-			self.skin = 0;
+			ent.skin = 0;
 		}
 	}
 	
-	if(self.playerType == PT_MALE)
+	if(ent.playerType == PT_MALE)
 	{
-		setmodel (self, "players/male/tris.md2");
-		setsize (self, VEC_HULL_MIN, VEC_HULL_MAX);
+		setmodel (ent, "players/male/tris.md2");
+		setsize (ent, VEC_HULL_MIN, VEC_HULL_MAX);
 		
 	}
-	else if (self.playerType == PT_FEMALE)
+	else if (ent.playerType == PT_FEMALE)
 	{
-		setmodel (self, "players/female/tris.md2");
-		setsize (self, VEC_HULL_MIN, VEC_HULL_MAX);
+		setmodel (ent, "players/female/tris.md2");
+		setsize (ent, VEC_HULL_MIN, VEC_HULL_MAX);
 	
 	}
 	else
 	{
-		setmodel (self, "players/cyborg/tris.md2");
-		setsize (self, VEC_HULL_MIN, VEC_HULL_MAX);
+		setmodel (ent, "players/cyborg/tris.md2");
+		setsize (ent, VEC_HULL_MIN, VEC_HULL_MAX);
 
 	}
 }
@@ -1130,6 +1134,7 @@ void() PutClientInServer =
 // paustime is set by teleporters to keep the player from moving a while
 	self.pausetime = 0;
 
+	/*
 	if (autocvar_cl_playertype == PT_MALE)
 	{
 		self.playerType = PT_MALE;
@@ -1142,8 +1147,11 @@ void() PutClientInServer =
 	{
 		self.playerType = PT_OTHER;
 	}
-
+	*/
+	
 //	spot = SelectSpawnPoint ();
+
+//	self.playerType = PT_MALE;
 
 #ifdef opgrade
 	self.oldorigin = 
@@ -1162,7 +1170,7 @@ void() PutClientInServer =
 	self.velocity = '0 0 0';	// 1998-07-21 Player moves after respawn fix by Xian
 #endif
 //	setsize (self, VEC_HULL_MIN, VEC_HULL_MAX);
-	setPlayerModel();
+	setPlayerModel(self);
 	q2Player_stand();
 	AttachTPWeapon();
 	
