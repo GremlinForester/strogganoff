@@ -621,8 +621,6 @@ void() switchItemNum =
 	}
 }
 
-.float isHub;
-
 /*
 ============
 CycleItemNext
@@ -658,28 +656,7 @@ void() CycleSkinNext =
 	{
 		LOG("Skin can only be changed in HUB maps.");
 	}
-
-//	switchItemNum();
 };
-
-/*
-============
-CycleItemPrev
-
-Go to the previous item with ammo
-============
-*/
-
-void() CycleSkinPrev =
-{
-	self.skin -= 1;
-
-	if (self.player_pickup_itemnum < 0)
-		self.player_pickup_itemnum = 6;
-	
-//	switchItemNum();
-};
-
 
 /*
 ============

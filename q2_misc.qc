@@ -1105,3 +1105,63 @@ void () misc_easterchick2 =
 	self.think = misc_easterchick2_think;
 	self.nextthink = time + 0.1;
 }
+
+void() rtlight_use =
+{
+	self.light_lev = self.intensity_original;
+	if (!self.glow_size)
+		self.glow_size = self.gsize; //intensity
+	else
+		self.glow_size = 0;
+};
+
+void() rtlight_think =
+{
+//	if (self.spawnflags & MOVING){
+//		self.tag_entity = find(world, targetname, self.parent);	
+//	}
+
+	self.think = rtlight_think;
+	self.nextthink = time + 0.1;		
+};
+
+void() rtlight =
+{
+	self.classname = "rtlight";
+	self.intensity_original = self.light_lev;
+	self.movetype = MOVETYPE_NOCLIP;
+	self.skin = self.skin;
+	setorigin (self, self.origin);
+//	self.color = self.color;
+	self.glow_size = self.light_lev;
+	
+	if (self.targetname)
+	{
+		if (self.spawnflags & START_OFF)
+			self.light_lev = 0;
+			self.glow_size = 0;
+			self.use = rtlight_use;
+	}
+	if (self.spawnflags & NOSHADOW)
+		self.pflags = self.pflags | PFLAGS_NOSHADOW;
+	if (self.spawnflags & CORONA)
+		self.pflags = self.pflags | PFLAGS_CORONA;
+	if (self.spawnflags & FULL_DYN)
+		self.pflags = self.pflags | PFLAGS_FULLDYNAMIC;
+	/*
+	if (self.spawnflags & MOVING){
+		self.tag_entity = find(world, targetname, self.parent);	
+	}
+	*/
+	
+	if (self.parent){
+		self.tag_entity = find(world, targetname, self.parent);	
+		self.owner = find(world, targetname, self.parent);
+		setorigin (self, self.origin - self.owner.origin);
+	}
+	
+	self.avelocity = self.avelocity;
+	self.style = self.style;
+//	self.think = rtlight_think;
+//	self.nextthink = time + 0.1;
+};

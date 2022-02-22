@@ -640,6 +640,10 @@ Quake 2 MP Map ladder volumes
 	// 11 SLOW PULSE NOT FADE TO BLACK
 	lightstyle(11, "abcdefghijklmnopqrrqponmlkjihgfedcba");
 	
+	// 12 PULSE
+//	lightstyle(12, "mpqsvsqp");
+	lightstyle(12, "mpsic");	
+	
 	// styles 32-62 are assigned by the light program for switchable lights
 
 	// 63 testing

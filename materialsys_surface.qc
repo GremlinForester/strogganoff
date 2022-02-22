@@ -164,7 +164,7 @@ void(entity e) Q3Surface_Impact_Ent =
 
 	if (trace_dpstartcontents & DPCONTENTS_WATER)
 	{
-		bprint("WATER HIT");
+	//	bprint("WATER HIT");
 		r = random() * 4;
 		if (r < 1) sound(e, CHAN_BODY, "player/splash1.wav", 1, ATTN_IDLE);
 		else if (r < 2) sound(e, CHAN_BODY, "player/splash2.wav", 1, ATTN_IDLE);
@@ -227,6 +227,29 @@ void(entity e) Q3Surface_Impact_Ent =
 		else if (r < 3) sound(e, CHAN_BODY, "player/footsteps/pl_ladder3.wav", 0.25, ATTN_IDLE);
 		else            sound(e, CHAN_BODY, "player/footsteps/pl_ladder4.wav", 0.25, ATTN_IDLE);
 		pointparticles(particleeffectnum("TE_GUNSHOT"), e.origin, '0 0 0', 1);
+	}
+	else if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_DIRT)
+	{
+		if (r < 1) sound(e, CHAN_FOOT, "player/footsteps/pl_dirt1.wav", 0.25, ATTN_IDLE);
+		else if (r < 2) sound(e, CHAN_FOOT, "player/footsteps/pl_dirt2.wav", 0.25, ATTN_IDLE);
+		else if (r < 3) sound(e, CHAN_FOOT, "player/footsteps/pl_dirt3.wav", 0.25, ATTN_IDLE);
+		else            sound(e, CHAN_FOOT, "player/footsteps/pl_dirt4.wav", 0.25, ATTN_IDLE);
+		pointparticles(particleeffectnum("TE_WOODIMPACT"), e.origin, '0 0 0', 1);		
+	}
+	else if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_FORCEFIELD)
+	{
+		if (r < 1) sound(e, CHAN_FOOT, "player/energy1.wav", 0.25, ATTN_IDLE);
+		else if (r < 2) sound(e, CHAN_FOOT, "player/energy2.wav", 0.25, ATTN_IDLE);
+		else if (r < 3) sound(e, CHAN_FOOT, "player/energy3.wav", 0.25, ATTN_IDLE);
+		else            sound(e, CHAN_FOOT, "player/energy4.wav", 0.25, ATTN_IDLE);
+	}
+	else if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_GRASS)
+	{
+		if (r < 1) sound(e, CHAN_FOOT, "player/footsteps/pl_snow1.wav", 0.25, ATTN_IDLE);
+		else if (r < 2) sound(e, CHAN_FOOT, "player/footsteps/pl_snow2.wav", 0.25, ATTN_IDLE);
+		else if (r < 3) sound(e, CHAN_FOOT, "player/footsteps/pl_snow3.wav", 0.25, ATTN_IDLE);
+		else            sound(e, CHAN_FOOT, "player/footsteps/pl_snow4.wav", 0.25, ATTN_IDLE);
+		pointparticles(particleeffectnum("TE_WOODIMPACT"), e.origin, '0 0 0', 1);		
 	}
 	else //DEFAULT TO CONCRETE?
 	{

@@ -100,14 +100,19 @@ void() StroggZombieGrenadeTouch =
 		return;		// don't explode on owner
 	if (other.takedamage)
 	{
-		T_Damage (other, self, self.owner, 10 );
-		sound (self, CHAN_WEAPON, "zombie/z_hit.wav", 1, ATTN_NORM);
+		T_Damage (other, self, self.owner, 20 );
+		sound (self, CHAN_WEAPON, "blob/death1.wav", 1, ATTN_NORM);
+	//	BecomeExplosion();
+		pointparticles(particleeffectnum("TE_EXPLOSION"), self.origin, '0 0 0', 1);		
 		remove (self);
 		return;
 	}
-	sound (self, CHAN_WEAPON, "zombie/z_miss.wav", 1, ATTN_NORM);	// bounce sound
+	sound (self, CHAN_WEAPON, "blob/death1.wav", 1, ATTN_NORM);	// bounce sound
 	self.velocity = '0 0 0';
 	self.avelocity = '0 0 0';
+	T_RadiusDamage (self, self.owner, 60, other);
+	pointparticles(particleeffectnum("TE_EXPLOSION"), self.origin, '0 0 0', 1);
+//	BecomeExplosion();
 	self.touch = SUB_Remove;
 };
 
@@ -150,6 +155,7 @@ void(vector st) StroggZombieFireGrenade =
 	
 // set missile duration
 	newmis.nextthink = time + 2.5;
+	newmis.modelflags = MF_ROCKET;	
 /*
 	newmis.think = SUB_Remove;
 

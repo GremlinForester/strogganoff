@@ -1661,9 +1661,9 @@ void() Ladder_ClimbMove =
 	if (Dot(v_forward,self.velocity) > 2 || Dot(v_up,self.velocity) < -20 || Dot(v_up,self.velocity) > 20) //-20 20
 	{
 		//self.velocity = v_forward*self.entladder.speed;
-		if (self.v_angle_x < -35) //-25
+		if (self.v_angle_x < -25) //-25
 			self.velocity_z = self.entladder.speed; //climb up with the ladder speed when player is looking up
-		else if (self.v_angle_x > 35) //25
+		else if (self.v_angle_x > 25) //25
 		{
 			self.velocity = v_forward*self.entladder.speed;
 			self.velocity_z = -self.entladder.speed; //negate ladder speed when player looks down, was not possible to descend before
@@ -2042,20 +2042,32 @@ void() W_surfaceSniffer =
 	makevectors (self.v_angle);
 	source = self.origin + '0 0 -16';
 	traceline (source, source + v_forward*32, FALSE, self);
-	
 	org = trace_endpos - v_forward*4;
 	
 	if (self.movetype == MOVETYPE_NOCLIP)
 		return;
+
+//	makevectors (self.v_angle);
+
+	tracebox (self.origin, VEC_HULL_MIN, VEC_HULL_MAX, self.origin + '32 0 0', FALSE, self);
+	
+	
+//	if (trace_dphitcontents == 4097)
+//	if (trace_dphitcontents == 4104)
+//	if (trace_dphitcontents == 4864) //this seems to be ladder?
+//	well I give up! :(
 	/*
-	if (trace_dphitcontents == 4097)
+	if (trace_dphitcontents ==	4864)
 	{
 		bprint ("Ladder?");
 		bprint ("\n");
+	//	self.onladder = TRUE;
+	//	self.velocity_z = 160;
 		self.movetype = MOVETYPE_FLY;
 	}
 	else if (!trace_dphitcontents)
 	{
+	//	self.onladder = FALSE;
 		self.movetype = MOVETYPE_WALK;
 	}
 	*/
@@ -2540,7 +2552,7 @@ void(entity targ, entity attacker) ClientObituary =
 				if (attacker.classname == "monster_hover")
 					bprint (" was killed by a Hover\n");
 				if (attacker.classname == "monster_infantry")
-					bprint (" obliterated by an Infantry\n");
+					bprint (" obliterated by an Enforcer\n");
 				if (attacker.classname == "monster_parasite")
 					bprint (" caught a Parasite\n");
 				if (attacker.classname == "monster_supertank")
@@ -2551,6 +2563,8 @@ void(entity targ, entity attacker) ClientObituary =
 					bprint (" became mutant poop\n");
 				if (attacker.classname == "monster_medic")
 					bprint (" didn't have Medic insurance\n");
+				if (attacker.classname == "monster_stroggzombie")
+					bprint (" destroyed by a Strogg Zombie\n");
 				return;
 			}
 
