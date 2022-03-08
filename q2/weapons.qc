@@ -1344,6 +1344,7 @@ void() Weapon_Hyperblaster_Fire={
 				damage = 20;
 			
 			fire_blaster_base(self.origin, self.v_angle, 800, damage, 200, 100, 200);
+			self.shotcount++;
 			SpawnMuzzleFlash(WEP_BLASTER_MFLASH_OFFSET_FP, WEP_BLASTER_MFLASH_SCALE, 0.5);
 			SpawnMuzzleFlashTP(WEP_BLASTER_MFLASH_OFFSET_TP, 0.5);
 			sound (self, CHAN_WEAPON, "weapons/Hyprbf1a.wav", 1, ATTN_NORM);
@@ -1412,7 +1413,7 @@ void() Weapon_Railgun_Fire={
 	start_z = self.absmin_z + self.size_z * 0.7;
 	
 	self.solid = SOLID_BBOX;
-	fire_railgun_base(start, self.origin + (v_forward * 4096)+ PlayerViewOrg(v_up), damage);
+	fire_railgun_base(start, ((self.origin + (v_forward * 4096)) + (PlayerViewOrg(v_up))), damage);
 	self.solid = SOLID_SLIDEBOX;
 	
 	// send muzzle flash

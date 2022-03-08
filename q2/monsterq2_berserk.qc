@@ -293,7 +293,7 @@ void() q2berserk_die =
 	sound (self, CHAN_VOICE, BERSERK_SOUND_DIE, 1, ATTN_NORM);
 	self.deadflag = DEAD_DEAD;
 	
-	DropLoot(LOOT_SHELLS, floor(random()*8)+1);
+	DropLoot(LOOT_SHELLS, floor(random()*8)+1, self.origin);
 	
 	if (random() < 0.5)
 		q2berserk_die1 ();

@@ -391,7 +391,7 @@ void() q2infantry_die =
 	// regular death
 	self.deadflag = DEAD_DEAD;
 	
-	DropLoot(LOOT_BULLETS, floor(random()*12)+1);
+	DropLoot(LOOT_BULLETS, floor(random()*12)+1, self.origin);
 
 
 		if (random() < 0.4){

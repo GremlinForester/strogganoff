@@ -162,7 +162,7 @@ void() q2gunner_die =
 	sound(self, CHAN_VOICE, GUNNER_SOUND_DEATH, 1, ATTN_NORM);
 	self.deadflag = DEAD_DEAD;
 	
-	DropLoot(LOOT_BULLETS, floor(random()*6)+1);
+	DropLoot(LOOT_BULLETS, floor(random()*6)+1, self.origin);
 	
 	q2gunner_die1_frames();
 	}
@@ -222,19 +222,19 @@ void(entity attacker, float damage)	q2gunner_pain =
 
 	if (damage <= 10)
 	{
-		self.pain_finished = time + 0.5;
+		self.pain_finished = time + 3.5;
 		q2gunner_pain3 ();
 		sound (self, CHAN_VOICE, GUNNER_SOUND_PAIN2, 1, ATTN_NORM);
 	}
 	else if (damage <= 25)
 	{
-		self.pain_finished = time + 0.8;
+		self.pain_finished = time + 4.8;
 		q2gunner_pain2 ();
 		sound (self, CHAN_VOICE, GUNNER_SOUND_PAIN, 1, ATTN_NORM);
 	}
 	else
 	{
-		self.pain_finished = time + 1.8;
+		self.pain_finished = time + 2.3;
 		q2gunner_pain1 ();
 		sound (self, CHAN_VOICE, GUNNER_SOUND_PAIN2, 1, ATTN_NORM);
 	}

@@ -487,23 +487,23 @@ void() q2PlayerDie =
 	{
 	//	DropBackpack();
 		if (self.weapon == WEP_SHOTGUN || self.weapon == WEP_SUPERSHOTGUN){
-			DropLoot(LOOT_SHELLS, ceil(self.inv_ammo_shells / 4));
+			DropLoot(LOOT_SHELLS, ceil(self.inv_ammo_shells / 4), self.origin);
 		}
 		
 		if (self.weapon == WEP_MACHINEGUN || self.weapon == WEP_CHAINGUN){
-		DropLoot(LOOT_BULLETS, ceil(self.inv_ammo_bullets / 4));
+		DropLoot(LOOT_BULLETS, ceil(self.inv_ammo_bullets / 4), self.origin);
 		}
 		
 		if (self.weapon == WEP_GRENADE_LAUNCHER || self.weapon == WEP_ROCKET_LAUNCHER){
-		DropLoot(LOOT_ROCKETS, ceil(self.inv_ammo_rockets / 4));
+		DropLoot(LOOT_ROCKETS, ceil(self.inv_ammo_rockets / 4), self.origin);
 		}
 		
 		if (self.weapon == WEP_HYPERBLASTER || self.weapon == WEP_BFG){
-		DropLoot(LOOT_CELLS, ceil(self.inv_ammo_cells / 4));
+		DropLoot(LOOT_CELLS, ceil(self.inv_ammo_cells / 4), self.origin);
 		}
 		
 		if (self.weapon == WEP_RAILGUN){
-		DropLoot(LOOT_SLUGS, ceil(self.inv_ammo_slugs / 4));
+		DropLoot(LOOT_SLUGS, ceil(self.inv_ammo_slugs / 4), self.origin);
 		}
 	}
 	

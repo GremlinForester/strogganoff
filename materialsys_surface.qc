@@ -158,6 +158,68 @@ void() Generic_FootStep =
 	play_step_sound();
 };
 
+float sfx_ents;
+#define MAX_SFXENTS 4
+
+void() Impact_Spark_think =
+{
+	local float r;
+
+	self.nextthink = time + (random() * 1);
+	self.think = Impact_Spark_think;
+	
+	if (random() > 0.2)
+	{
+		r = random() * 4;
+		
+		if (r < 1){ sound(self, CHAN_AUTO, "world/spark1.wav", 0.5, ATTN_IDLE);	
+		}
+		else if (r < 2){ 
+		sound(self, CHAN_AUTO, "world/spark2.wav", 0.5, ATTN_IDLE);
+		}
+		else if (r < 3){ 
+		sound(self, CHAN_AUTO, "world/spark3.wav", 0.5, ATTN_IDLE);
+		}
+		else
+		{
+			sound(self, CHAN_AUTO, "world/spark5.wav", 0.5, ATTN_IDLE);
+		}
+		pointparticles(particleeffectnum("electronic_spark"), (self.origin + '0 0 0'), '0 0 0', 1);
+	}
+	else
+	{
+		sfx_ents--;
+		FLOG(sfx_ents);
+//		self.think = SUB_Remove;
+		remove(self);
+	}
+}
+
+void(vector org) Impact_Spark =
+{
+	local entity impact_spark;
+	
+	impact_spark = spawn();
+	impact_spark.origin = org;
+	impact_spark.solid = SOLID_NOT;
+	impact_spark.movetype = MOVETYPE_NONE;
+	impact_spark.effects = self.effects | EF_LOWPRECISION;
+	setmodel (impact_spark, "");
+
+	if (random() > 0.5)
+	{
+		impact_spark.nextthink = time + (random() * 2);	
+		impact_spark.think = Impact_Spark_think;
+		sfx_ents++;
+		FLOG(sfx_ents);	
+	}
+	else
+	{
+		impact_spark.nextthink = time + 0.1;	
+		impact_spark.think = SUB_Remove;
+	}
+}
+
 void(entity e) Q3Surface_Impact_Ent =
 {
 	local float r;
@@ -250,6 +312,18 @@ void(entity e) Q3Surface_Impact_Ent =
 		else if (r < 3) sound(e, CHAN_FOOT, "player/footsteps/pl_snow3.wav", 0.25, ATTN_IDLE);
 		else            sound(e, CHAN_FOOT, "player/footsteps/pl_snow4.wav", 0.25, ATTN_IDLE);
 		pointparticles(particleeffectnum("TE_WOODIMPACT"), e.origin, '0 0 0', 1);		
+	}
+	else if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_ELECTRONIC)
+	{
+		if (r < 1) sound(e, CHAN_FOOT, "player/footsteps/pl_snow1.wav", 0.25, ATTN_IDLE);
+		else if (r < 2) sound(e, CHAN_FOOT, "player/footsteps/pl_snow2.wav", 0.25, ATTN_IDLE);
+		else if (r < 3) sound(e, CHAN_FOOT, "player/footsteps/pl_snow3.wav", 0.25, ATTN_IDLE);
+		else            sound(e, CHAN_FOOT, "player/footsteps/pl_snow4.wav", 0.25, ATTN_IDLE);
+		//pointparticles(particleeffectnum("Lightning_gun_impact"), e.origin, '0 0 0', 1);
+		pointparticles(particleeffectnum("TE_GUNSHOT"), e.origin, '0 0 0', 1);
+		if (sfx_ents < MAX_SFXENTS){
+			Impact_Spark(e.origin);
+		}
 	}
 	else //DEFAULT TO CONCRETE?
 	{

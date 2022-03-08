@@ -51,6 +51,7 @@ void() particle_spawner_think =
 
 	makevectors(self.angles);
 
+	/*
 	if (self.parent){
 		LOG("I have a parent.");
 		self.tag_entity = find(world, targetname, self.parent);	
@@ -59,6 +60,7 @@ void() particle_spawner_think =
 
 		self.origin = self.origin + self.owner.origin;
 	}
+	*/
 	
 	if (self.estate == ESTATE_OFF){
 		return;
@@ -197,6 +199,15 @@ void() particle_spawner =
 	self.use = particle_spawner_use;	
 
 	VLOG(self.target1.origin);
+
+	if (self.parent){
+		LOG("I have a parent.");
+		self.tag_entity = find(world, targetname, self.parent);	
+		self.owner = find(world, targetname, self.parent);
+		setorigin (self, self.origin - self.owner.origin);
+
+		self.origin = self.origin + self.owner.origin;
+	}
 
 	self.nextthink = time + 0.2;
 	self.think = particle_spawner_init;

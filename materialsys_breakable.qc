@@ -145,6 +145,62 @@ void() xwall_respawn =
 
 void() xwall_hidethink;
 void() BecomeExplosion;
+void(float lootType, float lootAmt, vector org) DropLoot;
+
+void() xwall_spawnLoot =
+{
+	switch(self.owner.droploot)
+	{
+		case 1:
+			DropLoot(LOOT_SHELLS, self.owner.aflag, randompos(self.absmin, self.absmax));
+		break;
+		case 2:
+			DropLoot(LOOT_BULLETS, self.owner.aflag, randompos(self.absmin, self.absmax));
+		break;		
+		case 3:
+			DropLoot(LOOT_ROCKETS, self.owner.aflag, randompos(self.absmin, self.absmax));
+		break;
+		case 4:
+			DropLoot(LOOT_SLUGS, self.owner.aflag, randompos(self.absmin, self.absmax));
+		break;
+		case 5:
+			DropLoot(LOOT_CELLS, self.owner.aflag, randompos(self.absmin, self.absmax));
+		break;
+		case 6:
+			DropLoot(LOOT_ARMOR_SHARD, self.owner.aflag, randompos(self.absmin, self.absmax));
+		break;
+		case 7:
+			DropLoot(LOOT_HEALTH_SMALL, self.owner.aflag, randompos(self.absmin, self.absmax));
+		break;
+		case 8:
+			DropLoot(LOOT_SHOTGUN, self.owner.aflag, randompos(self.absmin, self.absmax));
+		break;
+		case 9:
+			DropLoot(LOOT_SUPERSHOTGUN, self.owner.aflag, randompos(self.absmin, self.absmax));
+		break;
+		case 10:
+			DropLoot(LOOT_MACHINEGUN, self.owner.aflag, randompos(self.absmin, self.absmax));
+		break;
+		case 11:
+			DropLoot(LOOT_CHAINGUN, self.owner.aflag, randompos(self.absmin, self.absmax));
+		break;
+		case 12:
+			DropLoot(LOOT_GRENADE_LAUNCHER, self.owner.aflag, randompos(self.absmin, self.absmax));
+		break;
+		case 13:
+			DropLoot(LOOT_ROCKET_LAUNCHER, self.owner.aflag, randompos(self.absmin, self.absmax));
+		break;
+		case 14:
+			DropLoot(LOOT_HYPERBLASTER, self.owner.aflag, randompos(self.absmin, self.absmax));
+		break;
+		case 15:
+			DropLoot(LOOT_RAILGUN, self.owner.aflag, randompos(self.absmin, self.absmax));
+		break;
+		case 16:
+			DropLoot(LOOT_BFG, self.owner.aflag, randompos(self.absmin, self.absmax));
+		break;		
+	}
+}
 
 void() xwall_breakthink =
 {
@@ -156,6 +212,12 @@ void() xwall_breakthink =
 	
 	self.think = xwall_breakthink;
 	self.nextthink = time + self.owner.delay;
+	
+	if (self.owner.droploot)
+	{
+		xwall_spawnLoot();
+	}	
+	
 	t = 0; // give up the search after 20 failures
 	while (t < 20)
 	{
@@ -196,6 +258,8 @@ void() xwall_breakthink =
 			}
 		}
 		v2 = randomvec() * (self.owner.dmg + 20) * 3 + '0 0 120';
+
+		pointparticles(particleeffectnum(self.owner.myparticle), v, v2, 1);
 
 		r = floor(random()*3);		
 		
@@ -368,7 +432,9 @@ void() func_explosive =
 	if (!self.health)
 		self.health = 100;
 	if (!self.material)
-		self.material = 1;	
+		self.material = 1;
+	if (!self.aflag)
+		self.aflag = 1;
 
 	if (self.count2 >= 1)
 		self.count = self.count / self.count2;

@@ -1124,17 +1124,17 @@ void() DropBackpack =
 #undef item
 };
 	
-void(float lootType, float lootAmt) DropLoot =
+void(float lootType, float lootAmt, vector org) DropLoot =
 {
 	local entity loot;
 
 	loot = spawn();
-	loot.origin = self.origin + '0 0 24';
+	loot.origin = org + '0 0 24';
 	setmodel (loot, "progs/backpack.mdl");
 	setsize (loot, '-16 -16 0', '16 16 56');
-	loot.velocity_z = 200;
-	loot.velocity_x = -50 + (random() * 200);
-	loot.velocity_y = -50 + (random() * 200);
+	loot.velocity_z = 150;
+	loot.velocity_x = -10 + (random() * 5);
+	loot.velocity_y = -10 + (random() * 5);
 	loot.netname = string_null;
 	loot.touch = BackpackTouch;	
 
@@ -1162,7 +1162,7 @@ void(float lootType, float lootAmt) DropLoot =
 			loot.netname = "Slugs";
 			setmodel (loot, "models/items/ammo/slugs/medium/tris.md2");
 			setsize (loot, '-16 -16 -16', '16 16 16');
-			loot.inv_ammo_cells = lootAmt;
+			loot.inv_ammo_slugs = lootAmt;
 			break;
 		case LOOT_CELLS:
 			loot.netname = "Cells";

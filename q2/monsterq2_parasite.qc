@@ -262,7 +262,7 @@ void() q2parasite_die =
 	sound(self, CHAN_WEAPON2, PARASITE_SOUND_DIE, 1, ATTN_NORM);
 	self.deadflag = DEAD_DEAD;
 	
-	DropLoot(LOOT_BULLETS, floor(random()*6)+1);
+	DropLoot(LOOT_BULLETS, floor(random()*6)+1, self.origin);
 	
 	q2parasite_die1_frames ();
 	}

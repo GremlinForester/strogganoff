@@ -516,11 +516,11 @@ void() q2soldier_die =
 	self.deadflag = DEAD_DEAD;
 	
 	if (self.classname == "monster_soldier_light")
-		DropLoot(LOOT_ARMOR_SHARD, 0); //LOOT_ARMOR_SHARD defaults to 2 through special handling.
+		DropLoot(LOOT_ARMOR_SHARD, 0, self.origin); //LOOT_ARMOR_SHARD defaults to 2 through special handling.
 	if (self.classname == "monster_soldier_ss")
-		DropLoot(LOOT_BULLETS, floor(random()*6)+1);
+		DropLoot(LOOT_BULLETS, floor(random()*6)+1, self.origin);
 	if (self.classname == "monster_soldier")
-		DropLoot(LOOT_SHELLS, floor(random()*8)+1);
+		DropLoot(LOOT_SHELLS, floor(random()*8)+1, self.origin);
 	
 	r = random() * 6;
 	if (r < 1) q2soldier_die1 ();

@@ -2034,6 +2034,69 @@ Called every frame after physics are run
 
 void() q2player_landframes;
 
+
+//this is a little jank atm but just wanted to experiment
+void() W_roomTrace =
+{
+	local	vector	source;
+	local	vector	org;
+	local	float	roomheight;
+	local	float	roomwidth;
+	local	float	roomwidth2;	
+	local 	float	roomsize; 	
+
+//	makevectors (self.v_angle);
+	source = self.origin + '0 0 16';
+
+//Trace room height	
+	traceline (source, source + '0 0 2048', FALSE, self);
+//	if (trace_fraction == 1.0)
+//		return;
+	org = trace_endpos;
+//	Q3Surface_Impact(org);	
+	roomheight = vlen(org);
+
+//Trace room width +y
+	traceline (source, source + '0 2048 0', FALSE, self);
+	
+//	if (trace_fraction == 1.0)
+//		return;	
+	org = trace_endpos;
+//	Q3Surface_Impact(org);	
+	roomwidth = vlen(org);
+	
+//Trace room width +y
+	traceline (source, source + '0 -2048 0', FALSE, self);
+	org = trace_endpos;
+//	Q3Surface_Impact(org);	
+	roomwidth2 = vlen(org);
+
+	roomsize = roomheight + (roomwidth + roomwidth2);
+
+//	FLOG(floor(roomheight + roomwidth));
+
+	FLOG(roomsize);
+	
+	if (roomsize < 500){
+		LOG("Small room");
+	}
+	else if (roomsize < 1250){
+		LOG("Medium room");
+	}
+	else if (roomsize < 2500){
+		LOG("Large room");
+	}
+	else if (roomsize < 4000){
+		LOG("Auditorium");
+	}	
+	else
+	{
+		LOG("Bigger on the inside.");
+	}
+	
+//	Q3Surface_Impact(org);
+};
+
 void() W_surfaceSniffer =
 {
 	local	vector	source;
@@ -2090,6 +2153,14 @@ void() PlayerPostThink =
 		return;		// intermission or finale
 	if (self.deadflag)
 		return;
+
+	if (self.button4){
+			crouch_on ();
+	}
+	else
+	{
+		crouch_off ();
+	}
 	
 // do weapon stuff
 	W_WeaponFrame ();
@@ -2151,6 +2222,10 @@ void() PlayerPostThink =
 
 	Q3Surface_FootStep();
 
+	if (autocvar_cl_printroomsize >= 1){
+	W_roomTrace();
+	}
+	
 	if (autocvar_cl_surfacesniffer >= 1)
 	{
 		W_surfaceSniffer();

@@ -18,6 +18,9 @@ const float STAT_FRAGS = 46;
 
 .float fadein;
 
+.string myparticle;
+.string myendparticle;
+
 var float autocvar_howmanyplayers;
 
 //Monster Customization/Debugging
@@ -213,6 +216,7 @@ var float autocvar_cl_smacktalk = 0;
 var float autocvar_cl_idletalk = 0;
 var float autocvar_cl_printpos = 0;
 var float autocvar_cl_printstate = 0;
+var float autocvar_cl_printroomsize = 0;
 //var float autocvar_cl_playertype = 0;
 var float autocvar_bot_print_waypointcreate = 0;
 
@@ -251,6 +255,7 @@ vector(vector vUp) PlayerViewOrg={
 .float weapon_anim_start;
 .float weapon_frame_end;
 
+.float droploot;
 
 //MrC: Items can be added like health, powerups, etc...
 enum
@@ -517,6 +522,7 @@ float Q3SURFACEFLAG_DIRT = 0x200000;
 float Q3SURFACEFLAG_FORCEFIELD = 0x400000;
 float Q3SURFACEFLAG_GRASS = 0x800000;
 float Q3SURFACEFLAG_TILE = 	0x1000000;
+float Q3SURFACEFLAG_ELECTRONIC = 0x2000000;
 
 .float aiflags;
 .float shotcount;

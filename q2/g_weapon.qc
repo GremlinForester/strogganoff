@@ -48,13 +48,32 @@ void(vector entOrg, vector aimAngle, float speed, float damage, float clr, float
 	newmis.movetype = MOVETYPE_FLYMISSILE;
 	newmis.solid = SOLID_BBOX;
 	newmis.classname = "blasterbolt";
-	newmis.glow_color = clr;
-	newmis.glow_size = glowSize;	//100
-	newmis.light_lev = lightLev;	//200
     newmis.modelflags = MF_TRACER2;
-	newmis.color = '1 0 0'; // color (does not affect radius), typical value '1 1 1' (bright white), can be up to '255 255 255' (nuclear blast)
-	newmis.style = 6; // light style (like normal light entities, flickering torches or switchable, etc)
-	newmis.pflags = PFLAGS_FULLDYNAMIC; // flags (see PFLAGS_ constants)
+	
+	if (self.weapon == WEP_HYPERBLASTER)
+	{
+//		if (self.shotcount >= 2)
+		if (self.weaponframe == 6 || self.weaponframe == 9)
+		{
+			newmis.color = '1 0 0'; // color (does not affect radius), typical value '1 1 1' (bright white), can be up to '255 255 255' (nuclear blast)
+			newmis.style = 6; // light style (like normal light entities, flickering torches or switchable, etc)
+			newmis.pflags = PFLAGS_NOSHADOW | PFLAGS_FULLDYNAMIC;
+			newmis.glow_color = clr;
+			newmis.glow_size = glowSize;	//100
+			newmis.light_lev = lightLev;	//200
+//			self.shotcount = 0;	
+		}
+	}
+	
+	if (self.weapon == WEP_BLASTER)
+	{
+			newmis.color = '1 0 0'; // color (does not affect radius), typical value '1 1 1' (bright white), can be up to '255 255 255' (nuclear blast)
+			newmis.style = 6; // light style (like normal light entities, flickering torches or switchable, etc)
+			newmis.pflags = PFLAGS_NOSHADOW | PFLAGS_FULLDYNAMIC; // flags (see PFLAGS_ constants)
+			newmis.glow_color = clr;
+			newmis.glow_size = glowSize;	//100
+			newmis.light_lev = lightLev;	//200
+	}
 
 // set missile speed
 

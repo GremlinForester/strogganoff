@@ -986,14 +986,6 @@ void() W_WeaponFrame =
 	else{
 		self.viewzoom = 1.0;
 	}
-	
-	if (self.button4){
-			crouch_on ();
-	}
-	else
-	{
-		crouch_off ();
-	}
 };
 
 /*
