@@ -716,7 +716,9 @@ float () BotPreFrame =
 			bot_start_topic(2);
 		self.b_frags = self.frags;
 	}
+	
 	DynamicWaypoint();
+	
 	return FALSE;
 };
 float () BotPostFrame =

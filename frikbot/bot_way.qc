@@ -255,6 +255,7 @@ entity way_foot; // Ugh. Do I need a foot for this or not?
 entity(vector org) make_waypoint = 
 {
 	local entity point;
+
 	point = spawn();
 	point.classname = "waypoint";
 	point.search_time = time; // don't double back for me;
@@ -262,8 +263,8 @@ entity(vector org) make_waypoint =
 	point.movetype = MOVETYPE_NONE;
 	point.items = -1;
 	setorigin(point, org);
-		if (autocvar_bot_print_waypointcreate == 1)
-		bprint ("dynamic waypoint created\n");
+//		if (autocvar_bot_create_dynamic_waypoint == 1)
+	bprint ("dynamic waypoint created\n");
 	setsize(point, VEC_HULL_MIN, VEC_HULL_MAX);
 	waypoints = waypoints + 1;
 	if (!way_head)
@@ -495,8 +496,11 @@ void() DynamicWaypoint =
 
 #endif
 	
-	t = make_waypoint(self.dyn_dest);
-
+//	if (autocvar_bot_create_dynamic_waypoint == 1)
+//	{
+		t = make_waypoint(self.dyn_dest);
+//	}
+	
 	if (!self.dyn_flags)
 	{
 		if (wisible(t, self.current_way))

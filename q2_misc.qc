@@ -1115,16 +1115,6 @@ void() rtlight_use =
 		self.glow_size = 0;
 };
 
-void() rtlight_think =
-{
-//	if (self.spawnflags & MOVING){
-//		self.tag_entity = find(world, targetname, self.parent);	
-//	}
-
-	self.think = rtlight_think;
-	self.nextthink = time + 0.1;		
-};
-
 void() rtlight =
 {
 	self.classname = "rtlight";
@@ -1162,6 +1152,4 @@ void() rtlight =
 	
 	self.avelocity = self.avelocity;
 	self.style = self.style;
-//	self.think = rtlight_think;
-//	self.nextthink = time + 0.1;
 };

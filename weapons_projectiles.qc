@@ -191,7 +191,7 @@ void(vector start, vector aimdir, float damage) fireRail =
 	impact_point.movetype = MOVETYPE_NONE;
 	impact_point.effects = self.effects | EF_LOWPRECISION;
 	impact_point.nextthink = time + 0.01;
-	setmodel (impact_point, "models/objects/flash/tris.md2");
+	setmodel (impact_point, "");
 	impact_point.think = SUB_Remove;
 	
 	if (trace_ent.takedamage)
@@ -270,7 +270,7 @@ void(float damage) FireBullet =
 	impact_point.movetype = MOVETYPE_NONE;
 	impact_point.effects = self.effects | EF_LOWPRECISION;
 	impact_point.nextthink = time + 0.1;
-	setmodel (impact_point, "models/objects/flash/tris.md2");
+	setmodel (impact_point, "");
 	impact_point.think = SUB_Remove;
 	
 	if (self.weapon == WEP_MACHINEGUN)
@@ -345,7 +345,7 @@ void(float damage, vector dir) Q3SurfaceTraceAttack =
 	impact_point.movetype = MOVETYPE_NONE;
 	impact_point.effects = self.effects | EF_LOWPRECISION;
 	impact_point.nextthink = time + 0.01;
-	setmodel (impact_point, "models/objects/flash/tris.md2");
+	setmodel (impact_point, "");
 	impact_point.think = SUB_Remove;
 	
 	if (trace_ent.takedamage && trace_ent.flags & FL_MONSTER || trace_ent.classname == "player")

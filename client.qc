@@ -852,181 +852,9 @@ entity() SelectSpawnPoint =
 	return spot;
 };
 
-// MrC: Thanks goes to Quake 1.5 for pointing me in the right direction on this.
-
-void() UpdateTPWeaponFrames =
-{
-	if (self.owner.health <= 0)
-	{
-		remove(self);
-		return;
-	}
-
-	if (self.owner.playerType == PT_MALE)
-	{
-		switch (self.owner.weapon)
-		{
-		case WEP_BLASTER:
-			setmodel (self, "players/male/w_blaster.md2");
-			break;
-		case WEP_SHOTGUN:
-			setmodel (self, "players/male/w_shotgun.md2");
-			break;
-		case WEP_SUPERSHOTGUN:
-			setmodel (self, "players/male/w_sshotgun.md2");
-			break;
-		case WEP_MACHINEGUN:
-			setmodel (self, "players/male/w_machinegun.md2");
-			break;
-		case WEP_CHAINGUN:
-			setmodel (self, "players/male/w_chaingun.md2");
-			break;
-		case WEP_GRENADE_LAUNCHER:
-			setmodel (self, "players/male/w_glauncher.md2");
-			break;
-		case WEP_ROCKET_LAUNCHER:
-			setmodel (self, "players/male/w_rlauncher.md2");
-			break;
-		case WEP_RAILGUN:
-			setmodel (self, "players/male/w_railgun.md2");
-			break;
-		case WEP_HYPERBLASTER:
-			setmodel (self, "players/male/w_hyperblaster.md2");
-			break;
-		case WEP_BFG:
-			setmodel (self, "players/male/w_bfg.md2");
-			break;
-		}	
-	}
-	
-	if (self.owner.playerType == PT_FEMALE)
-	{
-		switch (self.owner.weapon)
-		{
-		case WEP_BLASTER:
-			setmodel (self, "players/female/w_blaster.md2");
-			break;
-		case WEP_SHOTGUN:
-			setmodel (self, "players/female/w_shotgun.md2");
-			break;
-		case WEP_SUPERSHOTGUN:
-			setmodel (self, "players/female/w_sshotgun.md2");
-			break;
-		case WEP_MACHINEGUN:
-			setmodel (self, "players/female/w_machinegun.md2");
-			break;
-		case WEP_CHAINGUN:
-			setmodel (self, "players/female/w_chaingun.md2");
-			break;
-		case WEP_GRENADE_LAUNCHER:
-			setmodel (self, "players/female/w_glauncher.md2");
-			break;
-		case WEP_ROCKET_LAUNCHER:
-			setmodel (self, "players/female/w_rlauncher.md2");
-			break;
-		case WEP_RAILGUN:
-			setmodel (self, "players/female/w_railgun.md2");
-			break;
-		case WEP_HYPERBLASTER:
-			setmodel (self, "players/female/w_hyperblaster.md2");
-			break;
-		case WEP_BFG:
-			setmodel (self, "players/female/w_bfg.md2");
-			break;
-		}
-	}
-	
-	if (self.owner.playerType == PT_OTHER)
-	{
-		switch (self.owner.weapon)
-		{
-		case WEP_BLASTER:
-			setmodel (self, "players/cyborg/w_blaster.md2");
-			break;
-		case WEP_SHOTGUN:
-			setmodel (self, "players/cyborg/w_shotgun.md2");
-			break;
-		case WEP_SUPERSHOTGUN:
-			setmodel (self, "players/cyborg/w_sshotgun.md2");
-			break;
-		case WEP_MACHINEGUN:
-			setmodel (self, "players/cyborg/w_machinegun.md2");
-			break;
-		case WEP_CHAINGUN:
-			setmodel (self, "players/cyborg/w_chaingun.md2");
-			break;
-		case WEP_GRENADE_LAUNCHER:
-			setmodel (self, "players/cyborg/w_glauncher.md2");
-			break;
-		case WEP_ROCKET_LAUNCHER:
-			setmodel (self, "players/cyborg/w_rlauncher.md2");
-			break;
-		case WEP_RAILGUN:
-			setmodel (self, "players/cyborg/w_railgun.md2");
-			break;
-		case WEP_HYPERBLASTER:
-			setmodel (self, "players/cyborg/w_hyperblaster.md2");
-			break;
-		case WEP_BFG:
-			setmodel (self, "players/cyborg/w_bfg.md2");
-			break;
-		}		
-	}
-
-	if (self.owner.items & IT_INVISIBILITY){
-		self.alpha = .05;
-		self.owner.alpha = 0.05;
-	}
-	else{
-		self.alpha = 1;
-		self.owner.alpha = 1; //yea this is sort of dumb putting this here, didn't work in CheckPowerups and I've reached fuckit.
-	}
-		
-	if (self.owner.items & IT_QUAD)
-		self.effects = EF_NOSHADOW;
-	else
-	#ifdef q2model_lighting
-			self.effects = EF_FULLBRIGHT;
-	#endif
-	#ifndef q2model_lighting
-			self.effects = 0;
-	#endif
-
-	#ifdef q2model_lighting
-	self.colormod = getlight(self.owner.origin); //MrC Lightgrid workaround
-	#endif
-	self.frame = self.owner.frame;
-	
-	self.think = UpdateTPWeaponFrames;
-	self.nextthink = time;
-};
-
-void() AttachTPWeapon =
-{
-	local entity playerTPWeapon;
-	
-	playerTPWeapon = spawn();
-	setorigin (playerTPWeapon, '0 0 0');
-	playerTPWeapon.owner = self;
-//	setorigin (playerTPWeapon, self.owner.origin);
-	playerTPWeapon.netname = "playerTPWeapon";
-	playerTPWeapon.solid = SOLID_NOT;
-	playerTPWeapon.movetype = MOVETYPE_NOCLIP;
-	playerTPWeapon.exteriormodeltoclient = self;
-	
-	#ifdef q2model_lighting
-	playerTPWeapon.effects = EF_FULLBRIGHT; //MrC Lightgrid workaround
-	#endif	
-	
-	playerTPWeapon.think = UpdateTPWeaponFrames;
-	playerTPWeapon.nextthink = time;
-
-	setattachment(playerTPWeapon, self, "");
-};
-
 /*
 ===========
-PutClientInServer
+setPlayerModel
 
 called each time a player is spawned
 ============
@@ -1072,9 +900,16 @@ void(entity ent) setPlayerModel =
 	{
 		setmodel (ent, "players/cyborg/tris.md2");
 		setsize (ent, VEC_HULL_MIN, VEC_HULL_MAX);
-
 	}
 }
+
+/*
+===========
+PutClientInServer
+
+called each time a player is spawned
+============
+*/
 
 void() PutClientInServer =
 {
@@ -1151,8 +986,9 @@ void() PutClientInServer =
 	
 //	spot = SelectSpawnPoint ();
 
-//	self.playerType = PT_MALE;
+	//self.playerType = PT_MALE;
 
+	
 #ifdef opgrade
 	self.oldorigin = 
 #endif
@@ -1173,6 +1009,8 @@ void() PutClientInServer =
 	setPlayerModel(self);
 	q2Player_stand();
 	AttachTPWeapon();
+	spawnPowerupShell();
+	spawnPLRpowerupShell();	
 	
 	//setup player v_wep state machine
 	self.weapon_next = self.weapon;
@@ -1691,10 +1529,10 @@ void() PlayerPreThink =
 #ifdef FRIKBOT
 
 // frikbot tie-in
-
+	if (autocvar_bot_create_dynamic_waypoint == 1){ //MrC: temp "fix", will move this later.
 	if ( BotPreFrame () )
 		return ;
-
+}
 #endif
 
 	if (intermission_running)
@@ -1885,10 +1723,12 @@ void() CheckPowerups =
 			self.invincible_time = 0;
 			self.invincible_finished = 0;
 		}
+		/*
 		if (self.invincible_finished > time)
 			self.effects = self.effects | EF_DIMLIGHT;
 		else
 			self.effects = self.effects - (self.effects & EF_DIMLIGHT);
+		*/
 	}
 
 // super damage
@@ -1916,14 +1756,20 @@ void() CheckPowerups =
 
 		if (self.super_damage_finished < time)
 		{	// just stopped
-			self.items = self.items - IT_QUAD;
+		//	self.items = self.items - IT_QUAD;
+			removeBitsFromEntity(self,items,IT_QUAD);
 			self.super_damage_finished = 0;
 			self.super_time = 0;
 		}
-		if (self.super_damage_finished > time)
-			self.effects = self.effects | EF_DIMLIGHT;
-		else
-			self.effects = self.effects - (self.effects & EF_DIMLIGHT);
+		/*
+		if (self.super_damage_finished > time){
+			self.effects = self.effects | EF_BLUE;
+		//	removeBitsFromEntity(self,pflags,PFLAGS_NOSHADOW);
+		}
+		else{
+			self.effects = self.effects - (self.effects & EF_BLUE);
+		}
+		*/
 	}	
 
 // suit	

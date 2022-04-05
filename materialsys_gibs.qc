@@ -280,6 +280,7 @@ void(string gibname, float dm, float GibType, float gibScale) ThrowGib =
 	nspawn.avelocity_x = random()*600;
 	nspawn.avelocity_y = random()*600;
 	nspawn.avelocity_z = random()*600;
+	nspawn.effects = EF_LOWPRECISION;	
 	nspawn.think = GibPhysicsThinkPreRemove;
 	nspawn.ltime = time;
 	nspawn.nextthink = time + 10 + random()*10;

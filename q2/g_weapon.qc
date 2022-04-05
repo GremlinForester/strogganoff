@@ -267,7 +267,7 @@ void(vector start, vector end, float damage) fire_railgun_base={
 	impact_point.movetype = MOVETYPE_NONE;
 	impact_point.effects = self.effects | EF_LOWPRECISION;
 	impact_point.nextthink = time + 0.01;
-	setmodel (impact_point, "models/objects/flash/tris.md2");
+	setmodel (impact_point, "");
 	impact_point.think = SUB_Remove;
 	
 	if (trace_ent.takedamage)

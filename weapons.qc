@@ -705,8 +705,10 @@ void() UseInventoryItem =
 			if (self.inv_pickup_quad > 0){
 			self.inv_pickup_quad -= 1;
 			self.super_time = 1;
-			self.super_damage_finished = time + 30;
-			self.items = self.items | IT_QUAD;
+			self.super_damage_finished += time + 30;
+			//self.items = self.items | IT_QUAD;
+			addBitsToEntity(self,items,IT_QUAD);
+			//spawnPLRpowerupShell();			
 			}
 			else{
 					sprint (self, "out of item ");
@@ -846,6 +848,90 @@ void() q2player_taunt;
 void() q2player_wave;
 void() q2player_point;
 
+.float nextpingtime;
+
+void() q2player_ping_think =
+{
+	if (self.owner.health <= 0)
+	{
+		remove(self);
+		return;
+	}
+
+	if (!self.alpha)
+		self.alpha = 1;
+
+	self.alpha = self.alpha - 0.04;
+	
+	if (self.alpha < 0.02){
+		self.think = SUB_Remove;
+	}
+	else{
+		self.think = q2player_ping_think;
+	}
+
+	self.nextthink = time + 0.1;	
+}
+
+void(string model, float skinnum, float tim) q2player_ping_point =
+{
+	local	vector	source;
+	local	vector	org;
+	local entity q2playerping;
+	
+	makevectors (self.v_angle);
+	source = self.origin + '0 0 16';
+	traceline (source, source + v_forward*4096, FALSE, self);
+	if (trace_fraction == 1.0)
+		return;
+	
+	org = trace_endpos - v_forward*4;
+
+	if (time < self.nextpingtime)
+		return;	
+	
+	q2playerping = spawn();
+	q2playerping.movetype = MOVETYPE_NONE;
+	q2playerping.solid = SOLID_NOT;
+	q2playerping.effects = q2playerping.effects + EF_ADDITIVE + EF_NODEPTHTEST + EF_LOWPRECISION;
+	q2playerping.owner = self;
+	q2playerping.classname = "q2playerping";
+	q2playerping.alpha = 1;
+	q2playerping.skin = skinnum;
+	setmodel(q2playerping, model);
+	setorigin(q2playerping, org);
+	sound7(q2playerping, CHAN_AUTO, "misc/keytry.wav", 1.0, ATTN_NORM, 0, 0);
+	q2playerping.think = q2player_ping_think;
+	q2playerping.nextthink = time + tim;
+	self.nextpingtime = time + 1; //prevent spamming	
+};
+
+void(string model, float skinnum, float tim) q2player_ping =
+{
+	local entity q2playerping;
+
+	if (time < self.nextpingtime)
+		return;	
+	
+	//play ping sound
+	q2playerping = spawn();
+	q2playerping.movetype = MOVETYPE_NONE;
+	q2playerping.solid = SOLID_NOT;
+	q2playerping.effects = q2playerping.effects + EF_ADDITIVE + EF_NODEPTHTEST + EF_LOWPRECISION;
+	q2playerping.owner = self;
+	q2playerping.classname = "q2playerping";
+	q2playerping.alpha = 1;
+	q2playerping.skin = skinnum;
+	setmodel(q2playerping, model);
+	setorigin(q2playerping, self.origin + '0 0 24');
+	sound7(self, CHAN_AUTO, "misc/keytry.wav", 1.0, ATTN_NORM, 0, 0);	
+	q2playerping.think = q2player_ping_think;
+	q2playerping.nextthink = time + tim;
+	self.nextpingtime = time + 1; //prevent spamming
+}
+
+void(entity) setPlayerModel;
+
 void() ImpulseCommands =
 {
 	if (self.impulse == IMPULSE_TOSS_WEAPON){
@@ -934,21 +1020,85 @@ void() ImpulseCommands =
 
 	if(self.impulse == IMPULSE_WAVE){
 		if (self.flags & FL_DUCKED){
+			
+			if (coop)
+			{
+				q2player_ping("models/mapobjects/hub/stroggos_system/logo_strogg.MD3", 0, 0.1);
+				self.impulse = 0;
+			}
 			return;
 		}
 
-		sprint (self, "WAVE");		
+		if (coop)
+		{
+			q2player_ping("models/mapobjects/hub/stroggos_system/logo_strogg.MD3", 0, 0.1);
+		}
+
+		sprint (self, "WAVE");
 		q2player_wave();
 	}
 
 	if(self.impulse == IMPULSE_POINT){
 		if (self.flags & FL_DUCKED){
+			
+			if (coop)
+			{
+				q2player_ping_point("models/mapobjects/hub/stroggos_system/logo_strogg.MD3", 0, 0.1);
+				self.impulse = 0;
+			}
 			return;
+		}
+
+		if (coop)
+		{
+			q2player_ping_point("models/mapobjects/hub/stroggos_system/logo_strogg.MD3", 0, 0.1);
 		}
 
 		sprint (self, "POINT");		
 		q2player_point();
 	}
+	
+	if(self.impulse == IMPULSE_SETPLAYERMALE){
+		if (self.flags & FL_DUCKED){
+			return;
+		}
+
+		if (deathmatch || coop)
+		{
+			return;
+		}
+
+		self.playerType = PT_MALE;
+		setPlayerModel(self);
+	}
+
+	if(self.impulse == IMPULSE_SETPLAYERFEMALE){
+		if (self.flags & FL_DUCKED){
+			return;
+		}
+
+		if (deathmatch || coop)
+		{
+			return;
+		}
+
+		self.playerType = PT_FEMALE;
+		setPlayerModel(self);
+	}
+
+	if(self.impulse == IMPULSE_SETPLAYERCYBORG){
+		if (self.flags & FL_DUCKED){
+			return;
+		}
+
+		if (deathmatch || coop)
+		{
+			return;
+		}
+
+		self.playerType = PT_OTHER;
+		setPlayerModel(self);
+	}	
 
 	self.impulse = 0;
 };

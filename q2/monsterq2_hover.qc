@@ -184,6 +184,7 @@ void() hover_deadthink={
 		return;
 	}
 	gibMonster();
+	remove(self);
 };
 
 void() hover_dead={

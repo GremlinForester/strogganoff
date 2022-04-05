@@ -9,6 +9,9 @@ Prints messages and opens key doors
 */
 void() q2door_touch =
 {
+	if ((self.owner.spawnflags & NOMONSTER) && (other.flags & FL_MONSTER))
+		return;	
+	
 	if (other.classname != "player")
 		return;
 	

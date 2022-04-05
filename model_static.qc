@@ -5,6 +5,8 @@
 .float anim_lastframe_hold;
 
 .float bUseEnable;
+.float bUseEnvLight;
+
 .float onUse;
 
 .float oscale; //original scale
@@ -12,6 +14,7 @@
 .float eState;
 
 #define HOLOGRAM 1
+//#define SOLID_BSP 2
 
 .vector holo_color;
 
@@ -29,21 +32,31 @@ void() model_static_think =
 {
 	local float closedframe = self.anim_startframe;
 	local float openframe = self.anim_lastframe;
-	
+
 	if (self.parent){
 		self.tag_entity = find(world, targetname, self.parent);	
 		self.owner = find(world, targetname, self.parent);
 		setorigin (self, self.origin - self.owner.origin);
 
 		self.origin = self.origin + self.owner.origin;
+			
+		if (self.holo_color){
+			self.colormod = self.holo_color;
+		}
+		else
+		{
+			self.colormod = getlight(self.origin + self.owner.origin);
+		}	
 	}
 	
 	if (self.spawnflags & HOLOGRAM)
 	{
+		self.colormod = self.holo_color;
+		
 		self.alpha = 0.75 + random();
 		
 		if (random() < 0.2){
-			self.scale = self.oscale + (random() / 16);
+			self.scale = self.oscale + (random() / 14);
 		}
 		else{
 			self.scale = self.oscale;
@@ -87,7 +100,7 @@ void() model_static_think =
 			LOG("Open");
 			self.eState = OPEN;	
 			self.bUseEnable = TRUE;
-			self.solid = SOLID_BSP;			
+		//	self.solid = SOLID_BSP;			
 		}
 		else{
 			LOG("Opening");
@@ -102,7 +115,7 @@ void() model_static_think =
 			LOG("Closed");
 			self.eState = CLOSED;	
 			self.bUseEnable = TRUE;
-			self.solid = SOLID_BSP;			
+		//	self.solid = SOLID_BSP;			
 		}
 		else{
 			LOG("Closing");
@@ -218,10 +231,11 @@ void() model_static_init =
 		self.solid = SOLID_BBOX;		
 		self.takedamage = DAMAGE_YES;
 	}
-	
+
 	if (!self.scale)
 		self.scale = 1.0;
-	self.nextthink = time + self.delay;
+	
+	self.nextthink = time + 0.1;
 	self.think = model_static_think;
 }
 
@@ -229,31 +243,52 @@ void() model_static =
 {
 	self.classname = "model_static";	
 	makevectors(self.angles);
-	if (self.spawnflags & HOLOGRAM)
-	{
-		self.solid = SOLID_NOT;
-	}
-	else
+	
+	/*
+	if (self.spawnflags & SOLID_BSP)
 	{
 		self.solid = SOLID_BSP;
 	}
+	else
+	{
+		self.solid = SOLID_NOT;
+	}
+	*/
+	
+	self.solid = SOLID_NOT;	
+	
+	/*
+	if (self._color){
+		self.colormod = self._color;
+	}
+	
+	if (self.bUseEnvLight){
+		self.colormod = getlight(self.origin);
+	}
+	*/
+	
 	self.movetype = MOVETYPE_NOCLIP;
 	precache_model(self.model);
 	setorigin (self, self.origin);
+
+	if (self.holo_color){
+		self.colormod = self.holo_color;
+	}
+	
 	setmodel (self, self.model);
 	self.eState = CLOSED;
-	self.effects = self.effects | EF_LOWPRECISION;
+//	self.effects = self.effects | EF_LOWPRECISION;
 	self.oscale = self.scale;
 	self.max_health = self.health;
 	self.takedamage = DAMAGE_NO;
-	self.skin = 0;
+//	self.skin = 0;
 	self.th_die = model_static_die;
 	self.use = model_static_use;	
 	self.th_pain = model_static_pain;
 	self.scale = self.modelscale;
 	self.avelocity = self.avelocity;
 
-	self.nextthink = time;
+	self.nextthink = time + 0.1;
 	self.think = model_static_init;
 	
 	if (self.bUseEnable == 1){
@@ -271,7 +306,6 @@ void() model_static =
 
 	if (self.spawnflags & HOLOGRAM)
 	{
-		self.colormod = self.holo_color;
 		self.effects = self.effects | EF_ADDITIVE | EF_DOUBLESIDED;	
 	}
 };

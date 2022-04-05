@@ -59,6 +59,22 @@ float maxdecors;
 #define VLOG(x) bprint(vtos(x));bprint("\n")
 #define FLOG(x) bprint(ftos(x));bprint("\n")
 
+/*
+============
+Some bit functions
+============
+*/
+
+void(entity ent, .float field, float bits) addBitsToEntity =
+{
+	ent.field |= bits;
+}
+
+void(entity ent, .float field, float bits) removeBitsFromEntity =
+{
+	ent.field -= (ent.field & bits);
+}
+
 //MrC: FixMe: use shared/reserved appearflags if there are any in defs or something
 
 #define DOOR_START_OPEN				1
@@ -218,7 +234,7 @@ var float autocvar_cl_printpos = 0;
 var float autocvar_cl_printstate = 0;
 var float autocvar_cl_printroomsize = 0;
 //var float autocvar_cl_playertype = 0;
-var float autocvar_bot_print_waypointcreate = 0;
+var float autocvar_bot_create_dynamic_waypoint = 0;
 
 /*
 ============
@@ -604,7 +620,7 @@ WEAPONS
 IMPULSE VALUES
 ============
 */
-#define IMPULSE_TOSS_WEAPON 13
+
 
 #define IMPULSE_USE_WEAPON1 1
 #define IMPULSE_USE_WEAPON2 2
@@ -619,6 +635,8 @@ IMPULSE VALUES
 #define IMPULSE_USE_WEAPON11 11 //grenade
 
 #define IMPULSE_SVFLAGS_CMD 12
+
+#define IMPULSE_TOSS_WEAPON 13
 
 #define IMPULSE_WEAPON_NEXT 30
 #define IMPULSE_WEAPON_PREV 31
@@ -636,6 +654,10 @@ IMPULSE VALUES
 #define IMPULSE_TAUNT 112
 #define IMPULSE_WAVE 113
 #define IMPULSE_POINT 114
+
+#define IMPULSE_SETPLAYERMALE 115
+#define	IMPULSE_SETPLAYERFEMALE 116
+#define	IMPULSE_SETPLAYERCYBORG 117
 
 //FrikBot Waypoint Edit Impulses
 /*

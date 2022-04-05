@@ -18,6 +18,444 @@ vector() wall_velocity =
 	return vel;
 };
 
+// MrC: Thanks goes to Quake 1.5 for pointing me in the right direction on this.
+
+/*
+===========
+Client effects:
+3rd person weapon model
+3rd person powerup effects shell effects (quad/invul/invis)
+1st person viewmodel powerup shell effects (quad/invul/invis)
+
+called in PutClientInServer in client.qc
+============
+*/
+
+/*
+===========
+
+3rd person player model effect entity THINK and INIT
+
+============
+*/
+
+void() update_plrpowerupshell_frames =
+{
+	if (self.owner.health <= 0)
+	{
+		remove(self);
+		return;
+	}
+
+	if ((self.owner.items & IT_QUAD) && (self.owner.items & IT_INVULNERABILITY))
+	{
+		if(self.owner.playerType == PT_MALE)
+		{
+			setmodel (self, "players/male/tris.md2");
+			self.skin = 15;		
+		}
+		else if (self.owner.playerType == PT_FEMALE)
+		{
+			setmodel (self, "players/female/tris.md2");
+			self.skin = 10;			
+		}
+		else
+		{
+			setmodel (self, "players/cyborg/tris.md2");
+			self.skin = 3;			
+		}
+		
+		self.alpha = 0.85;
+		self.colormod = '4 1 4';
+	}
+	else if (self.owner.items & IT_QUAD)
+	{
+		if(self.owner.playerType == PT_MALE)
+		{
+			setmodel (self, "players/male/tris.md2");
+			self.skin = 15;	
+		}
+		else if (self.owner.playerType == PT_FEMALE)
+		{
+			setmodel (self, "players/female/tris.md2");
+			self.skin = 10;
+		}
+		else
+		{
+			setmodel (self, "players/cyborg/tris.md2");
+			self.skin = 3;		
+		}
+		
+		self.alpha = 0.85;
+		self.colormod = '1 1 4';
+	}
+	else if (self.owner.items & IT_INVULNERABILITY)
+	{
+		if(self.owner.playerType == PT_MALE)
+		{
+			setmodel (self, "players/male/tris.md2");
+			self.skin = 15;	
+		}
+		else if (self.owner.playerType == PT_FEMALE)
+		{
+			setmodel (self, "players/female/tris.md2");
+			self.skin = 10;			
+		}
+		else
+		{
+			setmodel (self, "players/cyborg/tris.md2");
+			self.skin = 3;
+		}
+		
+		self.alpha = 0.85;
+		self.colormod = '4 1 1';
+	}
+	else
+	{
+		self.alpha = 0.85;	
+		self.skin = 99;
+	//	self.effects = 0;
+		setmodel (self, "");
+		self.colormod = '1 1 1';
+	//	remove(self);		
+	}
+	
+	if (self.owner.items & IT_INVISIBILITY){
+		removeBitsFromEntity(self,effects,EF_FULLBRIGHT);
+		self.alpha = 0.05;		
+	}
+	else
+	{
+		if(!self.effects & EF_FULLBRIGHT)
+		{
+			addBitsToEntity(self,effects,EF_FULLBRIGHT);
+		}
+		self.alpha = 0.85;	
+	}
+	
+	self.frame = self.owner.frame;	
+	self.think = update_plrpowerupshell_frames;
+	self.nextthink = time;
+};
+
+void() spawnPLRpowerupShell =
+{
+	local entity plrpowerupShell;	
+
+	plrpowerupShell = spawn();
+	setorigin (plrpowerupShell, '0 0 0');
+	plrpowerupShell.owner = self;
+	plrpowerupShell.netname = "plrpowerupShell";
+	plrpowerupShell.solid = SOLID_NOT;
+	plrpowerupShell.scale = 1.06;	
+	plrpowerupShell.movetype = MOVETYPE_NOCLIP;
+	plrpowerupShell.exteriormodeltoclient = self;
+	plrpowerupShell.effects = plrpowerupShell.effects | EF_FULLBRIGHT;	
+	plrpowerupShell.think = update_plrpowerupshell_frames;
+	plrpowerupShell.nextthink = time;
+	setattachment(plrpowerupShell, self, "");	
+};
+
+/*
+===========
+
+3rd person weapon model entity THINK and INIT
+
+============
+*/
+
+void() UpdateTPWeaponFrames =
+{
+	if (self.owner.health <= 0)
+	{
+		remove(self);
+		return;
+	}
+
+	if (self.owner.playerType == PT_MALE)
+	{
+		switch (self.owner.weapon)
+		{
+		case WEP_BLASTER:
+			setmodel (self, "players/male/w_blaster.md2");
+			break;
+		case WEP_SHOTGUN:
+			setmodel (self, "players/male/w_shotgun.md2");
+			break;
+		case WEP_SUPERSHOTGUN:
+			setmodel (self, "players/male/w_sshotgun.md2");
+			break;
+		case WEP_MACHINEGUN:
+			setmodel (self, "players/male/w_machinegun.md2");
+			break;
+		case WEP_CHAINGUN:
+			setmodel (self, "players/male/w_chaingun.md2");
+			break;
+		case WEP_GRENADE_LAUNCHER:
+			setmodel (self, "players/male/w_glauncher.md2");
+			break;
+		case WEP_ROCKET_LAUNCHER:
+			setmodel (self, "players/male/w_rlauncher.md2");
+			break;
+		case WEP_RAILGUN:
+			setmodel (self, "players/male/w_railgun.md2");
+			break;
+		case WEP_HYPERBLASTER:
+			setmodel (self, "players/male/w_hyperblaster.md2");
+			break;
+		case WEP_BFG:
+			setmodel (self, "players/male/w_bfg.md2");
+			break;
+		}	
+	}
+	
+	if (self.owner.playerType == PT_FEMALE)
+	{
+		switch (self.owner.weapon)
+		{
+		case WEP_BLASTER:
+			setmodel (self, "players/female/w_blaster.md2");
+			break;
+		case WEP_SHOTGUN:
+			setmodel (self, "players/female/w_shotgun.md2");
+			break;
+		case WEP_SUPERSHOTGUN:
+			setmodel (self, "players/female/w_sshotgun.md2");
+			break;
+		case WEP_MACHINEGUN:
+			setmodel (self, "players/female/w_machinegun.md2");
+			break;
+		case WEP_CHAINGUN:
+			setmodel (self, "players/female/w_chaingun.md2");
+			break;
+		case WEP_GRENADE_LAUNCHER:
+			setmodel (self, "players/female/w_glauncher.md2");
+			break;
+		case WEP_ROCKET_LAUNCHER:
+			setmodel (self, "players/female/w_rlauncher.md2");
+			break;
+		case WEP_RAILGUN:
+			setmodel (self, "players/female/w_railgun.md2");
+			break;
+		case WEP_HYPERBLASTER:
+			setmodel (self, "players/female/w_hyperblaster.md2");
+			break;
+		case WEP_BFG:
+			setmodel (self, "players/female/w_bfg.md2");
+			break;
+		}
+	}
+	
+	if (self.owner.playerType == PT_OTHER)
+	{
+		switch (self.owner.weapon)
+		{
+		case WEP_BLASTER:
+			setmodel (self, "players/cyborg/w_blaster.md2");
+			break;
+		case WEP_SHOTGUN:
+			setmodel (self, "players/cyborg/w_shotgun.md2");
+			break;
+		case WEP_SUPERSHOTGUN:
+			setmodel (self, "players/cyborg/w_sshotgun.md2");
+			break;
+		case WEP_MACHINEGUN:
+			setmodel (self, "players/cyborg/w_machinegun.md2");
+			break;
+		case WEP_CHAINGUN:
+			setmodel (self, "players/cyborg/w_chaingun.md2");
+			break;
+		case WEP_GRENADE_LAUNCHER:
+			setmodel (self, "players/cyborg/w_glauncher.md2");
+			break;
+		case WEP_ROCKET_LAUNCHER:
+			setmodel (self, "players/cyborg/w_rlauncher.md2");
+			break;
+		case WEP_RAILGUN:
+			setmodel (self, "players/cyborg/w_railgun.md2");
+			break;
+		case WEP_HYPERBLASTER:
+			setmodel (self, "players/cyborg/w_hyperblaster.md2");
+			break;
+		case WEP_BFG:
+			setmodel (self, "players/cyborg/w_bfg.md2");
+			break;
+		}		
+	}
+
+	if (self.owner.items & IT_INVISIBILITY){
+		self.alpha = .05;
+		self.owner.alpha = 0.05;
+	}
+	else{
+		self.alpha = 1;
+		self.owner.alpha = 1; //yea this is sort of dumb putting this here, didn't work in CheckPowerups and I've reached fuckit.
+	}
+		
+	if (self.owner.items & IT_QUAD)
+		self.effects = EF_NOSHADOW;
+	else
+	#ifdef q2model_lighting
+			self.effects = EF_FULLBRIGHT;
+	#endif
+	#ifndef q2model_lighting
+			self.effects = 0;
+	#endif
+
+	#ifdef q2model_lighting
+	self.colormod = getlight(self.owner.origin); //MrC Lightgrid workaround
+	#endif
+	self.frame = self.owner.frame;
+	
+	self.think = UpdateTPWeaponFrames;
+	self.nextthink = time;
+};
+
+void() AttachTPWeapon =
+{
+	local entity playerTPWeapon;
+	
+	playerTPWeapon = spawn();
+	setorigin (playerTPWeapon, '0 0 0');
+	playerTPWeapon.owner = self;
+//	setorigin (playerTPWeapon, self.owner.origin);
+	playerTPWeapon.netname = "playerTPWeapon";
+	playerTPWeapon.solid = SOLID_NOT;
+	playerTPWeapon.movetype = MOVETYPE_NOCLIP;
+	playerTPWeapon.exteriormodeltoclient = self;
+	
+	#ifdef q2model_lighting
+	playerTPWeapon.effects = EF_FULLBRIGHT; //MrC Lightgrid workaround
+	#endif	
+	
+	playerTPWeapon.think = UpdateTPWeaponFrames;
+	playerTPWeapon.nextthink = time;
+
+	setattachment(playerTPWeapon, self, "");
+};
+
+/*
+===========
+
+1st person player model effect mesh THINK and INIT
+
+============
+*/
+
+void() updatePowerupShellFrames =
+{
+	if (self.owner.health <= 0)
+	{
+		remove(self);
+		return;
+	}
+	
+	switch (self.owner.weapon)
+	{
+	case WEP_BLASTER:
+		setmodel (self, "models/weapons/v_blast/tris.md2");
+		break;
+	case WEP_SHOTGUN:
+		setmodel (self, "models/weapons/v_shotg/tris.md2");
+		break;
+	case WEP_SUPERSHOTGUN:
+		setmodel (self, "models/weapons/v_shotg2/tris.md2");
+		break;
+	case WEP_MACHINEGUN:
+		setmodel (self, "models/weapons/v_machn/tris.md2");
+		break;
+	case WEP_CHAINGUN:
+		setmodel (self, "models/weapons/v_chain/tris.md2");
+		break;
+	case WEP_GRENADE_LAUNCHER:
+		setmodel (self, "models/weapons/v_launch/tris.md2");
+		break;
+	case WEP_ROCKET_LAUNCHER:
+		setmodel (self, "models/weapons/v_rocket/tris.md2");
+		break;
+	case WEP_RAILGUN:
+		setmodel (self, "models/weapons/v_rail/tris.md2");
+		break;
+	case WEP_HYPERBLASTER:
+		setmodel (self, "models/weapons/v_hyperb/tris.md2");
+		break;
+	case WEP_BFG:
+		setmodel (self, "models/weapons/v_bfg/tris.md2");
+		break;
+	}	
+
+	//this needs work!
+
+	if (self.owner.items & IT_INVISIBILITY)
+	{
+		self.skin = 0;
+		self.alpha = 0.2;
+		removeBitsFromEntity(self,effects,EF_FULLBRIGHT);		
+		//	self.colormod = '1 1 1';	
+	}
+	
+	if ((self.owner.items & IT_QUAD) && (self.owner.items & IT_INVULNERABILITY))
+	{
+		self.alpha = 0.85;		
+		self.skin = 1;
+		self.colormod = '4 1 4';
+	}
+	else if (self.owner.items & IT_QUAD)
+	{
+		if(!self.effects & EF_FULLBRIGHT)
+		{
+			addBitsToEntity(self,effects,EF_FULLBRIGHT);
+		}		
+		self.alpha = 0.85;		
+		self.skin = 1;
+		self.colormod = '1 1 4';
+	}
+	else if (self.owner.items & IT_INVULNERABILITY)
+	{
+		if(!self.effects & EF_FULLBRIGHT)
+		{
+			addBitsToEntity(self,effects,EF_FULLBRIGHT);
+		}		
+		self.alpha = 0.85;		
+		self.skin = 1;
+		self.colormod = '4 1 1';
+	}
+	else
+	{
+		if(!self.effects & EF_FULLBRIGHT)
+		{
+			addBitsToEntity(self,effects,EF_FULLBRIGHT);
+		}
+		self.alpha = 0.85;	
+		self.skin = 0;
+	//	self.effects = 0;
+		setmodel (self, "");
+		self.colormod = '1 1 1';		
+	}
+	
+	self.frame = self.owner.weaponframe;	
+	self.think = updatePowerupShellFrames;
+	self.nextthink = time;
+};
+
+void() spawnPowerupShell =
+{
+	local entity powerupShell;
+
+	powerupShell = spawn();
+	powerupShell.movetype = MOVETYPE_NONE;
+	powerupShell.solid = SOLID_NOT;
+	powerupShell.viewmodelforclient = self;
+	powerupShell.owner = self;
+	powerupShell.classname = "powerupShell";
+	powerupShell.alpha = 0.85;
+	setsize(powerupShell, '0 0 0', '0 0 0');
+	setorigin(powerupShell, '-0.1 0.1 0.1');
+	powerupShell.scale = 1.06;
+	powerupShell.effects = powerupShell.effects | EF_FULLBRIGHT;	
+	powerupShell.think = updatePowerupShellFrames;
+	powerupShell.nextthink = time + 0.1;	
+};
 
 /*
 ================
@@ -149,6 +587,8 @@ void(float num_bubbles) DeathBubbles =
 #undef bubble_spawner
 };
 
+//Thanks to LadyHavoc for DPMOD from which the newdecor/breakable stuff is based. 
+
 entity(entity e) newdecor =
 {
 	if (e == world)
@@ -224,7 +664,7 @@ void(vector pos, float mfsize, float trans) SpawnMuzzleFlash =			//Spawns a firs
 };
 
 .float numoverlays;
-float maxoverlays = 4;
+float maxoverlays = 4; //FIXME: should be field not global?
 
 void() SetVModelOverlay_fade_fast =
 {

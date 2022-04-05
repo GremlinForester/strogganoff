@@ -19,8 +19,6 @@ target (requires IS_TRAIL)
 Trigger to toggle between ON/OFF states.
 
 */
-.string myparticle;
-.string myendparticle;
 
 //float ESTATE_ON = 1;		// Switch ON
 #define IS_TRAIL 2
