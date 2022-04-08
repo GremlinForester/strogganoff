@@ -1,0 +1,46 @@
+Args: win64-fteqcc.exe -Wno-mundan -srcfile menu.src
+:: warning: Unrecognised warning parameter (-Wno-mundan)
+FTEQCC: 5595 (2019-12-17T19:21:29.947488Z)
+Source file: menu.src
+outputfile: ../../menu.dat
+compiling defs/menudefs.qc
+compiling common/input_keynums.qh
+compiling common/ui/ui_color_constants.qc
+compiling common/data/camp_loader.qh
+compiling common/ui/gui_api.qh
+compiling common/data/data_values_game.qc
+compiling defs/headers/menu.qh
+compiling defs/headers/menu_gfx.qh
+compiling defs/headers/menu_api.qh
+compiling defs/utils.qc
+compiling common/ui/gui_api.qc
+compiling common/ui/ui_color_player.qc
+compiling defs/menu_api.qc
+compiling common/data/data_campaign.qc
+compiling menu_main.qc
+compiling menus/m_main.qc
+compiling menus/m_training.qc
+compiling menus/m_camp.qc
+compiling menus/m_newsave.qc
+compiling menus/m_newgame.qc
+compiling menus/m_load.qc
+compiling menus/m_save.qc
+compiling menus/m_multiplayer.qc
+compiling menus/m_setup.qc
+compiling menus/m_host.qc
+compiling menus/m_join.qc
+compiling menus/m_options.qc
+compiling menus/m_options_controls.qc
+compiling menus/m_options_graphics.qc
+compiling menus/m_options_effects.qc
+compiling menus/m_options_gfx.qc
+compiling menus/m_options_audio.qc
+compiling menus/m_options_gameplay.qc
+compiling menus/m_credits.qc
+compiling menus/m_help.qc
+:: warning Q208: system defs not recognised from quake nor clones, probably buggy (sys)defs.qc
+
+common/ui/gui_api.qh:46: warning Q302: vector VIEW_VF_ORG  no references.
+common/ui/gui_api.qh:47: warning Q302: vector VIEW_FOV  no references.
+Compile finished: ../../menu.dat (id format)
+Done. 3 warnings
