@@ -51,21 +51,14 @@ void() m_init={
   UI_KEYBIND_ACTIVE = FALSE;
   SUB_MENU = FALSE;
     
-  FONT_NUM_ROBOT_LIGHT = loadfont("Roboto_Light", "gfx/fonts/Roboto_Light", "8 12 16 32", FONT_USER, FALSE, FALSE);
-  FONT_NUM_ROBOT_THIN = loadfont("Roboto_Thin", "gfx/fonts/Roboto_Thin", "8 12 16 32", FONT_USER1, FALSE, FALSE);
-  FONT_NUM_ROBOT_REGULAR = loadfont("Roboto_Regular", "gfx/fonts/Roboto_Regular", "8 12 16 32", FONT_USER2, FALSE, FALSE);
-  FONT_NUM_ROBOT_MEDIUM = loadfont("Roboto_Medium", "gfx/fonts/Roboto_Medium", "8 12 16 32", FONT_USER3, FALSE, FALSE);
-  loadfont("Roboto-Light", "gfx/fonts/Roboto_Light", "6 8 10 12 16", FONT_DEFAULT, FALSE, FALSE);
-  loadfont("Roboto_Regular", "gfx/fonts/Roboto_Regular", "6 8 10 12 16", FONT_CONSOLE, FALSE, FALSE);
-  FONT_NUM_DYSTOPIAN = loadfont("Dystopian_Future", "gfx/fonts/Dystopian_Future", "6 8 10 12 16", FONT_USER4, FALSE, FALSE);
-  FONT_NUM_XOLONIUM_BOLD = loadfont("Xolonium Bold", "gfx/fonts/Xolonium-Bold", "10 12 16 24 32", FONT_USER5, FALSE, FALSE);
+  FONT_NUM_BLACK_OPS_ONE = loadfont("BlackOpsOne-Regular", "gfx/BlackOpsOne-Regular", "8 10 12 14 16 18 24 36", FONT_USER, FALSE, FALSE);
   
   menu_ini_ratelist();
   
   //setup textfield key filter;
   menu_ini_txtfilter();
-  RESO_CHANGE = TRUE;
-  
+  RESO_CHANGE = FALSE;
+  gui_set_screen_size(cvar("vid_width"), cvar("vid_height"));
 };
 
 /*
@@ -174,17 +167,17 @@ void(float width, float height) m_draw={
       VIEW_ACT_x = width;
       VIEW_ACT_y = height;
       VIEW_ACT_z = cvar("vid_pixelheight");
-      gui_set_screen_size(VIEW_ACT_x, VIEW_ACT_y);
     }
-    if(MAIN_MISSION){
-      drawfill(VIEW_ORG, VIEW_MAX, '0.1 0.1 0.1', 0.75, 0);
-    }
+    //originally background splash image when
+    //if(MAIN_MISSION){
+    //  drawfill(VIEW_ORG, VIEW_MAX, '0.1 0.1 0.1', 0.75, 0);
+    //}
     
     
-    if( clientstate() == CS_DISCONNECTED){
+    /*if( clientstate() == CS_DISCONNECTED){
       bimg = gui_newAspectRatio(drawgetimagesize("gfx/menu/splash.tga"), Vector2(VIEW_WIDTH, VIEW_MAX_y));
       drawpic(VIEW_ORG, "gfx/menu/splash.tga", bimg, '1 1 1', 1, 0);
-    }
+    }*/
     if(cvar("developer")){
       gui_drawversion();
     }
@@ -258,11 +251,11 @@ void(float width, float height) m_draw={
 
   m_drawmouse(DRAW_MOUSE);
   //DEBUG
-  /*drawstring('4 4', vtos(getmousepos()), '8 8 0', '1 1 1', 1, 0);
+  drawstring('4 4', vtos(getmousepos()), '8 8 0', '1 1 1', 1, 0);
   drawstring('4 14', ftos(VIEW_MAX_x), '8 8 0', '1 1 1', 1, 0);
   drawstring('48 14', ftos(VIEW_MAX_y), '8 8 0', '1 1 1', 1, 0);
   drawstring('4 24', strcat("mouse : ", ftos(MOUSE_DOWN)), '8 8 0', '1 1 1', 1, 0);
-  drawstring('4 34', strcat("target : ", MOUSE_TARGET.classname), '8 8 0', '1 1 1', 1, 0);*/
+  drawstring('4 34', strcat("target : ", MOUSE_TARGET.classname), '8 8 0', '1 1 1', 1, 0);
 };
 
 /*
@@ -315,7 +308,7 @@ void(float drawmous) m_drawmouse={
   if(drawmous){
     
     i_sz = drawgetimagesize(UI_IMG_MOUSE);
-    i_sz = gui_scaleSize(i_sz, VIEW_SCALE / 1.25);
+    i_sz = gui_scaleSize(i_sz, 0.75);
 
     mpos_x = VIEW_MPOS_x;
     mpos_y = VIEW_MPOS_y;

@@ -1,5 +1,5 @@
 /*
-battleMETAL
+  threshold3 
   author: Peter Roohr
   date: 04/11/2018
   overview: header for menu system
@@ -44,11 +44,7 @@ float MOUSE_DOWN_COUNT;
 float MAIN_MISSION;
 
 float drawfont_prev;
-float FONT_NUM_ROBOT_LIGHT;
-float FONT_NUM_ROBOT_THIN;
-float FONT_NUM_ROBOT_REGULAR;
-float FONT_NUM_ROBOT_MEDIUM;
-float FONT_NUM_DYSTOPIAN;
+float FONT_NUM_BLACK_OPS_ONE;
 
 string MAPS_COOP[128];
 string MAPS_TDM[128];

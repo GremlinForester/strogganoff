@@ -1,5 +1,5 @@
 /*
-  battleMETAL
+  threshold3
   author: Peter Roohr
   date: 04/13/2018
   overview: impl of menu_api
@@ -58,7 +58,7 @@ entity() new_ui_elm={
     self.color = '0 0 0';
     self.select_color = '0 0 0';
     self.subid = FALSE;
-    self.fontId = FONT_NUM_ROBOT_REGULAR;
+    self.fontId = FONT_NUM_BLACK_OPS_ONE;
   self = this;
   return element;
 };
@@ -206,6 +206,7 @@ entity(vector org, vector siz, string txt, vector clr, float algn, float menu_id
 */
 entity(vector org, vector siz, string txt, float algn, float menu_id, void() click, vector clr, vector hclr, float alph, float flgs) btn_text_callback={
   local entity newBtn, this;
+  local float txt_len;
   
   newBtn = btn_new_blank();
   this = self;
@@ -221,6 +222,28 @@ entity(vector org, vector siz, string txt, float algn, float menu_id, void() cli
     self.alpha = alph;
     self.color = clr;
     self.select_color = hclr;
+
+    self.drawOrg = self.origin;
+    
+    drawfont_prev = drawfont;
+    drawfont = self.fontId;
+    if( (self.flags & UI_FLAG_SIZE_IMG) ){
+      txt_len = stringwidth(self.label, 0, self.size * 0.5);
+      self.drawSize_x = txt_len;  //for some reason this is misbehaving and results in double-wide pixel length!?
+      self.drawSize_y = self.size_y;
+    }
+    else{
+      self.drawSize_x = self.size_x;
+      self.drawSize_y = self.size_y;
+    }
+    
+    if( (self.align & VIEW_CTX) ){
+      self.drawOrg_x = self.drawOrg_x - (self.drawSize_x / 2);
+    }
+    if( (self.align & VIEW_CTY) ){
+      self.drawOrg_y = self.drawOrg_y - (self.drawSize_y / 2);
+    }
+    drawfont = drawfont_prev;
   self = this;
   return newBtn;
 };
@@ -306,12 +329,14 @@ void(entity btn) render_btn={
       org_x = self.origin_x;
       org_y = self.origin_y;
       
-      sizzle_x = self.size_x;
-      sizzle_y = self.size_y;
       
       if( (self.flags & UI_FLAG_SIZE_IMG) && self.image1 != ""){
         sizzle = draw_getimagesize(self.image1);
         sizzle = gui_scaleSize(sizzle, VIEW_SCALE);
+      }
+      else{
+        sizzle_x = self.size_x;
+        sizzle_y = self.size_y;
       }
       self.drawSize = sizzle;
       
@@ -357,35 +382,16 @@ void(entity btn) render_btn={
 
 void(entity btn) render_btn_txt={
   local entity this;
-  local vector org, sizzle, bclr;
-        local float txt_len;
+  local vector bclr;
   
   if(btn.drawme){
     this = self;
     self = btn;
-      org_x = self.origin_x;
-      org_y = self.origin_y;
-      
-      sizzle_x = self.size_x;
-      sizzle_y = self.size_y;
-      if( (self.flags & UI_FLAG_SIZE_IMG) ){
-        txt_len = stringwidth(self.label, 0, self.size);
-        sizzle_x = txt_len * 1.25;  //magik number for width because raw stringwidth() doesn't seem to be accurate?
-        sizzle_y = self.size_y;
-      }
-      
-      if( (self.align & VIEW_CTX) ){
-        org_x = org_x - (sizzle_x / 2);
-      }
-      if( (self.align & VIEW_CTY) ){
-        org_y = org_y - (sizzle_y / 2);
-      }
-      
-      self.drawSize = sizzle;
-      self.drawOrg = org;
+
+      //drawfill(self.drawOrg, self.drawSize, '0.75 0.75 0.75', 0.5, 0); //debug
       
       bclr = self.color;
-      if(menu_checkMouseInBounds(VIEW_MPOS, org, sizzle)){
+      if(menu_checkMouseInBounds(VIEW_MPOS, self.drawOrg, self.drawSize)){
         MOUSE_TARGET = self;
         if( self.rolledover == FALSE){ 
           localsound("sound/misc/menu3.wav");
@@ -406,7 +412,7 @@ void(entity btn) render_btn_txt={
       }
       drawfont_prev = drawfont;
       drawfont = self.fontId;
-        drawstring(org, self.label, self.size, bclr, self.alpha, 0);
+        drawstring(self.drawOrg, self.label, self.size, bclr, self.alpha, 0);
       drawfont = drawfont_prev;
     self = this;
   }
@@ -511,7 +517,7 @@ void(entity lbl) render_lbl_text={
         }
       }
       if( (self.flags & UI_FLAG_SIZE_IMG) ){
-        txt_len = stringwidth(self.label, 0, self.size);
+        txt_len = stringwidth(self.label, 0, self.size * 0.5);
         sizzle_x = txt_len;
         sizzle_y = self.size_y;
       }
@@ -542,8 +548,6 @@ void(entity lbl) render_lbl_img={
       org_x = self.origin_x;
       org_y = self.origin_y;
       
-      sizzle_x = self.size_x;
-      sizzle_y = self.size_y;
       if( (self.flags & UI_FLAG_SIZE_IMG) ){
         sizzle = draw_getimagesize(self.image1);
         sizzle = gui_scaleSize(sizzle, VIEW_SCALE);
@@ -551,7 +555,10 @@ void(entity lbl) render_lbl_img={
       else if( (self.flags & UI_FLAG_IMG_SIZE_ASPECT) ){
         sizzle = draw_getimagesize(self.image1);
         sizzle = gui_newAspectRatio(sizzle, self.size);
-        
+      }
+      else{
+        sizzle_x = self.size_x;
+        sizzle_y = self.size_y;
       }
 
       if( (self.align & VIEW_CTX) || (self.flags & UI_FLAG_CENTER_IMG) ){
@@ -683,7 +690,7 @@ void(entity txt) render_bindfield={
       
       if( self.image1 != "" ){
         drawfont_prev = drawfont;
-        drawfont = FONT_NUM_ROBOT_REGULAR;
+        drawfont = FONT_NUM_BLACK_OPS_ONE;
           labelOrg = self.origin - Vector2(stringwidth(self.image1, 0, self.size - (self.size * 0.15)), 0);
           drawstring(labelOrg, self.image1, self.size - (self.size * 0.15), CLR_DEF_TXT_NONSELECT, self.alpha, 0); 
         drawfont = drawfont_prev;
@@ -1105,7 +1112,11 @@ string(float val) menu_float_bool={
 void(vector mOrg, vector mSize) menu_parent_setup={
   MENU_ORG = mOrg;
   MENU_SIZE = mSize;
-  MENU_CTR = mOrg + (mSize * 0.5);
+  MENU_CTR = MENU_ORG + (MENU_SIZE * 0.5);
+  
+  cons_logAVector("MENU_ORG", MENU_ORG);  //debug
+  cons_logAVector("MENU_SIZE", MENU_SIZE);  //debug
+  cons_logAVector("MENU_CTR", MENU_CTR);  //debug
 };
 
 vector( float y ) menu_parent_center_width={
@@ -1125,6 +1136,8 @@ vector( float x ) menu_parent_center_height={
   
   return v;
 };
+
+
 
 /*
   only allow these keys when typing in textfield

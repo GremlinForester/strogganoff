@@ -1,5 +1,5 @@
 /*
-battleMETAL
+threshold3
 Author: Peter Roohr
 Date: 4/16/2018
 Overview: 
@@ -163,8 +163,8 @@ void() join_refresh_action={
 void() join_back_click={
   localsound("sound/misc/menu2.wav");
   menu_clear_items(M_STATE);
-  M_STATE = M_MULTI;
-  m_multi_f();
+  M_STATE = M_MAIN;
+  m_main_f();
 };
 
 // ini function, called by '_f' function as a setup func
@@ -190,25 +190,25 @@ void() m_join_i={
   join_server_pagenext = btn_img_callback(MENU_ORG + '52 45', '16 16', UI_IMG_ARW_RGT, 0, M_JOIN, join_server_page_next, '1 1 1', CLR_DEF_IIF_FRIEND_BLD, 1, 0) ;
   
   join_refresh_btn =  btn_text_callback(MENU_ORG + '100 45', '16 16', "Refresh", 0, M_JOIN, join_refresh_action, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_IIF_FRIEND, 1, UI_FLAG_SIZE_IMG);
-  join_refresh_btn.fontId = FONT_NUM_XOLONIUM_BOLD;
+  join_refresh_btn.fontId = FONT_NUM_BLACK_OPS_ONE;
   
   join_server_name = btn_text_callback(MENU_ORG + '10 65', '16 16', "Server", 0, M_JOIN, join_sort_name, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_IIF_FRIEND, 1, UI_FLAG_SIZE_IMG);
-  join_server_name.fontId = FONT_NUM_XOLONIUM_BOLD;
+  join_server_name.fontId = FONT_NUM_BLACK_OPS_ONE;
   
   join_server_ping = btn_text_callback(MENU_ORG + '135 65', '16 16', "Ping", 0, M_JOIN, join_sort_ping, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_IIF_FRIEND, 1, UI_FLAG_SIZE_IMG);
-  join_server_ping.fontId = FONT_NUM_XOLONIUM_BOLD;
+  join_server_ping.fontId = FONT_NUM_BLACK_OPS_ONE;
   
   join_server_map = btn_text_callback(MENU_ORG + '185 65', '16 16', "Map", 0, M_JOIN, join_sort_map, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_IIF_FRIEND, 1, UI_FLAG_SIZE_IMG);
-  join_server_map.fontId = FONT_NUM_XOLONIUM_BOLD;
+  join_server_map.fontId = FONT_NUM_BLACK_OPS_ONE;
   
   join_server_numplayer = btn_text_callback(MENU_ORG + '235 65', '16 16', "Players", 0, M_JOIN, join_sort_numplayer, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_IIF_FRIEND, 1, UI_FLAG_SIZE_IMG);
-  join_server_numplayer.fontId = FONT_NUM_XOLONIUM_BOLD;
+  join_server_numplayer.fontId = FONT_NUM_BLACK_OPS_ONE;
   
   join_server_mods = btn_text_callback(MENU_ORG + '300 65', '16 16', "Mod", 0, M_JOIN, join_sort_players, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_IIF_FRIEND, 1, UI_FLAG_SIZE_IMG);  
-  join_server_mods.fontId = FONT_NUM_XOLONIUM_BOLD;
+  join_server_mods.fontId = FONT_NUM_BLACK_OPS_ONE;
   
   join_back = btn_text_callback(MENU_ORG + '45 380', '16 16', "BACK", VIEW_CTX, M_JOIN, join_back_click, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, UI_FLAG_SIZE_IMG);
-  join_back.fontId = FONT_NUM_XOLONIUM_BOLD;
+  join_back.fontId = FONT_NUM_BLACK_OPS_ONE;
 };
 
 /*
@@ -244,14 +244,14 @@ void(float serverCacheId, vector ofset, float svPing, float svMaxPlayers, string
   }
   
   drawfont_prev = drawfont;
-  drawfont = FONT_NUM_ROBOT_MEDIUM;
+  drawfont = FONT_NUM_BLACK_OPS_ONE;
   
     gui_renderString(serverName, ofset , '1 1 1', '12 12 0', 1, 0);
   
-  drawfont = FONT_NUM_ROBOT_LIGHT;
+  drawfont = FONT_NUM_BLACK_OPS_ONE;
     gui_renderString(serverIp, ofset + '0 12', '1 1 1', '10 10 0', 1, 0);
   
-  drawfont = FONT_NUM_ROBOT_MEDIUM;
+  drawfont = FONT_NUM_BLACK_OPS_ONE;
     
     gui_renderString(ftos(svPing), ofset + '135 0', '1 1 1', '12 12 0', 1, 0);
     
@@ -285,7 +285,7 @@ void() m_join_d={
   }
   
   drawfont_prev = drawfont;
-  drawfont = FONT_NUM_ROBOT_MEDIUM;
+  drawfont = FONT_NUM_BLACK_OPS_ONE;
     gui_renderString( ftos(SERVER_PAGE), join_server_pageprev.origin + '26 0', '1 1 1', '16 16 0', 1, 0);
   drawfont = drawfont_prev;
   
@@ -339,8 +339,8 @@ void(float key, float ascii) m_join_k={
     case K_ESCAPE:
       localsound("sound/misc/menu2.wav");
       menu_clear_items(M_STATE);
-      M_STATE = M_MULTI;
-      m_multi_f();
+      M_STATE = M_MAIN;
+      m_main_f();
       break;
   }
 };

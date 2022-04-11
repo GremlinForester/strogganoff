@@ -1,5 +1,5 @@
 /*
-battleMETAL
+threshold3
 Author: Peter Roohr
 Date: 4/17/2018
 Overview: options - audio menu
@@ -498,10 +498,10 @@ void() m_audio_i={
   
   //operations
   audio_back = btn_text_callback(MENU_ORG + '40 272', '16 16', "BACK", VIEW_CTX, M_OPTIONS_AUDIO, click_audio_back, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, UI_FLAG_SIZE_IMG);
-  audio_back.fontId = FONT_NUM_XOLONIUM_BOLD;
+  audio_back.fontId = FONT_NUM_BLACK_OPS_ONE;
   
   audio_save = btn_text_callback(MENU_ORG + '245 272', '16 16', "ACCEPT", VIEW_CTX, M_OPTIONS_AUDIO, click_audio_save, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, UI_FLAG_SIZE_IMG);
-  audio_save.fontId = FONT_NUM_XOLONIUM_BOLD;
+  audio_save.fontId = FONT_NUM_BLACK_OPS_ONE;
 
 };
 
@@ -521,7 +521,7 @@ void() m_audio_f={
 */
 void() m_audio_d={
   drawfont_prev = drawfont;
-  drawfont = FONT_NUM_ROBOT_REGULAR;
+  drawfont = FONT_NUM_BLACK_OPS_ONE;
   
   gui_renderPatch9_1_32(MENU_ORG, MENU_SIZE, '0.35 0.35 0.55', 0.85, 0);
   

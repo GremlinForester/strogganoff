@@ -1,8 +1,6 @@
 /*
 battleMETAL
 Author: Peter Roohr
-Date: 4/11/2018
-mod: 07/30/2019
 Overview: 
   definition file for a menu ui.
   
@@ -14,23 +12,23 @@ on how to use menu.dat.
 entity main_title;
 entity main_label;
 entity main_leave;
-entity main_camp;
-entity main_training;
+entity main_host;
+entity main_player;
 entity main_options;
-entity main_multi;
-entity main_help;
-entity main_credits;
+entity main_join;
+//entity main_help;
+//entity main_credits;
 entity main_quit;
 
 entity main_player_options; //link to player options during network play
 
 //Main Menu Constants
-string IMG_MULTI_PLAYERSETUP   = "gfx/menu/multi/multi_playersetup.png";
+/*string IMG_MULTI_PLAYERSETUP   = "gfx/menu/multi/multi_playersetup.png";
 string IMG_MAIN_TITLE  = "gfx/menu/main/main_title.png";
 string IMG_MAIN_PAUSE  = "gfx/pause.png";
 string IMG_MAIN_LBL    = "gfx/menu/main/main_label.png";
 
-string IMG_MAIN_LEAVE = "gfx/menu/quit_mission.png";
+string IMG_MAIN_LEAVE = "gfx/menu/quit_mission.png";*/
 
 string IMG_TITLE;
 //string IMG_QUIT;
@@ -38,22 +36,22 @@ string IMG_TITLE;
 //Main callbacks
 //because we define these right before the menu functions are defined, we 
 //don't have to put them in a header, and they can be 'somewhat' flexibily generated
-void() click_main_camp={
+void() click_main_player={
   menu_clear_items(M_STATE);
-  M_STATE = M_SINGLE;
-  m_camp_f();
+  M_STATE = M_SETUP;
+  m_setup_f();
 };
 
-void() click_main_train={
+void() click_main_host={
   menu_clear_items(M_STATE);
-  M_STATE = M_TRAINING;
-  m_train_f();
+  M_STATE = M_HOST;
+  m_host_f();
 };
 
-void() click_main_multi={
+void() click_main_join={
   menu_clear_items(M_STATE);
-  M_STATE = M_MULTI;
-  m_multi_f();
+  M_STATE = M_JOIN;
+  m_join_f();
 };
 
 void() click_main_quit={
@@ -65,18 +63,6 @@ void() click_main_options={
   menu_clear_items(M_STATE);
   M_STATE = M_OPTIONS;
   m_options_f();
-};
-
-void() click_main_help={
-  menu_clear_items(M_STATE);
-  M_STATE = M_HELP;
-  m_help_f();
-};
-
-void() click_main_credits={
-  menu_clear_items(M_STATE);
-  M_STATE = M_CREDITS;
-  m_credits_f();
 };
 
 void() click_main_leave={
@@ -111,65 +97,63 @@ void() m_main_i={
   if( VIEW_ACT == '0 0 0'){
     VIEW_ACT = [cvar("vid_width"), cvar("vid_height"), 0];
   }
-  gui_set_screen_size(VIEW_ACT_x, VIEW_ACT_y);  //ugh
+  //gui_set_screen_size(VIEW_ACT_x, VIEW_ACT_y);  //ugh
   
-  if( MAIN_MISSION ){
-    menu_parent_setup(VIEW_ORG + '0 80', '208 192');
+  /*if( MAIN_MISSION ){
+    menu_parent_setup([UI_CTR_x - 196/2, VIEW_ORG_y + 40], '196 266');
     
-    IMG_TITLE = IMG_MAIN_PAUSE;
-    mainTitleFlag = UI_FLAG_SIZE_IMG;
+    IMG_TITLE = IMG_MAIN_PAUSE;   
+    main_label = lbl_img(menu_parent_center_width(5), '1 1', IMG_TITLE, '1 1 1', VIEW_CTX | VIEW_CTY, M_MAIN, 1, UI_FLAG_SIZE_IMG );
     
-    main_label = lbl_img(MENU_ORG + menu_parent_center_width(5), '1 1', IMG_TITLE, '1 1 1', VIEW_CTX, M_MAIN, 1, mainTitleFlag );
+    main_player_options = btn_text_callback( menu_parent_center_width(45), '18 18', "PLAYER SETUP", VIEW_CTX | VIEW_CTY, M_MAIN, click_main_player_setup, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, UI_FLAG_SIZE_IMG);
+    main_player_options.fontId = FONT_NUM_BLACK_OPS_ONE;
     
-    main_player_options = btn_text_callback(MENU_ORG + menu_parent_center_width(45), '16 16', "PLAYER SETUP", VIEW_CTX, M_MAIN, click_main_player_setup, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, UI_FLAG_SIZE_IMG);
-    main_player_options.fontId = FONT_NUM_XOLONIUM_BOLD;
+    orgOptions = menu_parent_center_width(64);
     
-    orgOptions = MENU_ORG + menu_parent_center_width(64);
+    orgHelp =  menu_parent_center_width(83);
     
-    orgHelp = MENU_ORG + menu_parent_center_width(83);
+    main_leave = btn_text_callback( menu_parent_center_width(121), '16 16', "LEAVE", VIEW_CTX | VIEW_CTY, M_MAIN, click_main_leave, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, UI_FLAG_SIZE_IMG);
+    main_leave.fontId = FONT_NUM_BLACK_OPS_ONE;
     
-    main_leave = btn_text_callback(MENU_ORG + menu_parent_center_width(121), '16 16', "LEAVE", VIEW_CTX, M_MAIN, click_main_leave, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, UI_FLAG_SIZE_IMG);
-    main_leave.fontId = FONT_NUM_XOLONIUM_BOLD;
-    
-    orgQuit = MENU_ORG + menu_parent_center_width(159);
+    orgQuit =  menu_parent_center_width(159);
   }
-  else{
-    menu_parent_setup(VIEW_ORG + '0 40', '208 256');
+  else{*/
+    menu_parent_setup([UI_CTR_x - 196/2, VIEW_ORG_y + 64], '196 266');
     
-    IMG_TITLE = IMG_MAIN_LBL;
-    mainTitleFlag = UI_FLAG_SIZE_IMG;
-    main_title = lbl_img(MENU_ORG + menu_parent_center_width(10), '1 1 0', IMG_MAIN_TITLE, '1.5 0.75 0.35', VIEW_CTX, M_MAIN, 1, UI_FLAG_SIZE_IMG );
+    //IMG_TITLE = IMG_MAIN_LBL;
+    //main_title = lbl_img(MENU_ORG + menu_parent_center_width(0), '1 1 0', IMG_MAIN_TITLE, '1.5 0.75 0.35', VIEW_CTX | VIEW_CTY, M_MAIN, 1, UI_FLAG_SIZE_IMG );
+    main_title = lbl_text( menu_parent_center_width(74), '18 18', "STROGGANOFF", '1.5 0.75 0.35', VIEW_CTX | VIEW_CTY, M_MAIN, 1, UI_FLAG_SIZE_IMG );
     
-    main_label = lbl_img(MENU_ORG + menu_parent_center_width(60), '1 1', IMG_TITLE, '1 1 1', VIEW_CTX, M_MAIN, 1, mainTitleFlag );
+    //main_label = lbl_img( menu_parent_center_width(0), '1 1', IMG_TITLE, '1 1 1', VIEW_CTX | VIEW_CTY, M_MAIN, 1, UI_FLAG_SIZE_IMG );
     
-    main_training = btn_text_callback(MENU_ORG + menu_parent_center_width(92), '16 16', "TRAINING", VIEW_CTX, M_MAIN, click_main_train, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, UI_FLAG_SIZE_IMG);
-    main_training.fontId = FONT_NUM_XOLONIUM_BOLD;
+    main_player = btn_text_callback( menu_parent_center_width(112), '14 14', "PLAYER SETUP", VIEW_CTX | VIEW_CTY, M_MAIN, click_main_player, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, UI_FLAG_NOLABEL|UI_FLAG_SIZE_IMG);
+    main_player.fontId = FONT_NUM_BLACK_OPS_ONE;
     
-    main_camp = btn_text_callback(MENU_ORG + menu_parent_center_width(111), '16 16', "CAMPAIGN", VIEW_CTX, M_MAIN, click_main_camp, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, (UI_FLAG_NOLABEL | UI_FLAG_SIZE_IMG));
-    main_camp.fontId = FONT_NUM_XOLONIUM_BOLD;
+    main_host = btn_text_callback( menu_parent_center_width(131), '14 14', "HOST GAME", VIEW_CTX | VIEW_CTY, M_MAIN, click_main_host, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, (UI_FLAG_NOLABEL | UI_FLAG_SIZE_IMG));
+    main_host.fontId = FONT_NUM_BLACK_OPS_ONE;
     
-    main_multi = btn_text_callback(MENU_ORG + menu_parent_center_width(130), '16 16', "MULTIPLAYER", VIEW_CTX, M_MAIN, click_main_multi, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, (UI_FLAG_NOLABEL | UI_FLAG_SIZE_IMG));
-    main_multi.fontId = FONT_NUM_XOLONIUM_BOLD;
+    main_join = btn_text_callback( menu_parent_center_width(150), '14 14', "JOIN GAME", VIEW_CTX | VIEW_CTY, M_MAIN, click_main_join, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, (UI_FLAG_NOLABEL | UI_FLAG_SIZE_IMG));
+    main_join.fontId = FONT_NUM_BLACK_OPS_ONE;
     
-    orgOptions = MENU_ORG + menu_parent_center_width(149);
-    orgHelp = MENU_ORG + menu_parent_center_width(169);
+    orgOptions =  menu_parent_center_width(169);
+    orgHelp =  menu_parent_center_width(169);
     
-    main_credits = btn_text_callback(MENU_ORG + menu_parent_center_width(189), '16 16', "CREDITS", VIEW_CTX, M_MAIN, click_main_credits, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, (UI_FLAG_NOLABEL | UI_FLAG_SIZE_IMG));
-    main_credits.fontId = FONT_NUM_XOLONIUM_BOLD;
+    //main_credits = btn_text_callback(MENU_ORG + menu_parent_center_width(189), '16 16', "CREDITS", VIEW_CTX, M_MAIN, click_main_credits, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, (UI_FLAG_NOLABEL | UI_FLAG_SIZE_IMG));
+    //main_credits.fontId = FONT_NUM_BLACK_OPS_ONE;
     
-    orgQuit = MENU_ORG + menu_parent_center_width(209);
+    orgQuit =  menu_parent_center_width(188);
     
-  }
+  //}
   
   
-  main_options = btn_text_callback(orgOptions, '16 16', "OPTIONS", VIEW_CTX, M_MAIN, click_main_options, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, (UI_FLAG_NOLABEL | UI_FLAG_SIZE_IMG));
-  main_options.fontId = FONT_NUM_XOLONIUM_BOLD;
+  main_options = btn_text_callback(orgOptions, '14 14', "OPTIONS", VIEW_CTX | VIEW_CTY, M_MAIN, click_main_options, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, (UI_FLAG_NOLABEL | UI_FLAG_SIZE_IMG));
+  main_options.fontId = FONT_NUM_BLACK_OPS_ONE;
   
-  main_help = btn_text_callback(orgHelp, '16 16', "HELP", VIEW_CTX, M_MAIN, click_main_help, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, (UI_FLAG_NOLABEL | UI_FLAG_SIZE_IMG));
-  main_help.fontId = FONT_NUM_XOLONIUM_BOLD;
+  //main_help = btn_text_callback(orgHelp, '16 16', "HELP", VIEW_CTX | VIEW_CTY, M_MAIN, click_main_help, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, (UI_FLAG_NOLABEL | UI_FLAG_SIZE_IMG));
+  //main_help.fontId = FONT_NUM_BLACK_OPS_ONE;
   
-  main_quit = btn_text_callback(orgQuit, '16 16', "QUIT", VIEW_CTX, M_MAIN, click_main_quit, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, (UI_FLAG_NOLABEL | UI_FLAG_SIZE_IMG));
-  main_quit.fontId = FONT_NUM_XOLONIUM_BOLD;
+  main_quit = btn_text_callback(orgQuit, '14 14', "QUIT", VIEW_CTX | VIEW_CTY, M_MAIN, click_main_quit, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, (UI_FLAG_NOLABEL | UI_FLAG_SIZE_IMG));
+  main_quit.fontId = FONT_NUM_BLACK_OPS_ONE;
 };
 
 /*

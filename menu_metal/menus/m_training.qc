@@ -1,5 +1,5 @@
 /*
-battleMETAL
+threshold3
 Author: Peter Roohr
 Date: 5/22/2021
 Overview: training menu
@@ -55,16 +55,16 @@ void() m_train_i={
   train_title = lbl_text(MENU_ORG + menu_parent_center_width(5), '16 16', "TUTORIALS", '1 1 1', VIEW_CTX, M_TRAINING, 1, UI_FLAG_SIZE_IMG);
   
   train_move_btn = btn_text_callback(MENU_ORG + menu_parent_center_width(125), '16 16', ">Movement<", VIEW_CTX, M_TRAINING, click_train_move, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_GREEN, 1, UI_FLAG_SIZE_IMG);
-  train_move_btn.fontId = FONT_NUM_XOLONIUM_BOLD;
+  train_move_btn.fontId = FONT_NUM_BLACK_OPS_ONE;
   
   train_shoot_btn = btn_text_callback(MENU_ORG + menu_parent_center_width(150), '16 16', ">Shooting<", VIEW_CTX, M_TRAINING, click_train_shoot, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_GREEN, 1, UI_FLAG_SIZE_IMG);
-  train_shoot_btn.fontId = FONT_NUM_XOLONIUM_BOLD;
+  train_shoot_btn.fontId = FONT_NUM_BLACK_OPS_ONE;
   
   train_brieft_btn = btn_text_callback(MENU_ORG + menu_parent_center_width(175), '16 16', ">Briefing and Arming<", VIEW_CTX, M_TRAINING, click_train_brief, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_GREEN, 1, UI_FLAG_SIZE_IMG);
-  train_brieft_btn.fontId = FONT_NUM_XOLONIUM_BOLD;
+  train_brieft_btn.fontId = FONT_NUM_BLACK_OPS_ONE;
   
   train_back_btn = btn_text_callback(MENU_ORG + '40 225', '16 16', "BACK", VIEW_CTX, M_TRAINING, click_train_back, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, UI_FLAG_SIZE_IMG);
-  train_back_btn.fontId = FONT_NUM_XOLONIUM_BOLD;
+  train_back_btn.fontId = FONT_NUM_BLACK_OPS_ONE;
 };
 
 
@@ -95,8 +95,8 @@ void() m_train_d={
   }
   
   drawfont_prev = drawfont;
-  drawfont = FONT_NUM_ROBOT_REGULAR;
-    gui_wrapText(MENU_ORG + '20 45', '265 300', "The following maps are tutorials to teach you how to play battleMETAL. It is STRONGLY recommended that you play these tutorials before your first time playing the main campaign.", '14 14', '1 1 0.1', 1);
+  drawfont = FONT_NUM_BLACK_OPS_ONE;
+    gui_wrapText(MENU_ORG + '20 45', '265 300', "The following maps are tutorials to teach you how to play threshold3. It is STRONGLY recommended that you play these tutorials before your first time playing the main campaign.", '14 14', '1 1 0.1', 1);
   drawfont = drawfont_prev;
 };
 

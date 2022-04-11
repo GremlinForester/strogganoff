@@ -1,5 +1,5 @@
 /*
-battleMETAL
+threshold3
 Author: Peter Roohr
 Date: 4/19/2018
 mod: 07/20/2019
@@ -643,10 +643,10 @@ void() m_gfx_i={
 
   //operations
   gfx_back = btn_text_callback(MENU_ORG + '45 310', '16 16', "BACK", VIEW_CTX, M_OPTIONS_GFX, click_gfx_back, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, UI_FLAG_SIZE_IMG);
-  gfx_back.fontId = FONT_NUM_XOLONIUM_BOLD;
+  gfx_back.fontId = FONT_NUM_BLACK_OPS_ONE;
   
   gfx_save = btn_text_callback(MENU_ORG + '200 310', '16 16', "SAVE", VIEW_CTX, M_OPTIONS_GFX, click_gfx_save, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, UI_FLAG_SIZE_IMG);
-  gfx_save.fontId = FONT_NUM_XOLONIUM_BOLD;
+  gfx_save.fontId = FONT_NUM_BLACK_OPS_ONE;
 
 };
 
@@ -669,7 +669,7 @@ void() m_gfx_d={
   gui_renderPatch9_1_32(MENU_ORG, MENU_SIZE, '0.35 0.35 0.55', 0.85, 0);
   
   drawfont_prev = drawfont;
-  drawfont = FONT_NUM_ROBOT_REGULAR;
+  drawfont = FONT_NUM_BLACK_OPS_ONE;
   
   gui_renderString("- Lighting Settings -", MENU_ORG + menu_parent_center_width(40) - Vector2((stringwidth("- Lighting Settings -", 0, '16 16')/2),0), CLR_DEF_TXT_NONSELECT, '16 16', 1, 0);
   

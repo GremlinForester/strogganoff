@@ -1,5 +1,5 @@
 /*
-battleMETAL
+threshold3
 Author: Peter Roohr
 Date: 12/19/2019
 Overview: new campaign, pick save slot
@@ -51,12 +51,12 @@ void() m_newsave_i={
     if( GAME_SAVES_DRAWNAME[itr] == "" ){
       name = "- NEW SAVE SLOT -";
       list = btn_text_callback(next, '14 14', name, 0, M_NEWSAVE, click_saveslot, CLR_DEF_WHITE, CLR_DEF_GREEN, 1, UI_FLAG_SIZE_IMG);
-      list.fontId = FONT_NUM_ROBOT_LIGHT;
+      list.fontId = FONT_NUM_BLACK_OPS_ONE;
     }
     else{
       name = GAME_SAVES_DRAWNAME[itr];
       list = btn_text_callback(next, '14 14', name, 0, M_NEWSAVE, click_saveslot, CLR_DEF_WHITE, CLR_DEF_ARM_THREEQ, 1, UI_FLAG_SIZE_IMG);
-      list.fontId = FONT_NUM_XOLONIUM_BOLD;
+      list.fontId = FONT_NUM_BLACK_OPS_ONE;
     }
     
     list.data_bind = itr; //databind
@@ -65,7 +65,7 @@ void() m_newsave_i={
   backOrg = MENU_ORG + '40 0';
   backOrg_y = next_y + 36;
   newsave_back = btn_text_callback(backOrg, '16 16', "BACK", VIEW_CTX, M_NEWSAVE, click_newsave_back, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, UI_FLAG_SIZE_IMG);
-  newsave_back.fontId = FONT_NUM_XOLONIUM_BOLD;
+  newsave_back.fontId = FONT_NUM_BLACK_OPS_ONE;
 };
 
 void() m_newsave_f={

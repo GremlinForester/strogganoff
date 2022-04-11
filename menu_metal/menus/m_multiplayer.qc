@@ -1,5 +1,5 @@
 /*
-battleMETAL
+threshold3
 Author: Peter Roohr
 Date: 4/14/2018
 Overview: 
@@ -46,16 +46,16 @@ void() m_multi_i={
   multi_title = lbl_img( MENU_ORG + menu_parent_center_width(5), '1 1 0', IMG_MULTI_TITLE, '1 1 1', VIEW_CTX , M_MULTI, 1, UI_FLAG_SIZE_IMG );
   
   multi_playersetup = btn_text_callback(MENU_ORG + menu_parent_center_width(45), '16 16', "PLAYER SETUP", VIEW_CTX, M_MULTI, click_multi_setup, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, UI_FLAG_SIZE_IMG);
-  multi_playersetup.fontId = FONT_NUM_XOLONIUM_BOLD;
+  multi_playersetup.fontId = FONT_NUM_BLACK_OPS_ONE;
   
   multi_hostgame = btn_text_callback(MENU_ORG + menu_parent_center_width(64), '16 16', "HOST GAME", VIEW_CTX, M_MULTI, click_multi_host, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0',1, UI_FLAG_SIZE_IMG);
-  multi_hostgame.fontId = FONT_NUM_XOLONIUM_BOLD;
+  multi_hostgame.fontId = FONT_NUM_BLACK_OPS_ONE;
   
   multi_joingame = btn_text_callback(MENU_ORG + menu_parent_center_width(83), '16 16', "JOIN GAME", VIEW_CTX, M_MULTI, click_multi_join, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, UI_FLAG_SIZE_IMG);
-  multi_joingame.fontId = FONT_NUM_XOLONIUM_BOLD;
+  multi_joingame.fontId = FONT_NUM_BLACK_OPS_ONE;
   
   multi_back = btn_text_callback(MENU_ORG + menu_parent_center_width(128), '16 16', "BACK", VIEW_CTX, M_MULTI, click_multi_back, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, UI_FLAG_SIZE_IMG);
-  multi_back.fontId = FONT_NUM_XOLONIUM_BOLD;
+  multi_back.fontId = FONT_NUM_BLACK_OPS_ONE;
 };
 
 /*

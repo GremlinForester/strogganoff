@@ -1,5 +1,5 @@
 /*
-battleMETAL
+threshold3
 Author: Peter Roohr
 Date: 4/25/2018
 Overview: save campaign menu
@@ -39,7 +39,7 @@ void() m_save_i={
     
   save_title = lbl_img('10 100', '1 1 0', IMG_SAVE_TITLE, '1 1 1', (VIEW_CTX | VIEW_CTY), M_SAVE, 1, (UI_FLAG_SIZE_IMG) );
   save_back = btn_text_callback('10 132 0', '16 16', "BACK", 0, M_SAVE, click_load_back, '1 1 1', '0 1 0', 1, (UI_FLAG_NOLABEL | UI_FLAG_SIZE_IMG));
-  save_back.fontId = FONT_NUM_XOLONIUM_BOLD;
+  save_back.fontId = FONT_NUM_BLACK_OPS_ONE;
   
   start = '10 150';
   

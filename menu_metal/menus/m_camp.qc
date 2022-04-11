@@ -1,5 +1,5 @@
 /*
-battleMETAL
+threshold3
 Author: Peter Roohr
 Date: 4/14/2018
 Overview: singleplayer menu
@@ -48,13 +48,13 @@ void() m_camp_i={
   camp_title = lbl_img( MENU_ORG + menu_parent_center_width(10), '1 1 0', IMG_CAMP_TITLE, '1 1 1', VIEW_CTX, M_SINGLE, 1, UI_FLAG_SIZE_IMG );
   
   camp_new = btn_text_callback(MENU_ORG + menu_parent_center_width(52), '16 16', "NEW GAME", VIEW_CTX, M_SINGLE, click_camp_new, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, UI_FLAG_SIZE_IMG);
-  camp_new.fontId = FONT_NUM_XOLONIUM_BOLD;
+  camp_new.fontId = FONT_NUM_BLACK_OPS_ONE;
   
   camp_load = btn_text_callback(MENU_ORG + menu_parent_center_width(71), '16 16', "LOAD", VIEW_CTX, M_SINGLE, click_camp_load, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0',1,  UI_FLAG_SIZE_IMG);
-  camp_load.fontId = FONT_NUM_XOLONIUM_BOLD;
+  camp_load.fontId = FONT_NUM_BLACK_OPS_ONE;
   
   camp_back = btn_text_callback(MENU_ORG + menu_parent_center_width(109), '16 16', "BACK", VIEW_CTX, M_SINGLE, click_camp_back, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, UI_FLAG_SIZE_IMG);
-  camp_back.fontId = FONT_NUM_XOLONIUM_BOLD;
+  camp_back.fontId = FONT_NUM_BLACK_OPS_ONE;
 };
 
 /*

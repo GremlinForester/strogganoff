@@ -1,5 +1,5 @@
 /*
-battleMETAL
+threshold3
 Author: Peter Roohr
 Date: 4/17/2018
 mod: 07/19/2019
@@ -341,10 +341,10 @@ void() m_controls_i={
   controls_ini_pilot(MENU_ORG + '450 45');
   
   controls_back = btn_text_callback(MENU_ORG + '40 272', '16 16', "BACK", VIEW_CTX, M_OPTIONS_CONTROLS, click_controls_back, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, UI_FLAG_SIZE_IMG);
-  controls_back.fontId = FONT_NUM_XOLONIUM_BOLD;
+  controls_back.fontId = FONT_NUM_BLACK_OPS_ONE;
   
   controls_accept = btn_text_callback(MENU_ORG + '255 272', '16 16', "ACCEPT", VIEW_CTX, M_OPTIONS_CONTROLS, click_controls_accept, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, UI_FLAG_SIZE_IMG);
-  controls_accept.fontId = FONT_NUM_XOLONIUM_BOLD;
+  controls_accept.fontId = FONT_NUM_BLACK_OPS_ONE;
 };
 
 /*
@@ -369,7 +369,7 @@ void() m_controls_d={
   gui_renderPatch9_1_32(MENU_ORG, MENU_SIZE, '0.35 0.35 0.55', 0.85, 0);
 
   drawfont_prev = drawfont;
-  drawfont = FONT_NUM_ROBOT_REGULAR;
+  drawfont = FONT_NUM_BLACK_OPS_ONE;
 
   //titleLen = stringwidth( "Controls - click a key to change it. Hit <ESC> to cancel.", 0, '16 16 0');
   //titleOrg_x = VIEW_CTR_x - ( titleLen / 2.5 );

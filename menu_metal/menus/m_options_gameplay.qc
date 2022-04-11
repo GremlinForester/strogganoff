@@ -1,5 +1,5 @@
 /*
-battleMETAL
+threshold3
 Author: Peter Roohr
 Date: 4/17/2018
 mod: 07/19/2019
@@ -363,7 +363,7 @@ void() m_gameplay_i={
   //gameplay_hud_sway_less = btn_img_callback('176 263', '8 12', UI_IMG_ARW_LFT, (VIEW_CTX | VIEW_CTY), M_OPTIONS_GAMEPLAY, click_gameplay_hudsway_less, '1 1 1', '0 1 0', 1, UI_FLAG_NOLABEL);
 
   gameplay_back = btn_text_callback(MENU_ORG + '45 190', '16 16', "BACK", VIEW_CTX, M_OPTIONS_GAMEPLAY, click_gameplay_back, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_GREEN, 1, UI_FLAG_SIZE_IMG);
-  gameplay_back.fontId = FONT_NUM_XOLONIUM_BOLD;
+  gameplay_back.fontId = FONT_NUM_BLACK_OPS_ONE;
 };
 
 /*
@@ -386,12 +386,12 @@ void() m_gameplay_d={
   gui_renderPatch9_1_32(MENU_ORG, MENU_SIZE, '0.35 0.35 0.55', 0.85, 0);
   
   drawfont_prev = drawfont;
-  drawfont = FONT_NUM_ROBOT_REGULAR;
+  drawfont = FONT_NUM_BLACK_OPS_ONE;
   
   gui_renderString("- Gameplay -", MENU_ORG + menu_parent_center_width(40) - Vector2((stringwidth("- Particle Settings -", 0, '16 16')/2),0), CLR_DEF_WHITE, '16 16', 1, 0);
   
   drawfont_prev = drawfont;
-  drawfont = FONT_NUM_ROBOT_LIGHT;
+  drawfont = FONT_NUM_BLACK_OPS_ONE;
   
     gui_renderString("Field of View:", gameplay_fov_less.origin - Vector2(stringwidth("Field of View:  ", 0, '12 12'),0), CLR_DEF_TXT_NONSELECT, '12 12', 1, 0);
     gui_renderString("Show FPS:", gameplay_fps_off.origin - Vector2(stringwidth("Show FPS:  ", 0, '12 12'),0), CLR_DEF_TXT_NONSELECT, '12 12', 1, 0);

@@ -1,5 +1,5 @@
 /*
-battleMETAL
+threshold3
 Author: Peter Roohr
 Date: 12/20/2019
 Overview: 
@@ -119,38 +119,38 @@ void() m_help_i={
   help_title = lbl_img(MENU_ORG + menu_parent_center_width(5), '1 1 0', IMG_HELP_TITLE, '1 1 1', VIEW_CTX, M_HELP, 1, UI_FLAG_SIZE_IMG );
   
   help_back = btn_text_callback(MENU_ORG + '45 197', '16 16', "BACK", 0, M_HELP, click_help_back, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, UI_FLAG_SIZE_IMG);
-  help_back.fontId = FONT_NUM_XOLONIUM_BOLD;
+  help_back.fontId = FONT_NUM_BLACK_OPS_ONE;
   
   //sub menus
     //main help
     help_starting = btn_text_callback( MENU_ORG + '10 45', '16 16', "Getting Started", 0, M_HELP, click_help_start, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_GREEN, 1, UI_FLAG_SIZE_IMG);
-    help_starting.fontId = FONT_NUM_XOLONIUM_BOLD;
+    help_starting.fontId = FONT_NUM_BLACK_OPS_ONE;
     
     help_options = btn_text_callback(MENU_ORG + '10 64', '16 16', "Config", 0, M_HELP, click_help_options, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_GREEN, 1, UI_FLAG_SIZE_IMG);
-    help_options.fontId = FONT_NUM_XOLONIUM_BOLD;
+    help_options.fontId = FONT_NUM_BLACK_OPS_ONE;
     
     help_menus_briefing = btn_text_callback(MENU_ORG + '10 83', '16 16', "Briefing Menu", 0, M_HELP, click_help_enter_briefing, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_GREEN, 1, UI_FLAG_SIZE_IMG);
-    help_menus_briefing.fontId = FONT_NUM_XOLONIUM_BOLD;
+    help_menus_briefing.fontId = FONT_NUM_BLACK_OPS_ONE;
     
     help_menus_hangar = btn_text_callback(MENU_ORG + '10 102', '16 16', "Hangar Menu", 0, M_HELP, click_help_enter_hangar, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_GREEN, 1, UI_FLAG_SIZE_IMG);
-    help_menus_hangar.fontId = FONT_NUM_XOLONIUM_BOLD;
+    help_menus_hangar.fontId = FONT_NUM_BLACK_OPS_ONE;
     
     help_menus_arming = btn_text_callback(MENU_ORG + '10 121', '16 16', "Arming Menu", 0, M_HELP, click_help_enter_arming, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_GREEN, 1, UI_FLAG_SIZE_IMG);
-    help_menus_arming.fontId = FONT_NUM_XOLONIUM_BOLD;
+    help_menus_arming.fontId = FONT_NUM_BLACK_OPS_ONE;
     
     help_menus_deploy = btn_text_callback(MENU_ORG + '10 140', '16 16', "Deploy Menu", 0, M_HELP, click_help_enter_deploy, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_GREEN, 1, UI_FLAG_SIZE_IMG);
-    help_menus_deploy.fontId = FONT_NUM_XOLONIUM_BOLD;
+    help_menus_deploy.fontId = FONT_NUM_BLACK_OPS_ONE;
     
     //help_menus_hud = btn_text_callback(MENU_ORG + '10 159', '14 14', "Sample Mech HUD", 0, M_HELP, click_help_enter_hud, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_GREEN, 1, UI_FLAG_SIZE_IMG);
-    //help_menus_hud.fontId = FONT_NUM_XOLONIUM_BOLD;
+    //help_menus_hud.fontId = FONT_NUM_BLACK_OPS_ONE;
     
     //Starting
-    help_start_overview = text_panel(MENU_ORG + '144 45', '320 100', "GETTING STARTED | To launch a new game, simply do Main Menu -> Campaign -> New Game -> then choose a Save Slot. | battleMETAL uses numbered Save Slots to save your progress during gameplay. | | You can run the Training map at any time from the Main Menu to refresh yourself on the gameplay. | | To load an existing saved game, simply go Main Menu -> Campaign -> Load. | | Mission Menus | During a mission, you will interact with 4 primary menus before you launch into the action. | In this HELP section, there's an overview for each Menu to assist you in navigating them. | Further helpful info can be found using the tooltips on each menu, look for the golden box with the question mark [?] and roll your mouse over it.", CLR_DEF_TXT_HIGHLIGHT, 0, M_HELP, 1, 0);
-    help_start_contact = text_panel(MENU_ORG + '144 288', '320 100', "HELP AND RESOURCES | | Bug Reports:  send email to battleMETAL.qa@gmail.com | | Website:  http://battleMETAL.net | | Source Code:  https://github.com/Subject9x/battleMETAL", CLR_DEF_TXT_HIGHLIGHT, 0, M_HELP, 1, 0);
+    help_start_overview = text_panel(MENU_ORG + '144 45', '320 100', "GETTING STARTED | To launch a new game, simply do Main Menu -> Campaign -> New Game -> then choose a Save Slot. | threshold3 uses numbered Save Slots to save your progress during gameplay. | | You can run the Training map at any time from the Main Menu to refresh yourself on the gameplay. | | To load an existing saved game, simply go Main Menu -> Campaign -> Load. | | Mission Menus | During a mission, you will interact with 4 primary menus before you launch into the action. | In this HELP section, there's an overview for each Menu to assist you in navigating them. | Further helpful info can be found using the tooltips on each menu, look for the golden box with the question mark [?] and roll your mouse over it.", CLR_DEF_TXT_HIGHLIGHT, 0, M_HELP, 1, 0);
+    help_start_contact = text_panel(MENU_ORG + '144 288', '320 100', "HELP AND RESOURCES | | Bug Reports:  send email to threshold3.qa@gmail.com | | Website:  http://threshold3.net | | Source Code:  https://github.com/Subject9x/threshold3", CLR_DEF_TXT_HIGHLIGHT, 0, M_HELP, 1, 0);
     
     //Config
-    help_config_overview = text_panel(MENU_ORG + '144 45', '320 100', "Here is a quick index of all the configuration you may adjust for your install of battleMETAL. | | CONTROLS (Main->Options->Controls) + Configure any and all in-game keybindings. + Change a binding by clicking a key, which will then go ORANGE, press the new key and you're all set. | | GRAPHICS (Main->Options->GRAPHICS) + Adjust all the game's graphical settings in this set of menus. + Clicking ACCEPT will immediately apply and save the settings you changed. | | AUDIO (Main->Options->Audio) + Adjust Audio settings for the game here. + You can ONLY change the ADVANCED settings from the Main Menu. + Advanced Settings may auto adjust your Speaker Mode based on what it detects.", CLR_DEF_TXT_HIGHLIGHT, 0, M_HELP, 1, 0);
-    help_config_adv = text_panel(MENU_ORG + '144 250', '320 100', "ADVANCED SETTINGS | + You can bring down the Developer Console at any time using the tilde ` key. + All your config settings are saved to the file battleMETAL/metaldata/config.cfg + You can add your own custom config at game startup by modifying either the battleMETAL/metaldata/default.cfg OR /autoexec.cfg files.", CLR_DEF_TXT_HIGHLIGHT, 0, M_HELP, 1, 0);
+    help_config_overview = text_panel(MENU_ORG + '144 45', '320 100', "Here is a quick index of all the configuration you may adjust for your install of threshold3. | | CONTROLS (Main->Options->Controls) + Configure any and all in-game keybindings. + Change a binding by clicking a key, which will then go ORANGE, press the new key and you're all set. | | GRAPHICS (Main->Options->GRAPHICS) + Adjust all the game's graphical settings in this set of menus. + Clicking ACCEPT will immediately apply and save the settings you changed. | | AUDIO (Main->Options->Audio) + Adjust Audio settings for the game here. + You can ONLY change the ADVANCED settings from the Main Menu. + Advanced Settings may auto adjust your Speaker Mode based on what it detects.", CLR_DEF_TXT_HIGHLIGHT, 0, M_HELP, 1, 0);
+    help_config_adv = text_panel(MENU_ORG + '144 250', '320 100', "ADVANCED SETTINGS | + You can bring down the Developer Console at any time using the tilde ` key. + All your config settings are saved to the file threshold3/metaldata/config.cfg + You can add your own custom config at game startup by modifying either the threshold3/metaldata/default.cfg OR /autoexec.cfg files.", CLR_DEF_TXT_HIGHLIGHT, 0, M_HELP, 1, 0);
     
     //Briefing
     help_briefing_img = lbl_img(MENU_ORG + '172.5 5', gui_newAspectRatio(drawgetimagesize("gfx/menu/help/help_brief.png"), UI_MAX) * 0.45,  "gfx/menu/help/help_brief.png", '1 1 1', 0, M_HELP, 1, 0 );

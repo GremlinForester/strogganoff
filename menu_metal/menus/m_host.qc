@@ -1,5 +1,5 @@
 /*
-battleMETAL
+threshold3
 Author: Peter Roohr
 Date: 4/15/2018
 Overview: 
@@ -620,11 +620,11 @@ void() m_host_i={
   
   //LAAAAAAAAUNCH!
   host_launch = btn_text_callback(MENU_ORG + '200 360 0', '16 16', "LAUNCH", VIEW_CTX, M_HOST, click_host_launch, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, UI_FLAG_SIZE_IMG);
-  host_launch.fontId = FONT_NUM_XOLONIUM_BOLD;
+  host_launch.fontId = FONT_NUM_BLACK_OPS_ONE;
   
   //or not
   host_back = btn_text_callback(MENU_ORG + '40 360 0', '16 16', "BACK", VIEW_CTX, M_HOST, click_host_back, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, UI_FLAG_SIZE_IMG);
-  host_back.fontId = FONT_NUM_XOLONIUM_BOLD;
+  host_back.fontId = FONT_NUM_BLACK_OPS_ONE;
   
   host_update_playeramount();
 };
@@ -649,7 +649,7 @@ void() m_host_d={
   PUBLIC_TYPE = "";
   
   drawfont_prev = drawfont;
-  drawfont = FONT_NUM_ROBOT_LIGHT;
+  drawfont = FONT_NUM_BLACK_OPS_ONE;
   
   gui_renderString("Server Name  :", host_name.origin + '-80 1', '1 1 1', '12 12 0', 1, 0);
   

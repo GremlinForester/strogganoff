@@ -1,5 +1,5 @@
 /*
-battleMETAL
+threshold3
 Author: Peter Roohr
 Date: 4/17/2018
 Overview: options root menu
@@ -50,19 +50,19 @@ void() m_options_i={
   options_title = lbl_img(MENU_ORG + menu_parent_center_width(5), '1 1', IMG_OPTION_TITLE, '1 1 1', VIEW_CTX, M_OPTIONS, 1, UI_FLAG_SIZE_IMG );
   
   options_controls = btn_text_callback(MENU_ORG + menu_parent_center_width(45), '16 16', "CONTROLS", VIEW_CTX, M_OPTIONS, click_options_controls, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_GREEN, 1, UI_FLAG_SIZE_IMG);
-  options_controls.fontId = FONT_NUM_XOLONIUM_BOLD;
+  options_controls.fontId = FONT_NUM_BLACK_OPS_ONE;
   
   options_graphics = btn_text_callback(MENU_ORG + menu_parent_center_width(64), '16 16', "GRAPHICS", VIEW_CTX, M_OPTIONS, click_options_graphics, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_GREEN,1, UI_FLAG_SIZE_IMG);
-  options_graphics.fontId = FONT_NUM_XOLONIUM_BOLD;
+  options_graphics.fontId = FONT_NUM_BLACK_OPS_ONE;
   
   options_audio = btn_text_callback(MENU_ORG + menu_parent_center_width(83), '16 16', "SOUND", VIEW_CTX, M_OPTIONS, click_options_audio, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_GREEN, 1, UI_FLAG_SIZE_IMG);
-  options_audio.fontId = FONT_NUM_XOLONIUM_BOLD;
+  options_audio.fontId = FONT_NUM_BLACK_OPS_ONE;
   
   options_gameplay = btn_text_callback(MENU_ORG + menu_parent_center_width(102), '16 16', "GAMEPLAY", VIEW_CTX, M_OPTIONS, click_options_gameplay, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_GREEN, 1, UI_FLAG_SIZE_IMG);
-  options_gameplay.fontId = FONT_NUM_XOLONIUM_BOLD;
+  options_gameplay.fontId = FONT_NUM_BLACK_OPS_ONE;
   
   options_back = btn_text_callback(MENU_ORG + menu_parent_center_width(178), '16 16', "BACK", VIEW_CTX, M_OPTIONS, click_options_back, CLR_DEF_TXT_GRAY_SMOOTH,CLR_DEF_GREEN, 1, UI_FLAG_SIZE_IMG);
-  options_back.fontId = FONT_NUM_XOLONIUM_BOLD;
+  options_back.fontId = FONT_NUM_BLACK_OPS_ONE;
 };
 
 /*

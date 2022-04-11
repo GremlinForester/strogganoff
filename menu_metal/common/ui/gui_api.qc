@@ -1,5 +1,5 @@
 /*
-battleMETAL
+threshold3
 Author: Peter Roohr
 Date: 03/8/2017
 Overview: GUI API class file
@@ -837,7 +837,7 @@ void() gui_drawversion={
   local vector lowerLeft, lowerRight, upperRight;
   
   drawfont_prev = drawfont;
-  drawfont = FONT_NUM_ROBOT_REGULAR;
+  drawfont = FONT_NUM_BLACK_OPS_ONE;
   
   lbl = strcat("Release ",cvar_string("gameversion"));
   

@@ -1,5 +1,5 @@
 /*
-battleMETAL
+threshold3
 Author: Peter Roohr
 Date: 4/14/2018
 Overview:
@@ -145,12 +145,8 @@ void() click_setup_accept={
     localcmd("cl_cmd tint");
   }
   menu_clear_items(M_STATE);
-  if( MAIN_MISSION ) {
-    m_main_f();
-  }
-  else{
-    m_multi_f();
-  }
+  M_STATE = M_MAIN;
+  m_main_f();
 };
 
 void() textfield_setup_name={
@@ -399,27 +395,27 @@ void() m_setup_i={
 
 
   setup_color_part_ct_btn = btn_text_callback(MENU_ORG + '10 195', '16 16', "Center Torso", 0, M_SETUP, setup_color_select_ct, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, UI_FLAG_SIZE_IMG);
-  setup_color_part_ct_btn.fontId = FONT_NUM_XOLONIUM_BOLD;
+  setup_color_part_ct_btn.fontId = FONT_NUM_BLACK_OPS_ONE;
   setup_color_part_ct_btn.len = SETUP_COLOR_PART_CT;
   
   setup_color_part_lt_btn = btn_text_callback(MENU_ORG + '10 220', '16 16', "Left Torso", 0, M_SETUP, setup_color_select_lt, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, UI_FLAG_SIZE_IMG);
-  setup_color_part_lt_btn.fontId = FONT_NUM_XOLONIUM_BOLD;
+  setup_color_part_lt_btn.fontId = FONT_NUM_BLACK_OPS_ONE;
   setup_color_part_lt_btn.len = SETUP_COLOR_PART_LT;
   
   setup_color_part_rt_btn = btn_text_callback(MENU_ORG + '10 245', '16 16', "Right Torso", 0, M_SETUP, setup_color_select_rt, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, UI_FLAG_SIZE_IMG);
-  setup_color_part_rt_btn.fontId = FONT_NUM_XOLONIUM_BOLD;
+  setup_color_part_rt_btn.fontId = FONT_NUM_BLACK_OPS_ONE;
   setup_color_part_rt_btn.len = SETUP_COLOR_PART_RT;
   
   setup_color_part_la_btn = btn_text_callback(MENU_ORG + '10 270', '16 16', "Left Arm", 0, M_SETUP, setup_color_select_la, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, UI_FLAG_SIZE_IMG);
-  setup_color_part_la_btn.fontId = FONT_NUM_XOLONIUM_BOLD;
+  setup_color_part_la_btn.fontId = FONT_NUM_BLACK_OPS_ONE;
   setup_color_part_la_btn.len = SETUP_COLOR_PART_LA;
   
   setup_color_part_ra_btn = btn_text_callback(MENU_ORG + '10 295', '16 16', "Right Arm", 0, M_SETUP, setup_color_select_ra, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, UI_FLAG_SIZE_IMG);
-  setup_color_part_ra_btn.fontId = FONT_NUM_XOLONIUM_BOLD;
+  setup_color_part_ra_btn.fontId = FONT_NUM_BLACK_OPS_ONE;
   setup_color_part_ra_btn.len = SETUP_COLOR_PART_RA;
   
   setup_color_part_lg_btn = btn_text_callback(MENU_ORG + '10 320', '16 16', "Legs", 0, M_SETUP, setup_color_select_lg, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, UI_FLAG_SIZE_IMG);
-  setup_color_part_lg_btn.fontId = FONT_NUM_XOLONIUM_BOLD;
+  setup_color_part_lg_btn.fontId = FONT_NUM_BLACK_OPS_ONE;
   setup_color_part_lg_btn.len = SETUP_COLOR_PART_LG;
   
   local entity colorGrid;
@@ -441,7 +437,7 @@ void() m_setup_i={
   }
   
   setup_accept = btn_text_callback(MENU_ORG + '45 395', '16 16', "SAVE", VIEW_CTX, M_SETUP, click_setup_accept, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, UI_FLAG_SIZE_IMG);
-  setup_accept.fontId = FONT_NUM_XOLONIUM_BOLD;
+  setup_accept.fontId = FONT_NUM_BLACK_OPS_ONE;
 };
 
 /*
@@ -463,7 +459,7 @@ void() m_setup_d={
   gui_renderPatch9_1_32(MENU_ORG, MENU_SIZE, '0.35 0.35 0.55', 0.85, 0);
   
   drawfont_prev = drawfont;
-  drawfont = FONT_NUM_ROBOT_REGULAR;
+  drawfont = FONT_NUM_BLACK_OPS_ONE;
   
   drawfont = drawfont_prev;
   
@@ -490,12 +486,8 @@ void(float key, float ascii) m_setup_k={
       menu_clear_items(M_STATE);
       setup_save_color_scheme();
       localcmd("saveconfig\n");
-      if( MAIN_MISSION ) {
-        m_main_f();
-      }
-      else{
-        m_multi_f();
-      }
+      M_STATE = M_MAIN;
+      m_main_f();
       break;
   }
 };

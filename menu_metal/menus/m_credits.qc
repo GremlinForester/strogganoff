@@ -1,5 +1,5 @@
 /*
-battleMETAL
+threshold3
 Author: Peter Roohr
 Date: 4/17/2018
 mod: 07/19/2019
@@ -40,7 +40,7 @@ void() m_credits_i={
   
   
   credits_back = btn_text_callback(MENU_ORG + '45 380', '16 16', "BACK", VIEW_CTX, M_CREDITS, click_credits_back, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, UI_FLAG_SIZE_IMG);
-  credits_back.fontId = FONT_NUM_XOLONIUM_BOLD;
+  credits_back.fontId = FONT_NUM_BLACK_OPS_ONE;
 };
 
 /*
@@ -62,17 +62,17 @@ void() m_credits_d={
   
   local float centerLineX;
   drawfont_prev = drawfont;
-  drawfont = FONT_NUM_ROBOT_REGULAR;
+  drawfont = FONT_NUM_BLACK_OPS_ONE;
   
   centerLineX = MENU_SIZE_x / 2;
   
   local float menuTitleLen;
   local vector menuTitleOrg;
-  menuTitleLen = stringwidth( "battleMETAL Design Team", 0, '16 16 0');
+  menuTitleLen = stringwidth( "threshold3 Design Team", 0, '16 16 0');
   menuTitleOrg_x = centerLineX - ( menuTitleLen / 2);
   menuTitleOrg_y = 100;
   
-  gui_renderString("battleMETAL Design Team", menuTitleOrg, CLR_DEF_ARM_THREEQ, '16 16 0', 1, 0);
+  gui_renderString("threshold3 Design Team", menuTitleOrg, CLR_DEF_ARM_THREEQ, '16 16 0', 1, 0);
   
   local float leadTitleLen;
   local vector leadTitleOrg;

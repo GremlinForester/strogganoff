@@ -1,5 +1,5 @@
 /*
-battleMETAL
+threshold3
 Author: Peter Roohr
 Date: 4/17/2018
 Overview: 
@@ -785,7 +785,7 @@ void() m_graphics_i={
   cacheGlobalString( graphics_resolution_aspect_lbl.label, VID_RESO_NAME[vid])
   
   graphics_resolution_change = btn_text_callback(graphics_resolution_aspect_lbl.origin + '0 16', '16 16', "Change", 0, M_OPTIONS_GRAPHICS, click_graphics_reso_change, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, UI_FLAG_SIZE_IMG );
-  graphics_resolution_change.fontId = FONT_NUM_XOLONIUM_BOLD;
+  graphics_resolution_change.fontId = FONT_NUM_BLACK_OPS_ONE;
   graphics_resolution_change.subid = SUB_GRAPHICS_MAIN;
   
   startOrg = MENU_ORG + '25 125';
@@ -801,7 +801,7 @@ void() m_graphics_i={
       reso_list.len = idx;
       reso_list.subid = SUB_GRAPHICS_RESO;
       cacheGlobalString( reso_list.label, vidResName)
-      reso_list.fontId = FONT_NUM_ROBOT_REGULAR;
+      reso_list.fontId = FONT_NUM_BLACK_OPS_ONE;
       if( col < (panelSize_x / panelCol) - 1 ){
         col = col + 1;
       }
@@ -1022,10 +1022,10 @@ void() m_graphics_i={
   }
   
   graphics_back = btn_text_callback(MENU_ORG + '45 365', '16 16', "BACK", VIEW_CTX, M_OPTIONS_GRAPHICS, click_graphics_back, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, UI_FLAG_SIZE_IMG);
-  graphics_back.fontId = FONT_NUM_XOLONIUM_BOLD;
+  graphics_back.fontId = FONT_NUM_BLACK_OPS_ONE;
 
   graphics_accept = btn_text_callback(MENU_ORG + '285 365', '16 16', "ACCEPT", VIEW_CTX, M_OPTIONS_GRAPHICS, click_graphics_accept, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, UI_FLAG_SIZE_IMG);
-  graphics_accept.fontId = FONT_NUM_XOLONIUM_BOLD;
+  graphics_accept.fontId = FONT_NUM_BLACK_OPS_ONE;
   graphics_accept.subid = SUB_GRAPHICS_MAIN;
   
   //assign sub menu
@@ -1113,7 +1113,7 @@ void() m_graphics_d={
   gui_renderPatch9_1_32(MENU_ORG, MENU_SIZE, '0.35 0.35 0.55', 0.85, 0);
   
   drawfont_prev = drawfont;
-  drawfont = FONT_NUM_ROBOT_LIGHT;
+  drawfont = FONT_NUM_BLACK_OPS_ONE;
   
   //display
   gui_renderString("Display", MENU_ORG + '90 40', CLR_DEF_ARM_THREEQ, '16 16', 1, 0);
