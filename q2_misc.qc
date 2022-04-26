@@ -1,5 +1,5 @@
 /*======================================================================
-MrC: This ladder code is from the Quake 1.5 codebase. Left any comments as-is.
+MrC: Grabbed this ladder code from the Quake 1.5 codebase. Left any comments as-is.
 /*======================================================================
 
 /*======================================================================
@@ -287,31 +287,44 @@ void() misc_deadsoldier =
 	self.takedamage = DAMAGE_AIM;
 };
 
+void() target_activator_think =
+{
+	LOG("target_activator_think");
+	VLOG(self.origin);
+}
+
 void() target_activator_touch =
 {
+	if (other.classname != "trigger_multiple" || other.classname != "trigger_once")
+			return;
+	
+	SUB_UseTargets();
 }
 
 void() target_activator =
 {
-	self.classname = "target_activator";
-	precache_model(self.model);
+//	self.classname = "player";
+//	precache_model(self.model);
 	
 	activator = self;
 	
 	self.movetype = MOVETYPE_NOCLIP;
 	self.solid = SOLID_TRIGGER;
-	setmodel (self, self.model);
+//	setmodel (self, self.model);
 	setorigin (self, self.origin);
-	self.scale = (self.modelscale);
-	self.health = (self.health);
-	self.angles = self.angles;
-	setsize (self, '-16 -16 0', '16 16 16');
-	self.avelocity = self.avelocity;
-	self.touch = target_activator_touch;
-	if (self.target != "")
-	{
-		self.tag_entity = find(world, targetname, self.target);
+	setsize (self, '-32 -32 0', '16 16 16');
+//	self.touch = target_activator_touch;
+
+	if (self.parent){
+		self.tag_entity = find(world, targetname, self.parent);	
+		self.owner = find(world, targetname, self.parent);
+		setorigin (self, self.origin - self.owner.origin);
 	}
+
+	LOG("target_activator_lives");
+	
+	self.think = target_activator_think;
+	self.nextthink = time + 0.1;
 }
 
 /*QUAKED func_train_activator (0 .5 .8) ?
@@ -367,6 +380,10 @@ void() func_train_activator =
 	self.think = func_train_find;
 };
 
+.float wait;
+.float delay;
+.float variance;
+
 /*QUAKED func_timer (0.3 0.1 0.6) (-8 -8 -8) (8 8 8) START_ON
 "wait"			base time between triggering all targets, default is 1
 "random"		wait variance, default is 0
@@ -385,16 +402,15 @@ These can used but not touched.
 void() func_timer_think  =
 {
 	SUB_UseTargets ();
-//	self.nextthink = time + self.wait + crandom() * self.random;
+	//self.nextthink = time + (((random() * 1 ) + self.wait) + ((random() * 1 ) * self.delay));
+	self.nextthink = ((time + self.wait) + (random() * self.variance));
+//level.time + self->wait + crandom() * self->random;	
 }
 
 void() func_timer_use =
 {
 	SUB_UseTargets();
 }
-
-.float wait;
-.float delay;
 
 void() func_timer =
 {
@@ -406,19 +422,15 @@ void() func_timer =
 	{
 		self.wait = 1;
 	}
-	if (!self.delay)
-	{
-		self.delay = 1;
-	}
 
 	if (self.spawnflags & ESTATE_ON)
 	{
-		self.nextthink = time + self.delay;
-		self.think = func_timer_use;
+		self.nextthink = time + self.wait;
+		self.think = func_timer_think;
 
 	}
 	
-	self.use = func_timer_use;
+//	self.use = func_timer_use();
 }
 
 /*QUAKED target_speaker (1 0 0) (-8 -8 -8) (8 8 8) looped-on looped-off reliable changelevel
@@ -429,8 +441,8 @@ void() func_timer =
  1 = normal fighting sounds
  2 = idle sound level
  3 = ambient sound level
-"volume"	0.0 to 1.0
 
+"volume"	0.0 to 1.0
 Normal sounds play each time the target is used.  The reliable flag can be set for crucial voiceovers.
 
 Looped sounds are always atten 3 / vol 1, and the use function toggles it on/off.
@@ -1152,4 +1164,110 @@ void() rtlight =
 	
 	self.avelocity = self.avelocity;
 	self.style = self.style;
+};
+
+/*
+================
+point_sensor
+
+Shoots out a trace and activates targets based on detection for whatever it's configured for.
+
+<targetname key="targetname" name="Target Name">Name of this entity.</targetname>
+<target key="target" name="Target">Entity to USE when trace positive.</target>
+<angles key="angles" name="Pitch Yaw Roll">Which way to point the trace.</angles>
+<string key="classname" name="Target Classname">The classname of the trace entity to activate.</string>
+<integer key="count" name="Reset Time">Time to reset the trace after firing targets. -1 to disable.</integer>
+
+================
+*/
+
+void() point_sensor_think;
+
+.string target_classname;
+
+void() point_sensor_think =
+{
+	local	vector	source;
+	local	vector	org;	
+
+	if (self.estate == ESTATE_OFF){
+		self.nextthink = -1;	
+		return;
+	}
+	
+	makevectors(self.angles);
+	
+//	makevectors(self.v_angle);
+//	nep_traceline (self.origin, self.origin + v_forward*4096, FALSE, self);
+	traceline (self.origin, self.origin + v_forward*4096, FALSE, self);
+
+	org = trace_endpos;
+
+//	if (trace_fraction == 1.0)
+//		return;
+
+	/*
+	if (trace_ent.takedamage)
+	{
+		trace_ent.axhitme = 1;
+		T_Damage (trace_ent, self, self, 20);
+	}
+	*/
+
+//	if (trace_ent.classname == self.target_classname) //becuase this would be too flexible!
+	if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_WOOD) //ah, just dumb enough.
+	{
+	//	LOG("Activating target: ");
+	//	LOG(self.target);
+		SUB_UseTargets();
+		self.estate = ESTATE_OFF;
+		self.nextthink = time + self.count;
+		self.think = self.use;		
+		return;
+	}
+	
+//	VLOG(self.origin);
+	
+//	Q3Surface_Impact(org);
+	
+	self.think = point_sensor_think;
+	self.nextthink = time + 0.1;		
+};
+
+void() point_sensor_use =
+{
+	estateFlipFlop(ESTATE_ON, ESTATE_OFF);
+	self.think = point_sensor_think;
+	self.nextthink = time + 0.1;	
+}
+
+void() point_sensor =
+{
+	self.classname = "point_sensor";
+	makevectors(self.angles);	
+	self.movetype = MOVETYPE_NOCLIP;
+	self.solid = SOLID_NOT;	
+	setorigin (self, self.origin);
+	setmodel (self, "");
+	activator = self;
+	if (self.targetname)
+	{
+		if (self.spawnflags & START_OFF){
+			self.estate = ESTATE_OFF;
+		}
+	}
+	
+	if (self.parent){
+		self.tag_entity = find(world, targetname, self.parent);	
+		self.owner = find(world, targetname, self.parent);
+		setorigin (self, self.origin - self.owner.origin);
+	}
+
+	self.use = point_sensor_use;
+	
+	if (self.target_classname)
+		self.target_classname = strzone(self.target_classname);	
+	
+	self.think = point_sensor_think;
+	self.nextthink = time + 0.1;
 };

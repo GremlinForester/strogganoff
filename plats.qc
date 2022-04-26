@@ -412,7 +412,6 @@ void() func_train =
 	self.blocked = train_blocked;
 	self.use = train_use;
 	self.classname = "train";
-
 	setmodel (self, self.model);
 	setsize (self, self.mins , self.maxs);
 	setorigin (self, self.origin);

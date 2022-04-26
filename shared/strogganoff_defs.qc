@@ -26,6 +26,17 @@ var float autocvar_howmanyplayers;
 //Monster Customization/Debugging
 var vector autocvar_q2soldier_shotgun_accuracy = '0.2 0.2 0.05';
 
+// get center of bmodel (found in Doombringer source - thanks!)
+vector() bmodelOrigin =
+{
+	return self.absmin + ((self.absmax - self.absmin) * 0.5);
+};
+
+vector(entity this) bmodelOriginEntity = //if owner is a bmodel or something...
+{
+	return this.absmin + ((this.absmax - this.absmin) * 0.5);
+};	
+
 #ifndef opgrade
 //replaced with define
 float() crandom =
@@ -219,6 +230,46 @@ float (vector from, vector to) Dot =
 };
 
 string SOUND_EMPTY = "misc/null.wav";			// No sound
+
+/*
+============
+Flip/Flop self.eState switches first and second.
+============
+*/
+void(float first, float second) estateFlipFlop =
+{
+	if (self.estate == first)
+	{
+		self.estate = second;
+		return;
+	}
+	
+	if (self.estate == second)
+	{
+		self.estate = first;
+		return;
+	}	
+}
+
+/*
+============
+Flip/Flop field float switches first and second.
+============
+*/
+void(float first, float second, .float field) fieldFloatFlipFlop =
+{
+	if (self.field == first)
+	{
+		self.field = second;
+		return;
+	}
+	
+	if (self.field == second)
+	{
+		self.field = first;
+		return;
+	}	
+}
 
 /*
 ============

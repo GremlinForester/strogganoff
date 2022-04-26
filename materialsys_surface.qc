@@ -304,6 +304,7 @@ void(entity e) Q3Surface_Impact_Ent =
 		else if (r < 2) sound(e, CHAN_FOOT, "player/energy2.wav", 0.25, ATTN_IDLE);
 		else if (r < 3) sound(e, CHAN_FOOT, "player/energy3.wav", 0.25, ATTN_IDLE);
 		else            sound(e, CHAN_FOOT, "player/energy4.wav", 0.25, ATTN_IDLE);
+		pointparticles(particleeffectnum("electronic_spark_red"), e.origin, '0 0 0', 1);		
 	}
 	else if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_GRASS)
 	{

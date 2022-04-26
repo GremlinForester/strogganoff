@@ -16,13 +16,15 @@ shared/strogganoff_defs.qc
 
 extras/extras_defs.qc   // pOx - additions
 
-effects.qc //muzzle flashes, shell casings, etc...
+
 
 playermovement.qc
 
 // frikbot module - 0.10.1.cat 
 
 frikbot/frik_code.qc
+
+effects.qc //muzzle flashes, shell casings, etc...
 
 materialsys_surface.qc
 materialsys_gibs.qc

@@ -498,7 +498,7 @@ float		skill;
 .float		rebreather_finished;
 
 .float		invincible_time, invincible_sound;
-.float		invisible_time, invisible_sound;
+.float		invisible_time, invisible_sound, rebreather_sound;
 .float		super_time, super_sound;
 .float		rad_time;
 .float		fly_sound;

@@ -493,6 +493,12 @@ void() T_MissileTouch =
 	{
 		remove(self);
 		return;
+	}
+
+	if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_FORCEFIELD)
+	{
+		remove(self);
+		return;
 	}	
 
 	damg = self.dmg;

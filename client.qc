@@ -943,7 +943,6 @@ void() PutClientInServer =
 	#ifdef q2model_lighting
 	self.effects = EF_FULLBRIGHT; //MrC Lightgrid workaround
 	#endif
-	
   
   //Stroggannoff EXT-COOP / playerCache ops
   local entity cache;
@@ -1028,8 +1027,8 @@ void() PutClientInServer =
 	spawn_tdeath (self.origin, self);
   
 	// pOx - START - func_water support
-//	self.fwatershift = TRUE;// catch runaway cshifts (changlevel/respawn while in func_water)
-//	self.oldgravity = 0;// use unmodified sv_gravity
+	self.fwatershift = TRUE;// catch runaway cshifts (changlevel/respawn while in func_water)
+	self.oldgravity = 0;// use unmodified sv_gravity
 	// pOx - END - func_water support
 	
 	if (world.fadein == 1)
@@ -1378,8 +1377,7 @@ void() WaterMove =
 	
 	if ( !(self.flags & FL_INWATER) )
 	{	
-
-// player enter water sound
+		// player enter water sound
 
 		if (self.watertype == CONTENT_LAVA)
 			sound (self, CHAN_BODY, "player/inlava.wav", 1, ATTN_NORM);
@@ -1629,17 +1627,9 @@ void() PlayerPreThink =
 		//if (self.button2) PlayerJump ();
 		//else self.flags = self.flags | FL_JUMPRELEASED;
 	}
-	/*
-	if (self.flags & FL_DUCKED)
-	{
-		if (self.velocity_x > 100)
-			self.velocity_x = 100;
-
-		if (self.velocity_y > 100)
-			self.velocity_y = 100;
-	}
-	*/
 };
+
+.float breathcount;
 	
 /*
 ================
@@ -1657,12 +1647,13 @@ void() CheckPowerups =
 	if (self.invisible_finished)
 	{
 // sound and screen flash when items starts to run out
+/*
 		if (self.invisible_sound < time)
 		{
-			sound (self, CHAN_AUTO, "items/inv3.wav", 0.5, ATTN_IDLE);
+		//	sound (self, CHAN_AUTO, "items/inv3.wav", 0.5, ATTN_IDLE);
 			self.invisible_sound = time + ((random() * 3) + 1);
 		}
-
+*/
 
 		if (self.invisible_finished < time + 3)
 		{
@@ -1775,6 +1766,26 @@ void() CheckPowerups =
 // suit	
 	if (self.radsuit_finished)
 	{
+
+		if (self.rebreather_sound < time)
+		{
+			if (self.waterlevel >= 3)
+			{
+				if (self.breathcount == 0)
+				{
+					sound (self, CHAN_AUTO, "player/u_breath1.wav", 0.5, ATTN_IDLE);
+					self.breathcount = 1;
+				}
+				else
+				{
+					sound (self, CHAN_AUTO, "player/u_breath2.wav", 0.5, ATTN_IDLE);
+					self.breathcount = 0;
+					pointparticles(particleeffectnum("TR_GRENADE"), (self.origin + '0 0 24'), '0 32 0', 1);					
+				}				
+				self.rebreather_sound = time + ((random() * 5) + 2);
+			}
+		}		
+		
 		self.air_finished = time + 12;		// don't drown
 		
 // sound and screen flash when items starts to run out
@@ -1807,6 +1818,25 @@ void() CheckPowerups =
 // rebreather	
 	if (self.rebreather_finished)
 	{
+
+		if (self.rebreather_sound < time)
+		{
+			if (self.waterlevel >= 3)
+			{
+				if (self.breathcount == 0)
+				{
+					sound (self, CHAN_AUTO, "player/u_breath1.wav", 0.5, ATTN_IDLE);
+					self.breathcount = 1;
+				}
+				else
+				{
+					sound (self, CHAN_AUTO, "player/u_breath2.wav", 0.5, ATTN_IDLE);
+					self.breathcount = 0;
+				}				
+				self.rebreather_sound = time + ((random() * 5) + 1);
+			}
+		}	
+	
 		self.air_finished = time + 12;		// don't drown
 		
 // sound and screen flash when items starts to run out
@@ -1846,7 +1876,7 @@ void() CheckPowerups =
 		{
 			if (self.silencer_time == 1)
 			{
-				sprint (self, "Silencer is wearing off\n");
+				sprint (self, "Doubler is wearing off\n");
 				stuffcmd (self, "bf\n");
 				sound (self, CHAN_AUTO, "items/inv2.wav", 1, ATTN_NORM);
 				self.silencer_time = time + 1;
@@ -1911,7 +1941,7 @@ void() W_roomTrace =
 //	Q3Surface_Impact(org);	
 	roomwidth = vlen(org);
 	
-//Trace room width +y
+//Trace room width -y
 	traceline (source, source + '0 -2048 0', FALSE, self);
 	org = trace_endpos;
 //	Q3Surface_Impact(org);	
@@ -2495,6 +2525,11 @@ void(entity targ, entity attacker) ClientObituary =
 				bprint (" blew up\n");
 				return;
 			}
+			if (attacker.classname == "func_forcefield")
+			{
+				bprint (" became one with the force... field\n");
+				return;
+			}			
 			if (attacker.solid == SOLID_BSP && attacker) // != world)
 			{
 				bprint (" was squished\n");

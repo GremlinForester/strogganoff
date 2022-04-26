@@ -277,21 +277,50 @@ void() armor_touch =
 	if (other.classname != "player")
 		return;
 
-	if (self.classname == "item_armor1" 
-	|| self.classname == "item_armor_jacket")
+	if (self.classname == "item_armor1" || self.classname == "item_armor_jacket")
 	{
-		type = 0.3;
-		value = 100;
-		bit = IT_ARMOR_JACKET;
+		if (other.items & IT_ARMOR_COMBAT) 
+		{
+			bit = IT_ARMOR_COMBAT;
+			type = 0.6;
+			value = 50;
+		}
+		else if (other.items & IT_ARMOR_BODY)
+		{
+			bit = IT_ARMOR_BODY;
+			type = 0.8;	
+			value = 50;			
+		}
+		else{
+			type = 0.3;
+			value = 100;	
+			bit = IT_ARMOR_JACKET;
+		}
 	}
-	else if (self.classname == "item_armor2"
-	|| self.classname == "item_armor_combat")
+	
+	if (self.classname == "item_armor2" || self.classname == "item_armor_combat")
 	{
-		type = 0.6;
-		value = 150;
-		bit = IT_ARMOR_COMBAT;
+		if (other.items & IT_ARMOR_BODY)
+		{
+			bit = IT_ARMOR_BODY;
+			type = 0.8;			
+			value = 75;
+		}
+		else{
+			type = 0.6;
+			value = 150;
+			bit = IT_ARMOR_COMBAT;
+		}
 	}
-	else if (self.classname == "item_armor_shard")
+	
+	if (self.classname == "item_armor_body")
+	{
+		type = 0.8;
+		value = 200;
+		bit = IT_ARMOR_BODY;
+	}	
+	
+	if (self.classname == "item_armor_shard")
 	{
 		if (other.items & IT_ARMOR_JACKET){
 			bit = IT_ARMOR_JACKET;
@@ -311,25 +340,9 @@ void() armor_touch =
 		} 
 		value = 2;
 	}
-	else
-	{
-		type = 0.8;
-		value = 200;
-		bit = IT_ARMOR_BODY;
-	}
-	
-//	if (other.armortype*other.armorvalue >= type*value)
-//		return;
-
-/*		
-	other.armortype = type;
-	other.armorvalue += value;
-	other.items = other.items - (other.items & (IT_ARMOR1 | IT_ARMOR2 | IT_ARMOR3)) + bit;
-*/
 
 	other.armorvalue = other.armorvalue += value;
 	other.armortype = type;
-
 	
 	if (other.armorvalue >= 200)
 		other.armorvalue = 200;

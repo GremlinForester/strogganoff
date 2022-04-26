@@ -17,7 +17,7 @@ void() blaster_base_touch={
 	self.solid = SOLID_NOT;
 	self.velocity = '0 0 0';
 	self.avelocity = '0 0 0';
-	
+
 	self.think = SUB_Remove;
 	self.nextthink = time + 0.01;
 	
@@ -34,7 +34,6 @@ void() blaster_base_touch={
 	traceline(self.origin, self.origin + (v_forward * self.maxs_x), FALSE, self);
 	
 	T_Damage (other, self, self.owner, self.dmg);
-	
 };
 
 void(vector entOrg, vector aimAngle, float speed, float damage, float clr, float glowSize, float lightLev) fire_blaster_base={

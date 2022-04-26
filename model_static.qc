@@ -309,3 +309,8 @@ void() model_static =
 		self.effects = self.effects | EF_ADDITIVE | EF_DOUBLESIDED;	
 	}
 };
+
+void() model_static_brush =
+{
+	model_static();
+}

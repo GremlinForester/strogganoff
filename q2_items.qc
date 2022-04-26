@@ -166,11 +166,19 @@ void() item_silencer =
 	precache_sound ("misc/ar3_pkup.wav");
 	self.noise = "misc/ar3_pkup.wav";
 	setmodel (self, "models/items/silencer/tris.md2");
-	self.netname = "Silencer";
+	self.netname = "Doubler";
 //	self.items = IT_SILENCER;
 	self.modelflags = MF_ROTATE;
 	setsize (self, '-16 -16 -16', '16 16 16');
 	StartItem ();
+}
+
+/*QUAKED item_doubler (.3 .3 1) (-16 -16 -16) (16 16 16)
+model="models/items/silencer/"
+*/
+void() item_doubler =
+{
+	item_silencer();
 }
 
 /*QUAKED item_breather (.3 .3 1) (-16 -16 -16) (16 16 16)

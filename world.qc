@@ -599,6 +599,8 @@ Quake 2 MP Map ladder volumes
 	
 	precache_sound ("weapons/HGRENT1A.WAV");
 	precache_sound ("weapons/ROCKLF1A.wav");
+	
+	precache_sound ("items/suit2.wav");	
 
 //
 // Setup light animation tables. 'a' is total darkness, 'z' is maxbright.
