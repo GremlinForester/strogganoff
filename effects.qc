@@ -3,9 +3,6 @@
 
 .float isdecor;
 
-void() make_bubbles;
-void() bubble_bob;
-
 vector() wall_velocity =
 {
 	local vector	vel;
@@ -500,80 +497,6 @@ void(float damage) spawn_touchblood =
 	SpawnBlood (self.origin + vel*0.01, vel, damage);
 };
 
-//MrC: TODO: deathbubbles and other built-in particle effects should be replaced by a generic particle spawner that uses effectinfo
-//need particle spawner like particle_spawner for level designers
-
-void() DeathBubblesSpawn =
-{
-//local entity	bubble;
-
-#ifndef opgrade
-	if (self.owner.health > 1) // was a previous opgrade - not sure of intent, removes spawner after respawn
-	if (self.owner.waterlevel != 3)
-		{
-#ifdef codefix
-			remove(self);	// remove bubble spawner
-#endif
-			return;
-		}
-#endif
-/*
-	bubble = spawn();
-	setmodel (bubble, "progs/s_bubble.spr");
-	setorigin (bubble, self.owner.origin + '0 0 24');
-	bubble.movetype = MOVETYPE_NOCLIP;
-	bubble.solid = SOLID_NOT;
-	bubble.velocity = '0 0 15';
-	bubble.nextthink = time + 0.5;
-	bubble.think = bubble_bob;
-	bubble.classname = "bubble";
-	bubble.frame = 0;
-	bubble.cnt = 0;
-	setsize (bubble, '-8 -8 -8', '8 8 8');
-*/
-// note: fn sets think - the calling code below always resets it
-	make_bubbles();
-	nspawn.touch = SUB_Null;
-#ifndef opgrade
-	setorigin (nspawn, self.owner.origin + '0 0 24'); // can eliminate this step by setting it below
-#endif
-
-	self.nextthink = time + 0.1;
-
-	self.think = DeathBubblesSpawn;
-	self.air_finished = self.air_finished + 1;
-	if (self.air_finished >= self.bubble_count)
-		remove(self);
-};
-
-void(float num_bubbles) DeathBubbles =
-{
-#define bubble_spawner newmis
-//local entity	bubble_spawner;
-	
-	bubble_spawner = spawn();
-	setorigin (bubble_spawner, self.origin
-#ifdef opgrade
-																					 + '0 0 24'
-#endif
-	);
-//	bubble_spawner.movetype = MOVETYPE_NONE;
-//	bubble_spawner.solid = SOLID_NOT;
-	bubble_spawner.nextthink = time
-#ifdef opgrade
-									 			+ 0.01;
-#else
-												 + 0.1;
-#endif
-	bubble_spawner.think = DeathBubblesSpawn;
-//	bubble_spawner.air_finished = 0;
-	bubble_spawner.owner = self;
-	bubble_spawner.bubble_count = num_bubbles;
-//	return;
-
-#undef bubble_spawner
-};
-
 //Thanks to LadyHavoc for DPMOD from which the newdecor/breakable stuff is based. 
 
 entity(entity e) newdecor =
@@ -677,7 +600,6 @@ void() SetVModelOverlay_fade_fast =
 	self.nextthink = time + 0.01;
 };
 
-
 void() SetVModelOverlay_fade =
 {
 	if (self.owner.health <= 0)
@@ -702,7 +624,29 @@ void() SetVModelOverlay_fade =
 	self.nextthink = time + 0.1;
 };
 
-//MrC: Pass entity to one of these for self/other.
+void() SetVModelOverlay_hold =
+{
+	if (self.owner.health <= 0)
+	{
+		remove(self);
+		return;
+	}
+
+	if (self.owner.waterlevel <= 2){
+		self.think = SetVModelOverlay_fade_fast; //SUB_Remove;
+		self.owner.numoverlays -= 1;
+	}
+	else{
+		self.think = SetVModelOverlay_hold;
+	}
+	
+//	self.think = SetVModelOverlay_hold;
+	self.nextthink = time + 0.1;
+};
+
+//MrC: Pass entity to one of these for self/other. TODO: Other self, this is your future self. Pass it an entity like in that tutorial you wrote.
+//To future self: what tutorial?
+//To past self: like the tutorial you're going to write, anyway you'll figure it out.
 
 void(vector pos, string model, float skinnum, vector ColorMod, float additive) SetVModelOverlayOther =
 {
@@ -738,7 +682,7 @@ void(vector pos, string model, float skinnum, vector ColorMod, float additive) S
 };
 
 
-void(vector pos, string model, float skinnum, vector ColorMod, float tim, float maxoverlays) SetVModelOverlaySelf =
+void(vector pos, string model, float skinnum, vector ColorMod, float tim, float maxoverlays, float watercheck) SetVModelOverlaySelf =
 {
 	local entity overlay;
 	
@@ -751,21 +695,38 @@ void(vector pos, string model, float skinnum, vector ColorMod, float tim, float 
 	overlay = spawn();
 	overlay.movetype = MOVETYPE_NONE;
 	overlay.solid = SOLID_NOT;
-	overlay.effects = overlay.effects + EF_ADDITIVE + EF_NOGUNBOB; //EF_NODEPTHTEST
+	overlay.alpha = 1;	
+	if (watercheck = 2){
+		if(self.items & IT_SUIT){
+			overlay.effects = overlay.effects + EF_NOGUNBOB;// + EF_ADDITIVE;
+			overlay.alpha = 0.5;			
+		}
+		else
+		{
+			overlay.effects = overlay.effects + EF_NOGUNBOB;
+		}
+	}
+	else{
+		overlay.effects = overlay.effects + EF_NOGUNBOB + EF_ADDITIVE;
+	}
 	overlay.viewmodelforclient = self;
 	overlay.owner = self;
 	overlay.classname = "client_overlay";
-	overlay.alpha = 1;
 	overlay.colormod = ColorMod;
 	overlay.skin = skinnum;
 	setmodel(overlay, model);
 	setorigin(overlay, pos);
 	self.numoverlays++;
+	
+	if (watercheck >= 1){
+	overlay.think = SetVModelOverlay_hold;
+	}
+	else{
 	overlay.think = SetVModelOverlay_fade;
+	}
 	overlay.nextthink = time + tim;
 };
 
-//float (entity targ) visible;
 .float radius;
 .float nextShakeSound;
 
@@ -775,16 +736,13 @@ void() point_shake_think =
 	local float shakeRadius;
 	shakeRadius = self.radius;
 	local float shaketargetCount;
-	local float r = random() * 3;	
-	
-	//pointparticles(particleeffectnum("slimesplash_small"), self.origin, '0 0 0', 1);
+	local float r = random() * 3;
 	
 	if (self.parent){
 		self.tag_entity = find(world, targetname, self.parent);	
 		self.owner = find(world, targetname, self.parent);
 	
 		setorigin (self, (randompos(self.owner.absmin, self.owner.absmax)));
-	//	setorigin (self, (self.owner.mins + self.owner.maxs));
 	}
 	
 //	VLOG(self.origin);
@@ -804,28 +762,20 @@ void() point_shake_think =
 			if(shakeTarget.health > 0)
 			{
 				shaketargetCount++;
-			//	bprint("Shake targets: ");
-			//	bprint (ftos(shaketargetCount));
-			//	bprint("\n");
 				local float dist = vlen(shakeTarget.origin - self.origin);
-				//if (vlen(shakeTarget.origin - self.origin) < shakeRadius)
 
 				if (dist < shakeRadius)					
 				{
-				//	if (visible(shakeTarget) )
-				//	{
-						if (r < 1)
-						{
-							shakeTarget.punchangle_x += crandom() * self.intensity;
-						}
-						else if (r < 2){ 
-							shakeTarget.punchangle_y += crandom() * self.intensity;
-						}
-						else{ 
-							shakeTarget.punchangle_z += crandom() * self.intensity;
-						}
-						
-				//	}
+					if (r < 1)
+					{
+						shakeTarget.punchangle_x += crandom() * self.intensity;
+					}
+					else if (r < 2){ 
+						shakeTarget.punchangle_y += crandom() * self.intensity;
+					}
+					else{ 
+						shakeTarget.punchangle_z += crandom() * self.intensity;
+					}
 				}
 			}
 		}

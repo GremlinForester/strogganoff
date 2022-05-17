@@ -82,6 +82,7 @@ framerloop($run1, $run18, stroggzombie_run1, 0.1,
 	ai_rep($run9, ai_run, 2, 0, 0, 0, 2, 4, 6, 7);
 	frame_arb($run17,ai_run(3));
 	frame_arb($run18,ai_run(8));
+	self.glowmod = '2 0 0';
 );
 
 
@@ -193,6 +194,7 @@ framer($attc1, $attc12, stroggzombie_attc1, stroggzombie_run1, 0.1,
 
 	ai_face();
 	frame_arb($attc12,StroggZombieFireGrenade('-12 -19 29'));
+	self.glowmod = '2 0 0';
 );
 
 
@@ -232,6 +234,7 @@ framer($paina1, $paina12, stroggzombie_paina1, stroggzombie_run1, 0.1,
 	frametwo_arb($paina4,$paina6,ai_pain(1));
 );
 
+void() stroggzombie_die;
 
 /*
 PAIN 2
@@ -239,12 +242,14 @@ PAIN 2
 
 framer($painb1, $painb28, stroggzombie_painb1, stroggzombie_run1, 0.07,
 
-	frame_arb($painb1,sound(self, CHAN_VOICE, "zombie/z_pain1.wav", 1, ATTN_NORM));
+	frame_arb($painb1,sound(self, CHAN_VOICE, "zombie/z_pain1.wav", 1, ATTN_NORM);self.glowmod = '2 2 0';);
 	frame_arb($painb9,sound(self, CHAN_BODY, "zombie/z_fall.wav", 1, ATTN_NORM));
+	frame_arb($painb18,sound(self, CHAN_VOICE, "world/x_alarm.wav", 1, ATTN_IDLE););	
 	frame_arb($painb25,ai_painforward(1));
 	frame_arb($painb3,ai_pain(8));
 	frame_arb($painb4,ai_pain(6));
 	frametwo_arb($painb2,$painb5,ai_pain(2));
+	frame_arb($painb28,stroggzombie_die(););
 );
 
 
@@ -304,17 +309,28 @@ framer($paine1, $paine9, stroggzombie_paine1, stroggzombie_paine10, 0.1,
 
 framer($paine13, $paine30, stroggzombie_paine13, stroggzombie_run1, 0.1,
 
+	frame_arb($paine13,self.glowmod = '2 2 0';);
+	frame_arb($paine20,sound(self, CHAN_VOICE, "world/x_alarm.wav", 1, ATTN_IDLE););
 	frame_arb($paine28,ai_pain(1));
 	frame_arb($paine25,ai_painforward(5));
 	frame_arb($paine26,ai_painforward(3));
 	frame_arb($paine27,ai_painforward(1));
+	frame_arb($paine30,stroggzombie_die(););	
 );
 
+void() stroggzombie_cleanup =
+{
+	remove(self);	
+};
 
 void() stroggzombie_die =
 {
-	gibbs("progs/h_zombie.mdl");
-	sound (self, CHAN_VOICE, "zombie/z_gib.wav", 1, ATTN_NORM);
+//	gibbs("progs/h_zombie.mdl");
+	gibMonster();
+	self.solid = SOLID_NOT;
+	self.alpha = 0;
+	self.think = stroggzombie_cleanup;
+	self.nextthink = time + 0.1;
 };
 
 /*
@@ -385,8 +401,6 @@ void(entity attacker, float take) stroggzombie_pain =
 		stroggzombie_paind1 ();
 };
 
-
-
 //============================================================================
 
 /*QUAKED monster_stroggzombie (1 0 0) (-16 -16 -24) (16 16 32) ambush
@@ -398,7 +412,7 @@ void() monster_stroggzombie =
 		remove(self);
 		return;
 	}
-	
+
 	self.classname = "monster_stroggzombie";
 
 	precache_model ("progs/zombie.mdl");
@@ -430,6 +444,9 @@ void() monster_stroggzombie =
 	self.th_pain = stroggzombie_pain;
 	self.th_die = stroggzombie_die;
 	self.th_missile = stroggzombie_missile;
+
+	self.glowmod = '0 2 0';
+	self.skin = 1;
 
 	walkmonster_start;
 };

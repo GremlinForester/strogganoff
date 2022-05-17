@@ -1,3 +1,23 @@
+//Entities
+
+//Lights
+#define START_OFF 1
+
+//Trap Shooters
+#define SPAWNFLAG_SUPERSPIKE 1
+#define SPAWNFLAG_LASER 2
+
+//Used by func_bossgate, func_illusionary, func_episodegate
+void() func_wall;
+
+.float wait;
+.float delay;
+.float variance;
+
+//used by target_speaker
+.float volume;
+.float attenuation;
+
 const float STAT_Q2WEAPONS = 32;
 const float STAT_AMMO_SHELLS = 33;
 const float STAT_AMMO_BULLETS = 34;	
@@ -13,6 +33,7 @@ const float STAT_INV_SILENCER = 43;
 const float STAT_INVINVUL = 44;
 const float STAT_ENVIRO = 45;
 const float STAT_FRAGS = 46;
+const float STAT_PLAYERTYPE = 47;
 
 .float isHub;
 
@@ -894,7 +915,8 @@ OVERLAY_BLOODSPLAT1,
 OVERLAY_BLOODSPLAT2,
 OVERLAY_BLOODSPLAT3,
 OVERLAY_BLOODSPLAT4,
-OVERLAY_FACE
+OVERLAY_FACE,
+OVERLAY_SLIME
 };
 
 /*

@@ -16,8 +16,6 @@ shared/strogganoff_defs.qc
 
 extras/extras_defs.qc   // pOx - additions
 
-
-
 playermovement.qc
 
 // frikbot module - 0.10.1.cat 
@@ -82,15 +80,12 @@ q2/monsterq2_flyer.qc
 q2/monsterq2_tank.qc
 q2/monsterq2_hover.qc
 q2/monsterq2_insane.qc
-
 q2/monsterq2_supertank.qc
 q2/monsterq2_boss2.qc
 //q2/monsterq2_boss3.qc //more of a prop than a monster
 q2/monsterq2_boss32.qc //do this first so jorg can spawn makron
 q2/monsterq2_boss31.qc
-
 q2/monsterq2_zombie.qc
-
 q2/monsterq2_spawner.qc
 
 q1/ogre.qc
@@ -115,5 +110,67 @@ extras/extras_emitters.qc
 extras/extras_water.qc
 extras/extras_triggers.qc
 extras/extras_misc.qc
+
+//Goal: the order of entities here shouldn't matter, any shared defs, fields etc... will always come before these. 
+//These should be as "high level" as possible.
+entities/trigger_multiple.qc
+entities/trigger_key.qc
+entities/trigger_once.qc
+entities/trigger_relay.qc
+entities/trigger_secret.qc
+entities/trigger_counter.qc
+entities/trigger_changelevel.qc
+entities/trigger_teleport.qc
+entities/trigger_setskill.qc
+entities/trigger_onlyregistered.qc
+entities/trigger_hurt.qc
+entities/trigger_push.qc
+entities/trigger_monsterjump.qc
+entities/trigger_splashzone.qc
+entities/trigger_stripkeys.qc
+entities/trigger_shake.qc
+entities/trigger_coop_checkpoint.qc
+entities/trigger_setplayertype.qc
+entities/trigger_ladder.qc
+entities/misc_banner.qc
+entities/misc_deadsoldier.qc
+entities/misc_teleporttrain.qc
+entities/misc_fireball.qc 
+entities/misc_explobox.qc 
+entities/misc_explobox2.qc
+entities/misc_eastertank.qc
+entities/misc_breakable_glass.qc 
+entities/misc_noisemaker.qc
+entities/light.qc
+entities/trap_spikeshooter.qc
+entities/trap_shooter.qc 
+entities/func_plat.qc 
+entities/func_train.qc 
+entities/func_forcefield.qc 
+entities/func_wall.qc 
+entities/func_illusionary.qc 
+entities/func_episodegate.qc 
+entities/func_bossgate.qc
+entities/func_button.qc 
+entities/func_train_activator.qc
+entities/func_timer.qc
+entities/func_rotating.qc
+entities/func_door.qc 
+entities/func_door_secret.qc 
+entities/func_door_rotating.qc
+entities/func_explosive.qc 
+entities/point_radar.qc
+entities/point_sensor.qc 
+entities/info_null.qc 
+entities/info_notnull.qc 
+entities/info_intermission.qc 
+entities/info_player_start.qc 
+entities/info_player_start2.qc 
+entities/info_player_deathmatch.qc 
+entities/info_player_coop.qc 
+entities/info_teleport_destination.qc
+entities/path_corner.qc 
+entities/target_speaker.qc
+entities/viewthing.qc
 
 debug.qc

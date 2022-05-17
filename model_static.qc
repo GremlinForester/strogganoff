@@ -6,6 +6,7 @@
 
 .float bUseEnable;
 .float bUseEnvLight;
+.float bToggleVisibility;
 
 .float onUse;
 
@@ -13,8 +14,11 @@
 
 .float eState;
 
-#define HOLOGRAM 1
-//#define SOLID_BSP 2
+//NOTE: Always denote spawnflags with SF or something, SOLID_BSP was a really crappy choice for a spawnflag name!
+
+#define SF_HOLOGRAM 1
+#define SF_SOLID_BSP 2
+#define SF_START_INVIS 4
 
 .vector holo_color;
 
@@ -49,7 +53,7 @@ void() model_static_think =
 		}	
 	}
 	
-	if (self.spawnflags & HOLOGRAM)
+	if (self.spawnflags & SF_HOLOGRAM)
 	{
 		self.colormod = self.holo_color;
 		
@@ -76,13 +80,13 @@ void() model_static_think =
 		*/
 		if(self.eState == OPEN){
 			self.eState = CLOSING;
-			self.solid = SOLID_NOT;
+		//	self.solid = SOLID_NOT;
 			self.onUse = 0;
 		}
 		
 		if (self.eState == CLOSED){
 			self.eState = OPENING;
-			self.solid = SOLID_NOT;
+		//	self.solid = SOLID_NOT;
 			self.onUse = 0;
 		}
 
@@ -156,6 +160,20 @@ void() model_static_use =
 		return;
 	
 	self.onUse = 1;
+	
+	if (self.bToggleVisibility >= 1)	
+	{	
+		LOG("Model static used.");
+		fieldFloatFlipFlop(SOLID_BSP, SOLID_NOT, solid);
+				
+		if (self.effects & EF_NODRAW){
+		removeBitsFromEntity(self, effects, EF_NODRAW);	
+		}
+		else{
+		addBitsToEntity(self, effects, EF_NODRAW);
+		}	
+	}
+	
 	//todo enable/disable fire targets
 	SUB_UseTargets();
 }
@@ -234,7 +252,7 @@ void() model_static_init =
 
 	if (!self.scale)
 		self.scale = 1.0;
-	
+		
 	self.nextthink = time + 0.1;
 	self.think = model_static_think;
 }
@@ -243,9 +261,8 @@ void() model_static =
 {
 	self.classname = "model_static";	
 	makevectors(self.angles);
-	
-	/*
-	if (self.spawnflags & SOLID_BSP)
+
+	if (self.spawnflags & SF_SOLID_BSP)
 	{
 		self.solid = SOLID_BSP;
 	}
@@ -253,9 +270,6 @@ void() model_static =
 	{
 		self.solid = SOLID_NOT;
 	}
-	*/
-	
-	self.solid = SOLID_NOT;	
 	
 	/*
 	if (self._color){
@@ -304,10 +318,17 @@ void() model_static =
 
 	self.frame = self.anim_startframe;
 
-	if (self.spawnflags & HOLOGRAM)
+	if (self.spawnflags & SF_HOLOGRAM)
 	{
-		self.effects = self.effects | EF_ADDITIVE | EF_DOUBLESIDED;	
+		addBitsToEntity(self,effects,EF_ADDITIVE | EF_DOUBLESIDED);
 	}
+	
+	if (self.spawnflags & SF_START_INVIS)
+	{
+		self.bToggleVisibility = 1;
+		addBitsToEntity(self,effects,EF_NODRAW);		
+	}	
+	
 };
 
 void() model_static_brush =

@@ -258,6 +258,7 @@ void() worldspawn =
 	addstat (STAT_INVINVUL, 2, inv_pickup_invulnerability);
 	addstat (STAT_ENVIRO,2, inv_pickup_envirosuit);
 	addstat (STAT_FRAGS,2, frags);
+	addstat (STAT_PLAYERTYPE, 2, playerType);	
 	
 #ifndef cv_setdef
 // set cv defaults if set def package not used

@@ -17,7 +17,7 @@
 void() gibMonster =
 {
 	local float n;
-		
+
 	sound (self, CHAN_VOICE, "misc/udeath.wav", 1, ATTN_NORM);
 	
 	//everyone gets a little meat	
@@ -34,8 +34,10 @@ void() gibMonster =
 	|| self.classname == "monster_flyer"
 	|| self.classname == "monster_supertank"
 	|| self.classname == "monster_tank_commander"
+	|| self.classname == "monster_stroggzombie"	
 	|| self.classname == "monster_tank")
 	{
+		T_RadiusDamage (self, self.owner, 200, other);
 		ThrowGib ("models/objects/debris1/tris.md2", self.health * GIB_VELOCITY_FLAMING_MUL, GIB_FLAMING, 1);
 		ThrowGib ("models/objects/debris2/tris.md2", self.health * GIB_VELOCITY_FLAMING_MUL, GIB_FLAMING, 1);
 		ThrowGib ("models/objects/debris3/tris.md2", self.health * GIB_VELOCITY_FLAMING_MUL, GIB_FLAMING, 1);
@@ -43,8 +45,7 @@ void() gibMonster =
 		for (n= 0; n < 2; n++){
 		ThrowGib ("models/objects/gibs/gear/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_METAL, 0.75);
 		}
-		
-		T_RadiusDamage (self, self.owner, 10, other);
+
 		sound (self, CHAN_BODY, "weapons/r_exp3.wav", 1, ATTN_NORM);
 
 		WriteByte (MSG_BROADCAST, SVC_TEMPENTITY);

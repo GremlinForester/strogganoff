@@ -1373,6 +1373,12 @@ void() WaterMove =
 			self.dmgtime = time + 1;
 			T_Damage (self, world, world, 4*self.waterlevel);
 		}
+		if (self.waterlevel >= 3){
+			if (self.numoverlays <= 1){
+				SetVModelOverlaySelf('0 0 0', "models/overlay.md3", OVERLAY_SLIME, '1 0 0', 0.1, 2);
+				self.numoverlays++;				
+			}			
+		}
 	}
 	
 	if ( !(self.flags & FL_INWATER) )

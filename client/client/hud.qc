@@ -516,6 +516,115 @@ void Hud_DrawSBar(vector pos)
 		}
 	}
 	/*
+	if (getstati(STAT_PLAYERTYPE) = 0)
+	{
+	switch (self.skin)
+		{
+		case 0:
+			drawpic(pos+'106 0 0', "players/male/grunt_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 1:
+			drawpic(pos+'106 0 0', "players/male/cipher_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 2:
+			drawpic(pos+'106 0 0', "players/male/claymore_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 3:
+			drawpic(pos+'106 0 0', "players/male/flak_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 4:
+			drawpic(pos+'106 0 0', "players/male/howitzer_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 5:
+			drawpic(pos+'106 0 0', "players/male/major_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 6:
+			drawpic(pos+'106 0 0', "players/male/nightops_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 7:
+			drawpic(pos+'106 0 0', "players/male/pointman_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 8:
+			drawpic(pos+'106 0 0', "players/male/psycho_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 9:
+			drawpic(pos+'106 0 0', "players/male/rampage_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 10:
+			drawpic(pos+'106 0 0', "players/male/razor_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 11:
+			drawpic(pos+'106 0 0', "players/male/recon_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 12:
+			drawpic(pos+'106 0 0', "players/male/scout_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 13:
+			drawpic(pos+'106 0 0', "players/male/sniper_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 14:
+			drawpic(pos+'106 0 0', "players/male/viper_i", '0 24 0', '1 1 1', 1, 0);
+			break;			
+		}
+	}
+	if (getstati(STAT_PLAYERTYPE) = 1)
+	{
+	switch (self.skin)
+		{
+		case 0:
+			drawpic(pos+'106 0 0', "players/female/athena_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 1:
+			drawpic(pos+'106 0 0', "players/female/brianna_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 2:
+			drawpic(pos+'106 0 0', "players/female/cobalt_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 3:
+			drawpic(pos+'106 0 0', "players/female/ensign_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 4:
+			drawpic(pos+'106 0 0', "players/female/jezebel_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 5:
+			drawpic(pos+'106 0 0', "players/female/jungle_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 6:
+			drawpic(pos+'106 0 0', "players/female/lotus_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 7:
+			drawpic(pos+'106 0 0', "players/female/stiletto_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 8:
+			drawpic(pos+'106 0 0', "players/female/venus_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 9:
+			drawpic(pos+'106 0 0', "players/female/voodoo_i", '0 24 0', '1 1 1', 1, 0);
+			break;			
+		}
+	}
+	if (getstati(STAT_PLAYERTYPE) = 2)
+	{
+	switch (self.skin)
+		{
+		case 0:
+			drawpic(pos+'106 0 0', "players/cyborg/oni911_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 1:
+			drawpic(pos+'106 0 0', "players/cyborg/ps9000_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		case 2:
+			drawpic(pos+'106 0 0', "players/cyborg/tyr574_i", '0 24 0', '1 1 1', 1, 0);
+			break;
+		}
+	}
+	else
+	{
+		drawpic(pos+'112 0 0', "pics/i_health", '0 24 0', '1 1 1', 1, 0);
+	}
+	*/
+
+	/*
 	if (self.playerType == 0)
 	{
 	switch (self.skin)

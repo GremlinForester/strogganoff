@@ -262,7 +262,7 @@ void() q2playerPainSound =
 // water pain sounds
 	if (self.watertype == CONTENT_WATER && self.waterlevel == 3)
 	{
-		DeathBubbles(1);
+		//DeathBubbles(1); TODO: bubbles particle call here.
 			playerVOSound(PLAYER_VOICE_GURP);
 		return;
 	}
@@ -273,7 +273,7 @@ void() q2playerPainSound =
 // FIX ME	put in some steam here
 #ifdef opgrade
 		if (self.waterlevel == 3)
-			DeathBubbles(1);
+			//DeathBubbles(1); TODO: slime bubbles? particle call here.
 #endif
 
 		if (random() > 0.5)
@@ -392,7 +392,7 @@ void() q2playerDeathSound =
 	// water death sounds
 	if (self.waterlevel == 3)
 	{
-		DeathBubbles(20);
+		//DeathBubbles(20); //TODO: bubbles particle call here.
 		playerVOSound(PLAYER_VOICE_DROWN);
 		return;
 	}
