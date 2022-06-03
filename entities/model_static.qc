@@ -1,37 +1,3 @@
-.float bAnimLoop;
-//.float bAutoReset;
-.float anim_startframe;
-.float anim_lastframe;
-.float anim_lastframe_hold;
-
-.float bUseEnable;
-.float bUseEnvLight;
-.float bToggleVisibility;
-
-.float onUse;
-
-.float oscale; //original scale
-
-.float eState;
-
-//NOTE: Always denote spawnflags with SF or something, SOLID_BSP was a really crappy choice for a spawnflag name!
-
-#define SF_HOLOGRAM 1
-#define SF_SOLID_BSP 2
-#define SF_START_INVIS 4
-
-.vector holo_color;
-
-enum
-{
-	NONE = 0,
-	OPEN = 1,
-	OPENING = 2,
-	CLOSED = 3,
-	CLOSING = 4,
-	LOCKED = 5
-}; //6
-
 void() model_static_think =
 {
 	local float closedframe = self.anim_startframe;

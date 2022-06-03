@@ -52,7 +52,7 @@ void() CSQC_Init =
 	increment = 1;
 	
 	mouse = cvar("sensitivity");
-	if (!mouse)	cvar_set("sensitivity", "3");	
+	if (!mouse)	cvar_set("sensitivity", "3");
 };
 
 //-----------------------------------------------------------------------------
@@ -79,12 +79,12 @@ void() CSQC_UpdateView =
 	vid_conheight = cvar("vid_conheight");
 	
 	R_ClearScene();
-	
+
 	R_AddEntities(MASK_NORMAL | MASK_ENGINE | MASK_ENGINEVIEWMODELS);
 	R_SetView(VF_DRAWWORLD, 1);
 	R_SetView(VF_DRAWCROSSHAIR, 1);
 
-	R_RenderScene();
+	R_RenderScene();	
 	
 	if (showscores)
 	{

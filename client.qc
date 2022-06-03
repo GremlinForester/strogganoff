@@ -289,14 +289,6 @@ void(float plrVO) playerVOSound =
 	sound(self, CHAN_VOICE, playerVO, 1, ATTN_IDLE);
 }
 
-/*QUAKED info_intermission (1 0.5 0.5) (-16 -16 -16) (16 16 16)
-This is the camera point for the intermission.
-Use mangle instead of angle, so you can set pitch or roll as well as yaw.  'pitch roll yaw'
-*/
-void() info_intermission =
-{
-};
-
 void(entity ent) stripKeys =
 {
 	ent.items_q2keys = ent.items_q2keys - (ent.items_q2keys & (IT_KEY_DATACD | IT_KEY_POWERCUBE | IT_KEY_PYRAMID | IT_KEY_DATASPINNER | IT_KEY_PASS | IT_KEY_BLUE | IT_KEY_RED | IT_KEY_HEAD) );
@@ -633,30 +625,6 @@ void() changelevel_touch =
 	self.think = execute_changelevel;
 	self.nextthink = time + 0.1;
 };
-
-/*QUAKED trigger_changelevel (0.5 0.5 0.5) ? NO_INTERMISSION
-When the player touches this, he gets sent to the map listed in the "map" variable.  Unless the NO_INTERMISSION flag is set, the view will go to the info_intermission spot and display stats.
-*/
-void() trigger_changelevel =
-{
-	if (!self.map)
-#ifdef noobjerr
-	{
-		self.map = "start"; // DM or SP - we default here if a mapper forgot a map link
-
-#ifdef xvars1
-// future add cvar_string("svx_tc_rndmap") - random map selected from list
-		if (cvar_string("svx_tc_defmap")) self.map = cvar_string("svx_tc_defmap");
-#endif
-	}
-#else
-		objerror ("changelevel trigger doesn't have map");					//opgrade protected
-#endif
-	
-	InitTrigger ();
-	self.touch = changelevel_touch;
-};
-
 
 /*
 =============================================================================
@@ -1046,23 +1014,6 @@ void() PutClientInServer =
 =============================================================================
 */
 
-
-/*QUAKED info_player_start (1 0 0) (-16 -16 -24) (16 16 24)
-The normal starting point for a level.
-*/
-void() info_player_start =
-{
-};
-
-
-/*QUAKED info_player_start2 (1 0 0) (-16 -16 -24) (16 16 24)
-Only used on start map for the return point from an episode.
-*/
-void() info_player_start2 =
-{
-};
-
-
 /*
 saved out by quaked in region mode
 */
@@ -1072,36 +1023,6 @@ void() testplayerstart =
 {
 };
 #endif
-
-/*QUAKED info_player_deathmatch (1 0 1) (-16 -16 -24) (16 16 24)
-potential spawning position for deathmatch games
-*/
-void() info_player_deathmatch =
-{
-};
-
-
-/*
-  Allow trigger system to toggle info_player_coop entities.
-    This lets maps unlock player_coop zones sequentially, or at-will.
-*/
-void() infoPlayerCoop_toggle={
-  self.isActive = !self.isActive;
-};
-
-/*QUAKED info_player_coop (1 0 1) (-16 -16 -24) (16 16 24)
-potential spawning position for coop games
-
-  .coopID = player with matching coopID will spawn here.
-  
-  .isActive = player can only spawn at active spawn positions.
-*/
-void() info_player_coop =
-{  
-  if(!self.use){
-    self.use = infoPlayerCoop_toggle;
-  }
-};
 
 /*
 ===============================================================================
@@ -2031,6 +1952,7 @@ void() PlayerPostThink =
 		return ;
 
 #endif
+
 	if (!self.view_ofs) // == '0 0 0')
 		return;		// intermission or finale
 	if (self.deadflag)

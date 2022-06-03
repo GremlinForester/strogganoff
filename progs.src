@@ -28,9 +28,6 @@ materialsys_surface.qc
 materialsys_gibs.qc
 materialsys_breakable.qc
 
-model_static.qc
-particle_spawner.qc
-
 //Co-op
 coop/ext_coop.qc
 
@@ -113,6 +110,7 @@ extras/extras_misc.qc
 
 //Goal: the order of entities here shouldn't matter, any shared defs, fields etc... will always come before these. 
 //These should be as "high level" as possible.
+entities/base.qc
 entities/trigger_multiple.qc
 entities/trigger_key.qc
 entities/trigger_once.qc
@@ -160,7 +158,10 @@ entities/func_door_secret.qc
 entities/func_door_rotating.qc
 entities/func_explosive.qc 
 entities/point_radar.qc
-entities/point_sensor.qc 
+entities/point_sensor.qc
+entities/point_shake.qc
+entities/model_static.qc
+entities/particle_spawner.qc 
 entities/info_null.qc 
 entities/info_notnull.qc 
 entities/info_intermission.qc 
@@ -171,6 +172,7 @@ entities/info_player_coop.qc
 entities/info_teleport_destination.qc
 entities/path_corner.qc 
 entities/target_speaker.qc
+entities/target_objective.qc
 entities/viewthing.qc
 
 debug.qc

@@ -457,10 +457,7 @@ framer($death201, $death235, q2soldier_die2, SUB_Null, 0.1,
 
 framer($death301, $death345, q2soldier_die3, SUB_Null, 0.1,
 	
-	frame_arb($death303,
-
-		q2soldier_dead();
-	);
+	frame_arb($death303, q2soldier_dead(););
 );
 
 // DEATH 4

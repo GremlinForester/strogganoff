@@ -1,23 +1,3 @@
-//Entities
-
-//Lights
-#define START_OFF 1
-
-//Trap Shooters
-#define SPAWNFLAG_SUPERSPIKE 1
-#define SPAWNFLAG_LASER 2
-
-//Used by func_bossgate, func_illusionary, func_episodegate
-void() func_wall;
-
-.float wait;
-.float delay;
-.float variance;
-
-//used by target_speaker
-.float volume;
-.float attenuation;
-
 const float STAT_Q2WEAPONS = 32;
 const float STAT_AMMO_SHELLS = 33;
 const float STAT_AMMO_BULLETS = 34;	

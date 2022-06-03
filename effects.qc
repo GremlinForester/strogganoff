@@ -556,6 +556,7 @@ void(vector org, float mfsize) SpawnMuzzleFlashTP =
 void(vector pos, float mfsize, float trans) SpawnMuzzleFlash =			//Spawns a first person muzzleflash
 {
 	local entity mflashfp;
+	local float r = random();
 	
 	mflashfp = spawn();
 	mflashfp.movetype = MOVETYPE_NONE;
@@ -565,12 +566,28 @@ void(vector pos, float mfsize, float trans) SpawnMuzzleFlash =			//Spawns a firs
 	mflashfp.classname = "flashfp";
 	mflashfp.effects = mflashfp.effects + EF_ADDITIVE;
 	mflashfp.alpha = trans;
-	setmodel(mflashfp, "progs/muzzleflash3.spr");
+//	setmodel(mflashfp, "progs/muzzleflash3.spr"); 
+	setmodel(mflashfp, "progs/combust.spr32");
 	setsize(mflashfp, '0 0 0', '0 0 0');
 	setorigin(mflashfp, pos);
 	mflashfp.scale = mfsize;
+	if (r < 1){
+		mflashfp.frame = 1;	
+	}
+	else if (r < 0.7){
+		mflashfp.frame = 2;	
+	}
+	else if (r < 0.4){
+		mflashfp.frame = 3;	
+	}
+	else 
+	{
+		mflashfp.frame = 4;	
+	}	
 	mflashfp.think = SUB_Remove;
 	mflashfp.nextthink = time + 0.04;
+
+//	effect(pos, "progs/combust.spr32", 1, 5, 30);	
 };
 
 .float numoverlays;
@@ -631,7 +648,7 @@ void() SetVModelOverlay_hold =
 		remove(self);
 		return;
 	}
-
+	
 	if (self.owner.waterlevel <= 2){
 		self.think = SetVModelOverlay_fade_fast; //SUB_Remove;
 		self.owner.numoverlays -= 1;
@@ -695,7 +712,7 @@ void(vector pos, string model, float skinnum, vector ColorMod, float tim, float 
 	overlay = spawn();
 	overlay.movetype = MOVETYPE_NONE;
 	overlay.solid = SOLID_NOT;
-	overlay.alpha = 1;	
+	overlay.alpha = 1;
 	if (watercheck = 2){
 		if(self.items & IT_SUIT){
 			overlay.effects = overlay.effects + EF_NOGUNBOB;// + EF_ADDITIVE;
@@ -726,119 +743,3 @@ void(vector pos, string model, float skinnum, vector ColorMod, float tim, float 
 	}
 	overlay.nextthink = time + tim;
 };
-
-.float radius;
-.float nextShakeSound;
-
-void() point_shake_think =
-{
-	local entity shakeTarget;
-	local float shakeRadius;
-	shakeRadius = self.radius;
-	local float shaketargetCount;
-	local float r = random() * 3;
-	
-	if (self.parent){
-		self.tag_entity = find(world, targetname, self.parent);	
-		self.owner = find(world, targetname, self.parent);
-	
-		setorigin (self, (randompos(self.owner.absmin, self.owner.absmax)));
-	}
-	
-//	VLOG(self.origin);
-
-	if (self.estate == ESTATE_OFF){
-		self.nextthink = time + 0.1;
-		self.think = point_shake_think;
-		return;
-	}
-
-	shakeTarget = findradius(self.origin, shakeRadius);
-	shaketargetCount = 0;
-	while(shakeTarget)
-	{
-		if(shakeTarget.flags & FL_CLIENT)
-		{
-			if(shakeTarget.health > 0)
-			{
-				shaketargetCount++;
-				local float dist = vlen(shakeTarget.origin - self.origin);
-
-				if (dist < shakeRadius)					
-				{
-					if (r < 1)
-					{
-						shakeTarget.punchangle_x += crandom() * self.intensity;
-					}
-					else if (r < 2){ 
-						shakeTarget.punchangle_y += crandom() * self.intensity;
-					}
-					else{ 
-						shakeTarget.punchangle_z += crandom() * self.intensity;
-					}
-				}
-			}
-		}
-	shakeTarget = shakeTarget.chain;
-	}
-
-	self.nextthink = time + 0.1;
-	self.think = point_shake_think;
-	
-	
-	//loop a sound at owner's position (self.noise)
-	if (self.owner)
-	{
-		if (time < self.nextShakeSound)
-			return;
-
-		sound (self.owner, CHAN_AUTO, self.noise, 1, ATTN_STATIC);
-
-		self.nextShakeSound = time + soundlength(self.noise);
-	}
-}
-
-void() point_shake_use =
-{
-	estateFlipFlop(ESTATE_ON, ESTATE_OFF);
-	
-	self.nextthink = time + 0.1;
-	self.think = point_shake_think;
-}
-
-void() point_shake =
-{
-	self.classname = "point_shake";	
-	self.movetype = MOVETYPE_NOCLIP;
-	setmodel (self, "");
-	setsize (self, '0 0 0', '0 0 0');
-	setorigin (self, self.origin);
-	self.use = point_shake_use;
-
-	if (self.parent){
-		self.tag_entity = find(world, targetname, self.parent);	
-		self.owner = find(world, targetname, self.parent);
-		setorigin (self, self.origin - self.owner.mins);	
-	}
-	
-	if (!self.radius){
-		objerror("point_shake without radius");
-	}
-	
-	if (!self.intensity){
-		self.intensity = 1.0;
-	}
-
-	self.noise = "world/quake.wav";
-
-	if (self.targetname){
-		self.estate = ESTATE_OFF;
-	}
-	else
-	{
-		self.estate = ESTATE_ON;	
-	}
-
-	self.nextthink = time + 0.1;
-	self.think = point_shake_think;
-}

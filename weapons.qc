@@ -623,9 +623,9 @@ void() switchItemNum =
 
 /*
 ============
-CycleItemNext
+CycleSkinNext
 
-Go to the next item with ammo
+Go to the next availible skin by playerType
 ============
 */
 
@@ -996,7 +996,7 @@ void() ImpulseCommands =
 			return;
 		}
 		
-		sprint (self, "FLIP OFF");
+		sprint (self, "FLIP OFF\n");
 		q2player_flip();
 	}
 
@@ -1005,7 +1005,7 @@ void() ImpulseCommands =
 			return;
 		}
 
-		sprint (self, "SALUTE");		
+		sprint (self, "SALUTE\n");		
 		q2player_salute();
 	}
 	
@@ -1014,7 +1014,7 @@ void() ImpulseCommands =
 			return;
 		}
 
-		sprint (self, "TAUNT");		
+		sprint (self, "TAUNT\n");		
 		q2player_taunt();
 	}
 
@@ -1034,7 +1034,7 @@ void() ImpulseCommands =
 			q2player_ping("models/mapobjects/hub/stroggos_system/logo_strogg.MD3", 0, 0.1);
 		}
 
-		sprint (self, "WAVE");
+		sprint (self, "WAVE\n");
 		q2player_wave();
 	}
 
@@ -1054,7 +1054,7 @@ void() ImpulseCommands =
 			q2player_ping_point("models/mapobjects/hub/stroggos_system/logo_strogg.MD3", 0, 0.1);
 		}
 
-		sprint (self, "POINT");		
+		sprint (self, "POINT\n");		
 		q2player_point();
 	}
 	
@@ -1126,6 +1126,9 @@ void() W_WeaponFrame =
 		{
 			self.state = STATE_ATTACKING;
 			SuperDamageSound ();
+//			Q3Surface_Impact(self.cursor_trace_endpos);
+//			T_Damage (self.cursor_trace_ent, self, self, 40);
+//			VLOG(self.cursor_trace_endpos);
 			W_Attack ();
 		}
 	}

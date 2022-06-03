@@ -448,18 +448,26 @@ void() tank_dead={
 	setorigin(self, self.origin);
 	
 	self.movetype = MOVETYPE_TOSS;
+	
 	//self->svflags |= SVF_DEADMONSTER;
 	self.nextthink = 0;
 };
 
+/*
 framer($FRAME_death101, $FRAME_death132, tank_move_death, tank_dead, 0.1, 
-	ai_rep($FRAME_death101, ai_charge, -7,-2,-2,1,3,6,1,1);
+	ai_rep($FRAME_death101, movetogoal, -7,-2,-2,1,3,6,1,1);
 	
-	ai_rep($FRAME_death109, ai_charge, 2,0,0,0,-2,0,0,-3);
+	ai_rep($FRAME_death109, movetogoal, 2,0,0,0,-2,0,0,-3);
 	
-	ai_rep($FRAME_death117, ai_charge, 0,0,0,0,0,0,-4,-5);	//-5 originally -6 but -6 is no-Op
+	ai_rep($FRAME_death117, movetogoal, 0,0,0,0,0,0,-4,-5);	//-5 originally -6 but -6 is no-Op
 	
-	ai_rep($FRAME_death125, ai_charge, -4,-5,-7,-15,-5,0,0,0);
+	ai_rep($FRAME_death125, movetogoal, -4,-5,-7,-15,-5,0,0,0);
+	frame_arb($FRAME_death125, tank_thud(););
+);
+*/
+
+framer($FRAME_death101, $FRAME_death132, tank_move_death, tank_dead, 0.1,
+	
 	frame_arb($FRAME_death125, tank_thud(););
 );
 
@@ -471,6 +479,10 @@ void() tank_die={
 		gibMonster();
 		remove(self);
 		return;
+	}
+
+	if (self.skin != 1){
+	self.skin = 1;
 	}
 	
 	if (self.deadflag == DEAD_DEAD)
@@ -528,13 +540,16 @@ void() monster_tank={
 	
 	setsize(self, '-32 -32 -16', '32 32 72');
 	
-	if (strcmp(self.classname, "monster_tank_commander") == 0){
-		self.health = 1000;
-		//self->gib_health = -225;
-	}
-	else{
-		self.health = 750;
-		//self->gib_health = -200;
+	if (!self.health)
+	{
+		if (strcmp(self.classname, "monster_tank_commander") == 0){
+			self.health = 1000;
+			//self->gib_health = -225;
+		}
+		else{
+			self.health = 750;
+			//self->gib_health = -200;
+		}
 	}
 	self.max_health = self.health;
 	

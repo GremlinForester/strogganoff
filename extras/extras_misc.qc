@@ -18,8 +18,6 @@ Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 /*
 	Written by Frank Condello <pox@planetquake.com>
 	Modified by Ryan Smith
-	Additions by MrC
-	
 	
 	Misc functions/entities....
 	

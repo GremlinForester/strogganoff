@@ -338,6 +338,7 @@ void() monster_boss =
 
 entity	le1, le2;
 float	lightning_end;
+void() door_go_down;
 
 void() lightning_fire =
 {

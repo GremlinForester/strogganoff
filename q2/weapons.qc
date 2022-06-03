@@ -846,7 +846,6 @@ void() Weapon_Blaster_Fire=
 		damage = 10;
 
 	fire_blaster_base(self.origin, self.v_angle, 800, damage, 200, 100, 200);	
-	
 	SpawnMuzzleFlash(WEP_BLASTER_MFLASH_OFFSET_FP, WEP_BLASTER_MFLASH_SCALE, 0.5);
 	SpawnMuzzleFlashTP(WEP_BLASTER_MFLASH_OFFSET_TP, 0.5);
 	sound (self, CHAN_WEAPON, "weapons/BLASTF1A.WAV", 1, ATTN_NORM);

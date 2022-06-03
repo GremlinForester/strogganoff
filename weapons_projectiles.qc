@@ -469,11 +469,12 @@ void() BecomeExplosion =
 	self.movetype = MOVETYPE_NONE;
 	self.velocity = '0 0 0';
 	self.touch = SUB_Null;
-	setmodel (self, "progs/s_explod.spr");
+	setmodel (self, "progs/cgexplodex.spr32");
 	self.solid = SOLID_NOT;
 	self.think = SUB_Remove;
 	self.nextthink = 0.6;
-	effect(self.origin, "progs/s_explod.spr", 0, 5, 10);
+//	effect(self.origin, "progs/s_explod.spr", 0, 5, 10);
+	effect(self.origin, "progs/cgexplodex.spr32", 0, 36, 30);	
 };
 
 void() T_MissileTouch =
