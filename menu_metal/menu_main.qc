@@ -15,8 +15,6 @@ void() m_init={
   dynamic_precache();
   
   localcmd("disconnect;togglemenu;cd play 2;\n");
-  registercvar("gamemode", "0", CF_CLIENT | CF_SERVER | CF_CLIENT_FROM_SERVER | CF_SERVER_FROM_CLIENT);
-  registercvar("saveslot", "0", CF_CLIENT | CF_ARCHIVE);
   registercvar("cl_hud_alpha", "0", CF_CLIENT | CF_ARCHIVE);
   registercvar("cl_hud_color", "0", CF_CLIENT | CF_ARCHIVE);
   //registercvar("cl_hud_sway", "0", 1);
@@ -27,15 +25,6 @@ void() m_init={
   registercvar("cl_net_fav2", "0", CF_CLIENT | CF_ARCHIVE);
   registercvar("cl_net_fav3", "0", CF_CLIENT | CF_ARCHIVE);
   registercvar("cl_net_fav4", "0", CF_CLIENT | CF_ARCHIVE);
-  
-  //registercvar("cl_color_mil", "0 0 0 0 0 0", CF_CLIENT | CF_ARCHIVE);
-  //registercvar("cl_color_srv", "0 0 0 0 0 0", CF_CLIENT | CF_ARCHIVE);
-  //registercvar("cl_color_psc", "0 0 0 0 0 0", CF_CLIENT | CF_ARCHIVE);
-  
-  registercvar("cl_newgameplus","0", CF_CLIENT | CF_ARCHIVE);
-  
-  cvar_set("r_framedatasize", "16");  //FIXME - issue in engine
-  
   
   ui_colors_set_player_list();
   menu_setup_mainservers();

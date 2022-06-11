@@ -45,23 +45,23 @@ void() click_options_back={
 // ini function, called by '_f' function as a setup func
 void() m_options_i={
   
-  menu_parent_setup(VIEW_ORG + '0 80', '208 224');
-
-  options_title = lbl_img(MENU_ORG + menu_parent_center_width(5), '1 1', IMG_OPTION_TITLE, '1 1 1', VIEW_CTX, M_OPTIONS, 1, UI_FLAG_SIZE_IMG );
+  menu_parent_setup([UI_CTR_x - 196/2, VIEW_ORG_y + 64], '196 196');
   
-  options_controls = btn_text_callback(MENU_ORG + menu_parent_center_width(45), '16 16', "CONTROLS", VIEW_CTX, M_OPTIONS, click_options_controls, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_GREEN, 1, UI_FLAG_SIZE_IMG);
+  options_title = lbl_text( menu_parent_center_width(74), '18 18', "OPTIONS", '0.75 0.75 0.75', VIEW_CTX | VIEW_CTY, M_OPTIONS, 1, UI_FLAG_SIZE_IMG );
+  
+  options_controls = btn_text_callback(menu_parent_center_width(112), '14 14', "CONTROLS", VIEW_CTX, M_OPTIONS, click_options_controls, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_GREEN, 1, UI_FLAG_SIZE_IMG);
   options_controls.fontId = FONT_NUM_BLACK_OPS_ONE;
   
-  options_graphics = btn_text_callback(MENU_ORG + menu_parent_center_width(64), '16 16', "GRAPHICS", VIEW_CTX, M_OPTIONS, click_options_graphics, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_GREEN,1, UI_FLAG_SIZE_IMG);
+  options_graphics = btn_text_callback(menu_parent_center_width(131), '14 14', "GRAPHICS", VIEW_CTX, M_OPTIONS, click_options_graphics, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_GREEN,1, UI_FLAG_SIZE_IMG);
   options_graphics.fontId = FONT_NUM_BLACK_OPS_ONE;
   
-  options_audio = btn_text_callback(MENU_ORG + menu_parent_center_width(83), '16 16', "SOUND", VIEW_CTX, M_OPTIONS, click_options_audio, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_GREEN, 1, UI_FLAG_SIZE_IMG);
+  options_audio = btn_text_callback( menu_parent_center_width(150), '14 14', "SOUND", VIEW_CTX, M_OPTIONS, click_options_audio, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_GREEN, 1, UI_FLAG_SIZE_IMG);
   options_audio.fontId = FONT_NUM_BLACK_OPS_ONE;
   
-  options_gameplay = btn_text_callback(MENU_ORG + menu_parent_center_width(102), '16 16', "GAMEPLAY", VIEW_CTX, M_OPTIONS, click_options_gameplay, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_GREEN, 1, UI_FLAG_SIZE_IMG);
+  options_gameplay = btn_text_callback(menu_parent_center_width(169), '14 14', "GAMEPLAY", VIEW_CTX, M_OPTIONS, click_options_gameplay, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_GREEN, 1, UI_FLAG_SIZE_IMG);
   options_gameplay.fontId = FONT_NUM_BLACK_OPS_ONE;
   
-  options_back = btn_text_callback(MENU_ORG + menu_parent_center_width(178), '16 16', "BACK", VIEW_CTX, M_OPTIONS, click_options_back, CLR_DEF_TXT_GRAY_SMOOTH,CLR_DEF_GREEN, 1, UI_FLAG_SIZE_IMG);
+  options_back = btn_text_callback( menu_parent_center_width(188), '14 14', "BACK", VIEW_CTX, M_OPTIONS, click_options_back, CLR_DEF_TXT_GRAY_SMOOTH,CLR_DEF_GREEN, 1, UI_FLAG_SIZE_IMG);
   options_back.fontId = FONT_NUM_BLACK_OPS_ONE;
 };
 
