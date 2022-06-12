@@ -1,7 +1,6 @@
 /*
   threshold3
   author: Peter Roohr
-  date: 04/13/2018
   overview: impl of menu_api
 */
 
@@ -315,6 +314,7 @@ entity(vector org, vector siz, void() onchange, string lblText, string ini_bind_
     self.isclick = bindfld_isclick;
     self.ischange = bindfld_ischange;
     self.subid = FALSE;
+    self.fontId = FONT_NUM_BLACK_OPS_ONE; //ini default
   self = this;
   return newtxt;
 };
@@ -926,7 +926,7 @@ void(float menu_id) menu_clear_items={
 float(float keynr, float uiFlags) menu_textfilter_validate={
   local float itr, valid;
   valid = FALSE;
-  while(itr <= UI_INPUT_FILTER_MAX){
+  while(itr < UI_INPUT_FILTER_MAX){
     if( UI_INPUT_FILTER[itr] == keynr ){
       if( (uiFlags & UI_FLAG_TXTFIELD_NUM) ){
         if( (itr >= 26) && (itr <= 36) ){

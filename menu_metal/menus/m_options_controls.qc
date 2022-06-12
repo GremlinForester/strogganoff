@@ -1,8 +1,6 @@
 /*
 threshold3
 Author: Peter Roohr
-Date: 4/17/2018
-mod: 07/19/2019
 Overview: options-controls
 */
 
@@ -17,22 +15,8 @@ entity controls_mouse_invert;
 entity controls_mouse_invert_on;
 entity controls_mouse_invert_off;
 entity controls_target;
-entity controls_fire_group1;
-entity controls_fire_group2;
-entity controls_fire_group3;
-entity controls_fire_group4;
-entity controsl_select_fire_group;
-entity controsl_select_fire_chain;
-entity controls_open_bind_menu;
-
-/*entity controls_fire_group;
-entity controls_group_next;
-entity controls_group_prev;
-entity controls_select_group1;
-entity controls_select_group2;
-entity controls_select_group3;
-entity controls_select_group4;
-*/
+entity controls_zoom;
+entity controls_headlight;
 
 //movement
 entity controls_forward;
@@ -40,23 +24,35 @@ entity controls_backward;
 entity controls_strafe_left;
 entity controls_strafe_right;
 entity controls_sprint;
-entity controls_ram;
+entity controls_jump;
+entity controls_crouch;
 
-//piloting
-entity controls_radar;
-entity controls_navs;
+//inventory
 entity controls_objectives;
 entity controls_tacmap;
-//entity controls_repair;
+
+entity controls_wep_next;
+entity controls_wep_prev;
+entity controls_inv_prev;
+entity controls_inv_next;
+entity controls_inv_use;
+entity controls_inv_drop_weapon;
+entity controls_inv_drop_ammo;
+
+//multiplayer
 entity controls_chat_team;
 entity controls_chat_all;
-entity controls_zoom;
-entity controls_regen;
+
+entity controls_taunt_flip;
+entity controls_taunt_salute;
+entity controls_taunt_taunt;
+entity controls_taunt_wave;
+entity controls_taunt_point;
+
 entity controls_camera;
-entity controls_headlight;
 
 //controls constants
-string IMG_CONTROLS_TITLE = "gfx/menu/options/options_title.png";
+string IMG_CONTROLS_TITLE = "gfx/menu/options/options_title.png"; //ugh, re-used elsewhere, will need to clean up eventually.
 
 //controls callbacks
 entity controls_mouse_sense;
@@ -108,55 +104,9 @@ void() click_control_mouse_invert_off={
 void() txt_control_bind_target={
   menu_keybind_change ("impulse 7");
 };
+
 void() txt_control_bind_fire={
   menu_keybind_change ("+attack");
-};
-void() txt_control_bind_fire_grp1={
-  menu_keybind_change ("+button3");
-};
-void() txt_control_bind_fire_grp2={
-  menu_keybind_change ("+button4");
-};
-void() txt_control_bind_fire_grp3={
-  menu_keybind_change ("+button5");
-};
-void() txt_control_bind_fire_grp4={
-  menu_keybind_change ("+button6");
-};
-void() txt_control_bind_fire_grp5={
-  menu_keybind_change ("+button7");
-};
-//mechwarrior-style weapon groups not needed, but left in for modders who want legacy controls.
-/*
-void() txt_control_bind_grp_nxt={
-  menu_keybind_change ("impulse 4");
-};
-void() txt_control_bind_grp_prv={
-  menu_keybind_change ("impulse 5");
-};
-void() txt_control_bind_sel_grp1={
-  menu_keybind_change ("impulse 1");
-};
-void() txt_control_bind_sel_grp2={
-  menu_keybind_change ("impulse 2");
-};
-void() txt_control_bind_sel_grp3={
-  menu_keybind_change ("impulse 3");
-};
-void() txt_control_bind_sel_grp4={
-  menu_keybind_change ("impulse 23");
-};*/
-//void() txt_control_bind_sel_grp5={
-//  menu_keybind_change ("impulse 24");
-//};
-void() txt_control_bind_fire_grp={
-  menu_keybind_change ("impulse 10");
-};
-void() txt_control_bind_fire_chain={
-  menu_keybind_change ("impulse 11");
-};
-void() txt_control_bind_group_menu={
-  menu_keybind_change ("impulse 31");
 };
 void() txt_control_bind_forward={
   menu_keybind_change ("+forward");
@@ -173,35 +123,75 @@ void() txt_control_bind_straferight={
 void() txt_control_bind_sprint={
   menu_keybind_change ("+button8");
 };
-void() txt_control_bind_ram={
-  menu_keybind_change("impulse 27");
+void() txt_control_bind_jump={
+  menu_keybind_change ("+jump");
 };
-void() txt_control_bind_regen={
-  menu_keybind_change ("+button10");
+
+void() txt_control_bind_crouch={
+  menu_keybind_change ("+button4");
 };
-void() txt_control_bind_radar={
-  menu_keybind_change ("impulse 8");
-};
-void() txt_control_bind_nav={
-  menu_keybind_change ("impulse 9");
-};
+
 void() txt_control_bind_obj={
   menu_keybind_change ("impulse 25");
 };
 void() txt_control_bind_map={
   menu_keybind_change ("impulse 12");
 };
-void() txt_control_bind_repair={
-  menu_keybind_change ("impulse 26");
+
+void() txt_control_bind_wep_next={
+  menu_keybind_change ("impulse 30");
 };
+void() txt_control_bind_wep_prev={
+  menu_keybind_change ("impulse 31");
+};
+
+void() txt_control_bind_inv_prev={
+  menu_keybind_change ("impulse 32");
+};
+
+void() txt_control_bind_inv_next={
+  menu_keybind_change ("impulse 33");
+};
+
+void() txt_control_bind_inv_use={
+  menu_keybind_change ("impulse 34");
+};
+
+void() txt_control_bind_inv_drop_wep={
+  //menu_keybind_change ("impulse 12");
+  //TODO
+};
+
+void() txt_control_bind_inv_drop_ammo={
+  //menu_keybind_change ("impulse 12");
+  //TODO
+};
+
 void() txt_control_bind_chat_team={
   menu_keybind_change ("messagemode2");
 };
 void() txt_control_bind_chat_all={
   menu_keybind_change ("messagemode");
 };
+
+void() txt_control_bind_taunt_flip={
+  menu_keybind_change ("impulse 110");
+};
+void() txt_control_bind_taunt_salute={
+  menu_keybind_change ("impulse 111");
+};
+void() txt_control_bind_taunt_taunt={
+  menu_keybind_change ("impulse 112");
+};
+void() txt_control_bind_taunt_wave={
+  menu_keybind_change ("impulse 113");
+};
+void() txt_control_bind_taunt_point={
+  menu_keybind_change ("impulse 114");
+};
+
 void() txt_control_bind_zoom={
-  menu_keybind_change ("+button9");
+  menu_keybind_change ("+button3");
 };
 void() txt_control_bind_camera={
   menu_keybind_change ("impulse 30");
@@ -262,63 +252,55 @@ void(vector rootOfs) controls_ini_movement={
   
   controls_sprint = inp_keybindfield(rootOfs + '86 126', '14 14', txt_control_bind_sprint, "Sprint:  ", "+button8", M_OPTIONS_CONTROLS, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
 
-  controls_ram = inp_keybindfield(rootOfs + '86 148', '14 14', txt_control_bind_ram, "Ram Attack:  ", "impulse 27", M_OPTIONS_CONTROLS, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
+  controls_jump = inp_keybindfield(rootOfs + '86 148', '14 14', txt_control_bind_jump, "Jump:  ", "+jump", M_OPTIONS_CONTROLS, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
+  
+  controls_crouch = inp_keybindfield(rootOfs + '86 170', '14 14', txt_control_bind_crouch, "Crouch:  ", "+button4", M_OPTIONS_CONTROLS, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
+};
+
+
+void(vector rootOfs) controls_ini_inventory={
+  
+  controls_objectives = inp_keybindfield(rootOfs + '40 0', '14 14', txt_control_bind_forward, "Toggle Objectives:  ", "todo", M_OPTIONS_CONTROLS, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
+
+  controls_tacmap = inp_keybindfield(rootOfs + '40 19', '14 14', txt_control_bind_forward, "Tac Map?:  ", "todo", M_OPTIONS_CONTROLS, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
+  
+  controls_wep_next = inp_keybindfield(rootOfs + '40 38', '14 14', txt_control_bind_wep_next, "Next Weapon:  ", "impulse 30", M_OPTIONS_CONTROLS, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
+  
+  controls_wep_prev = inp_keybindfield(rootOfs + '40 60', '14 14', txt_control_bind_wep_prev, "Prev Weapon:  ", "impulse 31", M_OPTIONS_CONTROLS, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
+  
+  controls_inv_next = inp_keybindfield(rootOfs + '40 82', '14 14', txt_control_bind_inv_next, "Next Item:  ", "impulse 32", M_OPTIONS_CONTROLS, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
+  
+  controls_inv_prev = inp_keybindfield(rootOfs + '40 104', '14 14', txt_control_bind_inv_prev, "Prev Item:  ", "impulse 33", M_OPTIONS_CONTROLS, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
+  
+  controls_inv_use = inp_keybindfield(rootOfs + '40 126', '14 14', txt_control_bind_inv_use, "Use Item:  ", "impulse 34", M_OPTIONS_CONTROLS, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
+  
+  controls_inv_drop_weapon = inp_keybindfield(rootOfs + '40 148', '14 14', txt_control_bind_inv_drop_wep, "Drop Weapon:  ", "todo", M_OPTIONS_CONTROLS, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
+  
+  controls_inv_drop_ammo = inp_keybindfield(rootOfs + '40 170', '14 14', txt_control_bind_inv_drop_ammo, "Drop Ammo:  ", "todo", M_OPTIONS_CONTROLS, CLR_DEF_TXT_GRAY_SMOOTH, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
   
 };
 
 
-void(vector rootOfs) controls_ini_combat={
-  controls_target = inp_keybindfield(rootOfs + '56 16', '14 14', txt_control_bind_target, "Acquire Target:  ", "impulse 7", M_OPTIONS_CONTROLS, CLR_DEF_WHITE, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
-   
-  controls_fire_group1 = inp_keybindfield(rootOfs + '56 38', '14 14', txt_control_bind_fire_grp1, "Fire Group 1:  ", "+button3", M_OPTIONS_CONTROLS, CLR_DEF_WHITE, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
+void(vector rootOfs) controls_ini_net={
+
+  controls_target = inp_keybindfield(rootOfs + '56 0', '14 14', txt_control_bind_target, "Ping area:  ", "impulse 7", M_OPTIONS_CONTROLS, CLR_DEF_WHITE, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
+
+  controls_chat_team = inp_keybindfield(rootOfs + '56 19', '14 14 0', txt_control_bind_chat_team, "Chat Team:  ", "messagemode2", M_OPTIONS_CONTROLS, CLR_DEF_WHITE, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
+
+  controls_chat_all = inp_keybindfield(rootOfs + '56 38', '14 14 0', txt_control_bind_chat_all, "Chat All:  ", "messagemode", M_OPTIONS_CONTROLS, CLR_DEF_WHITE, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
   
-  controls_fire_group2 = inp_keybindfield(rootOfs + '56 60', '14 14', txt_control_bind_fire_grp2, "Fire Group 2:  ", "+button4", M_OPTIONS_CONTROLS, CLR_DEF_WHITE, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
+  controls_taunt_flip = inp_keybindfield(rootOfs + '56 60', '14 14 0', txt_control_bind_taunt_flip, "Flipoff:  ", "impulse 110", M_OPTIONS_CONTROLS, CLR_DEF_WHITE, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));;
   
-  controls_fire_group3 = inp_keybindfield(rootOfs + '56 82', '14 14', txt_control_bind_fire_grp3, "Fire Group 3:  ", "+button5", M_OPTIONS_CONTROLS, CLR_DEF_WHITE, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
-
-  controls_fire_group4 = inp_keybindfield(rootOfs + '56 104', '14 14', txt_control_bind_fire_grp4, "Fire Group 4:  ", "+button6", M_OPTIONS_CONTROLS, CLR_DEF_WHITE, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
-
-  controsl_select_fire_group = inp_keybindfield(rootOfs + '56 126', '14 14', txt_control_bind_fire_grp, "Toggle Group Fire:  ", "impulse 10", M_OPTIONS_CONTROLS, CLR_DEF_WHITE, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
+  controls_taunt_salute = inp_keybindfield(rootOfs + '56 82', '14 14 0', txt_control_bind_taunt_salute, "Salute:  ", "impulse 111", M_OPTIONS_CONTROLS, CLR_DEF_WHITE, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));;
   
-  controsl_select_fire_chain = inp_keybindfield(rootOfs + '56 148', '14 14', txt_control_bind_fire_chain, "Toggle Chain Fire:  ", "impulse 11", M_OPTIONS_CONTROLS, CLR_DEF_WHITE, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
-
-  controls_open_bind_menu = inp_keybindfield(rootOfs + '56 170', '14 14', txt_control_bind_group_menu, "Toggle Weapon Bind Menu:  " , "impulse 31", M_OPTIONS_CONTROLS, CLR_DEF_WHITE, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
-
-  //2.0.0 - mechwarrior-style controls aren't really needed anymore.
-  //controls_fire_group = inp_keybindfield('11 119', '14 14 0', txt_control_bind_fire, "Fire Select Group:  ", "+attack", M_OPTIONS_CONTROLS, CLR_DEF_WHITE, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
+  controls_taunt_taunt = inp_keybindfield(rootOfs + '56 104', '14 14 0', txt_control_bind_taunt_taunt, "taunt:  ", "impulse 112", M_OPTIONS_CONTROLS, CLR_DEF_WHITE, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));;
   
-  //controls_group_next = inp_keybindfield('0 238', '14 14 0', txt_control_bind_grp_nxt, "Next Weapon Group:  ", "impulse 4", M_OPTIONS_CONTROLS, CLR_DEF_WHITE, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
-
-  //controls_group_prev = inp_keybindfield('0 258', '14 14 0', txt_control_bind_grp_prv, "Prev Weapon Group:  ", "impulse 5", M_OPTIONS_CONTROLS, CLR_DEF_WHITE, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
-
-  //controls_select_group1 = inp_keybindfield('22 278', '14 14 0', txt_control_bind_sel_grp1, "Select Group 1:  ", "impulse 1", M_OPTIONS_CONTROLS, CLR_DEF_WHITE, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
-
-  //controls_select_group2 = inp_keybindfield('22 298', '14 14 0', txt_control_bind_sel_grp2, "Select Group 2:  ", "impulse 2", M_OPTIONS_CONTROLS, CLR_DEF_WHITE, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
-
-  //controls_select_group3 = inp_keybindfield('22 318', '14 14 0', txt_control_bind_sel_grp3, "Select Group 3:  ", "impulse 3", M_OPTIONS_CONTROLS, CLR_DEF_WHITE, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
-
-  //controls_select_group4 = inp_keybindfield('22 338', '14 14 0', txt_control_bind_sel_grp4, "Select Group 4:  ", "impulse 23", M_OPTIONS_CONTROLS, CLR_DEF_WHITE, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
-
-};
-
-
-void(vector rootOfs) controls_ini_pilot={
-  controls_radar = inp_keybindfield(rootOfs + '56 16', '14 14 0', txt_control_bind_radar, "Toggle RADAR:  ", "impulse 8", M_OPTIONS_CONTROLS, CLR_DEF_WHITE, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
-
-  controls_navs = inp_keybindfield(rootOfs + '56 38', '14 14 0', txt_control_bind_nav, "Show Navs:  ", "impulse 9", M_OPTIONS_CONTROLS, CLR_DEF_WHITE, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
+  controls_taunt_wave = inp_keybindfield(rootOfs + '56 126', '14 14 0', txt_control_bind_taunt_wave, "Wave:  ", "impulse 113", M_OPTIONS_CONTROLS, CLR_DEF_WHITE, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));;
   
-  controls_objectives = inp_keybindfield(rootOfs + '56 60', '14 14 0', txt_control_bind_obj, "Display Objectives:  ", "impulse 25", M_OPTIONS_CONTROLS, CLR_DEF_WHITE, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
-
-  controls_tacmap = inp_keybindfield(rootOfs + '56 82', '14 14 0', txt_control_bind_map, "Display Map:  ", "impulse 12", M_OPTIONS_CONTROLS, CLR_DEF_WHITE, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
-
-  controls_chat_team = inp_keybindfield(rootOfs + '56 104', '14 14 0', txt_control_bind_chat_team, "Chat Team:  ", "messagemode2", M_OPTIONS_CONTROLS, CLR_DEF_WHITE, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
-
-  controls_chat_all = inp_keybindfield(rootOfs + '56 126', '14 14 0', txt_control_bind_chat_all, "Chat All:  ", "messagemode", M_OPTIONS_CONTROLS, CLR_DEF_WHITE, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
+  controls_taunt_point = inp_keybindfield(rootOfs + '56 148', '14 14 0', txt_control_bind_taunt_point, "Point:  ", "impulse 114", M_OPTIONS_CONTROLS, CLR_DEF_WHITE, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));;
   
-  controls_zoom = inp_keybindfield(rootOfs + '56 148', '14 14 0', txt_control_bind_zoom, "Optical Zoom:  ", "+button9", M_OPTIONS_CONTROLS, CLR_DEF_WHITE, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
-
-  controls_regen = inp_keybindfield(rootOfs + '56 170', '14 14 0', txt_control_bind_regen, "Shield Regen:  ", "+button10", M_OPTIONS_CONTROLS, CLR_DEF_WHITE, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
-  
+  controls_zoom = inp_keybindfield(rootOfs + '56 170', '14 14 0', txt_control_bind_zoom, "Optical Zoom:  ", "+button3", M_OPTIONS_CONTROLS, CLR_DEF_WHITE, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
+ 
   controls_camera = inp_keybindfield(rootOfs + '56 192', '14 14 0', txt_control_bind_camera, "External Camera: ", "impulse 30", M_OPTIONS_CONTROLS, CLR_DEF_WHITE, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
   
   controls_headlight = inp_keybindfield(rootOfs + '56 212', '14 14 0', txt_control_bind_headlight, "Headlight: ", "impulse 32", M_OPTIONS_CONTROLS, CLR_DEF_WHITE, CLR_DEF_ARM_THREEQ, 1, (UI_FLAG_TXTFIELD_NUM | UI_FLAG_TXTFIELD_SPEC | UI_FLAG_TXTFIELD_LOW | UI_FLAG_TXTFIELD_MOUSE | UI_FLAG_TXTFIELD_FUNC));
@@ -327,18 +309,18 @@ void(vector rootOfs) controls_ini_pilot={
 // ini function, called by '_f' function as a setup func
 void() m_controls_i={
   
-  menu_parent_setup(VIEW_ORG + '0 40', '560 320');
+  menu_parent_setup([UI_CTR_x - 560/2, VIEW_ORG_y + 64], '560 320');
   
-  controls_title = lbl_img(MENU_ORG + menu_parent_center_width(5), '1 1 0', IMG_CONTROLS_TITLE, '1 1 1', VIEW_CTX, M_OPTIONS_CONTROLS, 1, UI_FLAG_SIZE_IMG );
+  controls_title = lbl_text( menu_parent_center_width(75), '18 18', "CONTROLS", '0.75 0.75 0.75', VIEW_CTX | VIEW_CTY, M_OPTIONS_CONTROLS, 1, UI_FLAG_SIZE_IMG );
   
   //movement
   controls_ini_movement(MENU_ORG + '10 58');
   
   //combat
-  controls_ini_combat(MENU_ORG + '235 45');
+  controls_ini_inventory(MENU_ORG + '235 58');
 
-  //piloting
-  controls_ini_pilot(MENU_ORG + '450 45');
+  //multiplayer
+  controls_ini_net(MENU_ORG + '425 58');
   
   controls_back = btn_text_callback(MENU_ORG + '40 272', '16 16', "BACK", VIEW_CTX, M_OPTIONS_CONTROLS, click_controls_back, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, UI_FLAG_SIZE_IMG);
   controls_back.fontId = FONT_NUM_BLACK_OPS_ONE;
@@ -362,8 +344,6 @@ void() m_controls_f={
   running on M_STATE to determine which menu_d to execute.
 */
 void() m_controls_d={
-  //local float titleLen;
-  //local vector titleOrg;
   local entity widget;
 
   gui_renderPatch9_1_32(MENU_ORG, MENU_SIZE, '0.35 0.35 0.55', 0.85, 0);
@@ -371,21 +351,16 @@ void() m_controls_d={
   drawfont_prev = drawfont;
   drawfont = FONT_NUM_BLACK_OPS_ONE;
 
-  //titleLen = stringwidth( "Controls - click a key to change it. Hit <ESC> to cancel.", 0, '16 16 0');
-  //titleOrg_x = VIEW_CTR_x - ( titleLen / 2.5 );
-  //titleOrg_y = 20;
-  //gui_renderString("Controls - click a key to change it. Hit <ESC> to cancel.", titleOrg, '1 1 1', '16 16 0', 1, 0);
-  
   //combat
-  gui_renderString("-Movement-", MENU_ORG + '46 40', CLR_DEF_ARM_THREEQ, '16 16 0', 1, 0);
+  gui_renderString("Movement", MENU_ORG + '46 40', CLR_DEF_ARM_THREEQ, '16 16 0', 1, 0);
     gui_renderString("Mouse Sensitivity:", controls_mouse_sense_less.origin - Vector2(stringwidth("Mouse Sensitivity:  ", 0, '12 12'), -1), CLR_DEF_WHITE, '12 12', 1, 0);
     gui_renderString("Invert Mouse:", controls_mouse_invert_off.origin - Vector2(stringwidth("Invert Mouse:  ", 0, '12 12'),-1), CLR_DEF_WHITE, '12 12', 1, 0);
   
-  //controls
-  gui_renderString("-Combat-", MENU_ORG + '235 40', CLR_DEF_IIF_FRIEND_BLD, '16 16 0', 1, 0);
+  //Inventory
+  gui_renderString("Inventory", MENU_ORG + '235 40', CLR_DEF_IIF_FRIEND_BLD, '16 16 0', 1, 0);
 
-  //movement
-  gui_renderString("-Piloting-", MENU_ORG + '450 40', CLR_DEF_GREEN, '16 16 0', 1, 0);
+  //Misc
+  gui_renderString("Multiplayer", MENU_ORG + '425 40', CLR_DEF_GREEN, '16 16 0', 1, 0);
   
   drawfont = drawfont_prev;
   
