@@ -1,7 +1,6 @@
 /*
 threshold3
 Author: Peter Roohr
-Date: 4/17/2018
 Overview: 
   options - graphics menu
 */

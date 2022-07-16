@@ -1,5 +1,12 @@
+rem @echo ================
+rem @echo building metal menu...
+rem @echo ================
+rem cd menu_metal
+rem win64-fteqcc.exe -Wno-mundan -srcfile menu.src
+
+
 @echo ================
-@echo building metal menu...
+@echo building menu...
 @echo ================
-cd menu_metal
-win64-fteqcc.exe -Wno-mundan -srcfile menu.src
+cd menusys_src
+win64-fteqcc.exe -srcfile menu.src
