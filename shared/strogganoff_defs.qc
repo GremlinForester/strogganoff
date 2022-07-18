@@ -1,3 +1,32 @@
+/*
+  SendEntity Entity Type Definitions
+*/
+#define SENDTYPE_PLAYER 1
+#define SENDTYPE_MONSTER 2
+#define SENDTYPE_PROJECTILE 3
+#define SENDTYPE_MISC_ENT 4
+#define SENDTYPE_MAP_OBJ 5
+
+//================================
+/*
+  SendEntity Change Flag definitions
+  -----------------------------------
+*/
+#define SENDFLAG_ORIGIN 1     //new origin value
+#define SENDFLAG_ANGLE 2      //new angle value
+#define SENDFLAG_VELOCITY 4   //new velocity value
+#define SENDFLAG_DEAD 8       //deadflag changed 
+#define SENDFLAG_CHANGE_WEP 16    //entity is making an attack
+#define SENDFLAG_DAMAGE 32    //entity took damage.
+#define SENDFLAG_IMPACT 64    //impact event, usually for projectiles.
+
+#define SENDFLAG_NEW_ENT 128  //engine-set, entity is "new" for viewing client.
+
+#define SENDFLAG_ATTACK 256
+
+//================================
+
+
 const float STAT_Q2WEAPONS = 32;
 const float STAT_AMMO_SHELLS = 33;
 const float STAT_AMMO_BULLETS = 34;	

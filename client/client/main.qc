@@ -256,3 +256,83 @@ float(float event, float parama) CSQC_InputEvent =
 	}
 	else return FALSE; 
 };
+
+
+/*
+  Remember, the read order must exactly match the write order,
+  so if you sent (changeFlags & SENDFLAG_ORIGIN), you MUST
+    WriteCoord();
+    WriteCoord();
+    WriteCoord();
+    
+    which is then read IF (changeFlags & SENDFLAG_ORIGIN)
+*/
+void(float isnew, float changeFlags) sendent_handle_player_TEST={
+  vector prevOrg;
+  vector prevAngle;
+  float prevDeadFlag;
+  
+  if( (changeFlags & SENDFLAG_ORIGIN) ){
+    self.origin_x = ReadCoord();
+    self.origin_y = ReadCoord();
+    self.origin_z = ReadCoord();
+  }
+  
+  if( (changeFlags & SENDFLAG_ANGLE) ){
+    self.angles_x = ReadAngle();
+    self.angles_y = ReadAngle();
+    self.angles_z = ReadAngle();
+  }
+  
+  if( (changeFlags & SENDFLAG_DEAD) ){
+    self.deadflag = ReadByte();
+  }
+  
+  if( (changeFlags & SENDFLAG_CHANGE_WEP) ){
+    //change player weapon to this new one
+  }
+  
+  if( (changeFlags & SENDFLAGS_NEW_ENT) ){
+    //stand up any new stuff
+  }
+  
+  if( (changeFlags & SENDFLAG_ATTACK) ){
+    //do player attack animation, etc
+  }
+  
+};
+
+/*
+  parse a network update, isnew indicates this network slot was previously empty
+  if you wish to do interpolation, be sure to make use the proper time variables: 
+    time is previous packet time, 
+    servertime is new packet time, 
+  so the tick time between packets is servertime - time and the interpolation should begin 
+  the new move at servertime and end at servertime + (servertime - time)
+*/
+void(float isNew) CSQC_Ent_Update={
+  float entType;
+  float entFlags;
+  
+  entType = ReadByte();
+  entFlags = fabs(rint(ReadLong())); //expanding entFlags values -> data/common
+  
+  switch(entType){
+    case SENDTYPE_PLAYER:
+      //TEST
+      sendent_handle_player_TEST( isnew, entFlags );
+      break;
+    case SENDTYPE_MONSTER:
+      //TODO -  handle monster
+      break;
+    case SENDTYPE_PROJECTILE:
+      //TODO -  handle projectiles
+      break;
+    case SENDTYPE_MISC_ENT:
+      //TODO -  handle misc. ents
+      break;
+    case SENDTYPE_MAP_OBJ:
+      //TODO -  handle map objects
+      break;
+  }
+};

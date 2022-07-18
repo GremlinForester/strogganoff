@@ -34,6 +34,7 @@ void()		CSQC_Shutdown;
 float(float f, float t)	CSQC_InputEvent;
 void()		CSQC_UpdateView;
 float(string s)	CSQC_ConsoleCommand;
+void(float isNew) CSQC_Ent_Update;
 
 
 /*
