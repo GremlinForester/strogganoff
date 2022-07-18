@@ -190,13 +190,13 @@ void(entity attacker, float damage)	q2chick_pain =
 
 	if (random() < 0.5)
 	{
-		self.pain_finished = time + 0.5;
+		self.pain_finished = time + 3.5;
 		q2chick_pain1 ();
 		sound (self, CHAN_VOICE, CHICK_SOUND_PAIN1, 1, ATTN_NORM);
 	}
 	else
 	{
-		self.pain_finished = time + 0.5;
+		self.pain_finished = time + 3.5;
 		q2chick_pain2 ();
 		sound (self, CHAN_VOICE, CHICK_SOUND_PAIN2, 1, ATTN_NORM);
 	}

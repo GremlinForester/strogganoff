@@ -789,7 +789,7 @@ void Hud_DrawSBar(vector pos)
 			break;
 	}
 
-	if (stat_items & IT_SILENCER)
+	if (stat_items & IT_DOUBLER)
 		drawpic(pos+'96 -20 0', "gfx/i_silencer", '16 16 0', '1 1 1', 1, 0);
 	if (stat_items & IT_BREATHER)
 		drawpic(pos+'112 -20 0', "pics/p_rebreather", '16 16 0', '1 1 1', 1, 0);

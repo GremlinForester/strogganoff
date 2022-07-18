@@ -569,8 +569,6 @@ void() T_BFGTouch =
 	remove(self);
 };
 
-void(vector org, vector vec, float dmg, vector colortint, float mflags) monster_fire_blaster;
-
 void(vector start, vector aimdir, float damage) fireBFGtrail =
 {
 	local	vector	org;

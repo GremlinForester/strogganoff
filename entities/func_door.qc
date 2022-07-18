@@ -95,41 +95,49 @@ void() q2door_touch =
 
 void() spawn_q2_func_door = 
 {
-	if (!self.sounds || self.sounds == 1)
+	if (!self.sounds) //Silent
 	{
 		precache_sound ("misc/null.wav");
 		precache_sound ("misc/null.wav");
 		self.noise1 = "misc/null.wav";
 		self.noise2 = "misc/null.wav";
 	}
-	if (self.sounds == 2)
+	if (self.sounds == 1) //Stone
 	{
 		precache_sound ("doors/drclos4.wav");
 		precache_sound ("doors/doormv1.wav");
 		self.noise1 = "doors/drclos4.wav";
 		self.noise2 = "doors/doormv1.wav";
 	}
-	if (self.sounds == 3)
+	if (self.sounds == 2) //Machine
 	{
 		precache_sound ("doors/hydro1.wav");
 		precache_sound ("doors/hydro2.wav");
 		self.noise2 = "doors/hydro1.wav";
 		self.noise1 = "doors/hydro2.wav";
 	}
-	if (self.sounds == 4)
+	if (self.sounds == 3) //Stone Chain
 	{
 		precache_sound ("doors/stndr1.wav");
 		precache_sound ("doors/stndr2.wav");
 		self.noise2 = "doors/stndr1.wav";
 		self.noise1 = "doors/stndr2.wav";
 	}
-	if (self.sounds == 5)
+	if (self.sounds == 4) //Screechy Metal
 	{
 		precache_sound ("doors/ddoor1.wav");
 		precache_sound ("doors/ddoor2.wav");
 		self.noise1 = "doors/ddoor2.wav";
 		self.noise2 = "doors/ddoor1.wav";
 	}
+	if (self.sounds == 5) //Quake 2 Door
+	{
+	//	precache_sound ("doors/dr1_strt.wav");
+		precache_sound ("doors/dr1_mid.wav");
+		precache_sound ("doors/dr1_end.wav");
+		self.noise1 = "doors/dr1_end.wav";
+		self.noise2 = "doors/dr1_mid.wav";
+	}	
 
 	SetMovedir ();
 
@@ -175,6 +183,14 @@ void() spawn_q2_func_door =
 		self.lip = 8;
 	if (!self.dmg)
 		self.dmg = 2;
+	
+	if (self.items_q2keys)
+	{
+		precache_sound ("misc/keytry.wav");
+		precache_sound ("misc/keyuse.wav");			
+		self.noise3 = "misc/keytry.wav";
+		self.noise4 = "misc/keyuse.wav";
+	}
 
 	self.pos1 = self.origin;
 	self.pos2 = self.pos1 + self.movedir*(fabs(self.movedir*self.size) - self.lip);
@@ -326,11 +342,7 @@ void() door_fire =
 // play use key sound
 
 	if (self.items_q2keys)
-#ifdef opgrade
-		sound (self, CHAN_ITEM, self.noise4, 1, ATTN_NORM);
-#else
-		sound (self, CHAN_VOICE, self.noise4, 1, ATTN_NORM);
-#endif
+		sound (self, CHAN_AUTO, self.noise4, 1, ATTN_NORM);
 
 	self.message = string_null;		// no more message
 	oself = self;

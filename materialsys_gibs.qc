@@ -324,6 +324,9 @@ void(string gibname, float dm, float GibType, float gibScale) ThrowGib =
 		nspawn.effects = EF_ADDITIVE;
 		nspawn.touch = Glass_Touch;
 	break;
+	
+	case GIB_STONE:
+	break;	
 	}
 }
 
@@ -387,6 +390,9 @@ void(entity e, vector org, vector vel, string gibname, float GibType) ThrowDebri
 		e.think = SUB_Null;
 		e.touch = Glass_Touch;
 	break;
+	
+	case GIB_STONE:
+	break;	
 	}
 	
 	if (cvar("dpmod_odephysics"))

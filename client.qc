@@ -303,7 +303,7 @@ void() SetChangeParms =
 	}
 
 // remove items
-	self.items = self.items - (self.items & (IT_KEY1 | IT_KEY2 | IT_INVISIBILITY | IT_INVULNERABILITY | IT_BREATHER | IT_SUIT | IT_QUAD | IT_SILENCER) );
+	self.items = self.items - (self.items & (IT_KEY1 | IT_KEY2 | IT_INVISIBILITY | IT_INVULNERABILITY | IT_BREATHER | IT_SUIT | IT_QUAD | IT_DOUBLER) );
 	
 // cap super health
 	if (self.health > 100)
@@ -1818,7 +1818,7 @@ void() CheckPowerups =
 
 		if (self.silencer_finished < time)
 		{	// just stopped
-			self.items = self.items - IT_SILENCER;
+			self.items = self.items - IT_DOUBLER;
 			self.silencer_finished = 0;
 			self.silencer_time = 0;
 		}
@@ -2019,11 +2019,13 @@ void() PlayerPostThink =
 	CheckPowerups ();
 
 	//MrC Lightgrid workaround for Q2 style lighting on players in Q3BSP with Lightgrid
-	//Doesn't transfer over to view weapons :(
-	#ifdef q2model_lighting
-	self.colormod = (getlight(self.origin + '0 0 22') - '0.1 0.1 0.1');
-	#endif
-
+	/*
+	if (autocvar_q2_classicmode >= 1)
+	{
+		self.colormod = (getlight(self.origin + '0 0 22') + '0.1 0.1 0.1');
+	}
+	*/
+	
 	Q3Surface_FootStep();
 
 	if (autocvar_cl_printroomsize >= 1){
@@ -2277,7 +2279,7 @@ void(entity targ, entity attacker) ClientObituary =
 				if (rnum < 0.25)
 					deathstring = " mows down a teammate\n";
 				else if (rnum < 0.50)
-					deathstring = " checks his glasses\n";
+					deathstring = " checks their glasses\n";
 				else if (rnum < 0.75)
 					deathstring = " gets a frag for the other team\n";
 				else
@@ -2417,7 +2419,7 @@ void(entity targ, entity attacker) ClientObituary =
 				if (attacker.classname == "monster_soldier_light")
 					bprint (" become blaster fodder for a Strogg Soldier\n");
 				if (attacker.classname == "monster_soldier_ss")
-					bprint (" was target practice for Strogg Soldier\n");
+					bprint (" was target practice for a Strogg Soldier\n");
 				if (attacker.classname == "monster_soldier")
 					bprint (" ate Strogg Soldier lead\n");
 				if (attacker.classname == "monster_floater")
@@ -2425,7 +2427,7 @@ void(entity targ, entity attacker) ClientObituary =
 				if (attacker.classname == "monster_flyer")
 					bprint (" was air struck by a Flyer\n");
 				if (attacker.classname == "monster_gladiator")
-					bprint (" was not entertained by a Gladiator\n");
+					bprint (" was entertained by a Gladiator\n");
 				if (attacker.classname == "monster_gunner")
 					bprint (" was gunnered down by a Gunner\n");
 				if (attacker.classname == "monster_hover")
@@ -2515,12 +2517,17 @@ void(entity targ, entity attacker) ClientObituary =
 			if (targ.deathtype == "falling")
 			{
 				targ.deathtype = string_null;
-				bprint (" fell to his death\n");
+				bprint (" had a rough landing\n");
 				return;
 			}
 
 			// hell if I know; he's just dead!!!
-			bprint (" died\n");
+			if (random() < 0.5)
+				bprint (" took the room temperature challenge\n");
+			else
+				bprint (" died\n");
+			
+			//bprint (" died\n");
 		}
 	}
 };

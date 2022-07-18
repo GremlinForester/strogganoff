@@ -154,13 +154,15 @@ START machinegun, hold (loop) and end attack broken up
 framer($FRAME_attak101, $FRAME_attak109, q2infantry_frames_start_attack, q2infantry_frames_holdattack, 0.135,
 	frame_arb($FRAME_attak103,
 	sound (self, CHAN_VOICE, "infantry/infatck3.wav", 1, ATTN_NORM);
+	
 	);
 	ai_face();
 );
 
 framerloop($FRAME_attak110, $FRAME_attak111, q2infantry_frames_holdattack, 0.05,
 	frame_arb($FRAME_attak110,
-	if (self.shotcount >= 10){
+	
+	if (self.shotcount >= 10 || (!visible (self.enemy))){
 		self.shotcount = 0;
 	q2infantry_frames_endattack();
 	}
@@ -170,7 +172,7 @@ framerloop($FRAME_attak110, $FRAME_attak111, q2infantry_frames_holdattack, 0.05,
 	}
 	);
 	frame_arb($FRAME_attak111, q2infantry_fire(););
-
+	
 	ai_face();
 );
 
@@ -460,7 +462,7 @@ void() monster_infantry =
 	self.th_die = q2infantry_die;
 	self.th_melee = q2infantry_melee;
 
-	self.sightSound = "infantry/INFSGHT1.wav";
+	self.sightSound = "infantry/INFSGHT1.wav";	
 
 	walkmonster_start;
 };

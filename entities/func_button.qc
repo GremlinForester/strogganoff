@@ -103,7 +103,7 @@ void() button_touch =
 				centerprint (other, "You need the pyramid key");
 				sound (self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
 		}
-		else if (self.owner.items_q2keys == IT_KEY_DATASPINNER)
+		else if (self.items_q2keys == IT_KEY_DATASPINNER)
 		{
 				centerprint (other, "You need the data spinner");
 				sound (self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);

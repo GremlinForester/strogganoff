@@ -43,22 +43,32 @@ void() update_plrpowerupshell_frames =
 		remove(self);
 		return;
 	}
+	
+	if(self.owner.playerType == PT_MALE)
+	{
+		setmodel (self, "players/male/tris.md2");
+	}
+	else if (self.owner.playerType == PT_FEMALE)
+	{
+		setmodel (self, "players/female/tris.md2");
+	}
+	else
+	{
+		setmodel (self, "players/cyborg/tris.md2");
+	}
 
 	if ((self.owner.items & IT_QUAD) && (self.owner.items & IT_INVULNERABILITY))
 	{
 		if(self.owner.playerType == PT_MALE)
 		{
-			setmodel (self, "players/male/tris.md2");
 			self.skin = 15;		
 		}
 		else if (self.owner.playerType == PT_FEMALE)
 		{
-			setmodel (self, "players/female/tris.md2");
 			self.skin = 10;			
 		}
 		else
 		{
-			setmodel (self, "players/cyborg/tris.md2");
 			self.skin = 3;			
 		}
 		
@@ -69,17 +79,14 @@ void() update_plrpowerupshell_frames =
 	{
 		if(self.owner.playerType == PT_MALE)
 		{
-			setmodel (self, "players/male/tris.md2");
 			self.skin = 15;	
 		}
 		else if (self.owner.playerType == PT_FEMALE)
 		{
-			setmodel (self, "players/female/tris.md2");
 			self.skin = 10;
 		}
 		else
 		{
-			setmodel (self, "players/cyborg/tris.md2");
 			self.skin = 3;		
 		}
 		
@@ -90,30 +97,40 @@ void() update_plrpowerupshell_frames =
 	{
 		if(self.owner.playerType == PT_MALE)
 		{
-			setmodel (self, "players/male/tris.md2");
 			self.skin = 15;	
 		}
 		else if (self.owner.playerType == PT_FEMALE)
 		{
-			setmodel (self, "players/female/tris.md2");
 			self.skin = 10;			
 		}
 		else
 		{
-			setmodel (self, "players/cyborg/tris.md2");
 			self.skin = 3;
 		}
-		
 		self.alpha = 0.85;
 		self.colormod = '4 1 1';
 	}
 	else
 	{
-		self.alpha = 0.85;	
-		self.skin = 99;
+		if (autocvar_q2_classicmode >= 1)
+		{
+			addBitsToEntity(self,effects,EF_FULLBRIGHT);
+			self.colormod = (getlight(self.owner.origin + '0 0 22') - '0.1 0.1 0.1');
+			self.alpha = 0.7;
+		}
+		else
+		{
+			setmodel (self, "");
+			self.colormod = '1 1 1'; //Just rest stuff to some default.
+			self.alpha = 0;
+			removeBitsFromEntity(self,effects,EF_FULLBRIGHT);			
+		}
+
+	//	self.alpha = 0.85;	
+	//	self.skin = 99;
 	//	self.effects = 0;
-		setmodel (self, "");
-		self.colormod = '1 1 1';
+	//	setmodel (self, "");
+	//	self.colormod = '1 1 1';
 	//	remove(self);		
 	}
 	
@@ -334,7 +351,7 @@ void() AttachTPWeapon =
 /*
 ===========
 
-1st person player model effect mesh THINK and INIT
+1st person player viewmodel effect mesh THINK and INIT
 
 ============
 */
@@ -411,10 +428,21 @@ void() updatePowerupShellFrames =
 	}
 	else
 	{
-		self.alpha = 0.85;	
-		self.skin = 0;
-		setmodel (self, "");
-		self.colormod = '1 1 1';		
+	//	self.alpha = 0.85;	
+	//	self.skin = 0;
+		if (autocvar_q2_classicmode >= 1)
+		{
+		//	self.weaponmodel = "";
+			self.colormod = (getlight(self.owner.origin + '0 0 22') - '0.1 0.1 0.1');
+			self.alpha = 0.75;
+		}
+		else
+		{
+			setmodel (self, "");
+			self.colormod = '1 1 1'; //Reset stuff?
+			self.alpha = 0;
+		}
+	
 	}
 	
 	self.frame = self.owner.weaponframe;	
@@ -566,8 +594,8 @@ void(vector pos, float mfsize, float trans) SpawnMuzzleFlash =			//Spawns a firs
 	mflashfp.classname = "flashfp";
 	mflashfp.effects = mflashfp.effects + EF_ADDITIVE;
 	mflashfp.alpha = trans;
-//	setmodel(mflashfp, "progs/muzzleflash3.spr"); 
-	setmodel(mflashfp, "progs/combust.spr32");
+	setmodel(mflashfp, "progs/muzzleflash3.spr"); 
+//	setmodel(mflashfp, "progs/combust.spr32");
 	setsize(mflashfp, '0 0 0', '0 0 0');
 	setorigin(mflashfp, pos);
 	mflashfp.scale = mfsize;

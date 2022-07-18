@@ -156,8 +156,9 @@ void(entity targ, entity attacker) Killed =
 //			WriteByte (MSG_ALL, SVC_KILLEDMONSTER);
 	}
 	
-	if (random() < 0.5){	
-		if (autocvar_cl_smacktalk >= 1)
+	if (autocvar_cl_smacktalk >= 1)
+	{	
+		if (random() < 0.5)
 		{
 			if (attacker.classname == "player")
 			{

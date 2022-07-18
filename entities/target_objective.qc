@@ -66,7 +66,7 @@ void() target_objective =
 	if (self.parent)
 	{
 		self.tag_entity = find(world, targetname, self.parent);	
-		self.owner = find(world, targetname, self.parent);
+		self.owner = self.tag_entity;
 		setorigin (self, self.origin - self.owner.origin);
 	}
 	else

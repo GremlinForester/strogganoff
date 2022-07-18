@@ -22,14 +22,18 @@ void() model_static_think =
 	if (self.spawnflags & SF_HOLOGRAM)
 	{
 		self.colormod = self.holo_color;
+		self.alpha = 0.75 + random();	
 		
-		self.alpha = 0.75 + random();
-		
-		if (random() < 0.2){
-			self.scale = self.oscale + (random() / 14);
-		}
-		else{
-			self.scale = self.oscale;
+		if (self.classname == "model_static") //only models do the scale distort
+		{
+			if (random() < 0.2)
+			{
+				self.scale = self.oscale + (random() / 14);
+			}
+			else
+			{
+				self.scale = self.oscale;
+			}
 		}
 	}	
 	
@@ -130,7 +134,15 @@ void() model_static_use =
 	if (self.bToggleVisibility >= 1)	
 	{	
 		LOG("Model static used.");
+		
+	if (self.spawnflags & SF_HOLOGRAM)
+	{
+		self.solid = SOLID_NOT;
+	}
+	else
+	{
 		fieldFloatFlipFlop(SOLID_BSP, SOLID_NOT, solid);
+	}	
 				
 		if (self.effects & EF_NODRAW){
 		removeBitsFromEntity(self, effects, EF_NODRAW);	
@@ -202,6 +214,15 @@ void() model_static_die =
 			for (n= 0; n < 4; n++)
 				ThrowGib ("models/objects/debris3/tris.md2", self.health, GIB_WOOD, 1);			
 	}
+	else if (self.material == 7)
+	{
+			for (n= 0; n < 2; n++)
+				ThrowGib ("models/objects/debris1/tris.md2", self.health, GIB_STONE, 1);
+			for (n= 0; n < 3; n++)
+				ThrowGib ("models/objects/debris2/tris.md2", self.health, GIB_STONE, 1);
+			for (n= 0; n < 4; n++)
+				ThrowGib ("models/objects/debris3/tris.md2", self.health, GIB_STONE, 1);			
+	}	
 
 	self.solid = SOLID_NOT;
 	self.takedamage = DAMAGE_NO;
@@ -271,6 +292,7 @@ void() model_static =
 	self.nextthink = time + 0.1;
 	self.think = model_static_init;
 	
+	/*
 	if (self.bUseEnable == 1){
 		self.bUseEnable = TRUE;
 	}
@@ -278,10 +300,13 @@ void() model_static =
 	{		
 		self.bUseEnable = FALSE;	
 	}
-
+	*/
+	
+	/*
 	if (self.bAnimLoop)
 		self.solid = SOLID_NOT;
-
+	*/
+	
 	self.frame = self.anim_startframe;
 
 	if (self.spawnflags & SF_HOLOGRAM)
@@ -300,4 +325,5 @@ void() model_static =
 void() model_static_brush =
 {
 	model_static();
+	self.classname = "model_static_brush";	
 }

@@ -68,6 +68,8 @@ float maxdecors;
 //LOG STUFF (might expand on this) these may require {} braces on any conditional i.e. 'if' logging.
 
 #define LOG(x) bprint(x);bprint("\n")
+#define LOG2(x,y) bprint(x);bprint(y);bprint("\n")
+#define LOG3(x,y,z) bprint(x);bprint(y);bprint(z);bprint("\n")
 #define VLOG(x) bprint(vtos(x));bprint("\n")
 #define FLOG(x) bprint(ftos(x));bprint("\n")
 
@@ -138,6 +140,19 @@ NOTE: This (and friends) should eventually go into its own file (possible TODO: 
 or put each one in it's own?).
 ============
 */
+
+vector Q2MEDIC_CABLE_OFFSETS[] = {
+'45.0 -9.2 15.5',
+'48.4 -9.7 15.2',
+'47.8 -9.8 15.8',
+'47.3 -9.3 14.3',
+'45.4 -10.1 13.1',
+'41.9 -12.7 12.0',
+'37.8 -15.8 11.2',
+'34.3 -18.4 10.7',
+'32.7 -19.7 10.4',
+'32.7 -19.7 10.4'
+};
 
 vector MZ2_INFANTRY_MACHINEGUN[] = {
 '18.2 7.5 15.4',
@@ -285,6 +300,7 @@ var float autocvar_cl_idletalk = 0;
 var float autocvar_cl_printpos = 0;
 var float autocvar_cl_printstate = 0;
 var float autocvar_cl_printroomsize = 0;
+var float autocvar_q2_classicmode = 0;
 //var float autocvar_cl_playertype = 0;
 var float autocvar_bot_create_dynamic_waypoint = 0;
 
@@ -423,26 +439,21 @@ inv_ammo_ instead of ammo_. I would like to thank Find/Replace for all its hard 
 //#define	IT_EXTRA			2
 //#define	IT_EXTRA			4
 //#define	IT_EXTRA			8
-#define	IT_SILENCER				16
+#define	IT_DOUBLER				16
 #define	IT_BREATHER				32
 #define	IT_POWER_SHIELD			64
-
 #define	IT_SLUGS				128
 #define	IT_SHELLS				256
 #define	IT_BULLETS				512
 #define	IT_ROCKETS				1024
 #define	IT_CELLS				2048
-
 //#define IT_EXTRA				4096
-
 #define	IT_ARMOR_JACKET			8192 //IT_ARMOR1
 #define	IT_ARMOR_COMBAT			16384 //IT_ARMOR2
 #define	IT_ARMOR_BODY			32768 //IT_ARMOR3
 #define	IT_SUPERHEALTH			65536
-
 #define	IT_KEY1					131072
 #define	IT_KEY2					262144
-
 #define	IT_INVISIBILITY			524288 //could replace power screen, cloak armor!
 #define	IT_INVULNERABILITY		1048576
 #define	IT_SUIT					2097152
@@ -914,7 +925,8 @@ GIB_FLESH,
 GIB_METAL,
 GIB_FLAMING,
 GIB_GLASS,
-GIB_WOOD
+GIB_WOOD,
+GIB_STONE
 };
 
 #define GIB_LIFE 4

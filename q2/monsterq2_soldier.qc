@@ -347,7 +347,7 @@ framer($attak404, $attak406, q2soldier_frames_endattack, q2soldier_run1, 0.135,)
 
 framerloop($attak402, $attak403, q2solder_frames_holdattack, 0.05,
 	frame_arb($attak402,
-	if (self.shotcount >= 10){
+	if (self.shotcount >= 10 || (!visible (self.enemy))){
 		self.shotcount = 0;
 	q2soldier_frames_endattack();
 	}

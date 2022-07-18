@@ -11,7 +11,7 @@ IS_TRAIL
 delay - time between firing use IS_RANDOM for delay * random() (delay * 0-1).
 dmg (requires IS_TRAIL) will damage anything that gets in the way of the beam/trail.
 noise will play this sound consistently if IS_RANDOM in NOT set.
-noise1-4 (requires IS_RANDOM) will play these sounds at random when spawning a particle. Will also play noise 5 sounds in total.
+noise1-3 (requires IS_RANDOM) will play these sounds at random when spawning a particle. Will also play noise 5 sounds in total.
 myparticle (if using a "trail particle" (requires IS_TRAIL) otherwise will play a point particle at origin)
 myendparticle (requires IS_TRAIL)
 target (requires IS_TRAIL)

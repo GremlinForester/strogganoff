@@ -44,5 +44,5 @@ void() func_timer =
 
 	}
 	
-//	self.use = func_timer_use();
+	self.use = func_timer_use;
 }

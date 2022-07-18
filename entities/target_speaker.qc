@@ -14,45 +14,81 @@ Looped sounds are always atten 3 / vol 1, and the use function toggles it on/off
 Multiple identical looping sounds will just increase volume without any speed cost.
 */
 
-
+var float autocvar_sound_debug_showall = 0;
+var float autocvar_sound_debug_showdistance = 128;
 
 void() target_speaker_think =
 {
 	local float chan;
+
+	local entity objectivetarget;
+	local vector dir;
+	local float objectivedist = autocvar_sound_debug_showdistance;
+
+	dir = normalize(self.origin - objectivetarget.origin);
+	
+	objectivetarget = findradius(self.origin, objectivedist);	
 	
 	if (self.spawnflags & 1)
 	{	// looping sound toggles
 		if (self.noise) 
 		{
 			//pointsound(self.origin, self.noise, self.volume, self.attenuation);
-			//sound7(self, CHAN_VOICE, self.noise, self.volume, self.attenuation, self.speed, self.flags);
-			//self.nextthink = time + soundlength(self.noise);
+			//sound7(self, CHAN_BODY, self.noise, self.volume, self.attenuation, self.speed, self.flags);
+			//self.nextthink = (time + soundlength(self.noise));
+
 			ambientsound (self.origin, self.noise, self.volume, self.attenuation);
 			self.nextthink = -1;
+			return;
 		}
 		else 
 		{
+			self.alpha = 0.01;
 			self.nextthink = -1;
 		}
 	}
-	/*
-	bprint("\n"); 
-	bprint("target_speaker at "); 
-	bprint(vtos(self.origin));
-	bprint(", CHAN:"); 
-	bprint(ftos(chan));
-	bprint(", SOUND:"); 
-	bprint(self.noise);
-	bprint(", VOL:"); 
-	bprint(ftos(self.volume));
-	bprint(", ATT:"); 
-	bprint(ftos(self.attenuation));
-	bprint(", SPEED:"); 
-	bprint(ftos(self.speed));
-	bprint(", FLG:"); 
-	bprint(ftos(self.flags));
-	bprint("\n");
-	*/	
+
+	if (autocvar_sound_debug_showall >= 1)
+	{
+		self.alpha = 0.5;
+		
+		while(objectivetarget)
+		{
+			if(objectivetarget.flags & FL_CLIENT)
+			{
+				if(objectivetarget.health > 0)
+				{
+					if (vlen(objectivetarget.origin - self.origin) < objectivedist)
+					{
+						bprint("\n"); 
+						bprint("target_speaker at "); 
+						bprint(vtos(self.origin));
+						bprint(", CHAN:"); 
+						bprint(ftos(chan));
+						bprint(", SOUND:"); 
+						bprint(self.noise);
+						bprint(", VOL:"); 
+						bprint(ftos(self.volume));
+						bprint(", ATT:"); 
+						bprint(ftos(self.attenuation));
+						bprint(", SPEED:"); 
+						bprint(ftos(self.speed));
+						bprint(", FLG:"); 
+						bprint(ftos(self.flags));
+						bprint("\n");
+						FLOG(soundlength(self.noise));
+						self.alpha = 1.00;					
+					}
+				}
+			}
+		objectivetarget = objectivetarget.chain;
+		}
+	}
+	else
+	{
+		self.alpha = 0.01;
+	}
+
 	self.think = target_speaker_think;
 }
 
@@ -140,6 +176,12 @@ void() target_speaker =
 		self.noise = self.noise;
 		self.attenuation = self.attenuation;
 	}*/
+	
+	//for sound debug
+	self.effects = 	self.effects | EF_FULLBRIGHT | EF_NODEPTHTEST;
+	precache_model ("models/mapobjects/hub/stroggos_system/logo_strogg.MD3");
+	setmodel (self, "models/mapobjects/hub/stroggos_system/logo_strogg.MD3");
+	self.alpha = 0.01;
 	
 	precache_sound (self.noise);
 	self.use = target_speaker_use;

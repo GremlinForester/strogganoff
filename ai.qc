@@ -13,7 +13,7 @@ Will be world if not currently angry at anyone.
 The next path spot to walk toward.  If .enemy, ignore .movetarget.
 When an enemy is killed, the monster will try to return to it's path.
 
-.huntt_ime
+.hunt_time
 Set to time + something when the player is in sight, but movement straight for
 him is blocked.  This causes the monster to use wall following code for
 movement direction instead of sighting on the player.
@@ -179,7 +179,7 @@ float (entity targ) visible =
 //	spot1 = self.origin + self.view_ofs;
 //	spot2 = targ.origin + targ.view_ofs;
 	traceline ((self.origin + self.view_ofs), (targ.origin + targ.view_ofs), TRUE, self);	// see through other monsters
-	
+
 	if (trace_inopen && trace_inwater)
 		return FALSE;			// sight line crossed contents
 
@@ -374,11 +374,7 @@ float() FindTarget =
 	{
 		client = sight_entity;
 		if (client.enemy == self.enemy)
-			return 
-#ifdef codefix 
-					FALSE
-#endif 
-					;
+			return FALSE;
 	}
 	else
 	{

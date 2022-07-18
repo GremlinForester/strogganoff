@@ -3,7 +3,7 @@
 /*
 The breakable glass switches models becuase for some reason skins weren't working.
 
-Eventually this special case will be moved to a more general purpose model_static entity with damage states.
+Eventually this special case will be moved to a more general purpose model_static_breakable entity with damage states or something.
 */
 
 //********************************************

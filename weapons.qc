@@ -222,9 +222,9 @@ void() W_ImpulseChangeWeapon =
 
 	self.impulse = 0;	//consume events
 	if (cvar("developer")){
-	bprint("\n W_ImpulseChangeWeapon()->wep = ");	//debug
-	bprint(ftos(wep));
-	bprint("\n");
+	//bprint("\n W_ImpulseChangeWeapon()->wep = ");	//debug TODO: add this under a more specific weapon debug cvar
+	//bprint(ftos(wep));
+	//bprint("\n");
 	}
 
 	//reverting W_ChangeWeapon back to mostly quake standard,
@@ -755,7 +755,7 @@ void() UseInventoryItem =
 			self.inv_pickup_silencer -= 1;
 			self.silencer_time = 1;
 			self.silencer_finished = time + 30;
-			self.items = self.items | IT_SILENCER;
+			self.items = self.items | IT_DOUBLER;
 			}
 			else{
 					sprint (self, "out of item ");

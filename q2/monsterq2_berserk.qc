@@ -23,16 +23,7 @@ void() q2berserk_select_stand;
 STAND1
 
 */
-/*
-framerloop($FRAME_stand1, $FRAME_stand5, q2berserk_stand_idle, 0.1,
 
-	frame_arb($FRAME_stand5, q2berserk_select_stand(););
-
-	ai_rep($FRAME_stand1, ai_stand, 0, 0, 0, 0, 0, 0, 0, 0);
-);
-*/
-
-//STAND1
 framer($FRAME_stand1, $FRAME_stand5, q2berserk_stand_idle, q2berserk_select_stand, 0.1,
 	ai_stand();
 );
@@ -42,21 +33,7 @@ framer($FRAME_stand1, $FRAME_stand5, q2berserk_stand_idle, q2berserk_select_stan
 STAND FIDGET
 
 */
-/*
-framerloop($FRAME_standb1, $FRAME_standb20, q2berserk_stand_fidget, 0.1,
 
-	frame_arb($FRAME_standb20, q2berserk_select_stand(););
-
-	ai_rep($FRAME_standb1, ai_stand, 0, 0, 0, 0, 0, 0, 0, 0);
-
-	frame_arb($FRAME_standb2, sound (self, CHAN_VOICE, BERSERK_SOUND_IDLE, 1, ATTN_NORM););
-
-	ai_rep($FRAME_standb9, ai_stand, 0, 0, 0, 0, 0, 0, 0, 0);
-	ai_rep($FRAME_standb17, ai_stand, 0, 0, 0, 0, 0, 0, 0, 0);
-);
-*/
-
-//STAND1
 framer($FRAME_standb1, $FRAME_standb20, q2berserk_stand_fidget, q2berserk_select_stand, 0.1,
 
 frame_arb($FRAME_standb2, sound (self, CHAN_VOICE, BERSERK_SOUND_IDLE, 1, ATTN_NORM););
@@ -229,7 +206,7 @@ void(entity attacker, float damage)	q2berserk_pain =
 		return;
 
 	if ((damage < 20) || (random() < 0.5)){
-		self.pain_finished = time + 0.4;
+		self.pain_finished = time + 3.4;
 		q2berserk_pain1 ();
 		sound (self, CHAN_VOICE, BERSERK_SOUND_PAIN, 1, ATTN_NORM);
 	}

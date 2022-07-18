@@ -6,7 +6,6 @@ void() point_shake_think =
 	local entity shakeTarget;
 	local float shakeRadius;
 	shakeRadius = self.radius;
-	local float shaketargetCount;
 	local float r = random() * 3;
 	
 	if (self.parent){
@@ -25,14 +24,12 @@ void() point_shake_think =
 	}
 
 	shakeTarget = findradius(self.origin, shakeRadius);
-	shaketargetCount = 0;
 	while(shakeTarget)
 	{
 		if(shakeTarget.flags & FL_CLIENT)
 		{
 			if(shakeTarget.health > 0)
 			{
-				shaketargetCount++;
 				local float dist = vlen(shakeTarget.origin - self.origin);
 
 				if (dist < shakeRadius)					
@@ -56,7 +53,6 @@ void() point_shake_think =
 	self.nextthink = time + 0.1;
 	self.think = point_shake_think;
 	
-	
 	//loop a sound at owner's position (self.noise)
 	if (self.owner)
 	{
@@ -66,6 +62,15 @@ void() point_shake_think =
 		sound (self.owner, CHAN_AUTO, self.noise, 1, ATTN_STATIC);
 
 		self.nextShakeSound = time + soundlength(self.noise);
+	}
+
+	if (self.duration)
+	{
+		if (self.cnt = self.duration)
+		//	remove(self);
+			self.nextthink = -1;
+		else
+			self.cnt = self.cnt+0.1;
 	}
 }
 
@@ -109,7 +114,7 @@ void() point_shake =
 	{
 		self.estate = ESTATE_ON;	
 	}
-
+	self.cnt = 0;
 	self.nextthink = time + 0.1;
 	self.think = point_shake_think;
 }

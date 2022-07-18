@@ -57,7 +57,11 @@ void() train_next =
 	else
 		self.wait = 0;
 	sound (self, CHAN_VOICE, self.noise1, 1, ATTN_NORM);
+	
+	local vector mypos = bmodelOrigin();
+	
 	SUB_CalcMove (targ.origin - self.mins, self.speed, train_wait);
+//	VLOG(bmodelOrigin());
 };
 
 void() func_train_find =

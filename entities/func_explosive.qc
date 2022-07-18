@@ -15,13 +15,14 @@ void() xwall_heal;
 
 void() xwall_respawn =
 {
-	self.solid = SOLID_BBOX;
+	self.solid = SOLID_BSP;
+	self.dphitcontentsmask = DPCONTENTS_SOLID;
 	self.touch = xwall_break;
 	self.movetype = MOVETYPE_PUSH;
 	setorigin (self, self.origin);
 	setmodel (self, self.mdl);
-
 	self.use = xwall_break;
+
 	if (self.max_health >= 1)
 	{
 		self.takedamage = DAMAGE_YES;
@@ -31,10 +32,11 @@ void() xwall_respawn =
 		else
 			self.th_pain = SUB_Null;
 	}
-	else
+	else{
 		self.takedamage = DAMAGE_NO;
+	}
 
-		self.touch = SUB_Null;
+	self.touch = SUB_Null;
 };
 
 void() xwall_hidethink;
@@ -195,6 +197,12 @@ void() xwall_breakthink =
 		if (r == 1) ThrowDebris(world, v, v2, "models/objects/debris2/tris.md2", GIB_WOOD);
 		if (r == 2) ThrowDebris(world, v, v2, "models/objects/debris3/tris.md2", GIB_WOOD);
 		break;
+		
+		case 7:
+		if (r == 0) ThrowDebris(world, v, v2, "models/objects/debris1/tris.md2", GIB_STONE);
+		if (r == 1) ThrowDebris(world, v, v2, "models/objects/debris2/tris.md2", GIB_STONE);
+		if (r == 2) ThrowDebris(world, v, v2, "models/objects/debris3/tris.md2", GIB_STONE);
+		break;		
 		}
 
 		sound(self, CHAN_BODY, break_sound, 0.75, ATTN_IDLE);
@@ -310,6 +318,7 @@ Keys:
  4: Flaming
  5: Glass
  6: Wood
+ 7: Stone
 */
 void() func_explosive =
 {
@@ -323,8 +332,6 @@ void() func_explosive =
 		self.count2 = 0;
 	if (self.delay < 0.1)
 		self.delay = 0.1;
-	if (!self.health)
-		self.health = 100;
 	if (!self.material)
 		self.material = 1;
 	if (!self.aflag)

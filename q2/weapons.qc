@@ -594,7 +594,7 @@ void() W_WeaponAnimate={
 				self.weapon_think = time + 0.1;
 			}
 		}
-		else if (self.items & IT_SILENCER && self.weaponstate == WEAPON_FIRING)
+		else if (self.items & IT_DOUBLER && self.weaponstate == WEAPON_FIRING)
 		{
 			self.weapon_think = time + 0.075;
 		}	

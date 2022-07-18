@@ -37,7 +37,14 @@ void() gibMonster =
 	|| self.classname == "monster_stroggzombie"	
 	|| self.classname == "monster_tank")
 	{
-		T_RadiusDamage (self, self.owner, 200, other);
+		
+		if (self.classname == "monster_stroggzombie"){
+			T_RadiusDamage (self, self.owner, 85, other); //BOOM! Get out the way!
+		}
+		else{
+			T_RadiusDamage (self, self.owner, 5, other);	
+		}
+		
 		ThrowGib ("models/objects/debris1/tris.md2", self.health * GIB_VELOCITY_FLAMING_MUL, GIB_FLAMING, 1);
 		ThrowGib ("models/objects/debris2/tris.md2", self.health * GIB_VELOCITY_FLAMING_MUL, GIB_FLAMING, 1);
 		ThrowGib ("models/objects/debris3/tris.md2", self.health * GIB_VELOCITY_FLAMING_MUL, GIB_FLAMING, 1);
@@ -150,7 +157,7 @@ void(vector org, vector vec, float damage, vector colortint, float mflags) monst
 	mlaser.light_lev = 200;
 	mlaser.color = colortint; // color (does not affect radius), typical value '1 1 1' (bright white), can be up to '255 255 255' (nuclear blast)
 	mlaser.style = 6; // light style (like normal light entities, flickering torches or switchable, etc)
-	mlaser.pflags = PFLAGS_FULLDYNAMIC; // flags (see PFLAGS_ constants)
+	mlaser.pflags = PFLAGS_NOSHADOW | PFLAGS_FULLDYNAMIC; // flags (see PFLAGS_ constants)
 	
 	mlaser.angles = '0 0 0'; // orientation of the light
 
@@ -403,7 +410,7 @@ void() monster_go =
 
 void(float flg) monster_start =
 {
-
+	self.dphitcontentsmask = self.dphitcontentsmask | (DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_MONSTERCLIP | DPCONTENTS_DONOTENTER | DPCONTENTS_BOTCLIP);
 // this fires specific code in monster_go
 	self.flags = self.flags | flg;
 

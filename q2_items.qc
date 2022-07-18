@@ -167,7 +167,7 @@ void() item_silencer =
 	self.noise = "misc/ar3_pkup.wav";
 	setmodel (self, "models/items/silencer/tris.md2");
 	self.netname = "Doubler";
-//	self.items = IT_SILENCER;
+//	self.items = IT_DOUBLER;
 	self.modelflags = MF_ROTATE;
 	setsize (self, '-16 -16 -16', '16 16 16');
 	StartItem ();
