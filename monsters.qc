@@ -140,6 +140,46 @@ void (float shotcount, vector start, vector aim, vector spread, float dmg) monst
 	FireBullets(shotcount, start, aim, spread, dmg);
 }
 
+void (float shotcount, vector start, vector aimDir, vector spread, float setDamage) monster_fire_flechette =
+{
+	local entity mfletch;
+  local vector dir;
+	makevectors(aimDir);
+  
+	while (shotcount > 0)
+	{
+		mfletch = spawn();
+		mfletch.owner = self;
+		mfletch.dmg = setDamage;
+		mfletch.movetype = MOVETYPE_FLY;
+		mfletch.solid = SOLID_BBOX;
+		//mfletch.modelflags = mflags; //MF_TRACER2;
+		mfletch.effects = EF_FULLBRIGHT;
+		mfletch.colormod = '1 1 1';
+		mfletch.glow_size = 50;
+		mfletch.light_lev = 50;
+		mfletch.color = '0.5 0.25 0.1'; // color (does not affect radius), typical value '1 1 1' (bright white), can be up to '255 255 255' (nuclear blast)
+		mfletch.style = 6; // light style (like normal light entities, flickering torches or switchable, etc)
+		mfletch.pflags = PFLAGS_NOSHADOW | PFLAGS_FULLDYNAMIC; // flags (see PFLAGS_ constants)
+		
+		mfletch.angles = '0 0 0'; // orientation of the light
+		
+		setmodel (mfletch, "models/objects/flash/tris.md2");
+		setsize (mfletch, '0 0 0', '0 0 0');
+		setorigin (mfletch, start);
+		
+    dir = normalize(aimDir) + ((crandom()*spread_x)*v_right) + ((crandom()*spread_y)*v_up);
+		mfletch.velocity =  dir * (500 + (random() * 200));
+		
+		mfletch.angles = vectoangles(mfletch.velocity);
+		
+		mfletch.nextthink = time + 5;
+		mfletch.think = SUB_Remove;
+		mfletch.touch = blasterTouch; 
+		shotcount = shotcount - 1;
+	}
+}
+
 // Blaster and rocket spawns a new entity for monsters for now, can expose more parms if needed, like speed etc...
 void(vector org, vector vec, float damage, vector colortint, float mflags) monster_fire_blaster =
 {

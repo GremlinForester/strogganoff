@@ -6,6 +6,7 @@ QUAKE II STROGG SOLDIERS
 monster_soldier_light
 monster_soldier
 monster_soldier_ss
+monster_soldier_flak
 
 ==============================================================================
 */
@@ -172,6 +173,22 @@ framer($attak201, $attak218, q2soldier_atk2, q2soldier_run1, 0.1, ai_face();
 	);
 );
 
+framer($attak201, $attak218, q2soldier_atk3, q2soldier_run1, 0.1, ai_face();
+	
+	frame_arb($attak205,
+		q2soldier_fire();
+		self.effects = self.effects | EF_MUZZLEFLASH;
+	);
+	
+	frame_arb($attak208,
+		SUB_CheckRefire (q2soldier_atk3);
+	);
+	
+	frame_arb($attak211,
+		sound (self, CHAN_VOICE, "infantry/infatck3.wav", 1, ATTN_IDLE);
+	);
+);
+
 // PAIN1
 
 framer($pain101, $pain105, q2soldier_pain1, q2soldier_run1, 0.1, 
@@ -245,6 +262,7 @@ void(entity attacker, float damage)	q2soldier_pain =
 	//SKIN 0 = Red, Laser monster_soldier_light
 	//SKIN 2 = Shotgun monster_soldier
 	//SKIN 4 = Chaingun monster_soldier_ss
+  //SKIN 6 = flak 
 	local	vector	org;
 	org = self.origin + '0 0 24';
 	SpawnBlood (org, '0 0 0', 30);
@@ -256,6 +274,10 @@ void(entity attacker, float damage)	q2soldier_pain =
 	else if (self.skin == 2 && self.classname == "monster_soldier") //shogun soldier
 	{
 		self.skin = 3;
+	}
+	else if (self.skin == 6 && self.classname == "monster_soldier_flak") //shogun soldier
+	{
+		self.skin = 7;
 	}
 	else if (self.skin == 0 && self.classname == "monster_soldier_light") //laser soldier
 	{
@@ -310,6 +332,7 @@ void() q2soldier_fire =
 //	return;
 	
 	ai_face();
+  makevectors(self.angles);
 
 // fire somewhat behind the player, so a dodging player is harder to hit
 	en = self.enemy;
@@ -328,6 +351,10 @@ void() q2soldier_fire =
 	{
 		sound (self, CHAN_WEAPON, "soldier/Solatck3.wav", 1, ATTN_NORM);		
 		monster_fire_bullet(org, dir, '0.01 0.01 0', 3);
+	}
+	else if (self.classname == "monster_soldier_flak"){
+		sound (self, CHAN_WEAPON, "soldier/Solatck1.wav", 1, ATTN_NORM);
+		monster_fire_flechette(4, org, self.enemy.origin - self.origin, '0.05 0.06', 3);
 	}
 	else
 	{
@@ -372,6 +399,9 @@ void() q2soldier_seleck_attack =
 	{
 		q2solder_frames_holdattack();
 	}
+  else if (self.classname == "monster_soldier_flak"){
+    q2soldier_atk3();
+  }
 	else
 	{
 		q2soldier_atk1();
@@ -409,6 +439,10 @@ void() q2soldier_death1fire =
 
 		sound (self, CHAN_WEAPON, "soldier/Solatck1.wav", 1, ATTN_NORM);
 		monster_fire_shotgun(8, org, dir, '0.1 0.1 0', WEAPON_DEFAULT_DAMAGE);		
+	}
+  else if (self.classname == "monster_soldier_flak"){
+		sound (self, CHAN_WEAPON, "soldier/Solatck1.wav", 1, ATTN_NORM);
+		monster_fire_flechette(2, org, self.enemy.origin - self.origin, '0.05 0.06', 3);
 	}
 	else
 	{
@@ -671,6 +705,42 @@ void () monster_soldier_ss =
 
 	self.skin = 4; //machinegun
 }
+
+/*QUAKED monster_soldier_flak (1 .5 0) (-16 -16 -24) (16 16 32) Ambush Trigger_Spawn Sight
+*/
+void () monster_soldier_flak =
+{
+	self.classname = "monster_soldier_flak";
+	if (deathmatch)
+	{
+		remove(self);
+		return;
+	}
+	
+	precache_soldier();
+	
+	self.solid = SOLID_SLIDEBOX;
+	self.movetype = MOVETYPE_STEP;
+
+	setmodel (self, "models/monsters/soldier/tris.md2");
+
+	setsize (self, '-16 -16 -24', '16 16 32');
+	self.health = 55;
+
+	self.th_stand = q2soldier_select_stand;
+	self.th_walk = q2soldier_selectwalk; //q2soldier_2walk1;
+	self.th_run = q2soldier_run1;
+	self.th_missile = q2soldier_seleck_attack; //q2soldier_atk1;
+	self.th_pain = q2soldier_pain;
+	self.th_die = q2soldier_die;
+
+	self.sightSound = "soldier/solsght1.wav";
+
+	walkmonster_start;
+
+	self.skin = 6; //machinegun
+}
+
 
 #ifdef q2monster_replace_soldier
 void() monster_army =
