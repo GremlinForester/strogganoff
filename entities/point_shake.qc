@@ -18,8 +18,8 @@ void() point_shake_think =
 //	VLOG(self.origin);
 
 	if (self.estate == ESTATE_OFF){
-		self.nextthink = time + 0.1;
-		self.think = point_shake_think;
+	//	self.nextthink = time + 0.1;
+	//	self.think = point_shake_think;
 		return;
 	}
 
@@ -44,6 +44,10 @@ void() point_shake_think =
 					else{ 
 						shakeTarget.punchangle_z += crandom() * self.intensity;
 					}
+					if (self.duration)
+					{
+						self.cnt = self.cnt+0.1;
+					}
 				}
 			}
 		}
@@ -66,11 +70,12 @@ void() point_shake_think =
 
 	if (self.duration)
 	{
-		if (self.cnt = self.duration)
-		//	remove(self);
-			self.nextthink = -1;
-		else
-			self.cnt = self.cnt+0.1;
+		if (self.cnt >= self.duration)
+		{
+			self.estate = ESTATE_OFF;
+			self.cnt = 0;
+		}
+		FLOG(self.cnt);
 	}
 }
 

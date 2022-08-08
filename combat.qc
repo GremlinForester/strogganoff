@@ -274,11 +274,13 @@ void(entity targ, entity inflictor, entity attacker, float damage) T_Damage=
 
 	if ( (self.flags & FL_MONSTER) && attacker) // != world)
 	{
+	//MrC: TODO animals like Mutants might switch targets, Strogg should not get mad at other Strogg.
+	//classtype? Or someting.
 	// get mad unless of the same class (except for soldiers)
+		/*
 		if (self != attacker && attacker != self.enemy)
 		{
-			if ( (self.classname != attacker.classname) 
-			|| (self.classname == "monster_army" ) )
+			if ( (self.classname != attacker.classname) || (self.classname == "monster_army" ) )
 			{
 				if (self.enemy.classname == "player")
 					self.oldenemy = self.enemy;
@@ -286,6 +288,7 @@ void(entity targ, entity inflictor, entity attacker, float damage) T_Damage=
 				FoundTarget ();
 			}
 		}
+		*/
 	}
 
 	if (self.th_pain)

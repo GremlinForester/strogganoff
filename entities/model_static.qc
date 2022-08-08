@@ -237,8 +237,8 @@ void() model_static_init =
 		self.takedamage = DAMAGE_YES;
 	}
 
-	if (!self.scale)
-		self.scale = 1.0;
+//	if (!self.scale)
+//		self.scale = 1.0;
 		
 	self.nextthink = time + 0.1;
 	self.think = model_static_think;
@@ -279,14 +279,20 @@ void() model_static =
 	setmodel (self, self.model);
 	self.eState = CLOSED;
 //	self.effects = self.effects | EF_LOWPRECISION;
-	self.oscale = self.scale;
+
 	self.max_health = self.health;
 	self.takedamage = DAMAGE_NO;
 //	self.skin = 0;
 	self.th_die = model_static_die;
 	self.use = model_static_use;	
 	self.th_pain = model_static_pain;
+	
+	if (!self.modelscale){
+		self.modelscale = 1;
+	}	
+	
 	self.scale = self.modelscale;
+	self.oscale = self.scale;	
 	self.avelocity = self.avelocity;
 
 	self.nextthink = time + 0.1;
@@ -311,7 +317,7 @@ void() model_static =
 
 	if (self.spawnflags & SF_HOLOGRAM)
 	{
-		addBitsToEntity(self,effects,EF_ADDITIVE | EF_DOUBLESIDED);
+		addBitsToEntity(self,effects,EF_ADDITIVE | EF_DOUBLESIDED | EF_FULLBRIGHT);
 	}
 	
 	if (self.spawnflags & SF_START_INVIS)

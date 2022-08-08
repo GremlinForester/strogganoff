@@ -450,7 +450,6 @@ Quake 2 MP Map ladder volumes
 	precache_sound ("misc/water2.wav");			// swimming
 
 	precache_model ("progs/player.mdl");
-	precache_model ("progs/eyes.mdl");
 	precache_model ("progs/h_player.mdl");
 	precache_model ("progs/gib1.mdl");
 	precache_model ("progs/gib2.mdl");
@@ -458,14 +457,6 @@ Quake 2 MP Map ladder volumes
 
 	precache_model ("progs/s_bubble.spr");	// drowning bubbles
 	precache_model ("progs/s_explod.spr");	// sprite explosion
-
-	precache_model ("progs/v_axe.mdl");
-	precache_model ("progs/v_shot.mdl");
-	precache_model ("progs/v_nail.mdl");
-	precache_model ("progs/v_rock.mdl");
-	precache_model ("progs/v_shot2.mdl");
-	precache_model ("progs/v_nail2.mdl");
-	precache_model ("progs/v_rock2.mdl");
 	
 	precache_model ("progs/muzzleflash3.spr");
 	precache_model ("progs/combust.spr32");	
@@ -536,68 +527,10 @@ Quake 2 MP Map ladder volumes
 
 	precache_model ("progs/zom_gib.mdl");
 
-	precache_model ("progs/v_light.mdl");
-	
-	precache_model ("models/objects/r_explode/tris.md2");
-
 	precache_model ("models/objects/grenade/tris.md2");
 	precache_model ("sprites/s_bfg1.sp2");
 	
 	// player foot sounds
-
-	precache_sound ("player/boot1.wav");
-	precache_sound ("player/boot2.wav");
-	precache_sound ("player/boot3.wav");
-	precache_sound ("player/boot4.wav");
-	
-	precache_sound ("player/foot1.wav");
-	precache_sound ("player/foot2.wav");
-	precache_sound ("player/foot3.wav");
-	precache_sound ("player/foot4.wav");
-
-	precache_sound ("player/clank1.wav");
-	precache_sound ("player/clank2.wav");
-	precache_sound ("player/clank3.wav");
-	precache_sound ("player/clank4.wav");
-
-	precache_sound ("player/wood1.wav");
-	precache_sound ("player/wood2.wav");
-	precache_sound ("player/wood3.wav");
-	precache_sound ("player/wood4.wav");
-
-	precache_sound ("player/wade1.wav");
-	precache_sound ("player/wade2.wav");
-	precache_sound ("player/wade3.wav");
-
-	precache_sound ("player/splash1.wav");
-	precache_sound ("player/splash2.wav");
-	precache_sound ("player/splash3.wav");
-	precache_sound ("player/splash4.wav");
-	
-	precache_sound ("player/footsteps/pl_slosh1.wav");
-	precache_sound ("player/footsteps/pl_slosh2.wav");
-	precache_sound ("player/footsteps/pl_slosh3.wav");
-	precache_sound ("player/footsteps/pl_slosh4.wav");
-	
-	precache_sound ("player/footsteps/pl_ladder1.wav");
-	precache_sound ("player/footsteps/pl_ladder2.wav");
-	precache_sound ("player/footsteps/pl_ladder3.wav");
-	precache_sound ("player/footsteps/pl_ladder4.wav");
-	
-	precache_sound ("player/footsteps/pl_dirt1.wav");
-	precache_sound ("player/footsteps/pl_dirt2.wav");
-	precache_sound ("player/footsteps/pl_dirt3.wav");
-	precache_sound ("player/footsteps/pl_dirt4.wav");
-	
-	precache_sound ("player/energy1.wav");
-	precache_sound ("player/energy2.wav");
-	precache_sound ("player/energy3.wav");
-	precache_sound ("player/energy4.wav");
-	
-	precache_sound ("player/footsteps/pl_snow1.wav");
-	precache_sound ("player/footsteps/pl_snow2.wav");
-	precache_sound ("player/footsteps/pl_snow3.wav");
-	precache_sound ("player/footsteps/pl_snow4.wav");
 	
 	precache_sound ("weapons/HGRENT1A.WAV");
 	precache_sound ("weapons/ROCKLF1A.wav");

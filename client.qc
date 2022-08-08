@@ -331,7 +331,7 @@ void() SetChangeParms =
 	parm16 = self.inv_pickup_silencer;
 	parm17 = self.inv_pickup_invulnerability;
 	parm18 = self.inv_pickup_envirosuit;
-	parm19 = self.playerType;	
+	parm19 = self.playerType;
 };
 
 void() SetNewParms =
@@ -998,7 +998,7 @@ void() PutClientInServer =
 	self.fwatershift = TRUE;// catch runaway cshifts (changlevel/respawn while in func_water)
 	self.oldgravity = 0;// use unmodified sv_gravity
 	// pOx - END - func_water support
-	
+
 	if (world.fadein == 1)
 	{
 		stuffcmd(self, "bf 0 0 0 1\n");

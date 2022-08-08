@@ -34,12 +34,12 @@ void() target_speaker_think =
 		if (self.noise) 
 		{
 			//pointsound(self.origin, self.noise, self.volume, self.attenuation);
-			//sound7(self, CHAN_BODY, self.noise, self.volume, self.attenuation, self.speed, self.flags);
-			//self.nextthink = (time + soundlength(self.noise));
+			sound7(self, CHAN_BODY, self.noise, self.volume, self.attenuation, self.speed, self.flags);
+			self.nextthink = (time + soundlength(self.noise));
 
-			ambientsound (self.origin, self.noise, self.volume, self.attenuation);
-			self.nextthink = -1;
-			return;
+			//ambientsound (self.origin, self.noise, self.volume, self.attenuation);
+			//self.nextthink = -1;
+		//	return;
 		}
 		else 
 		{

@@ -35,3 +35,40 @@ void() misc_noisemaker =
 	self.think = noise_think;
 };
 #endif
+
+void() misc_randomnoise_think =
+{
+	local float r;
+
+	r = random() * 4;	
+	
+	if (r < 1) 	   sound7(self, CHAN_AUTO, self.noise3, self.volume, ATTN_IDLE, 100, 0);
+	else if (r < 2)sound7(self, CHAN_AUTO, self.noise2, self.volume, ATTN_IDLE, 100, 0);
+	else if (r < 3)sound7(self, CHAN_AUTO, self.noise1, self.volume, ATTN_IDLE, 100, 0);
+	else		   sound7(self, CHAN_AUTO, self.noise, self.volume, ATTN_IDLE, 100, 0);
+	
+	self.nextthink = ((time + self.delay) + (random() * self.variance));
+	self.think = misc_randomnoise_think;
+}
+
+/*QUAKED misc_randomnoise (1 0.5 0) (-10 -10 -10) (10 10 10)
+*/
+
+void() misc_randomnoise =
+{
+	precache_sound(self.noise);
+	precache_sound(self.noise1);
+	precache_sound(self.noise2);
+	precache_sound(self.noise3);
+	
+	if (!self.delay){
+		self.delay = 1;
+	}
+
+	if (!self.volume){
+		self.volume = 1;
+	}
+
+	self.nextthink = ((time + self.delay) + (random() * self.variance));
+	self.think = misc_randomnoise_think;
+};

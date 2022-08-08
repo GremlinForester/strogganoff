@@ -261,7 +261,7 @@ void(float damage) FireBullet =
  	nep_traceline (source, source + v_forward*4096, FALSE, self);
 	if (trace_fraction == 1.0)
 		return;
-
+	
 	org = trace_endpos - v_forward*4;
 
 	impact_point = spawn();
@@ -313,6 +313,7 @@ void(float damage) FireBullet =
 		self.currentammo = self.inv_ammo_slugs = self.inv_ammo_slugs - 1;
 	}
 	
+	/*
 	if (self.weapon == WEP_CHAINGUN)
 	{
 	//	fireBulletSound();
@@ -320,6 +321,7 @@ void(float damage) FireBullet =
 
 	//	sound (self, CHAN_WEAPON2, "weapons/chngnl1a.wav", 0.5, ATTN_NORM); //spinning
 	}
+	*/
 };
 
 /*

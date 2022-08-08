@@ -331,4 +331,23 @@ enum
 	LOCKED = 5
 }; //6
 
+//used by misc_randomnoise and particle_spawner, play some random self.noiseses
+void() random4Noise =
+{
+	if (random() < 1){
+		sound (self, CHAN_AUTO, self.noise1, 1, ATTN_NORM);
+	}
+	else if (random() < 0.7){
+		sound (self, CHAN_AUTO, self.noise2, 1, ATTN_NORM);
+	}
+	else if (random() < 0.4){
+		sound (self, CHAN_AUTO, self.noise3, 1, ATTN_NORM);
+	}
+	else 
+	{
+		sound (self, CHAN_AUTO, self.noise, 1, ATTN_NORM);
+	}
+}
+
+
 

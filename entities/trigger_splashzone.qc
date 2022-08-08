@@ -15,7 +15,7 @@ void() splashzone_touch =
 	self.solid = SOLID_NOT;
 	
 	if (self.splashtype == 0){
-		SetVModelOverlayOther('0 0 0', "models/overlay.md3", OVERLAY_RAIN, '1 1 1', 1);
+		SetVModelOverlayOther('0 0 0', "models/overlay.md3", OVERLAY_RAIN, self.colormod, 1);
 	}
 	
 	if (self.splashtype == 1){
@@ -50,4 +50,7 @@ void() trigger_splashzone =
 	if (!self.splashtype)
 		self.splashtype = 0;
 	self.splashtype = self.splashtype;
+	
+	if (!self.colormod)
+		self.colormod = '1 1 1';
 };

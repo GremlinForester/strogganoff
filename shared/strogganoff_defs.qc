@@ -608,6 +608,10 @@ float Q3SURFACEFLAG_ELECTRONIC = 0x2000000;
 
 // aiflags
 #define	FL_MEDIC				1
+#define AI_RESURRECTING			2
+#define AI_ANIMAL				4
+#define AI_STROGG				8
+#define AI_HUMAN				16
 
 /*
 ============

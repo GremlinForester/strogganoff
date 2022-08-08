@@ -143,8 +143,8 @@ framerloop($FRAME_walk11, $FRAME_walk20, q2chick_frames_walk, 0.1,
 	}
 	);
 	
-	ai_rep($FRAME_walk11, ai_run, 6, 8, 13, 5, 7, 4, 11, 5);
-	ai_rep($FRAME_walk19, ai_run, 9, 7, 0, 0, 0, 0, 0, 0);
+	ai_rep($FRAME_walk11, ai_walk, 6, 8, 13, 5, 7, 4, 11, 5);
+	ai_rep($FRAME_walk19, ai_walk, 9, 7, 0, 0, 0, 0, 0, 0);
 );
 
 // PAIN1
