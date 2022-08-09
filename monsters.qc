@@ -130,14 +130,14 @@ For now they mostly just pass parameters but down the road can be used for more 
 //MrC: Unless there's a performance hit with ApplyMultiDamage, this should work fine. 
 //This defaults FireBullets to 1 bullet of configurable damage and spread.
 
-void (vector start, vector aim, vector spread, float dmg) monster_fire_bullet =
+void (vector start, vector aimDir, vector spread, float dmg) monster_fire_bullet =
 {
-	FireBullets(1, start, aim, spread, dmg);
+	FireBullets(1, start, aimDir, spread, dmg);
 }
 
-void (float shotcount, vector start, vector aim, vector spread, float dmg) monster_fire_shotgun =
+void (float shotcount, vector start, vector aimDir, vector spread, float dmg) monster_fire_shotgun =
 {
-	FireBullets(shotcount, start, aim, spread, dmg);
+	FireBullets(shotcount, start, aimDir, spread, dmg);
 }
 
 void (float shotcount, vector start, vector aimDir, vector spread, float setDamage) monster_fire_flechette =

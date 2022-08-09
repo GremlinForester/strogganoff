@@ -19,6 +19,7 @@ monster_hover
 #define HOVER_SOUND_SIGHT1	"hover/HOVSGHT1.WAV"
 #define HOVER_SOUND_SRCH1		"hover/HOVSRCH1.WAV"
 #define HOVER_SOUND_SRCH2		"hover/HOVSRCH2.WAV"
+#define HOVER_TELE_EFFECT "TE_TELEPORT"
 
 void() hover_sight={
 	sound (self, CHAN_VOICE, HOVER_SOUND_SIGHT1, 1, ATTN_NORM);
@@ -75,6 +76,9 @@ framer($FRAME_forwrd01, $FRAME_forwrd35, hover_move_forward, SUB_Null, 0.1, ai_c
 
 //WALK
 framer($FRAME_forwrd01, $FRAME_forwrd35, hover_move_walk, hover_move_walk, 0.1, ai_walk(4););
+
+//"""TELEPORT"""
+framerloop($FRAME_forwrd01, $FRAME_forwrd35, hover_move_teleport, 0.05, ai_run(20););
 
 //RUN
 framerloop($FRAME_forwrd01, $FRAME_forwrd35, hover_move_run, 0.1, ai_run(10););
@@ -134,7 +138,18 @@ void() hover_stand={
 	hover_move_stand();
 };
 
-void() hover_run={
+void() hover_run=
+{
+	if (self.classname == "monster_hover_teleporter")
+	{
+		self.alpha = 0.001; 
+		self.solid = SOLID_NOT;
+		pointparticles(particleeffectnum(HOVER_TELE_EFFECT), (self.origin), '0 0 0', 1);
+		sound (self, CHAN_AUTO, "misc/tele_up.wav", 1, ATTN_IDLE);		
+		addBitsToEntity(self, aiflags, bits_AI_CLOAKED); //might use this for somethign elsewhere, rn doesn't do much of anything here.
+		hover_move_teleport();
+		return;
+	}
 	hover_move_run();
 };
 
@@ -143,6 +158,18 @@ void() hover_walk={
 };
 
 void() hover_start_attack={
+	
+	if (self.classname == "monster_hover_teleporter")
+	{
+		if (self.alpha != 1.0)
+		{
+			self.alpha = 1.0; 
+			self.solid = SOLID_SLIDEBOX;
+			pointparticles(particleeffectnum(HOVER_TELE_EFFECT), (self.origin), '0 32 0', 1);
+			sound (self, CHAN_AUTO, "misc/tele_up.wav", 1, ATTN_IDLE);			
+			removeBitsFromEntity(self, aiflags, bits_AI_CLOAKED);			
+		}
+	}	
 	hover_move_start_attack();
 };
 
@@ -294,6 +321,39 @@ void() monster_hover=
 	self.th_die = hover_die;
 
 	attachq2hoverSound(self);
+
+	flymonster_start;
+}
+
+/*QUAKED monster_hover_teleporter (1 .5 0) (-16 -16 -24) (16 16 32) Ambush Trigger_Spawn Sight
+*/
+void() monster_hover_teleporter=
+{
+	if(deathmatch){
+		remove(self);
+		return;
+	}
+
+	self.classname = "monster_hover_teleporter";
+
+	precache_hover();
+	
+	self.solid = SOLID_SLIDEBOX;
+	self.movetype = MOVETYPE_STEP;
+	
+	setmodel(self, "models/monsters/hover/tris.md2");
+	
+	setsize(self, '-16 -16 -24', '16 16 32');
+	self.health = 240;
+	self.max_health = self.health;
+	
+	self.th_stand = hover_stand;
+	self.th_walk = hover_walk;
+	self.th_run = hover_run;
+//	self.th_missile = hover_start_attack;
+	self.th_melee = hover_start_attack;	
+	self.th_pain = hover_pain;
+	self.th_die = hover_die;
 
 	flymonster_start;
 }

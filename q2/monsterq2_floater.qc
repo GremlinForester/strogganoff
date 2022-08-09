@@ -17,10 +17,28 @@ monster_floater
 #define FLOATER_SOUND_PAIN1		"floater/Fltpain1.wav"
 #define FLOATER_SOUND_PAIN2		"floater/Fltpain2.wav"
 #define FLOATER_SOUND_SIGHT		"floater/Fltsght1.wav"
+#define FLOATER_SOUND_ACT1		"switches/butn2.wav"
+#define FLOATER_SOUND_ACT2		"flyer/Flyatck1.wav"
+#define FLOATER_SOUND_ACT3		"flyer/Flyatck2.wav"
 
 void() floater_stand_switch;
 void() floater_attack_start;
 void() floater_run1;
+void() floater_activate;
+
+//ACTIVATE
+framer($actvat01, $actvat31, floater_activate, floater_run1, 0.1, 
+//SUB_Null();
+//	frame_arb($attak104, floater_fire_blaster(););
+//	frame_arb($attak105, floater_fire_blaster(););
+
+	frame_arb($actvat02, sound (self, CHAN_VOICE, FLOATER_SOUND_IDLE, 1, ATTN_NORM););	
+	frame_arb($actvat04, sound (self, CHAN_BODY, FLOATER_SOUND_PAIN2, 1, ATTN_NORM););
+	frame_arb($actvat07, sound (self, CHAN_AUTO, FLOATER_SOUND_ACT1, 1, ATTN_NORM););
+	frame_arb($actvat16, sound (self, CHAN_AUTO, FLOATER_SOUND_ACT2, 1, ATTN_NORM););	
+	frame_arb($actvat20, sound (self, CHAN_AUTO, FLOATER_SOUND_ACT3, 1, ATTN_NORM););
+	frame_arb($actvat22, sound (self, CHAN_AUTO, FLOATER_SOUND_SIGHT, 1, ATTN_NORM););	
+);
 
 //STAND1
 framer($stand101, $stand152, floater_stand1, floater_stand_switch, 0.1,
@@ -52,6 +70,12 @@ void(entity attacker, float damage) floater_pain={
 	
 	if(skill == 3)
 		return;
+	
+	if((self.enemy == world) && (self.spawnflags & 1)){
+		self.enemy = attacker;
+		floater_activate();
+		return;
+	}
 	
 	r = random();
 	if(r < 0.3){
@@ -196,6 +220,23 @@ void() floater_stand_switch={
 		floater_stand2_1();
 };
 
+void() floater_stand_deactivated	=[	$actvat01,	floater_stand_deactivated	] {ai_stand();};
+
+void() floater_stand_set={
+	if(self.spawnflags & 1)
+		floater_stand_deactivated();
+	else
+		floater_stand_switch();
+};
+
+void() floater_run_set =
+{
+	if(self.spawnflags & 1)
+		floater_activate();
+	else
+		floater_run1();
+};
+
 void() floater_melee_select={
 	if(random() <= 0.5)
 		floater_attack2_1();
@@ -253,6 +294,9 @@ void() precache_floater =
 	precache_sound (FLOATER_SOUND_PAIN1);
 	precache_sound (FLOATER_SOUND_PAIN2);
 	precache_sound (FLOATER_SOUND_SIGHT);
+	precache_sound (FLOATER_SOUND_ACT1);
+	precache_sound (FLOATER_SOUND_ACT2);
+	precache_sound (FLOATER_SOUND_ACT3);	
 }
 
 /*QUAKED monster_floater (1 .5 0) (-16 -16 -16) (16 16 40) Ambush Trigger_Spawn Sight
@@ -277,9 +321,11 @@ void() monster_floater=
 	self.health = 200;
 	self.max_health = self.health;
 	
-	self.th_stand = floater_stand_switch;
+	//self.th_stand = floater_stand_switch;
+	self.th_stand = floater_stand_set;
 	self.th_walk = floater_walk1;
-	self.th_run = floater_run1;
+//	self.th_run = floater_run1;
+	self.th_run = floater_run_set;
 	self.th_missile = floater_attack_start;
 	self.th_melee = floater_melee_select;
 	self.th_pain = floater_pain;

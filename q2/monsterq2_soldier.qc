@@ -13,6 +13,8 @@ monster_soldier_flak
 
 #include "monsterq2_soldier.qh"
 
+#define MONSTER_SOLDIER_FLAK_RUNSPEED 0.1
+
 void() q2soldier_fire;
 void() q2soldier_death1fire;
 void() q2soldier_selectwalk;
@@ -121,7 +123,7 @@ framerloop($walk209, $walk218, q2soldier_2walk1, 0.1,
 
 // RUN
 
-framerloop($run03, $run08, q2soldier_run1, 0.1,
+framerloop($run03, $run08, q2soldier_run1, getSpeedByClassname(),
 
 //	frame_arb($run04, footsetp(););
 //	frame_arb($run08, footstep(););

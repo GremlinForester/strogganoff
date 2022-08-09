@@ -44,6 +44,15 @@ const float STAT_ENVIRO = 45;
 const float STAT_FRAGS = 46;
 const float STAT_PLAYERTYPE = 47;
 
+float() getSpeedByClassname =
+{
+	if (self.classname == "monster_soldier_flak")
+		return MONSTER_SOLDIER_FLAK_RUNSPEED;
+		
+	return 0.1;
+}
+
+
 .float isHub;
 
 .float fadein;
@@ -636,11 +645,14 @@ float Q3SURFACEFLAG_ELECTRONIC = 0x2000000;
 .float shotcount;
 
 // aiflags
-#define	FL_MEDIC				1
-#define AI_RESURRECTING			2
-#define AI_ANIMAL				4
-#define AI_STROGG				8
-#define AI_HUMAN				16
+#define	bits_FL_MEDIC				1
+#define bits_AI_RESURRECTING		2
+#define bits_AI_ANIMAL				4
+#define bits_AI_STROGG				8
+#define bits_AI_HUMAN				16
+#define bits_AI_WOUNDED				32
+#define bits_AI_CLOAKED				64
+#define bits_AI_SPECIAL				128
 
 /*
 ============
