@@ -138,6 +138,8 @@ void(float damage) infantry_melee =
 
 framer($FRAME_attak201, $FRAME_attak208, q2infantry_melee, q2infantry_frames_run, 0.1,
 
+	frame_arb($FRAME_attak201, if(self.classname == "monster_infantry_nail"){self.th_missile();});
+
 	frame_arb($FRAME_attak203,sound(self, CHAN_WEAPON, "infantry/infatck2.wav", 1, ATTN_NORM););
 	
 	frame_arb($FRAME_attak206, infantry_melee(20); ai_charge(25););
@@ -162,13 +164,25 @@ framer($FRAME_attak101, $FRAME_attak109, q2infantry_frames_start_attack, q2infan
 framerloop($FRAME_attak110, $FRAME_attak111, q2infantry_frames_holdattack, 0.05,
 	frame_arb($FRAME_attak110,
 	
-	if (self.shotcount >= 10 || (!visible (self.enemy))){
-		self.shotcount = 0;
-	q2infantry_frames_endattack();
+	if (self.classname == "monster_infantry_nail") {
+		if (self.shotcount >= 5 || (!visible (self.enemy))){
+			self.shotcount = 0;
+			q2infantry_frames_endattack();
+		}
+		else
+		{
+			self.shotcount++;
+		}
 	}
-	else
-	{
-		self.shotcount++;
+	else{
+		if (self.shotcount >= 10 || (!visible (self.enemy))){
+			self.shotcount = 0;
+			q2infantry_frames_endattack();
+		}
+		else
+		{
+			self.shotcount++;
+		}
 	}
 	);
 	frame_arb($FRAME_attak111, q2infantry_fire(););
@@ -210,9 +224,15 @@ void(entity attacker, float damage)	q2infantry_pain =
 {
 	local float r;
 
-	if (self.health < (self.max_health / 2))
-		self.skin = 1;
-
+	if (self.health < (self.max_health / 2)){
+    if (self.classname == "monster_infantry_nail") {
+      self.skin = 3;
+    }
+    else{
+      self.skin = 1;
+    }
+  }
+  
 	if (self.pain_finished > time)
 		return;
 
@@ -255,7 +275,13 @@ void() q2infantry_deathfire =
 	dir = normalize (start - self.origin);	
 	
 	sound (self, CHAN_AUTO, "infantry/infatck1.wav", 1, ATTN_NORM);
-	monster_fire_bullet(start, dir, '0.01 0.01 0', 3);	
+  
+  if (self.classname == "monster_infantry_nail") {
+    monster_fire_flechette(1, start, dir, '0.01 0.01', 1);
+  }
+  else{
+    monster_fire_bullet(start, dir, '0.01 0.01 0', 3);	
+  }
 };
 
 void() q2infantry_fire =
@@ -275,7 +301,13 @@ void() q2infantry_fire =
 
 	org = self.origin + (v_forward * 26.6) + (v_right * 7.1) + (v_up * 13.1);
 
-	monster_fire_bullet(org, dir, '0.01 0.01 0', 3);
+  if (self.classname == "monster_infantry_nail") {
+    monster_fire_flechette(1, org, self.enemy.origin - self.origin, '0.01 0.01', 1);
+  }
+  else{
+    monster_fire_bullet(org, dir, '0.01 0.01 0', 3);
+  }
+	
 };
 
 void() q2infantry_dead =
@@ -451,7 +483,45 @@ void() monster_infantry =
 	setmodel (self, "models/monsters/infantry/tris.md2");
 
 	setsize (self, '-16 -16 -24', '16 16 40');
-	self.health = 30;
+	self.health = 100;
+	self.max_health = self.health = 100;
+
+	self.th_stand = q2infantry_select_stand;
+	self.th_walk = q2infantry_frames_walk;
+	self.th_run = q2infantry_frames_run;
+	self.th_missile = q2infantry_frames_start_attack;
+	self.th_pain = q2infantry_pain;
+	self.th_die = q2infantry_die;
+	self.th_melee = q2infantry_melee;
+
+	self.sightSound = "infantry/INFSGHT1.wav";	
+
+	walkmonster_start;
+};
+
+
+/*QUAKED monster_infantry_nail(1 0 0) (-16 -16 -24) (16 16 40) Ambush
+*/
+void() monster_infantry_nail=
+{
+	if (deathmatch)
+	{
+		remove(self);
+		return;
+	}
+	
+	self.classname = "monster_infantry_nail";
+	
+	precache_infantry();
+
+	precache_sound ("player/udeath.wav");		// gib death
+
+	self.solid = SOLID_SLIDEBOX;
+	self.movetype = MOVETYPE_STEP;
+	setmodel (self, "models/monsters/infantry/tris.md2");
+
+	setsize (self, '-16 -16 -24', '16 16 40');
+	self.health = 150;
 	self.max_health = self.health;
 
 	self.th_stand = q2infantry_select_stand;
@@ -465,4 +535,6 @@ void() monster_infantry =
 	self.sightSound = "infantry/INFSGHT1.wav";	
 
 	walkmonster_start;
+  
+  self.skin = 2;
 };
