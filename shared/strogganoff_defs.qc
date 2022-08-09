@@ -26,6 +26,7 @@
 
 //================================
 
+#define MONSTER_SOLDIER_FLAK_RUNSPEED 0.1
 
 const float STAT_Q2WEAPONS = 32;
 const float STAT_AMMO_SHELLS = 33;

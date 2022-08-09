@@ -13,8 +13,6 @@ monster_soldier_flak
 
 #include "monsterq2_soldier.qh"
 
-#define MONSTER_SOLDIER_FLAK_RUNSPEED 0.1
-
 void() q2soldier_fire;
 void() q2soldier_death1fire;
 void() q2soldier_selectwalk;
