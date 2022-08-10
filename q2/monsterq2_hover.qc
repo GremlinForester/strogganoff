@@ -10,20 +10,17 @@ monster_hover
 // [0-9]{1,} - strips out frame num
 #include "monsterq2_hover.qh"
 
-#define HOVER_SOUND_ATTACK1 "hover/HOVATCK1.WAV"
+#define HOVER_SOUND_ATTACK1 	"hover/HOVATCK1.WAV"
 #define HOVER_SOUND_DETH1		"hover/HOVDETH1.WAV"
 #define HOVER_SOUND_DETH2		"hover/HOVDETH2.WAV"
 #define HOVER_SOUND_IDLE1		"hover/HOVIDLE1.WAV"
 #define HOVER_SOUND_PAIN1		"hover/HOVPAIN1.WAV"
 #define HOVER_SOUND_PAIN2		"hover/HOVPAIN2.WAV"
-#define HOVER_SOUND_SIGHT1	"hover/HOVSGHT1.WAV"
+#define HOVER_SOUND_SIGHT1		"hover/HOVSGHT1.WAV"
 #define HOVER_SOUND_SRCH1		"hover/HOVSRCH1.WAV"
 #define HOVER_SOUND_SRCH2		"hover/HOVSRCH2.WAV"
-#define HOVER_TELE_EFFECT "TE_TELEPORT"
-
-void() hover_sight={
-	sound (self, CHAN_VOICE, HOVER_SOUND_SIGHT1, 1, ATTN_NORM);
-};
+#define HOVER_TELE_EFFECT 		"TE_TELEPORT"
+#define HOVER_TELE_SOUND		"misc/tele_up.wav"
 
 void() hover_search={
 	if(random() < 0.6)
@@ -131,7 +128,7 @@ void() hover_fire_blaster={
 	
 	dir = normalize(end - org);
 	sound (self, CHAN_AUTO, HOVER_SOUND_ATTACK1, 1, ATTN_NORM);
-	monster_fire_blaster(org, dir, 1, '0.1 2 0.1', MF_TRACER);
+	monster_fire_blaster(org, dir, HOVER_BLASTER_DAMAGE, '0.1 0.2 0.1', MF_TRACER);
 };
 
 void() hover_stand={
@@ -145,8 +142,8 @@ void() hover_run=
 		self.alpha = 0.001; 
 		self.solid = SOLID_NOT;
 		pointparticles(particleeffectnum(HOVER_TELE_EFFECT), (self.origin), '0 0 0', 1);
-		sound (self, CHAN_AUTO, "misc/tele_up.wav", 1, ATTN_IDLE);		
-		addBitsToEntity(self, aiflags, bits_AI_CLOAKED); //might use this for somethign elsewhere, rn doesn't do much of anything here.
+		sound (self, CHAN_AUTO, HOVER_TELE_SOUND, 1, ATTN_IDLE);		
+		teleporterAfterImage(self);
 		hover_move_teleport();
 		return;
 	}
@@ -162,12 +159,11 @@ void() hover_start_attack={
 	if (self.classname == "monster_hover_teleporter")
 	{
 		if (self.alpha != 1.0)
-		{
-			self.alpha = 1.0; 
+		{	
+			self.alpha = 1;
 			self.solid = SOLID_SLIDEBOX;
 			pointparticles(particleeffectnum(HOVER_TELE_EFFECT), (self.origin), '0 32 0', 1);
-			sound (self, CHAN_AUTO, "misc/tele_up.wav", 1, ATTN_IDLE);			
-			removeBitsFromEntity(self, aiflags, bits_AI_CLOAKED);			
+			sound (self, CHAN_AUTO, HOVER_TELE_SOUND, 1, ATTN_IDLE);		
 		}
 	}	
 	hover_move_start_attack();
@@ -288,7 +284,8 @@ void() precache_hover =
 	precache_sound (HOVER_SOUND_PAIN2);
 	precache_sound (HOVER_SOUND_SIGHT1);
 	precache_sound (HOVER_SOUND_SRCH1);
-	precache_sound (HOVER_SOUND_SRCH2);	
+	precache_sound (HOVER_SOUND_SRCH2);
+	precache_sound (HOVER_TELE_SOUND);	
 }
 
 /*QUAKED monster_hover (1 .5 0) (-16 -16 -24) (16 16 32) Ambush Trigger_Spawn Sight
@@ -344,7 +341,7 @@ void() monster_hover_teleporter=
 	setmodel(self, "models/monsters/hover/tris.md2");
 	
 	setsize(self, '-16 -16 -24', '16 16 32');
-	self.health = 240;
+	self.health = 80;
 	self.max_health = self.health;
 	
 	self.th_stand = hover_stand;
@@ -354,6 +351,8 @@ void() monster_hover_teleporter=
 	self.th_melee = hover_start_attack;	
 	self.th_pain = hover_pain;
 	self.th_die = hover_die;
+	
+	self.sightSound = HOVER_SOUND_SIGHT1;
 
 	flymonster_start;
 }

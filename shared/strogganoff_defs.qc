@@ -654,6 +654,8 @@ float Q3SURFACEFLAG_ELECTRONIC = 0x2000000;
 #define bits_AI_WOUNDED				32
 #define bits_AI_CLOAKED				64
 #define bits_AI_SPECIAL				128
+#define bits_AI_CLOAKING			256
+#define bits_AI_UNCLOAKING			512
 
 /*
 ============
@@ -723,6 +725,13 @@ WEAPONS
 #define	WEP_MACHINEGUN_MFLASH_SCALE 0.5
 #define	WEP_MG_MFLASH_ALPHA 0.5
 
+/*
+============
+ENEMY WEAPON DAMAGE
+============
+*/
+
+#define HOVER_BLASTER_DAMAGE 5
 
 /*
 ============

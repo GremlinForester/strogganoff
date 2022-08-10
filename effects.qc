@@ -1,3 +1,39 @@
+void() teleporterAfterImageFadeOUT =
+{
+	if (self.alpha <= 0.1){
+		remove(self);
+		return;
+	}
+
+	setorigin (self, self.owner.origin);
+
+	self.alpha -= 0.1;
+	self.scale -= 0.1;
+
+	self.think = teleporterAfterImageFadeOUT;
+	self.nextthink = time + 0.05;
+}
+
+void(entity ent) teleporterAfterImage =
+{
+	local entity afterImage;
+	
+	afterImage = spawn();
+	afterImage.owner = ent;
+	setorigin (afterImage, ent.origin);	
+	afterImage.netname = "afterImage";
+	setmodel (afterImage, ent.model);
+	afterImage.solid = SOLID_NOT;
+	afterImage.movetype = MOVETYPE_NONE;
+	afterImage.angles = ent.angles;
+	afterImage.frame = ent.frame;
+	afterImage.scale = 1;
+	afterImage.alpha = 1;
+	afterImage.effects = EF_LOWPRECISION;	
+	afterImage.think = teleporterAfterImageFadeOUT;
+	afterImage.nextthink = time;
+};
+
 //MrC: Muzzle Flash stuff from http://www.insideqc.com/qctut/qctut-85.shtml
 //Thanks Supajoe
 
