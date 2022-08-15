@@ -30,6 +30,7 @@ materialsys_breakable.qc
 
 //Co-op
 coop/ext_coop.qc
+coop/ext_hub.qc
 
 subs.qc
 fight.qc
@@ -129,6 +130,7 @@ entities/trigger_splashzone.qc
 entities/trigger_stripkeys.qc
 entities/trigger_shake.qc
 entities/trigger_coop_checkpoint.qc
+coop/ext_trig.qc
 entities/trigger_setplayertype.qc
 entities/trigger_ladder.qc
 entities/misc_banner.qc

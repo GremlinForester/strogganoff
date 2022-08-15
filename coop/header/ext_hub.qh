@@ -1,0 +1,49 @@
+/*
+  Hub Map Concept
+    Q1's concept of Hub-Map is mostly single-player focused.
+      It reads a players.items | IT_RUNE values and reacts to that.
+
+    We'd like to have something a little more robust, allowing mappers to create
+    a more interactable hub map.
+
+    The overall layout is a workflow to show how state is carried and modified during gameplay.
+    Goal is any given map can be set to be a 'hub map' where things will change/mutate over time as
+      players complete other maps/ map sets.
+
+
+*/
+
+/*
+  Server state variables.
+    Most reliable data storage for the server in-between maps would be CVARS (thanks, Mr.C!)
+
+    sv_ishub
+      <map>isHub(true) -> cvar_set(sv_ishub, 1)
+        map files, on-load, will tell the server if the current map is a hub map.
+
+    sv_hubmap
+      this is set when (sv_ishub) is also set, this becomes the reference point for players when the server
+        needs to find the hub map.
+          example:
+            + players win a campaign and return to hub.
+            + ALL players dead on the mission, return to hub.
+
+    sv_hubstate
+      abstract numerical value. 0 - X
+      This is set by the hubmap on map changes AWAY from the hub.
+
+*/
+
+#define SV_CVAR_HUB "sv_hub"
+#define SV_CVAR_HUB_MAP "sv_hub_map"
+#define SV_CVAR_HUB_STATE "sv_hub_state"
+#define SV_CVAR_MISSION_STATUS "sv_mission_result"
+
+.float isHub;     //set on world either by map file or trigger.
+.float hubState;  //set on world FROM cvar.
+.string hub_target; //searchable by trigger_hub_state
+
+/*
+  API Hooks
+*/
+void() sv_ext_hub_ini;

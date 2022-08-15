@@ -367,6 +367,10 @@ Quake 2 MP Map ladder volumes
 	W_Precache ();			// get weapon precaches
 
 	FRIK_FILE_precaches(); //MrC: Thanks goes to Peter Roohr (battleMETAL), precaching with external text files is TIGHT!
+
+  //Stroggannoff EXT-HUB / initialize hub-map extension
+  sv_ext_hub_ini();
+  //-------------------
 	
 // sounds used from C physics code
 	precache_sound ("demon/dland2.wav");		// landing thud

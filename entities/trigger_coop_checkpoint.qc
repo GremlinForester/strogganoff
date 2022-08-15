@@ -47,7 +47,7 @@ checkpoints act as info_player_coop managers.
 */
 void() trigger_coop_checkpoint={
   if(!self.target){
-    bprint("WARN - trigger_coop_checkpoint - missing TARGET!\n");
+    dprint("WARN - trigger_coop_checkpoint - missing TARGET!\n");
   }
   InitTrigger();
   
