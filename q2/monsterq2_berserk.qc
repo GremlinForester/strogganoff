@@ -138,7 +138,7 @@ framer($FRAME_att_c1, $FRAME_att_c8, q2berserk_melee_attack1, q2berserk_run, 0.1
 
 	frame_arb($FRAME_att_c4,sound(self, CHAN_WEAPON, BERSERK_SOUND_ATTACK, 1, ATTN_NORM));
 	
-	frame_arb($FRAME_att_c5, berserk_spike(20); ai_charge(25););
+	frame_arb($FRAME_att_c5, berserk_spike(autocvar_sk_q2berserk_melee_damage); ai_charge(25););
 );
 
 // ATTACK 2
@@ -147,7 +147,7 @@ framer($FRAME_att_c9, $FRAME_att_c20, q2berserk_melee_attack2, q2berserk_run, 0.
 
 	frame_arb($FRAME_att_c9,sound(self, CHAN_WEAPON, BERSERK_SOUND_ATTACK, 1, ATTN_NORM));
 	
-	frame_arb($FRAME_att_c14, berserk_spike(20); ai_charge(25););
+	frame_arb($FRAME_att_c14, berserk_spike(autocvar_sk_q2berserk_melee_damage); ai_charge(25););
 );
 
 // Select Attack
@@ -312,7 +312,7 @@ void () monster_berserk =
 	setmodel (self, "models/monsters/berserk/tris.md2");
 
 	setsize (self, '-16 -16 -24', '16 16 32');
-	self.health = 240;
+	self.health = autocvar_sk_q2berserk_health;
 	self.max_health = self.health;
 
 	self.th_stand = q2berserk_select_stand;

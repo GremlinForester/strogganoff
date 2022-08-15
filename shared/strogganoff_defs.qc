@@ -54,6 +54,10 @@ float() getSpeedByClassname =
 }
 
 
+.float spawn_max;
+.float spawn_count;
+.float strogg_type;
+
 .float isHub;
 
 .float fadein;
@@ -63,8 +67,114 @@ float() getSpeedByClassname =
 
 var float autocvar_howmanyplayers;
 
-//Monster Customization/Debugging
-var vector autocvar_q2soldier_shotgun_accuracy = '0.2 0.2 0.05';
+
+
+/*
+============
+ENEMY WEAPON DAMAGE AND HEALTH VALUES
+
+For Monster Customization/Debugging, sets default values. Can be changed by exec'ing cfg/skill#.cfg
+============
+*/
+
+//BERSERK
+var float autocvar_sk_q2berserk_health = 240;
+var float autocvar_sk_q2berserk_melee_damage = 20;
+
+//BRAIN
+var float autocvar_sk_q2brain_melee_damage = 3;
+var float autocvar_sk_q2brain_melee_chest_damage = 20;
+var float autocvar_sk_q2brain_health = 150;
+
+//CHICK
+var float autocvar_sk_q2chick_melee_damage = 20;
+var float autocvar_sk_q2chick_missile_damage = 50;
+var float autocvar_sk_q2chick_health = 175;
+
+//FLIPPER
+var float autocvar_sk_q2flipper_melee_damage = 5;
+var float autocvar_sk_q2flipper_health = 50;
+
+//FLOATER
+var float autocvar_sk_q2floater_blaster_damage = 10;
+var float autocvar_sk_q2floater_wham_damage = 4;
+var float autocvar_sk_q2floater_zap_damage = 1;
+var float autocvar_sk_q2floater_health = 200;
+
+//FLYER
+var float autocvar_sk_q2flyer_blaster_damage = 10;
+var float autocvar_sk_q2flyer_melee_damage = 5;
+var float autocvar_sk_q2flyer_health = 50;
+
+//GLADIATOR
+var float autocvar_sk_q2gladiator_rail_damage = 20;
+var float autocvar_sk_q2gladiator_melee_damage = 20;
+var float autocvar_sk_q2gladiator_health = 400;
+
+//GUNNER
+var float autocvar_sk_q2gunner_grenade_damage = 40;
+var float autocvar_sk_q2gunner_mg_damage = 3;
+var float autocvar_sk_q2gunner_health = 175;
+
+//HOVER
+var float autocvar_sk_q2hover_damage = 5;
+var float autocvar_sk_q2hover_health = 240;
+
+//HOVER TELEPORTER
+var float autocvar_sk_q2hover_teleport_damage = 2;
+var float autocvar_sk_q2hover_teleport_health = 80;
+
+//INFANTRY
+var float autocvar_sk_q2infantry_mg_damage = 2;
+var float autocvar_sk_q2infantry_melee_damage = 20;
+var float autocvar_sk_q2infantry_health = 100;
+
+//INFANTRY NAIL
+var float autocvar_sk_q2infantry_nail_damage = 1;
+var float autocvar_sk_q2infantry_nail_health = 150;
+
+//MEDIC
+var float autocvar_sk_q2medic_blaster_damage = 10;
+var float autocvar_sk_q2medic_health = 300;
+
+//MUTANT
+var float autocvar_sk_q2mutant_melee_damage = 10;
+var float autocvar_sk_q2mutant_leap_damage = 40;
+var float autocvar_sk_q2mutant_health = 300;
+
+//PARASITE
+var float autocvar_sk_q2parasite_damage = 10;
+var float autocvar_sk_q2parasite_health = 175;
+
+//SOLDIER LIGHT
+var float autocvar_sk_q2soldier_light_health = 30;
+var float autocvar_sk_q2soldier_light_damage = 5;
+
+//SOLDIER MACHINEGUN
+var float autocvar_sk_q2soldier_mg_health = 40;
+var float autocvar_sk_q2soldier_mg_damage = 3;
+
+//SOLDIER SHOTGUN
+var float autocvar_sk_q2soldier_shotgun_health = 30;
+var float autocvar_sk_q2soldier_shotgun_damage = 5;
+var vector autocvar_sk_q2soldier_shotgun_accuracy = '0.2 0.2 0.05';
+
+//SOLDIER FLAK
+var float autocvar_sk_q2soldier_flak_health = 55;
+var float autocvar_sk_q2soldier_flak_damage = 3;
+
+//TANK
+var float autocvar_sk_q2tank_bullet_damage = 4;
+var float autocvar_sk_q2tank_blaster_damage = 30;
+var float autocvar_sk_q2tank_rocket_damage = 50;
+var float autocvar_sk_q2tank_health = 750;
+
+//TANK COMMANDER
+var float autocvar_sk_q2tank_commander_health = 1000;
+
+//STROGG ZOMBIE
+var float autocvar_sk_q2zombie_grenade_damage = 30;
+var float autocvar_sk_q2zombie_health = 60;
 
 // get center of bmodel (found in Doombringer source - thanks!)
 vector() bmodelOrigin =
@@ -691,7 +801,6 @@ WEAPONS
 ============
 */
 
-#define WEAPON_DEFAULT_DAMAGE 		5
 #define WEAPON_AXE_DAMAGE 			15
 #define WEAPON_BLASTER_DAMAGE 		12
 #define WEAPON_SHOTGUN_DAMAGE 		4 //per pellot
@@ -724,14 +833,6 @@ WEAPONS
 #define	WEP_MACHINEGUN_MFLASH_OFFSET_TP '40 -18 -10'
 #define	WEP_MACHINEGUN_MFLASH_SCALE 0.5
 #define	WEP_MG_MFLASH_ALPHA 0.5
-
-/*
-============
-ENEMY WEAPON DAMAGE
-============
-*/
-
-#define HOVER_BLASTER_DAMAGE 5
 
 /*
 ============

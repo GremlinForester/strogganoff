@@ -276,13 +276,6 @@ void(vector start, vector end, float damage) fire_railgun_base={
 	else
 	{	// hit wall
 		Q3Surface_Impact_Ent(impact_point);
-		//sound (impact_sound, CHAN_WEAPON, "player/axhit2.wav", 1, ATTN_NORM);
-		//WriteByte (MSG_BROADCAST, SVC_TEMPENTITY);
-		//WriteByte (MSG_BROADCAST, TE_GUNSHOT);
-		//WriteCoord (MSG_BROADCAST, org_x);
-		//WriteCoord (MSG_BROADCAST, org_y);
-		//WriteCoord (MSG_BROADCAST, org_z);
-		//T_Damage (trace_ent, self, self, WEAPON_DEFAULT_DAMAGE);
 	}
 };
 
@@ -318,7 +311,4 @@ void(vector start, vector aimdir, float speed, float damage, float damage_radius
 	setsize (newmis, '0 0 0', '0 0 0');
 	setorigin (newmis, source);
 //	setorigin (newmis, self.origin + v_forward*8 + '0 0 16');	
-
-	
-
 };

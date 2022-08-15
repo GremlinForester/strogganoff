@@ -1,7 +1,3 @@
-.float spawn_max;
-.float spawn_count;
-.float strogg_type;
-
 /*QUAKED monster_strogg_spawner (1 .5 0) (-16 -16 -24) (16 16 32) Ambush Trigger_Spawn Sight
 -------- KEYS --------
 "strogg_type" :

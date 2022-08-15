@@ -90,7 +90,7 @@ framer($FRAME_melee1, $FRAME_melee9, q2gladiator_melee_attack1, q2gladiator_run,
 
 	frame_arb($FRAME_melee5,sound(self, CHAN_WEAPON, GLADIATOR_SOUND_CLEAVER_SWING, 1, ATTN_NORM););
 	
-	frame_arb($FRAME_melee7, gladiator_melee(20); ai_charge(25););
+	frame_arb($FRAME_melee7, gladiator_melee(autocvar_sk_q2gladiator_melee_damage); ai_charge(25););
 );
 
 // MELEE ATTACK 2
@@ -99,7 +99,7 @@ framer($FRAME_melee10, $FRAME_melee17, q2gladiator_melee_attack2, q2gladiator_ru
 
 	frame_arb($FRAME_melee11,sound(self, CHAN_WEAPON, GLADIATOR_SOUND_CLEAVER_SWING, 1, ATTN_NORM););
 	
-	frame_arb($FRAME_melee14, gladiator_melee(20); ai_charge(25););
+	frame_arb($FRAME_melee14, gladiator_melee(autocvar_sk_q2gladiator_melee_damage); ai_charge(25););
 );
 
 // Select Attack
@@ -137,7 +137,7 @@ void() q2gladiator_fire =
 	
 	dir = normalize(end - org);
 	
-	monster_fire_railgun(org, end, 20);
+	monster_fire_railgun(org, end, autocvar_sk_q2gladiator_rail_damage);
 };
 
 
@@ -279,7 +279,7 @@ void () monster_gladiator =
 	setmodel (self, "models/monsters/gladiatr/tris.md2");
 
 	setsize (self, '-32 -32 -24', '32 32 64');
-	self.health = 400;
+	self.health = autocvar_sk_q2gladiator_health;
 	self.max_health = self.health;
 
 	self.th_stand = q2gladiator_stand;

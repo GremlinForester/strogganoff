@@ -326,9 +326,25 @@ void() q2playerPainSound =
 	}
 };
 
+//TP weapon switch anims
+
+//STAND
+framer($FRAME_pain301, $FRAME_pain304, q2player_wepSwitchStand, q2player_run, 0.05,
+
+	frame_arb($FRAME_pain301,
+	
+	);
+);
+
+//CROUCH
+framer($FRAME_crpain1, $FRAME_crpain4, q2player_wepSwitchCrouch, q2player_run, 0.05,
+
+	frame_arb($FRAME_crpain1,
+	
+	);
+);
+
 //CROUCH PAIN
-
-
 framer($FRAME_crpain1, $FRAME_crpain4, q2player_CRpainFramesA, q2player_run, 0.1,
 
 	frame_arb($FRAME_crpain1,

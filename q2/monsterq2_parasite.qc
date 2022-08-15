@@ -168,7 +168,7 @@ void() CastUmbilical =
 	WriteCoord (MSG_BROADCAST, trace_endpos_y);
 	WriteCoord (MSG_BROADCAST, trace_endpos_z);
 	self.effects | EF_MUZZLEFLASH;
-	LightningDamage (org, trace_endpos, self, 10);
+	LightningDamage (org, trace_endpos, self, autocvar_sk_q2parasite_damage);
 };
 
 void() q2parasite_attack1     =[      $FRAME_drain01,       q2parasite_attack2    ] {ai_face();sound (self, CHAN_WEAPON, "shambler/sattck1.wav", 1, ATTN_NORM);};
@@ -307,7 +307,7 @@ void () monster_parasite =
 	setmodel (self, "models/monsters/parasite/tris.md2");
 
 	setsize (self, '-16 -16 -24', '16 16 24');
-	self.health = 175;
+	self.health = autocvar_sk_q2parasite_health;
 	self.max_health = self.health;
 
 	self.th_stand = q2parasite_stand;

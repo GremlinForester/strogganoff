@@ -92,7 +92,7 @@ void(float side)	q2mutant_Melee =
 	else
 		sound (self, CHAN_VOICE, MUTANT_SOUND_HIT2, 1, ATTN_NORM);	
 	
-	self.ldmg_ = 10 + 5*random();
+	self.ldmg_ = autocvar_sk_q2mutant_melee_damage + 5*random();
 	T_Damage (self.enemy, self, self, self.ldmg_);	
 
 	makevectors (self.angles);
@@ -150,7 +150,7 @@ framer($FRAME_attack01, $FRAME_attack06, q2mutant_jump, q2mutant_run, 0.1,
 		self.velocity = v_forward * 600 + '0 0 250';
 		if (self.flags & FL_ONGROUND)
 			self.flags = self.flags - FL_ONGROUND;
-		self.dmg = 40;
+		self.dmg = autocvar_sk_q2mutant_leap_damage;
 		self.jump_vel = 400;
 
 	);
@@ -303,7 +303,7 @@ void() monster_mutant =
 	setsize (self, '-32 -32 -24', '32 32 48');
 	//setsize (self, '-16 -16 -24', '16 16 32');
 	//setsize (self, VEC_HULL2_MIN, VEC_HULL2_MAX);
-	self.health = 300;
+	self.health = autocvar_sk_q2mutant_health;
 	self.max_health = self.health;
 
 	self.th_stand = q2mutant_stand;

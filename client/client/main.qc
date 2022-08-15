@@ -257,7 +257,6 @@ float(float event, float parama) CSQC_InputEvent =
 	else return FALSE; 
 };
 
-
 /*
   Remember, the read order must exactly match the write order,
   so if you sent (changeFlags & SENDFLAG_ORIGIN), you MUST
@@ -267,11 +266,12 @@ float(float event, float parama) CSQC_InputEvent =
     
     which is then read IF (changeFlags & SENDFLAG_ORIGIN)
 */
+
 void(float isnew, float changeFlags) sendent_handle_player_TEST={
   vector prevOrg;
   vector prevAngle;
   float prevDeadFlag;
-  
+   
   if( (changeFlags & SENDFLAG_ORIGIN) ){
     self.origin_x = ReadCoord();
     self.origin_y = ReadCoord();
@@ -292,7 +292,7 @@ void(float isnew, float changeFlags) sendent_handle_player_TEST={
     //change player weapon to this new one
   }
   
-  if( (changeFlags & SENDFLAGS_NEW_ENT) ){
+  if( (changeFlags & SENDFLAG_NEW_ENT) ){
     //stand up any new stuff
   }
   
@@ -320,7 +320,7 @@ void(float isNew) CSQC_Ent_Update={
   switch(entType){
     case SENDTYPE_PLAYER:
       //TEST
-      sendent_handle_player_TEST( isnew, entFlags );
+      sendent_handle_player_TEST( isNew, entFlags );
       break;
     case SENDTYPE_MONSTER:
       //TODO -  handle monster
@@ -329,7 +329,8 @@ void(float isNew) CSQC_Ent_Update={
       //TODO -  handle projectiles
       break;
     case SENDTYPE_MISC_ENT:
-      //TODO -  handle misc. ents
+	      //TODO -  handle misc. ents
+	sendent_handle_misc_ent( isNew, entFlags );
       break;
     case SENDTYPE_MAP_OBJ:
       //TODO -  handle map objects

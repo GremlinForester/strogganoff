@@ -248,7 +248,7 @@ void() q2gunner_fire_grenade =
 	org = self.origin + (v_forward * 8) + (v_right * -8) + (v_up * 16);
 //	org = '20 8 17';
 //	makevectors(self.angles);	
-	monster_fire_grenade (org, '300 300 300', 40, 600);
+	monster_fire_grenade (org, '300 300 300', autocvar_sk_q2gunner_grenade_damage, 600);
 };
 
 /*
@@ -285,7 +285,7 @@ void() gunner_fire_bullet =
 	dir = normalize (en.origin - self.origin);
 	org = self.origin + (v_forward * 30) + (v_right * 16) + (v_up * 36);
 	
-	monster_fire_bullet(self.origin, dir, '0.01 0.01 0', 3);
+	monster_fire_bullet(self.origin, dir, '0.01 0.01 0', autocvar_sk_q2gunner_mg_damage);
 };
 
 framer($FRAME_attak209, $FRAME_attak230, q2gunner_attack_chain, q2gunner_frames_run, 0.1,
@@ -354,7 +354,7 @@ void() monster_gunner =
 	setmodel (self, "models/monsters/gunner/tris.md2");
 
 	setsize (self, '-16 -16 -24', '16 16 32');
-	self.health = 175;
+	self.health = autocvar_sk_q2gunner_health;
 	self.max_health = self.health;
 
 	self.th_stand = q2gunner_frames_stand;

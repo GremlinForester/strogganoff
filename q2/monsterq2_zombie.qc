@@ -111,7 +111,7 @@ void() StroggZombieGrenadeTouch =
 	sound (self, CHAN_WEAPON, "blob/death1.wav", 1, ATTN_NORM);	// bounce sound
 	self.velocity = '0 0 0';
 	self.avelocity = '0 0 0';
-	T_RadiusDamage (self, self.owner, 60, other);
+	T_RadiusDamage (self, self.owner, autocvar_sk_q2zombie_grenade_damage, other);
 	pointparticles(particleeffectnum("TE_EXPLOSION"), self.origin, '0 0 0', 1);
 //	BecomeExplosion();
 	self.touch = SUB_Remove;
@@ -436,7 +436,7 @@ void() monster_stroggzombie =
 	setmodel (self, "progs/zombie.mdl");
 
 	setsize (self, '-16 -16 -24', '16 16 40');
-	self.health = 60;
+	self.health = autocvar_sk_q2zombie_health;
 
 	self.th_stand = stroggzombie_stand1;
 	self.th_walk = stroggzombie_walk1;

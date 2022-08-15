@@ -121,8 +121,10 @@ void(float damage) infantry_melee =
 
 	if (vlen(self.enemy.origin - self.origin) > 75)
 		return;
-		
+	
+	
 	self.ldmg_ = (random() + random() + random()) * damage;
+	
 	T_Damage (self.enemy, self, self, self.ldmg_);
 	
 	if (damage)
@@ -142,7 +144,7 @@ framer($FRAME_attak201, $FRAME_attak208, q2infantry_melee, q2infantry_frames_run
 
 	frame_arb($FRAME_attak203,sound(self, CHAN_WEAPON, "infantry/infatck2.wav", 1, ATTN_NORM););
 	
-	frame_arb($FRAME_attak206, infantry_melee(20); ai_charge(25););
+	frame_arb($FRAME_attak206, infantry_melee(autocvar_sk_q2infantry_melee_damage); ai_charge(25););
 );
 
 
@@ -302,10 +304,10 @@ void() q2infantry_fire =
 	org = self.origin + (v_forward * 26.6) + (v_right * 7.1) + (v_up * 13.1);
 
   if (self.classname == "monster_infantry_nail") {
-    monster_fire_flechette(1, org, self.enemy.origin - self.origin, '0.01 0.01', 1);
+    monster_fire_flechette(1, org, self.enemy.origin - self.origin, '0.01 0.01', autocvar_sk_q2infantry_nail_damage);
   }
   else{
-    monster_fire_bullet(org, dir, '0.01 0.01 0', 3);
+    monster_fire_bullet(org, dir, '0.01 0.01 0', autocvar_sk_q2infantry_mg_damage);
   }
 	
 };
@@ -483,8 +485,8 @@ void() monster_infantry =
 	setmodel (self, "models/monsters/infantry/tris.md2");
 
 	setsize (self, '-16 -16 -24', '16 16 40');
-	self.health = 100;
-	self.max_health = self.health = 100;
+	self.health = autocvar_sk_q2infantry_health;
+	self.max_health = self.health;
 
 	self.th_stand = q2infantry_select_stand;
 	self.th_walk = q2infantry_frames_walk;
@@ -521,7 +523,7 @@ void() monster_infantry_nail=
 	setmodel (self, "models/monsters/infantry/tris.md2");
 
 	setsize (self, '-16 -16 -24', '16 16 40');
-	self.health = 150;
+	self.health = autocvar_sk_q2infantry_nail_health;
 	self.max_health = self.health;
 
 	self.th_stand = q2infantry_select_stand;

@@ -4,6 +4,7 @@
 QUAKE II STROGG HOVER
 
 monster_hover
+monster_hover_teleporter
 
 ==============================================================================
 */
@@ -128,7 +129,15 @@ void() hover_fire_blaster={
 	
 	dir = normalize(end - org);
 	sound (self, CHAN_AUTO, HOVER_SOUND_ATTACK1, 1, ATTN_NORM);
-	monster_fire_blaster(org, dir, HOVER_BLASTER_DAMAGE, '0.1 0.2 0.1', MF_TRACER);
+	
+	if (self.classname == "monster_hover_teleporter")
+	{
+		monster_fire_blaster(org, dir, autocvar_sk_q2hover_teleport_damage, '0.1 0.1 0.2', MF_TRACER);	
+	}
+	else
+	{
+		monster_fire_blaster(org, dir, autocvar_sk_q2hover_damage, '0.1 0.2 0.1', MF_TRACER);	
+	}
 };
 
 void() hover_stand={
@@ -307,7 +316,7 @@ void() monster_hover=
 	setmodel(self, "models/monsters/hover/tris.md2");
 	
 	setsize(self, '-16 -16 -24', '16 16 32');
-	self.health = 240;
+	self.health = autocvar_sk_q2hover_health;
 	self.max_health = self.health;
 	
 	self.th_stand = hover_stand;
@@ -341,7 +350,7 @@ void() monster_hover_teleporter=
 	setmodel(self, "models/monsters/hover/tris.md2");
 	
 	setsize(self, '-16 -16 -24', '16 16 32');
-	self.health = 80;
+	self.health = autocvar_sk_q2hover_teleport_health;
 	self.max_health = self.health;
 	
 	self.th_stand = hover_stand;

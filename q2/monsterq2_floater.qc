@@ -115,7 +115,7 @@ void() floater_fire_blaster={
 	dir = en.origin + en.velocity*0.2;
 	dir = normalize (dir - org);
 	
-	monster_fire_blaster(org, dir, 10, '2 0.5 0.5', MF_TRACER2);
+	monster_fire_blaster(org, dir, autocvar_sk_q2floater_blaster_damage, '2 0.5 0.5', MF_TRACER2);
 	sound (self, CHAN_WEAPON, "weapons/BLASTF1A.WAV", 1, ATTN_NORM);
 };
 
@@ -131,7 +131,7 @@ void() floater_wham={
 	if (vlen(self.enemy.origin - self.origin) > 75)
 		return;
 	
-	T_Damage(self.enemy, self, self, 4 + (4*random()));
+	T_Damage(self.enemy, self, self, autocvar_sk_q2floater_wham_damage + (4*random()));
 	sound (self, CHAN_WEAPON, FLOATER_SOUND_ATTACK3, 1, ATTN_NORM);
 };
 
@@ -150,7 +150,7 @@ void() floater_zap={
 	te_spark(org, dir, 15);
 	
 	//T_Damage(self.enemy, self, self, 7 * random());
-	T_Damage(self.enemy, self, self, 1);
+	T_Damage(self.enemy, self, self, autocvar_sk_q2floater_zap_damage);
 	
 	sound (self, CHAN_WEAPON, FLOATER_SOUND_ATTACK2, 1, ATTN_NORM);
 };
@@ -318,7 +318,7 @@ void() monster_floater=
 	setmodel(self, "models/monsters/float/tris.md2");
 	
 	setsize(self, '-16 -16 -16', '16 16 40');
-	self.health = 200;
+	self.health = autocvar_sk_q2floater_health;
 	self.max_health = self.health;
 	
 	//self.th_stand = floater_stand_switch;

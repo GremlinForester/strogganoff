@@ -76,7 +76,7 @@ void(entity attacker, float damage)	q2flipper_pain =
 	}
 };
 
-void() q2flipper_bite =
+void(float damage) q2flipper_bite =
 {
 	if (!self.enemy)
 		return;		// removed before stroke
@@ -86,14 +86,14 @@ void() q2flipper_bite =
 		
 	sound (self, CHAN_VOICE, FLIPPER_SOUND_CHOMP, 1, ATTN_NORM);
 	self.ldmg_ = (random() + random()) * 3;
-	T_Damage (self.enemy, self, self, self.ldmg_);
+	T_Damage (self.enemy, self, self, damage);
 };
 
 framer($FRAME_flpbit01, $FRAME_flpbit20, q2flipper_frames_attack, q2flipper_frames_start_run, 0.05,
 
-	frame_arb($FRAME_flpbit14, q2flipper_bite(););
+	frame_arb($FRAME_flpbit14, q2flipper_bite(autocvar_sk_q2flipper_melee_damage););
 	
-	frame_arb($FRAME_flpbit19, q2flipper_bite(););
+	frame_arb($FRAME_flpbit19, q2flipper_bite(autocvar_sk_q2flipper_melee_damage););
 );
 
 
@@ -166,7 +166,7 @@ void () monster_flipper =
 	setmodel (self, "models/monsters/flipper/tris.md2");
 
 	setsize (self, '-16 -16 0', '16 16 32');
-	self.health = 50;
+	self.health = autocvar_sk_q2flipper_health;
 	self.max_health = self.health;
 
 	self.th_stand = q2flipper_frames_stand;

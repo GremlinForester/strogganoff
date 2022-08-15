@@ -208,6 +208,10 @@ void() ai_melee =
 		return;
 		
 	self.ldmg_ = (random() + random() + random()) * 3;
+	
+	if (self.classname == "monster_brain")
+		self.ldmg_ = (random() + random() + random()) * autocvar_sk_q2brain_melee_damage;
+	
 	T_Damage (self.enemy, self, self, self.ldmg_);
 };
 

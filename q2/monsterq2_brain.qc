@@ -59,6 +59,29 @@ void() brain_run9	=[	$FRAME_walk109,	brain_run0 ]{ai_run(-4);};
 void() brain_run0	=[	$FRAME_walk110, brain_run1 ]{ai_run(-1);Q3Surface_FootStep();};
 void() brain_run1	=[	$FRAME_walk110, brain_run ]{ai_run(2);};
 
+void(float damage) q2brain_melee =
+{
+	if (!self.enemy)
+		return;
+	if (!CanDamage (self.enemy, self))
+		return;
+
+	if (vlen(self.enemy.origin - self.origin) > 75)
+		return;
+		
+	self.ldmg_ = (random() + random() + random()) * damage;
+	T_Damage (self.enemy, self, self, self.ldmg_);
+	
+	if (damage)
+	{
+		makevectors (self.angles);
+		if (damage == 1){
+		//	SpawnMeatSpray (self.origin + v_forward*16, crandom() * 100 * v_right);
+			sound(self, CHAN_BODY, BRAIN_MELEE3, 1, ATTN_NORM);
+		}
+	}
+};
+
 // ATTACK 1
 
 framer($FRAME_attak101, $FRAME_attak118, brain_atk1_frames, brain_run, 0.1,
@@ -91,7 +114,7 @@ framer($FRAME_attak101, $FRAME_attak118, brain_atk1_frames, brain_run, 0.1,
 framer($FRAME_attak201, $FRAME_attak217, brain_atk2_frames, brain_run, 0.1,
 
 	frame_arb($FRAME_attak205, sound (self, CHAN_BODY, BRAIN_CHEST_OPEN, 1, ATTN_NORM););
-	frame_arb($FRAME_attak207, sound (self, CHAN_BODY, BRAIN_TENTACLES_EXTEND, 1, ATTN_NORM); ai_melee(););
+	frame_arb($FRAME_attak207, sound (self, CHAN_BODY, BRAIN_TENTACLES_EXTEND, 1, ATTN_NORM); q2brain_melee(autocvar_sk_q2brain_melee_chest_damage););
 	frame_arb($FRAME_attak211, sound (self, CHAN_BODY, BRAIN_TENTACLES_RETRACT, 1, ATTN_NORM););
 
 	ai_rep($FRAME_attak201, ai_charge, 5, -4, -4, -3, 0, 0, 13, 0);
@@ -286,7 +309,7 @@ void() monster_brain =
 	setmodel (self, "models/monsters/brain/tris.md2");
 
 	setsize (self, '-16 -16 -24', '16 16 32');
-	self.health = 150;
+	self.health = autocvar_sk_q2brain_health;
 	self.max_health = self.health;
 
 	self.th_stand = brain_stand_frames;

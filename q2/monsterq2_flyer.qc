@@ -60,7 +60,7 @@ void(float side) flyer_blaster_fire={
 	
 	dir = normalize(end - org);
 
-	monster_fire_blaster(org, dir, 10, '0.5 0.5 1', MF_TRACER3);
+	monster_fire_blaster(org, dir, autocvar_sk_q2flyer_blaster_damage, '0.5 0.5 1', MF_TRACER3);
 	sound(self, CHAN_WEAPON, FLYER_SOUND_BLASTER, 1, ATTN_NORM);
 };
 
@@ -169,7 +169,7 @@ void() flyer_slash_left=
 	if (vlen(self.enemy.origin - self.origin) > 64)
 		return;
 	
-	T_Damage(self.enemy, self, self, 5);
+	T_Damage(self.enemy, self, self, autocvar_sk_q2flyer_melee_damage);
 	sound (self, CHAN_WEAPON, FLYER_SOUND_SPLASH, 1, ATTN_NORM);
 }
 
@@ -183,7 +183,7 @@ void() flyer_slash_right=
 	if (vlen(self.enemy.origin - self.origin) > 64)
 		return;
 	
-	T_Damage(self.enemy, self, self, 5);
+	T_Damage(self.enemy, self, self, autocvar_sk_q2flyer_melee_damage);
 	sound (self, CHAN_WEAPON, FLYER_SOUND_SPLASH, 1, ATTN_NORM);
 }
 
@@ -300,7 +300,7 @@ void() monster_flyer=
 	
 	setsize(self, '-16 -16 -24', '16 16 32');
 	
-	self.health = 50;
+	self.health = autocvar_sk_q2flyer_health;
 	self.max_health = self.health;
 	
 	self.th_stand = flyer_stand;

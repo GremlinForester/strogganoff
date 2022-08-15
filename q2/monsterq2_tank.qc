@@ -220,7 +220,7 @@ void() TankBlaster ={
 	
 	dir = normalize(end - start);
 	
-	monster_fire_blaster (start, dir, 30, '2 0.5 0.5', MF_TRACER2);
+	monster_fire_blaster (start, dir, autocvar_sk_q2tank_blaster_damage, '2 0.5 0.5', MF_TRACER2);
 };
 
 void() TankStrike ={
@@ -248,7 +248,7 @@ void() TankRocket ={
 	
 	dir = normalize(end - start);
 	
-	monster_fire_rocket (start, dir, 50);
+	monster_fire_rocket (start, dir, autocvar_sk_q2tank_rocket_damage);
 };
 
 void() TankMachineGun={
@@ -289,7 +289,7 @@ void() TankMachineGun={
 	makevectors(dir);
 	vec = start + (v_forward * vlen(self.enemy.origin - self.origin));
 	
-	monster_fire_bullet (start, normalize(vec - start), '0.025 0.01 0', 4);
+	monster_fire_bullet (start, normalize(vec - start), '0.025 0.01 0', autocvar_sk_q2tank_bullet_damage);
 };
 
 framer($FRAME_attak101, $FRAME_attak116, tank_move_attack_blast, tank_reattack_blaster, 0.1, 
@@ -543,11 +543,11 @@ void() monster_tank={
 	if (!self.health)
 	{
 		if (strcmp(self.classname, "monster_tank_commander") == 0){
-			self.health = 1000;
+			self.health = autocvar_sk_q2tank_commander_health;
 			//self->gib_health = -225;
 		}
 		else{
-			self.health = 750;
+			self.health = autocvar_sk_q2tank_health;
 			//self->gib_health = -200;
 		}
 	}

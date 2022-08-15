@@ -345,21 +345,21 @@ void() q2soldier_fire =
 	if (self.classname == "monster_soldier")
 	{
 		sound (self, CHAN_WEAPON, "soldier/Solatck1.wav", 1, ATTN_NORM);		
-		monster_fire_shotgun(8, org, dir, autocvar_q2soldier_shotgun_accuracy, WEAPON_DEFAULT_DAMAGE);
+		monster_fire_shotgun(8, org, dir, autocvar_sk_q2soldier_shotgun_accuracy, autocvar_sk_q2soldier_shotgun_damage);
 	}
 	else if (self.classname == "monster_soldier_ss")
 	{
 		sound (self, CHAN_WEAPON, "soldier/Solatck3.wav", 1, ATTN_NORM);		
-		monster_fire_bullet(org, dir, '0.01 0.01 0', 3);
+		monster_fire_bullet(org, dir, '0.01 0.01 0', autocvar_sk_q2soldier_mg_damage);
 	}
 	else if (self.classname == "monster_soldier_flak"){
 		sound (self, CHAN_WEAPON, "soldier/Solatck1.wav", 1, ATTN_NORM);
-		monster_fire_flechette(4, org, self.enemy.origin - self.origin, '0.05 0.06', 3);
+		monster_fire_flechette(4, org, self.enemy.origin - self.origin, '0.05 0.06', autocvar_sk_q2soldier_flak_damage);
 	}
 	else
 	{
 		sound (self, CHAN_WEAPON, "soldier/Solatck2.wav", 1, ATTN_NORM);		
-		monster_fire_blaster(org, self.enemy.origin - self.origin, 5, '2 0.2 0.2', MF_TRACER2);
+		monster_fire_blaster(org, self.enemy.origin - self.origin, autocvar_sk_q2soldier_light_damage, '2 0.2 0.2', MF_TRACER2);
 	}
 };
 
@@ -429,7 +429,7 @@ void() q2soldier_death1fire =
 		dir = normalize (org - self.origin);
 
 		sound (self, CHAN_WEAPON, "soldier/Solatck3.wav", 1, ATTN_NORM);
-		monster_fire_bullet(org, dir, '0.01 0.01 0', 3);
+		monster_fire_bullet(org, dir, '0.01 0.01 0', autocvar_sk_q2soldier_mg_damage);
 
 	}
 	else if (self.classname == "monster_soldier")
@@ -438,16 +438,16 @@ void() q2soldier_death1fire =
 		dir = normalize (org - self.origin);
 
 		sound (self, CHAN_WEAPON, "soldier/Solatck1.wav", 1, ATTN_NORM);
-		monster_fire_shotgun(8, org, dir, '0.1 0.1 0', WEAPON_DEFAULT_DAMAGE);		
+		monster_fire_shotgun(8, org, dir, '0.1 0.1 0', autocvar_sk_q2soldier_shotgun_damage);		
 	}
-  else if (self.classname == "monster_soldier_flak"){
+	else if (self.classname == "monster_soldier_flak"){
 		sound (self, CHAN_WEAPON, "soldier/Solatck1.wav", 1, ATTN_NORM);
-		monster_fire_flechette(2, org, self.enemy.origin - self.origin, '0.05 0.06', 3);
+		monster_fire_flechette(2, org, self.enemy.origin - self.origin, '0.05 0.06', autocvar_sk_q2soldier_flak_damage);
 	}
 	else
 	{
 		sound (self, CHAN_WEAPON, "soldier/Solatck2.wav", 1, ATTN_NORM);
-		monster_fire_blaster(org, v_forward * 2000, 3, '2 0.2 0.2', MF_TRACER2);
+		monster_fire_blaster(org, v_forward * 2000, autocvar_sk_q2soldier_light_damage, '2 0.2 0.2', MF_TRACER2);
 	}
 };
 
@@ -623,7 +623,7 @@ void () monster_soldier_light =
 	setmodel (self, "models/monsters/soldier/tris.md2");
 
 	setsize (self, '-16 -16 -24', '16 16 32');
-	self.health = 30;
+	self.health = autocvar_sk_q2soldier_light_health;
 
 	self.th_stand = q2soldier_select_stand;
 	self.th_walk = q2soldier_selectwalk; //q2soldier_2walk1;
@@ -656,7 +656,7 @@ void () monster_soldier =
 	setmodel (self, "models/monsters/soldier/tris.md2");
 
 	setsize (self, '-16 -16 -24', '16 16 32');
-	self.health = 30;
+	self.health = autocvar_sk_q2soldier_shotgun_health;
 
 	self.th_stand = q2soldier_select_stand;
 	self.th_walk = q2soldier_selectwalk; //q2soldier_2walk1;
@@ -690,7 +690,7 @@ void () monster_soldier_ss =
 	setmodel (self, "models/monsters/soldier/tris.md2");
 
 	setsize (self, '-16 -16 -24', '16 16 32');
-	self.health = 40;
+	self.health = autocvar_sk_q2soldier_mg_health;
 
 	self.th_stand = q2soldier_select_stand;
 	self.th_walk = q2soldier_selectwalk; //q2soldier_2walk1;
@@ -725,7 +725,7 @@ void () monster_soldier_flak =
 	setmodel (self, "models/monsters/soldier/tris.md2");
 
 	setsize (self, '-16 -16 -24', '16 16 32');
-	self.health = 55;
+	self.health = autocvar_sk_q2soldier_flak_health;
 
 	self.th_stand = q2soldier_select_stand;
 	self.th_walk = q2soldier_selectwalk; //q2soldier_2walk1;

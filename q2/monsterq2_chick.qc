@@ -223,7 +223,7 @@ void() q2chick_fire =
 	
 	dir = normalize(end - org);
 	
-	monster_fire_rocket(org, dir, 50);
+	monster_fire_rocket(org, dir, autocvar_sk_q2chick_missile_damage);
 	sound(self, CHAN_WEAPON, CHICK_SOUND_MISSILE_LAUNCH, 1, ATTN_NORM);
 };
 
@@ -262,7 +262,7 @@ framer($FRAME_attak201, $FRAME_attak216, q2chick_melee_attack, q2chick_frames_ru
 
 	frame_arb($FRAME_attak203,sound(self, CHAN_WEAPON, CHICK_SOUND_MELEE_SWING, 1, ATTN_NORM););
 	
-	frame_arb($FRAME_attak205, q2chick_melee(20); ai_charge(25););
+	frame_arb($FRAME_attak205, q2chick_melee(autocvar_sk_q2chick_melee_damage); ai_charge(25););
 );
 
 /*
@@ -398,7 +398,7 @@ void () monster_chick =
 	setmodel (self, "models/monsters/bitch/tris.md2");
 
 	setsize (self, '-16 -16 0', '16 16 56');
-	self.health = 175;
+	self.health = autocvar_sk_q2chick_health;
 	self.max_health = self.health;
 
 	self.th_stand = q2chick_frames_stand;
