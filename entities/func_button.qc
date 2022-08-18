@@ -13,6 +13,9 @@ void() button_wait =
 void() button_done =
 {
 	self.state = STATE_BOTTOM;
+	if (self.spawnflags & 4){
+		self.skin = self.skin - 1;
+	}
 };
 
 void() button_return =
@@ -20,6 +23,7 @@ void() button_return =
 	self.state = STATE_DOWN;
 	SUB_CalcMove (self.pos1, self.speed, button_done);
 	self.frame = 0;			// use normal textures
+	
 	if (self.health)
 		self.takedamage = DAMAGE_YES;	// can be shot again
 };
@@ -33,6 +37,13 @@ void() button_fire =
 
 	self.state = STATE_UP;
 	SUB_CalcMove (self.pos2, self.speed, button_wait);
+	
+	if (self.classname == "quake2_button") {
+	
+	}
+	if(self.skin < (self.material + 1)){
+		self.skin = self.skin + 1;
+	}
 };
 
 void() button_use =
@@ -193,6 +204,11 @@ void() func_button =
 		precache_sound ("buttons/switch04.wav");
 		self.noise = "buttons/switch04.wav";
 	}
+	if (self.sounds == 6)
+	{
+		precache_sound ("switches/butn2.wav");
+		self.noise = "switches/butn2.wav";
+	}
 	
 	SetMovedir ();
 
@@ -249,4 +265,102 @@ void() func_button =
 	self.pos2 = self.pos1 + self.movedir*(fabs(self.movedir*self.size) - self.lip);
 };
 
+
+void() buttonq2_settle={
+
+	self.movetype = MOVETYPE_PUSH;
+	self.solid = SOLID_BSP;
+
+};
+
+/*QUAKED prefab_button_box (0 .5 .8) ?
+When a button is touched, it moves some distance in the direction of it's angle, triggers all of it's targets, waits some time, then returns to it's original position where it can be triggered again.
+
+"angle"		determines the opening direction
+"target"	all entities with a matching targetname will be used
+"speed"		override the default 40 speed
+"wait"		override the default 1 second wait (-1 = never return)
+"lip"		override the default 4 pixel lip remaining at end of move
+"health"	if set, the button must be killed instead of touched
+"sounds"
+0) steam metal
+1) wooden clunk
+2) metallic click
+3) in-out
+*/
+void() prefab_button_box={
+	local vector v;
+	
+	precache_sound ("switches/butn2.wav");
+	self.noise = "switches/butn2.wav";
+
+	SetMovedir ();
+
+	self.movetype = MOVETYPE_NONE;
+	self.solid = SOLID_BBOX;
+	self.model = precache_model("models/buttons/btn_square.obj");
+	setmodel (self, self.model);
+	setorigin(self, self.origin);
+	
+	v = vectoangles(self.movedir);
+	
+	
+	self.angles_y = v_y;
+	self.skin = self.material;
+
+	if (self.spawnflags & DOOR_KEY_DATA_CD)
+		self.items_q2keys = IT_KEY_DATACD;
+	
+	if (self.spawnflags & DOOR_KEY_POWER_CUBE)
+		self.items_q2keys = IT_KEY_POWERCUBE;
+	
+	if (self.spawnflags & DOOR_KEY_PYRAMID)
+		self.items_q2keys = IT_KEY_PYRAMID;
+	
+	if (self.spawnflags & DOOR_KEY_DATA_SPINNER)
+		self.items_q2keys = IT_KEY_DATASPINNER;
+	
+	if (self.spawnflags & DOOR_KEY_PASS)
+		self.items_q2keys = IT_KEY_PASS;
+	
+	if (self.spawnflags & DOOR_KEY_BLUE_KEY)
+		self.items_q2keys = IT_KEY_BLUE;
+	
+	if (self.spawnflags & DOOR_KEY_RED_KEY)
+		self.items_q2keys = IT_KEY_RED;
+	
+	if (self.spawnflags & DOOR_KEY_COMMANDER_HEAD)
+		self.items_q2keys = IT_KEY_HEAD;
+
+	self.blocked = button_blocked;
+	self.use = button_use;
+
+	if (self.health)
+	{
+		self.max_health = self.health;
+		self.th_die = button_killed;
+		self.takedamage = DAMAGE_YES;
+	}
+	else
+		self.touch = button_touch;
+
+	if (!self.speed)
+		self.speed = 40;
+	if (!self.wait)
+		self.wait = 1;
+	if (!self.lip)
+		self.lip = 4;
+
+	self.state = STATE_BOTTOM;
+
+	self.pos1 = self.origin;
+	self.pos2 = self.pos1 + self.movedir*(fabs(self.movedir*self.size) - self.lip);
+	
+	if ((self.material == 6) || (self.material == 8) || (self.material == 10) || (self.material == 12)){
+		self.spawnflags = self.spawnflags | 4;
+	}
+	
+	self.think = buttonq2_settle;
+	self.nextthink = time + 0.01;	//settle the angle
+};
 

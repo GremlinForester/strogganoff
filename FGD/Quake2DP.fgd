@@ -130,6 +130,7 @@
 		3 : "Wodden Clunk"
 		4 : "Metallic Click"
 		5 : "In-Out"
+		6 : "Q2 button"
 	]
 	message(string) : "Activation message"
 	_minlight(integer) : "Minimum light (optional)"
@@ -919,6 +920,48 @@
 	]
 	speed(integer) : "Speed of push" : 1000
 ]
+
+
+@PointClass base(Appearflags, Target, Targetname) color(0 128 204) model({ "path": ":models/buttons/btn_square.obj" }) size(-12 -16 -16, 12 16 16)= prefab_button_box 
+: "Quake2-style button prefab. Acts like normal button just with specific animated textures and selectable style." [
+	spawnflags(Flags) =
+	[
+		1 : "Remove Key" : 0
+		2 : "Key Pyramid" : 0
+		4 : "restart anim" : 0
+		16 : "Key Data Spinner" : 0
+		64 : "Key Security Pass" : 0
+		128 : "Key Data CD" : 0
+		4096 : "Key Blue" : 0
+		8192 : "Key Red" : 0
+		16384 : "Key Head" : 0
+		32768 : "Key Power Cube" : 0
+	]
+	pathtarget(string) : "Elevator level target"
+	speed(integer) : "Speed" : 40
+	wait(choices) : "Wait before reset" : 1 =
+	[
+		-1 : "Never Return"
+	]
+	lip(integer) : "Lip remaining after move" : 4
+	health(integer) : "Health (shootable)"
+	message(string) : "Activation message"
+	_minlight(integer) : "Minimum light (optional)"
+	material(Choices) : "Material" : 0 =
+	[
+		0 : "btact"
+		2 : "alarm"
+		4 : "btshoot"
+		6 : "btelev_dn"
+		8 : "btelev_up"
+		10 : "arrow dn"
+		12 : "arrow up"
+		14 : "door swt1"
+		16 : "laser btn"
+	]
+]
+
+
 
 //
 // Weapons!
