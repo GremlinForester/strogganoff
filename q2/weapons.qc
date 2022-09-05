@@ -794,9 +794,9 @@ void() Weapon_Blaster_Fire=
 	local float		damage;
 
 	if (deathmatch)
-		damage = 15;
+		damage = 15 + (self.upgrade_blaster_level * autocvar_sk_blaster_upgrade_multiplier);
 	else
-		damage = 10;
+		damage = 10 + (self.upgrade_blaster_level * autocvar_sk_blaster_upgrade_multiplier);
 
 	fire_blaster_base(self.origin, self.v_angle, 800, damage, 200, 100, 200);	
 	SpawnMuzzleFlash(WEP_BLASTER_MFLASH_OFFSET_FP, WEP_BLASTER_MFLASH_SCALE, 0.5);

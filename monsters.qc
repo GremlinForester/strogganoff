@@ -14,6 +14,90 @@
 #define GIB_VELOCITY_MUL 1.1
 #define GIB_VELOCITY_FLAMING_MUL random() * 4
 
+void setWounded(entity ent)
+{
+	//Any weird pain skin workaround stuff can go here
+	if (ent.bIsWounded)
+		return;
+	else
+		self.bIsWounded = 1;
+		self.bleedcount = 3;
+		ent.skin++;
+}
+
+void() initClassType =
+{
+	switch(self.classname)
+	{
+	case "monster_soldier_light":
+		self.classtype = CLASS_STROGG;
+		break;
+	case "monster_soldier_ss":
+		self.classtype = CLASS_STROGG;
+		break;
+	case "monster_soldier":
+		self.classtype = CLASS_STROGG;
+		break;
+	case "monster_soldier_flak":
+		self.classtype = CLASS_STROGG;
+		break;
+	case "monster_infantry":
+		self.classtype = CLASS_STROGG;
+		break;
+	case "monster_infantry_nail":
+		self.classtype = CLASS_STROGG;
+		break;		
+	case "monster_berserk":
+		self.classtype = CLASS_STROGG;
+		break;
+	case "monster_brain":
+		self.classtype = CLASS_STROGG;
+		break;
+	case "monster_chick":
+		self.classtype = CLASS_STROGG;
+		break;
+	case "monster_flipper":
+		self.classtype = CLASS_ANIMAL;
+		break;
+	case "monster_floater":
+		self.classtype = CLASS_STROGG;
+		break;
+	case "monster_flyer":
+		self.classtype = CLASS_STROGG;
+		break;
+	case "monster_gladiator":
+		self.classtype = CLASS_STROGG;
+		break;
+	case "monster_gunner":
+		self.classtype = CLASS_STROGG;
+		break;
+	case "monster_hover":
+		self.classtype = CLASS_STROGG;
+		break;
+	case "monster_hover_teleporter":
+		self.classtype = CLASS_STROGG;
+		break;		
+	case "monster_medic":
+		self.classtype = CLASS_STROGG;
+		break;
+	case "monster_mutant":
+		self.classtype = CLASS_ANIMAL;
+		break;
+	case "monster_parasite":
+		self.classtype = CLASS_STROGG;
+		break;	
+	case "monster_tank":
+		self.classtype = CLASS_STROGG;
+		break;
+	case "monster_tank_commander":
+		self.classtype = CLASS_STROGG;
+		break;
+	case "monster_stroggzombie":
+		self.classtype = CLASS_ANIMAL;
+		break;		
+	}
+}
+
 void() gibMonster =
 {
 	local float n;
@@ -132,12 +216,16 @@ For now they mostly just pass parameters but down the road can be used for more 
 
 void (vector start, vector aimDir, vector spread, float dmg) monster_fire_bullet =
 {
+	removeBitsFromEntity(self,dphitcontentsmask,DPCONTENTS_MONSTERCLIP);	
 	FireBullets(1, start, aimDir, spread, dmg);
+	addBitsToEntity(self,dphitcontentsmask,DPCONTENTS_MONSTERCLIP);		
 }
 
 void (float shotcount, vector start, vector aimDir, vector spread, float dmg) monster_fire_shotgun =
 {
+	removeBitsFromEntity(self,dphitcontentsmask,DPCONTENTS_MONSTERCLIP);	
 	FireBullets(shotcount, start, aimDir, spread, dmg);
+	addBitsToEntity(self,dphitcontentsmask,DPCONTENTS_MONSTERCLIP);	
 }
 
 void (float shotcount, vector start, vector aimDir, vector spread, float setDamage) monster_fire_flechette =
@@ -368,6 +456,8 @@ qc++ monster_start
 
 void() monster_go =
 {
+	initClassType();
+	
 	self.takedamage = DAMAGE_AIM;
 
 	self.ideal_yaw = self.angles * '0 1 0';
@@ -450,7 +540,8 @@ void() monster_go =
 
 void(float flg) monster_start =
 {
-	self.dphitcontentsmask = self.dphitcontentsmask | (DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_MONSTERCLIP | DPCONTENTS_DONOTENTER | DPCONTENTS_BOTCLIP);
+	self.dphitcontentsmask = self.dphitcontentsmask | (DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_MONSTERCLIP | DPCONTENTS_DONOTENTER| DPCONTENTS_BOTCLIP | DPCONTENTS_WATER);
+
 // this fires specific code in monster_go
 	self.flags = self.flags | flg;
 

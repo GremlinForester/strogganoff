@@ -482,3 +482,32 @@ void() item_health_mega =
 	self.healtype = 2;
 	StartItem ();
 }
+
+/*
+===============================================================================
+
+UPGRADES
+
+===============================================================================
+*/
+
+/*QUAKED item_upgrade_blaster (.3 .3 1) (-16 -16 -16) (16 16 16)
+model="models/weapons/g_blast/tris.md2"
+*/
+void() item_upgrade_blaster =
+{
+	self.touch = inv_upgrade_touch;
+	precache_model ("models/weapons/g_blast/tris.md2");
+	precache_sound ("items/damage.wav");
+	precache_sound ("items/damage2.wav");
+	precache_sound ("items/damage3.wav");
+	self.noise = "items/damage.wav";
+	setmodel (self, "models/weapons/g_blast/tris.md2");
+	self.netname = "Blaster Upgrade";
+//	self.items = IT_QUAD;
+	self.effects = self.effects | EF_FULLBRIGHT | EF_ADDITIVE;
+	self.colormod = '0 1 1';
+	self.modelflags = MF_ROTATE;
+	setsize (self, '-16 -16 -16', '16 16 16');
+	StartItem ();
+}

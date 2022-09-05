@@ -893,6 +893,39 @@ void() inv_item_touch =
 /*
 ===============================================================================
 
+Upgrade Items
+
+===============================================================================
+*/
+
+void() inv_upgrade_touch =
+{
+	if (other.classname != "player")
+		return;
+	if (other.health <= 0)
+		return;
+
+	switch (self.classname){
+		case "item_upgrade_blaster":
+			other.upgrade_blaster_level += 1;
+			break;
+	}
+
+	sound (other, CHAN_AUTO, self.noise, 1, ATTN_NORM);
+
+	sprint (other, "You got the ");
+	sprint (other, self.netname);
+	sprint (other," ");
+	sprint (other, "level ");
+	sprint (other, ftos(other.upgrade_blaster_level));
+	sprint (other,"\n");
+
+	touched(0);
+};
+
+/*
+===============================================================================
+
 POWERUPS
 
 ===============================================================================

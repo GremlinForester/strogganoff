@@ -304,6 +304,7 @@ void(vector start, vector aimdir, float speed, float damage, float damage_radius
 	newmis.colormod = '0 0.5 0';
 	newmis.scale = 1;
 	newmis.alpha = .5;
+	newmis.dphitcontentsmask = self.dphitcontentsmask | (DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_OPAQUE | DPCONTENTS_SKY | DPCONTENTS_WATER);
 	
 	source = G_ProjectSource (self.origin, '20 8 17', v_forward, v_right, '0 0 0');
 

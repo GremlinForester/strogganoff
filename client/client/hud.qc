@@ -515,10 +515,12 @@ void Hud_DrawSBar(vector pos)
 			drawpic(pos, "pics/i_jacketarmor", '24 24 0', '1 1 1', 1, 0);
 		}
 	}
-	/*
-	if (getstati(STAT_PLAYERTYPE) = 0)
+	
+	local float skinnum = getstati(STAT_PLAYERSKIN)
+
+	if (getstati(STAT_PLAYERTYPE) == 0)
 	{
-	switch (self.skin)
+	switch (skinnum)
 		{
 		case 0:
 			drawpic(pos+'106 0 0', "players/male/grunt_i", '0 24 0', '1 1 1', 1, 0);
@@ -567,9 +569,9 @@ void Hud_DrawSBar(vector pos)
 			break;			
 		}
 	}
-	if (getstati(STAT_PLAYERTYPE) = 1)
+	if (getstati(STAT_PLAYERTYPE) == 1)
 	{
-	switch (self.skin)
+	switch (skinnum)
 		{
 		case 0:
 			drawpic(pos+'106 0 0', "players/female/athena_i", '0 24 0', '1 1 1', 1, 0);
@@ -603,9 +605,9 @@ void Hud_DrawSBar(vector pos)
 			break;			
 		}
 	}
-	if (getstati(STAT_PLAYERTYPE) = 2)
+	if (getstati(STAT_PLAYERTYPE) == 2)
 	{
-	switch (self.skin)
+	switch (skinnum)
 		{
 		case 0:
 			drawpic(pos+'106 0 0', "players/cyborg/oni911_i", '0 24 0', '1 1 1', 1, 0);
@@ -618,12 +620,12 @@ void Hud_DrawSBar(vector pos)
 			break;
 		}
 	}
+	/*
 	else
 	{
 		drawpic(pos+'112 0 0', "pics/i_health", '0 24 0', '1 1 1', 1, 0);
 	}
 	*/
-
 	/*
 	if (self.playerType == 0)
 	{
@@ -733,7 +735,7 @@ void Hud_DrawSBar(vector pos)
 	}
 	*/
 	
-	drawpic(pos+'112 0 0', "pics/i_health", '0 24 0', '1 1 1', 1, 0);
+	//drawpic(pos+'112 0 0', "pics/i_health", '0 24 0', '1 1 1', 1, 0);
 
 	Hud_DrawLargeValue(pos+'136 0 0', getstati(STAT_HEALTH), 25);
 

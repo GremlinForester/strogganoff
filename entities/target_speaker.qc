@@ -34,10 +34,10 @@ void() target_speaker_think =
 		if (self.noise) 
 		{
 			//pointsound(self.origin, self.noise, self.volume, self.attenuation);
-			sound7(self, CHAN_BODY, self.noise, self.volume, self.attenuation, self.speed, self.flags);
-			self.nextthink = (time + soundlength(self.noise));
+			//sound7(self, CHAN_BODY, self.noise, self.volume, self.attenuation, self.speed, self.flags);
+			//self.nextthink = (time + soundlength(self.noise));
 
-			//ambientsound (self.origin, self.noise, self.volume, self.attenuation);
+			ambientsound (self.origin, self.noise, self.volume, self.attenuation);
 			//self.nextthink = -1;
 		//	return;
 		}
@@ -171,11 +171,15 @@ void() target_speaker =
 	else if (self.attenuation == -1)	// use -1 so 0 defaults to 1
 		self.attenuation = 0;
 
-	// check for prestarted looping sound
-/*	if (self.spawnflags & 1) {
-		self.noise = self.noise;
-		self.attenuation = self.attenuation;
-	}*/
+	precache_sound (self.noise);
+	
+		/*
+	if (self.spawnflags & 1)
+	{
+		ambientsound (self.origin, self.noise, self.volume, self.attenuation);
+		remove(self);
+	}		
+		*/
 	
 	//for sound debug
 	self.effects = 	self.effects | EF_FULLBRIGHT | EF_NODEPTHTEST;
@@ -183,7 +187,7 @@ void() target_speaker =
 	setmodel (self, "models/mapobjects/hub/stroggos_system/logo_strogg.MD3");
 	self.alpha = 0.01;
 	
-	precache_sound (self.noise);
+
 	self.use = target_speaker_use;
 	self.think = target_speaker_think;
 	self.nextthink = time + soundlength(self.noise);

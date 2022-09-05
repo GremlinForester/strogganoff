@@ -242,19 +242,19 @@ void(entity attacker, float damage)	q2infantry_pain =
 
 	if (r < 0.2)
 	{
-		self.pain_finished = time + 0.6;
+		self.pain_finished = time + 3.6;
 		q2infantry_pain1 ();
 		sound (self, CHAN_VOICE, "infantry/infpain1.wav", 1, ATTN_NORM);
 	}
 	else if (r < 0.6)
 	{
-		self.pain_finished = time + 1.1;
+		self.pain_finished = time + 3.1;
 		q2infantry_pain2 ();
 		sound (self, CHAN_VOICE, "infantry/infpain2.wav", 1, ATTN_NORM);
 	}
 	else
 	{
-		self.pain_finished = time + 1.1;
+		self.pain_finished = time + 3.1;
 		q2infantry_pain1 ();
 		sound (self, CHAN_VOICE, "infantry/infpain2.wav", 1, ATTN_NORM);
 	}

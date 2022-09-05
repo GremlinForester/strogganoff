@@ -22,7 +22,15 @@ void() model_static_think =
 	if (self.spawnflags & SF_HOLOGRAM)
 	{
 		self.colormod = self.holo_color;
-		self.alpha = 0.75 + random();	
+		
+		if (!self.alpha)
+		{
+			self.alpha = 0.75 + random();
+		}
+		else
+		{
+			self.alpha = self.alpha + random() * 0.5; //0.75 + random();
+		}		
 		
 		if (self.classname == "model_static") //only models do the scale distort
 		{
@@ -233,6 +241,14 @@ void() model_static_init =
 {
 	if (self.health > 0) 
 	{
+		if (self.spawnflags & SF_SOLID_BSP)
+		{
+			self.takedamage = DAMAGE_YES;
+			self.nextthink = time + 0.1;
+			self.think = model_static_think;
+			return;
+		}
+			
 		self.solid = SOLID_BBOX;		
 		self.takedamage = DAMAGE_YES;
 	}

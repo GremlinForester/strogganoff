@@ -379,7 +379,6 @@ void(float shotcount, vector org, vector dir, vector spread, float damage) FireB
 
 //	src = self.origin + v_forward*10;
 //	src_z = self.absmin_z + self.size_z * 0.7;
-
 	ClearMultiDamage ();
 	while (shotcount > 0)
 	{
@@ -587,9 +586,6 @@ void(vector start, vector aimdir, float damage) fireBFGtrail =
 	}
 };
 
-//MrC: Idea, use this as a base for a tesla ball, target points and hit them with beams. Points could follow a path or just randomize directions. 
-//A future weapon could use this as a recharge, something like in Prey. Get in range with the weapon selected and leech energy.
-
 void() m_BFGthink =
 {
 	local entity BFGtarget;
@@ -615,13 +611,13 @@ void() m_BFGthink =
 				bprint("\n");
 				if (vlen(BFGtarget.origin - self.origin) < BFGdist)
 				{
-					if (visible(BFGtarget) ){
+				//	if (visible(BFGtarget) ){
 						fireBFGtrail(self.origin, BFGtarget.origin, 20);
 						BFGFireCount++;
 						bprint("BFG Fire count: ");
 						bprint (ftos(BFGFireCount));
 						bprint("\n");
-					}					
+					//}					
 				}
 			}
 		}
@@ -670,13 +666,13 @@ void() BFGthink =
 				bprint("\n");
 				if (vlen(BFGtarget.origin - self.origin) < BFGdist)
 				{
-					if (visible(BFGtarget) ){
+				//	if (visible(BFGtarget) ){
 						fireBFGtrail(self.origin, BFGtarget.origin, 20);
 						BFGFireCount++;
 						bprint("BFG Fire count: ");
 						bprint (ftos(BFGFireCount));
 						bprint("\n");
-					}
+				//	}
 				
 				}
 				

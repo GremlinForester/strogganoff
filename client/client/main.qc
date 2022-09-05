@@ -330,7 +330,6 @@ void(float isNew) CSQC_Ent_Update={
       break;
     case SENDTYPE_MISC_ENT:
 	      //TODO -  handle misc. ents
-	sendent_handle_misc_ent( isNew, entFlags );
       break;
     case SENDTYPE_MAP_OBJ:
       //TODO -  handle map objects

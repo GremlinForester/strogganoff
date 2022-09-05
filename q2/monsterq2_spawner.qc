@@ -79,7 +79,7 @@ void() monster_strogg_spawn =
 			e.th_stand = q2soldier_frames_stand;
 			e.th_walk = q2soldier_2walk1;
 			e.th_run = q2soldier_run1;
-			e.th_missile = q2soldier_seleck_attack;
+			e.th_missile = q2soldier_select_attack;
 			e.th_pain = q2soldier_pain;
 			e.th_die = q2soldier_die;
 			
@@ -95,7 +95,7 @@ void() monster_strogg_spawn =
 			e.th_stand = q2soldier_frames_stand;
 			e.th_walk = q2soldier_2walk1;
 			e.th_run = q2soldier_run1;
-			e.th_missile = q2soldier_seleck_attack;
+			e.th_missile = q2soldier_select_attack;
 			e.th_pain = q2soldier_pain;
 			e.th_die = q2soldier_die;
 
@@ -111,7 +111,7 @@ void() monster_strogg_spawn =
 			e.th_stand = q2soldier_frames_stand;
 			e.th_walk = q2soldier_2walk1;
 			e.th_run = q2soldier_run1;
-			e.th_missile = q2soldier_seleck_attack;
+			e.th_missile = q2soldier_select_attack;
 			e.th_pain = q2soldier_pain;
 			e.th_die = q2soldier_die;
 
@@ -140,7 +140,7 @@ void() monster_strogg_spawn =
 			e.th_stand = q2soldier_frames_stand;
 			e.th_walk = q2soldier_2walk1;
 			e.th_run = q2soldier_run1;
-			e.th_missile = q2soldier_seleck_attack;
+			e.th_missile = q2soldier_select_attack;
 			e.th_pain = q2soldier_pain;
 			e.th_die = q2soldier_die;
 

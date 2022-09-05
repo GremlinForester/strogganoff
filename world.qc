@@ -16,7 +16,7 @@ void( ) FRIK_FILE_precaches =
 		ln = fgets(f);                              // this line sets ln to the string read from the file with the file handle of f
     
     while( ln != "EOF" ){                     // while there is still text to be read do the following
-      if( cvar("developer") ){
+	  if( cvar("developer") ){
         dprint(strcat("line value (",ln,")\n"));  //DEBUG
       }
       if( ln != "" && substring(ln,0, 2) != "//" ){
@@ -258,7 +258,10 @@ void() worldspawn =
 	addstat (STAT_INVINVUL, 2, inv_pickup_invulnerability);
 	addstat (STAT_ENVIRO,2, inv_pickup_envirosuit);
 	addstat (STAT_FRAGS,2, frags);
-	addstat (STAT_PLAYERTYPE, 2, playerType);	
+	addstat (STAT_PLAYERTYPE, 2, playerType);
+	addstat (STAT_UPGRADE_BLASTER_LEVEL, 2, upgrade_blaster_level);
+	addstat (STAT_PLAYERSKIN, 2, skin);		
+	
 	
 #ifndef cv_setdef
 // set cv defaults if set def package not used

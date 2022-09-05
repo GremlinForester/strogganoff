@@ -11,6 +11,15 @@ void() barrel_explode =
 	sound (self, CHAN_VOICE, "weapons/r_exp3.wav", 1, ATTN_NORM);
 	particle (self.origin, '0 0 0', 75, 255);
 
+	ThrowGib ("models/objects/debris1/tris.md2", self.health, GIB_METAL, 1);
+	ThrowGib ("models/objects/debris1/tris.md2", self.health, GIB_METAL, 1);
+	ThrowGib ("models/objects/debris1/tris.md2", self.health, GIB_METAL, 1);
+	ThrowGib ("models/objects/debris1/tris.md2", self.health, GIB_METAL, 1);
+	ThrowGib ("models/objects/debris1/tris.md2", self.health, GIB_METAL, 1);
+	ThrowGib ("models/objects/debris2/tris.md2", self.health, GIB_FLAMING, 1);
+	ThrowGib ("models/objects/debris2/tris.md2", self.health, GIB_FLAMING, 1);
+	ThrowGib ("models/objects/debris2/tris.md2", self.health, GIB_FLAMING, 1);
+
 	self.origin_z = self.origin_z + 32;
 	BecomeExplosion ();
 };
@@ -21,12 +30,13 @@ void() misc_explobox =
 	
 	self.solid = SOLID_BBOX;
 	self.movetype = MOVETYPE_NONE;
-	precache_model ("maps/b_explob.bsp");
-	setmodel (self, "maps/b_explob.bsp");
+	precache_model ("models/objects/barrels/tris.md2");
+	setmodel (self, "models/objects/barrels/tris.md2");
 	precache_sound ("weapons/r_exp3.wav");
 	self.health = 20;
 	self.th_die = barrel_explode;
 	self.takedamage = DAMAGE_AIM;
+	setsize (self, '-16 -16 0', '16 16 40');	
 
 	self.origin_z = self.origin_z + 2;
 	self.f__ = self.origin_z;

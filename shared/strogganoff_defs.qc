@@ -44,6 +44,16 @@ const float STAT_INVINVUL = 44;
 const float STAT_ENVIRO = 45;
 const float STAT_FRAGS = 46;
 const float STAT_PLAYERTYPE = 47;
+const float STAT_UPGRADE_BLASTER_LEVEL = 48;
+const float STAT_PLAYERSKIN = 49;
+
+.float classtype;
+enum
+{
+	CLASS_NONE,
+	CLASS_STROGG,
+	CLASS_ANIMAL
+};
 
 float() getSpeedByClassname =
 {
@@ -53,6 +63,21 @@ float() getSpeedByClassname =
 	return 0.1;
 }
 
+//They did the mask... they did the mmmoooooonnnnsterrrrr mask, it was a clipping mash
+
+//from Quake 2 for now, TODO make it work here or use it as a general guide or something.
+
+// content masks
+#define	MASK_ALL				(-1)
+#define	MASK_SOLID				(CONTENTS_SOLID|CONTENTS_WINDOW)
+#define	MASK_PLAYERSOLID		(CONTENTS_SOLID|CONTENTS_PLAYERCLIP|CONTENTS_WINDOW|CONTENTS_MONSTER)
+#define	MASK_DEADSOLID			(CONTENTS_SOLID|CONTENTS_PLAYERCLIP|CONTENTS_WINDOW)
+#define	MASK_MONSTERSOLID		(CONTENTS_SOLID|CONTENTS_MONSTERCLIP|CONTENTS_WINDOW|CONTENTS_MONSTER)
+#define	MASK_WATER				(CONTENTS_WATER|CONTENTS_LAVA|CONTENTS_SLIME)
+#define	MASK_OPAQUE				(CONTENTS_SOLID|CONTENTS_SLIME|CONTENTS_LAVA)
+#define	MASK_SHOT				(CONTENTS_SOLID|CONTENTS_MONSTER|CONTENTS_WINDOW|CONTENTS_DEADMONSTER)
+
+.float upgrade_blaster_level;
 
 .float spawn_max;
 .float spawn_count;
@@ -175,6 +200,9 @@ var float autocvar_sk_q2tank_commander_health = 1000;
 //STROGG ZOMBIE
 var float autocvar_sk_q2zombie_grenade_damage = 30;
 var float autocvar_sk_q2zombie_health = 60;
+
+//PLAYER WEAPONS
+var float autocvar_sk_blaster_upgrade_multiplier = 2;
 
 // get center of bmodel (found in Doombringer source - thanks!)
 vector() bmodelOrigin =

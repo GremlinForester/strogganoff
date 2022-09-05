@@ -262,11 +262,12 @@ void(entity attacker, float damage)	q2soldier_pain =
 	//SKIN 0 = Red, Laser monster_soldier_light
 	//SKIN 2 = Shotgun monster_soldier
 	//SKIN 4 = Chaingun monster_soldier_ss
-  //SKIN 6 = flak 
+	//SKIN 6 = flak 
 	local	vector	org;
 	org = self.origin + '0 0 24';
 	SpawnBlood (org, '0 0 0', 30);
 	
+	/*
 	if (self.skin == 4 && self.classname == "monster_soldier_ss") //machinegun soldier
 	{
 		self.skin = 5;
@@ -283,7 +284,11 @@ void(entity attacker, float damage)	q2soldier_pain =
 	{
 		self.skin = 1; 
 	}
+	*/
 
+	if (self.health < (self.max_health / 2))
+		setWounded(self);
+	
 	if (self.pain_finished > time)
 		return;
 
@@ -317,9 +322,6 @@ void(entity attacker, float damage)	q2soldier_pain =
 	//	sound (self, CHAN_VOICE, "soldier/solpain3.wav", 1, ATTN_NORM);
 		q2Soldier_Random_Pain_Sound();
 	}
-	
-	self.bIsWounded = 1;
-	self.bleedcount = 1;
 };
 
 void() q2soldier_fire =
@@ -344,12 +346,12 @@ void() q2soldier_fire =
 
 	if (self.classname == "monster_soldier")
 	{
-		sound (self, CHAN_WEAPON, "soldier/Solatck1.wav", 1, ATTN_NORM);		
+		sound (self, CHAN_WEAPON, "soldier/Solatck1.wav", 1, ATTN_NORM);
 		monster_fire_shotgun(8, org, dir, autocvar_sk_q2soldier_shotgun_accuracy, autocvar_sk_q2soldier_shotgun_damage);
 	}
 	else if (self.classname == "monster_soldier_ss")
 	{
-		sound (self, CHAN_WEAPON, "soldier/Solatck3.wav", 1, ATTN_NORM);		
+		sound (self, CHAN_WEAPON, "soldier/Solatck3.wav", 1, ATTN_NORM);
 		monster_fire_bullet(org, dir, '0.01 0.01 0', autocvar_sk_q2soldier_mg_damage);
 	}
 	else if (self.classname == "monster_soldier_flak"){
@@ -388,7 +390,7 @@ framerloop($attak402, $attak403, q2solder_frames_holdattack, 0.05,
 	ai_face();
 );
 
-void() q2soldier_seleck_attack =
+void() q2soldier_select_attack =
 {
 	if (self.classname == "monster_soldier")
 	{
@@ -624,11 +626,12 @@ void () monster_soldier_light =
 
 	setsize (self, '-16 -16 -24', '16 16 32');
 	self.health = autocvar_sk_q2soldier_light_health;
+	self.max_health = self.health;
 
 	self.th_stand = q2soldier_select_stand;
 	self.th_walk = q2soldier_selectwalk; //q2soldier_2walk1;
 	self.th_run = q2soldier_run1;
-	self.th_missile = q2soldier_seleck_attack; //q2soldier_atk1;
+	self.th_missile = q2soldier_select_attack; //q2soldier_atk1;
 	self.th_pain = q2soldier_pain;
 	self.th_die = q2soldier_die;
 
@@ -657,11 +660,12 @@ void () monster_soldier =
 
 	setsize (self, '-16 -16 -24', '16 16 32');
 	self.health = autocvar_sk_q2soldier_shotgun_health;
+	self.max_health = self.health;
 
 	self.th_stand = q2soldier_select_stand;
 	self.th_walk = q2soldier_selectwalk; //q2soldier_2walk1;
 	self.th_run = q2soldier_run1;
-	self.th_missile = q2soldier_seleck_attack; //q2soldier_atk1;
+	self.th_missile = q2soldier_select_attack; //q2soldier_atk1;
 	self.th_pain = q2soldier_pain;
 	self.th_die = q2soldier_die;
 
@@ -691,11 +695,12 @@ void () monster_soldier_ss =
 
 	setsize (self, '-16 -16 -24', '16 16 32');
 	self.health = autocvar_sk_q2soldier_mg_health;
+	self.max_health = self.health;
 
 	self.th_stand = q2soldier_select_stand;
 	self.th_walk = q2soldier_selectwalk; //q2soldier_2walk1;
 	self.th_run = q2soldier_run1;
-	self.th_missile = q2soldier_seleck_attack; //q2soldier_atk1;
+	self.th_missile = q2soldier_select_attack; //q2soldier_atk1;
 	self.th_pain = q2soldier_pain;
 	self.th_die = q2soldier_die;
 
@@ -726,11 +731,12 @@ void () monster_soldier_flak =
 
 	setsize (self, '-16 -16 -24', '16 16 32');
 	self.health = autocvar_sk_q2soldier_flak_health;
+	self.max_health = self.health;
 
 	self.th_stand = q2soldier_select_stand;
 	self.th_walk = q2soldier_selectwalk; //q2soldier_2walk1;
 	self.th_run = q2soldier_run1;
-	self.th_missile = q2soldier_seleck_attack; //q2soldier_atk1;
+	self.th_missile = q2soldier_select_attack; //q2soldier_atk1;
 	self.th_pain = q2soldier_pain;
 	self.th_die = q2soldier_die;
 

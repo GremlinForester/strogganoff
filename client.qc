@@ -332,6 +332,7 @@ void() SetChangeParms =
 	parm17 = self.inv_pickup_invulnerability;
 	parm18 = self.inv_pickup_envirosuit;
 	parm19 = self.playerType;
+	parm20 = self.upgrade_blaster_level;
 };
 
 void() SetNewParms =
@@ -343,9 +344,9 @@ void() SetNewParms =
 	parm5 = 0;
 	parm6 = 0;
 	parm7 = 0;
-	parm8 = WEP_BLASTER;
+	parm8 = WEP_BLASTER;	
 	parm9 = 0;
-	parm10 = WEP_BLASTER;
+	parm10 = WEP_BLASTER;	
 	parm11 = 0;
 	parm12 = 0; //self.items_q2keys;
 	parm13 = 0;
@@ -355,6 +356,7 @@ void() SetNewParms =
 	parm17 = 0;
 	parm18 = 0;
 	parm19 = 0;
+	parm20 = 0;
 };
 
 .float resetkeys;
@@ -388,6 +390,7 @@ void() DecodeLevelParms =
 	self.inv_pickup_invulnerability = parm17;
 	self.inv_pickup_envirosuit = parm18;
 	self.playerType = parm19;
+	self.upgrade_blaster_level = parm20;
 };
 
 /*
@@ -869,6 +872,8 @@ void(entity ent) setPlayerModel =
 		setmodel (ent, "players/cyborg/tris.md2");
 		setsize (ent, VEC_HULL_MIN, VEC_HULL_MAX);
 	}
+	
+	ent.skin = 0;	
 }
 
 /*
@@ -977,14 +982,14 @@ void() PutClientInServer =
 	q2Player_stand();
 	AttachTPWeapon();
 	spawnPowerupShell();
-	spawnPLRpowerupShell();	
+	spawnPLRpowerupShell();
 	
 	//setup player v_wep state machine
 	self.weapon_next = self.weapon;
-  if(!(self.inv_weapons & WEP_BLASTER)){
-    self.inv_weapons = self.inv_weapons | WEP_BLASTER;
-  }
-  
+		if(!(self.inv_weapons & WEP_BLASTER)){
+		self.inv_weapons = self.inv_weapons | WEP_BLASTER;
+	}
+	
 	W_ChangeWeapon();
   
 	if (deathmatch || coop)
@@ -1283,8 +1288,16 @@ void() WaterMove =
 				self.dmgtime = time + 1;
 			else
 				self.dmgtime = time + 0.2;
-
-			T_Damage (self, world, world, 10*self.waterlevel);
+				
+			if (self.waterlevel >= 2)
+			{
+				T_Damage (self, world, world, 100*self.waterlevel);
+			}
+			else
+			{
+				T_Damage (self, world, world, 10*self.waterlevel);
+			}
+			
 		}
 	}
 	else if (self.watertype == CONTENT_SLIME)

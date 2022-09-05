@@ -68,8 +68,10 @@ float() CheckAttack =
 //	spot1 = self.origin + self.view_ofs;
 //	spot2 = targ.origin + targ.view_ofs;
 
+	removeBitsFromEntity(self,dphitcontentsmask,DPCONTENTS_MONSTERCLIP); //Anything the AI should see through
 	traceline ((self.origin + self.view_ofs), (self.enemy.origin + self.enemy.view_ofs), FALSE, self);
-
+	addBitsToEntity(self,dphitcontentsmask,DPCONTENTS_MONSTERCLIP);
+	
 	if (trace_ent != self.enemy)
 		return FALSE;		// don't have a clear shot
 			

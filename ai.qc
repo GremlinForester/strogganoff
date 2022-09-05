@@ -172,6 +172,10 @@ visible
 returns 1 if the entity is visible to self, even if not infront ()
 =============
 */
+
+#define newvisible
+
+#ifndef newvisible 
 float (entity targ) visible =
 {
 //	local vector	spot1, spot2;
@@ -189,7 +193,41 @@ float (entity targ) visible =
 	return FALSE;
 #endif
 };
+#endifndef newvisible 
 
+#ifdef newvisible 
+float (entity targ) visible =
+{
+	//Thanks Subject9x for pointing the way here even though I messed it up!	
+	
+//  local float contentBuffer;
+//	contentBuffer = (DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER | DPCONTENTS_MONSTERCLIP | DPCONTENTS_BOTCLIP | DPCONTENTS_WATER); //self.dphitcontentsmask;
+//	self.dphitcontentsmask = 0;
+//	self.dphitcontentsmask = self.dphitcontentsmask | (DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER | DPCONTENTS_OPAQUE | DPCONTENTS_SKY | DPCONTENTS_WATER);	//contents the AI CAN'T see through
+
+//	if (self.classname == "BFG Projectile") //what tom hackery is this!?
+//	{
+//		traceline ((self.origin + self.view_ofs), (targ.origin + targ.view_ofs), TRUE, self);
+//	}
+//	else
+//	{
+		removeBitsFromEntity(self,dphitcontentsmask,DPCONTENTS_MONSTERCLIP); //Anything the AI should see through
+		traceline ((self.origin + self.view_ofs), (targ.origin + targ.view_ofs), TRUE, self);
+		addBitsToEntity(self,dphitcontentsmask,DPCONTENTS_MONSTERCLIP);
+//	}
+//	self.dphitcontentsmask = self.dphitcontentsmask | rint(contentBuffer);
+
+//	if (trace_inopen && trace_inwater) // sight line crossed contents
+//		return FALSE;
+
+	if (trace_fraction == 1)
+		return TRUE;
+		
+#ifdef pointless_warning
+	return FALSE;
+#endif
+};
+#endifdef
 
 /*
 =============
@@ -697,6 +735,7 @@ void(float dist) ai_run =
 //	local	float	direct, ang_rint, ang_floor, ang_ceil;	// fx_warning
 
 	movedist = dist;
+	
 // see if the enemy is dead
 	if (self.enemy.health <= 0)
 	{
@@ -758,7 +797,7 @@ void(float dist) ai_run =
 		ai_run_slide ();
 		return;
 	}
-		
+	
 // head straight in
 	movetogoal (dist);		// done in C code...
 };
