@@ -24,7 +24,10 @@ void insane_shake ()=
 
 void insane_moan ()=
 {
-	sound (self, CHAN_VOICE, sound_moan, 1, ATTN_IDLE);
+	if (random() < 0.2)
+	{
+		sound (self, CHAN_VOICE, sound_moan, 1, ATTN_IDLE);
+	}
 }
 
 void insane_scream ()=
@@ -32,6 +35,8 @@ void insane_scream ()=
 	local float r;
 	r = rint(random()*8);
 	
+	if (random() < 0.1)
+	{
 	switch(r){
 		default:
 			sound (self, CHAN_VOICE, "sound/insane/insane1.wav", 1, ATTN_IDLE);
@@ -57,6 +62,7 @@ void insane_scream ()=
 		case 7:
 			sound (self, CHAN_VOICE, "sound/insane/insane10.wav", 1, ATTN_IDLE);
 			break;
+	}
 	}
 }
 
@@ -149,22 +155,11 @@ framer($FRAME_stand100, $FRAME_stand160, insane_move_down, insane_onground, 0.1,
 
 framer($FRAME_walk27, $FRAME_walk39, insane_move_walk_normal, insane_walk, 0.1,
 	ai_rep($FRAME_walk28, ai_walk, 2.5, 3.5, 1.7, 2.3, 2.4, 2.2, 4.2, 5.6);
-	
-	frame_arb($FRAME_walk36, ai_walk(3.3););
-	frame_arb($FRAME_walk37, ai_walk(2.4););
-	frame_arb($FRAME_walk38, ai_walk(0.9););
-	frame_arb($FRAME_walk39, ai_walk(3.0););
-	
-	ai_walk(0);
+	ai_rep($FRAME_walk36, ai_walk, 3.3, 2.4, 0.9, 3.0, 0, 0, 0, 0);
 );
 framer($FRAME_walk27, $FRAME_walk39, insane_move_run_normal, insane_run, 0.1,
-	ai_rep($FRAME_walk28, ai_walk,2.5,3.5, 1.7, 2.3, 2.4, 2.2, 4.2, 5.6);
-	
-	frame_arb($FRAME_walk36, ai_walk(3.3););
-	frame_arb($FRAME_walk37, ai_walk(2.4););
-	frame_arb($FRAME_walk38, ai_walk(0.9););
-	frame_arb($FRAME_walk39, ai_walk(3.0););
-	ai_walk(0);
+	ai_rep($FRAME_walk28, ai_run,2.5,3.5, 1.7, 2.3, 2.4, 2.2, 4.2, 5.6);
+	ai_rep($FRAME_walk36, ai_run, 3.3, 2.4, 0.9, 3.0, 0, 0, 0, 0);	
 );
 
 framer($FRAME_walk1, $FRAME_walk26, insane_move_walk_insane, insane_walk, 0.1,
@@ -221,12 +216,12 @@ framer($FRAME_cr_death10, $FRAME_cr_death16, insane_move_crawl_death, insane_dea
 
 framer($FRAME_cross1, $FRAME_cross15, insane_move_cross, insane_cross, 0.1,
 	frame_arb($FRAME_cross1, insane_moan(););
-	ai_walk(0);
+//	ai_walk(0);
 );
 
 framer($FRAME_cross16, $FRAME_cross30, insane_move_struggle_cross, insane_cross, 0.1,
 	frame_arb($FRAME_cross16, insane_scream(););
-	ai_walk(0);
+//	ai_walk(0);
 );
 
 void() insane_cross=
@@ -245,13 +240,17 @@ void() insane_walk=
 			insane_move_down();
 			return;
 		}
-	if ((self.spawnflags & 4))
+	if ((self.spawnflags & 4)){
 		insane_move_crawl();
-	else
-		if (random() <= 0.5)
+	}
+	else{
+		if (random() <= 0.5){
 			insane_move_walk_normal();
-		else
+		}
+		else{
 			insane_move_walk_insane();
+		}
+	}
 };
 
 void() insane_run=
@@ -262,13 +261,16 @@ void() insane_run=
 			insane_move_down();
 			return;
 		}
-	if ((self.spawnflags & 4))				// Crawling?
+	if ((self.spawnflags & 4)){				// Crawling?
 		insane_move_runcrawl();
+	}
 	else
-		if (random() <= 0.5)				// Else, mix it up
+		if (random() <= 0.5){				// Else, mix it up
 			insane_move_run_normal();
-		else
+		}
+		else{
 			insane_move_run_insane();
+		}
 };
 
 
@@ -276,25 +278,10 @@ void(entity attacker, float damage) insane_pain=
 {
 	float	l,r;
 
-	if (self.health < (self->max_health / 2))
-		self.skin = 1;
-
 	SpawnBlood (self.origin, '0 0 0', 20);
 	
 	if (time < self.pain_finished)
 		return;
-	
-	self.pain_finished = time + 3;
-
-	r = 1 + (random()*1.0);
-	if (self.health < 25)
-		l = 25;
-	else if (self.health < 50)
-		l = 50;
-	else if (self.health < 75)
-		l = 75;
-	else
-		l = 100;
 	
 	sound (self, CHAN_VOICE, sprintf("player/male/pain%s_%s.wav", ftos(rint(l)), ftos(rint(r))), 1, ATTN_IDLE);
 
@@ -313,7 +300,9 @@ void(entity attacker, float damage) insane_pain=
 		insane_move_crawl_pain();
 	}
 	else
+	{
 		insane_move_stand_pain();
+	}
 
 };
 
@@ -327,11 +316,14 @@ void() insane_checkdown=
 //	if ( (self->s.frame == FRAME_stand94) || (self->s.frame == FRAME_stand65) )
 	if ((self.spawnflags & 32))				// Always stand
 		return;
-	if (random() < 0.3)
-		if (random() < 0.5)
+	if (random() < 0.3){
+		if (random() < 0.5){
 			insane_move_uptodown();
-		else
+		}
+		else{
 			insane_move_jumpdown();
+		}
+	}
 };
 
 
@@ -349,8 +341,7 @@ void() insane_stand=
 {
 	if ((self.spawnflags & 8))			// If crucified
 	{
-		//self->monsterinfo.currentmove = &insane_move_cross;
-		//self->monsterinfo.aiflags |= AI_STAND_GROUND;
+		insane_cross();
 	}
 	// If Hold_Ground and Crawl are set
 	else if ( (self.spawnflags & 4) && (self.spawnflags & 16) )
@@ -369,7 +360,8 @@ void() insane_dead=
 	
 	if ((self.spawnflags & 8))
 	{
-		self.flags = self.flags | FL_FLY;
+		self.movetype = MOVETYPE_NONE;
+	//	self.flags = self.flags | FL_FLY;
 	}
 	else
 	{
@@ -377,7 +369,7 @@ void() insane_dead=
 		self.movetype = MOVETYPE_TOSS;
 	}
 	//self->svflags |= SVF_DEADMONSTER;
-//	self.nextthink = 0;
+	self.nextthink = -1;
 };
 
 void() insane_die=
@@ -406,61 +398,114 @@ void() insane_die=
 
 	if ((self.spawnflags & 8))
 	{
+		self.nextthink = -1;
 		insane_dead ();
 	}
 	else
 	{
-		if ( ((self.frame >= $FRAME_crawl1) && (self.frame <= $FRAME_crawl9)) || ((self.frame >= $FRAME_stand99) && (self.frame <= $FRAME_stand160)) )		
+		if ( ((self.frame >= $FRAME_crawl1) && (self.frame <= $FRAME_crawl9)) || ((self.frame >= $FRAME_stand99) && (self.frame <= $FRAME_stand160)) )
+		//if (self.aiflags & bits_AI_CRAWLING)	
 			insane_move_crawl_death();
 		else
-			insane_move_stand_death();
+			insane_move_stand_death();	
 	}
-};
+}
 
-/*
-void() insane_die =
+void() updateWeaponModelFrames =
 {
-	float		n;
-
-	if (self.health <= -50)
+	if (self.owner.health <= 0)
 	{
-		sound (self, CHAN_VOICE, "misc/udeath.wav", 1, ATTN_IDLE);
-		for (n= 0; n < 2; n++)
-			ThrowGib ("models/objects/gibs/bone/tris.md2", self.health, GIB_FLESH, 1);
-		for (n= 0; n < 4; n++)
-			ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health, GIB_FLESH, 1);
-		ThrowHead ("models/objects/gibs/head2/tris.md2", self.health);
-		self.deadflag = DEAD_DEAD;
+		remove(self);
 		return;
 	}
 
-	self.takedamage = DAMAGE_YES;
-
- 	if (self.deadflag == DEAD_DEAD){
-		return;
-	}
-	else
-	{
-	// regular death
-	sound (self, CHAN_VOICE, sprintf("player/male/death%s.wav", ftos(rint((random()*4) + 1))), 1, ATTN_IDLE);
-
-	self.deadflag = DEAD_DEAD;
-	self.takedamage = DAMAGE_YES;
-
-	if ((self.spawnflags & 8))
-	{
-		insane_dead ();
-	}
-	else
-	{
-		if ( ((self.frame >= $FRAME_crawl1) && (self.frame <= $FRAME_crawl9)) || ((self.frame >= $FRAME_stand99) && (self.frame <= $FRAME_stand160)) )		
-			insane_move_crawl_death();
-		else
-			insane_move_stand_death();
-	}
-	}
+		switch (self.owner.inv_weapons)
+		{
+		case WEP_BLASTER:
+			setmodel (self, "players/male/w_blaster.md2");
+			break;
+		case WEP_SHOTGUN:
+			setmodel (self, "players/male/w_shotgun.md2");
+			break;
+		case WEP_SUPERSHOTGUN:
+			setmodel (self, "players/male/w_sshotgun.md2");
+			break;
+		case WEP_MACHINEGUN:
+			setmodel (self, "players/male/w_machinegun.md2");
+			break;
+		case WEP_CHAINGUN:
+			setmodel (self, "players/male/w_chaingun.md2");
+			break;
+		case WEP_GRENADE_LAUNCHER:
+			setmodel (self, "players/male/w_glauncher.md2");
+			break;
+		case WEP_ROCKET_LAUNCHER:
+			setmodel (self, "players/male/w_rlauncher.md2");
+			break;
+		case WEP_RAILGUN:
+			setmodel (self, "players/male/w_railgun.md2");
+			break;
+		case WEP_HYPERBLASTER:
+			setmodel (self, "players/male/w_hyperblaster.md2");
+			break;
+		case WEP_BFG:
+			setmodel (self, "players/male/w_bfg.md2");
+			break;
+		}	
+	
+	self.frame = self.owner.frame;
+	
+	self.think = updateWeaponModelFrames;
+	self.nextthink = time;
 };
-*/
+
+void() attachWeaponModel =
+{
+	local entity playerTPWeapon;
+	
+	playerTPWeapon = spawn();
+	setorigin (playerTPWeapon, '0 0 0');
+	playerTPWeapon.owner = self;
+//	setorigin (playerTPWeapon, self.owner.origin);
+	playerTPWeapon.netname = "playerTPWeapon";
+	playerTPWeapon.solid = SOLID_NOT;
+	playerTPWeapon.movetype = MOVETYPE_NOCLIP;
+	playerTPWeapon.exteriormodeltoclient = self;
+	
+	playerTPWeapon.think = updateWeaponModelFrames;
+	playerTPWeapon.nextthink = time;
+
+	setattachment(playerTPWeapon, self, "");
+};
+
+void() insane_gotaweapon =
+{
+	setmodel(self, "players/male/tris.md2");
+	setsize(self, '-16 -16 -24', '16 16 32');
+	
+	if (self.skin == 0)
+		self.skin = 16;
+	
+	if (self.skin == 1)
+		self.skin = 17;
+
+	if (self.skin == 2)
+		self.skin = 18;
+
+	self.th_stand = q2marine_stand;
+	self.th_walk = q2marine_walk;
+	self.th_run = q2marine_run;
+	self.th_missile = q2marine_select_attack;
+	self.th_pain = q2marine_pain;
+	self.th_die = q2marine_die;
+
+	attachWeaponModel();
+
+	self.think = q2marine_salute;
+	self.nextthink = time = 0.1;
+	LOG2("I picked up a ", printWeaponName(self));
+};
+
 /*QUAKED misc_insane (1 .5 0) (-16 -16 -24) (16 16 32) Ambush Trigger_Spawn CRAWL CRUCIFIED STAND_GROUND ALWAYS_STAND
 */
 void() misc_insane =
@@ -488,15 +533,16 @@ void() misc_insane =
 	precache_sound("sound/insane/insane9.wav");
 	precache_sound("sound/insane/insane10.wav");
 	
-	
 	self.movetype = MOVETYPE_STEP;
 	self.solid = SOLID_BBOX;
 	setmodel(self, "models/monsters/insane/tris.md2");
 	setsize(self, '-16 -16 -24', '16 16 32');
-	
-	self.health = 100;
-	//self.gib_health = -50;
-	//self.mass = 300;
+
+	#ifdef misc_insane_weapon_pickup
+	self.flags = FL_CLIENT; //should probably use something else
+	#endifdef
+
+	self.health = 30;
 
 	self.th_pain = insane_pain;
 	self.th_die = insane_die;
@@ -504,29 +550,20 @@ void() misc_insane =
 	self.th_stand = insane_stand;
 	self.th_walk = insane_walk;
 	self.th_run = insane_run;
-	//self.th_dodge = NULL;
-	//self.th_attack= NULL;
-	//self.th_melee = NULL;
-	//self.th_sight = NULL;
-	//self.th_aiflags |= AI_GOOD_GUY;
+	//self.touch = insane_touch;	
 
-//@@
-//	self->s.skinnum = skin;
-//	skin++;
-//	if (skin > 12)
-//		skin = 0;
 
-	if ((self.spawnflags & 16))				// Stand Ground
+	//if ((self.spawnflags & 16))				// Stand Ground
 		//self->monsterinfo.aiflags |= AI_STAND_GROUND;
 
 	insane_move_stand_normal();
 	
-	//self->monsterinfo.scale = MODEL_SCALE;
-
 	if ((self.spawnflags & 8))					// Crucified ?
 	{
 		setsize(self, '-16 0 0', '16 8 32');
-		//self->flags |= FL_NO_KNOCKBACK;
+		self.th_stand = insane_stand;
+		self.th_walk = SUB_Null;
+		self.th_run = SUB_Null;		
 		
 		flymonster_start;
 	}

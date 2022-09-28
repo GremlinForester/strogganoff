@@ -1,5 +1,16 @@
+// func_liquid & func_ladder
+.float fwatershift;
+.float fwatershifttime;
+.string cshift;
+.float drag;
+.float gravity;// actually a system global from the Mission Pack builds of Quake
+.float oldgravity;
+.float zerogtime;
+
 /*
-  SendEntity Entity Type Definitions
+
+SendEntity Entity Type Definitions
+
 */
 #define SENDTYPE_PLAYER 1
 #define SENDTYPE_MONSTER 2
@@ -7,10 +18,10 @@
 #define SENDTYPE_MISC_ENT 4
 #define SENDTYPE_MAP_OBJ 5
 
-//================================
 /*
-  SendEntity Change Flag definitions
-  -----------------------------------
+
+SendEntity Change Flag definitions
+
 */
 #define SENDFLAG_ORIGIN 1     //new origin value
 #define SENDFLAG_ANGLE 2      //new angle value
@@ -24,10 +35,11 @@
 
 #define SENDFLAG_ATTACK 256
 
-//================================
+/*
 
-#define MONSTER_SOLDIER_FLAK_RUNSPEED 0.1
+CSQC STATS for HUD
 
+*/
 const float STAT_Q2WEAPONS = 32;
 const float STAT_AMMO_SHELLS = 33;
 const float STAT_AMMO_BULLETS = 34;	
@@ -47,13 +59,32 @@ const float STAT_PLAYERTYPE = 47;
 const float STAT_UPGRADE_BLASTER_LEVEL = 48;
 const float STAT_PLAYERSKIN = 49;
 
+/*
+
+ENTITY CLASS TYPES
+
+*/
 .float classtype;
 enum
 {
 	CLASS_NONE,
 	CLASS_STROGG,
-	CLASS_ANIMAL
+	CLASS_ANIMAL,
+	CLASS_WEAPON,
+	CLASS_ITEM
 };
+
+
+/*
+
+EXPERIMENTAL MONSTER MOVE SPEED VARS
+
+example: framerloop($run03, $run08, q2soldier_run1, getSpeedByClassname(),
+
+The following float can be used to return different framerates/movespeeds for monster variants (like a fast mini-mutant).
+
+*/
+#define MONSTER_SOLDIER_FLAK_RUNSPEED 0.1
 
 float() getSpeedByClassname =
 {
@@ -63,11 +94,16 @@ float() getSpeedByClassname =
 	return 0.1;
 }
 
-//They did the mask... they did the mmmoooooonnnnsterrrrr mask, it was a clipping mash
+/*
 
-//from Quake 2 for now, TODO make it work here or use it as a general guide or something.
+CONTENT/CLIPPING MASKS
 
-// content masks
+They did the mask... they did the mmmoooooonnnnsterrrrr mask, it was a clipping mash.
+
+The following is from Quake 2 for now. TODO make it work here or use it as a general guide or something.
+
+*/
+
 #define	MASK_ALL				(-1)
 #define	MASK_SOLID				(CONTENTS_SOLID|CONTENTS_WINDOW)
 #define	MASK_PLAYERSOLID		(CONTENTS_SOLID|CONTENTS_PLAYERCLIP|CONTENTS_WINDOW|CONTENTS_MONSTER)
@@ -77,22 +113,16 @@ float() getSpeedByClassname =
 #define	MASK_OPAQUE				(CONTENTS_SOLID|CONTENTS_SLIME|CONTENTS_LAVA)
 #define	MASK_SHOT				(CONTENTS_SOLID|CONTENTS_MONSTER|CONTENTS_WINDOW|CONTENTS_DEADMONSTER)
 
-.float upgrade_blaster_level;
+/*
 
-.float spawn_max;
-.float spawn_count;
-.float strogg_type;
+HUB Globals
 
-.float isHub;
+*/
+.float isHub; //used in worldspawn to mark level as a HUB
 
 .float fadein;
 
-.string myparticle;
-.string myendparticle;
-
 var float autocvar_howmanyplayers;
-
-
 
 /*
 ============
@@ -223,6 +253,7 @@ float() crandom =
 };
 #endif
 
+.float player_pickup_itemnum;
 enum
 {
 	INV_PICKUP_NONE = 0,
@@ -234,8 +265,8 @@ enum
 	INV_PICKUP_ENVIROSUIT = 6
 }; //6
 
-.float player_pickup_itemnum;
 
+.string sightSound;
 .float dmgradius;
 
 //Currently used for debris
@@ -505,39 +536,21 @@ SPEECH LINES
 .float nexttalktime;
 .float nextsmacktalktime;
 
-.string sightSound;
-
 vector(vector vUp) PlayerViewOrg={
 	local vector v;
 	v = vUp * self.view_ofs_z;
 	return v;
 };
 
+/*
+
+WEAPONS & UPGRADES
+
+*/
+.float upgrade_blaster_level;
+
 .float weapon_anim_start;
 .float weapon_frame_end;
-
-.float droploot;
-
-//MrC: Items can be added like health, powerups, etc...
-enum
-{
-	LOOT_SHELLS,
-	LOOT_BULLETS,
-	LOOT_ROCKETS,
-	LOOT_SLUGS,
-	LOOT_CELLS,
-	LOOT_ARMOR_SHARD,
-	LOOT_HEALTH_SMALL,
-	LOOT_SHOTGUN,
-	LOOT_SUPERSHOTGUN,
-	LOOT_MACHINEGUN,
-	LOOT_CHAINGUN,
-	LOOT_GRENADE_LAUNCHER,
-	LOOT_ROCKET_LAUNCHER,
-	LOOT_HYPERBLASTER,
-	LOOT_RAILGUN,
-	LOOT_BFG
-};
 
 //Q2 weapon impl flattened down to player
 //mimic ammo_index value in Q2
@@ -569,13 +582,6 @@ enum
 
 //frame_t wpnFramesFire[10];
 //frame_t wpnFamesPause[10];
-
-.float state;
-.float bCrouched;
-
-.float idletime;
-.float animIdle;
-.float nextframetime;
 
 #define	FL_DUCKED 8192
 
@@ -615,7 +621,7 @@ inv_ammo_ instead of ammo_. I would like to thank Find/Replace for all its hard 
 //#define	IT_EXTRA			1
 //#define	IT_EXTRA			2
 //#define	IT_EXTRA			4
-//#define	IT_EXTRA			8
+#define	IT_JUMPBOOTS			8
 #define	IT_DOUBLER				16
 #define	IT_BREATHER				32
 #define	IT_POWER_SHIELD			64
@@ -652,14 +658,6 @@ inv_ammo_ instead of ammo_. I would like to thank Find/Replace for all its hard 
 
 .float anim_end;
 .float anim_priority;
-
-#define	ANIM_BASIC		0		// stand / run
-#define	ANIM_WAVE		1
-#define	ANIM_JUMP		2
-#define	ANIM_PAIN		3
-#define	ANIM_ATTACK		4
-#define	ANIM_DEATH		5
-#define	ANIM_REVERSE	6
 
 #define WEAPON_SWITCH_SPEED 0.05 //think speed
 
@@ -780,20 +778,17 @@ float Q3SURFACEFLAG_GRASS = 0x800000;
 float Q3SURFACEFLAG_TILE = 	0x1000000;
 float Q3SURFACEFLAG_ELECTRONIC = 0x2000000;
 
-.float aiflags;
-.float shotcount;
-
 // aiflags
+.float aiflags;
 #define	bits_FL_MEDIC				1
 #define bits_AI_RESURRECTING		2
-#define bits_AI_ANIMAL				4
-#define bits_AI_STROGG				8
-#define bits_AI_HUMAN				16
-#define bits_AI_WOUNDED				32
-#define bits_AI_CLOAKED				64
-#define bits_AI_SPECIAL				128
-#define bits_AI_CLOAKING			256
-#define bits_AI_UNCLOAKING			512
+#define bits_AI_WOUNDED				4
+#define bits_AI_CLOAKED				8
+#define bits_AI_SPECIAL				16
+#define bits_AI_CLOAKING			32
+#define bits_AI_UNCLOAKING			64
+#define bits_AI_STANDING			128
+#define bits_AI_CRAWLING			256
 
 /*
 ============
@@ -803,7 +798,9 @@ WEAPON VARS
 
 #define PLAYER_ROCKET_SPEED 1000
 
-//lights
+.float shotcount;
+
+//rtlights
 .float intensity_original;
 .float intensity; // store the value
 .float gsize;
@@ -812,13 +809,12 @@ float NOSHADOW	= 4;
 float CORONA	= 8;
 float FULL_DYN	= 16;
 
-//Parenting
-.string		parent;
-
+//Wounded entities
 #define MAX_BLEED 10
 .float bIsWounded;
 .float bleedcount;
 
+//Additional sound channels
 float CHAN_SPEECH             = 5;
 float CHAN_FOOT               = 6;
 float CHAN_WEAPON2            = 7;
@@ -867,7 +863,6 @@ WEAPONS
 IMPULSE VALUES
 ============
 */
-
 
 #define IMPULSE_USE_WEAPON1 1
 #define IMPULSE_USE_WEAPON2 2
@@ -1114,3 +1109,83 @@ GIB_STONE
 };
 
 #define GIB_LIFE 4
+
+//Check if an entity has any weapons (when given only one)
+float(entity ent) anyWeapons =
+{
+	if (ent.inv_weapons & WEP_SHOTGUN)
+		return TRUE;
+	if (ent.inv_weapons & WEP_SUPERSHOTGUN)
+		return TRUE;
+	if (ent.inv_weapons & WEP_MACHINEGUN)
+		return TRUE;
+	if (ent.inv_weapons & WEP_CHAINGUN)
+		return TRUE;
+	if (ent.inv_weapons & WEP_GRENADE_LAUNCHER)
+		return TRUE;
+	if (ent.inv_weapons & WEP_ROCKET_LAUNCHER)
+		return TRUE;
+	if (ent.inv_weapons & WEP_HYPERBLASTER)
+		return TRUE;
+	if (ent.inv_weapons & WEP_RAILGUN)
+		return TRUE;
+	if (ent.inv_weapons & WEP_BFG)
+		return TRUE;
+	return FALSE;
+}
+
+//Print which weapon an entity has (when given only one)
+string(entity ent) printWeaponName =
+{
+	if (ent.inv_weapons & WEP_SHOTGUN)
+		return "Shotgun";
+	if (ent.inv_weapons & WEP_SUPERSHOTGUN)
+		return "Super Shotgun";
+	if (ent.inv_weapons & WEP_MACHINEGUN)
+		return "machinegun";
+	if (ent.inv_weapons & WEP_CHAINGUN)
+		return "Chaingun";
+	if (ent.inv_weapons & WEP_GRENADE_LAUNCHER)
+		return "Grenade Launcher";
+	if (ent.inv_weapons & WEP_ROCKET_LAUNCHER)
+		return "Rocket Launcher";
+	if (ent.inv_weapons & WEP_HYPERBLASTER)
+		return "Hyperblaster";
+	if (ent.inv_weapons & WEP_RAILGUN)
+		return "Railgun";
+	if (ent.inv_weapons & WEP_BFG)
+		return "BFG";
+	return "I don't know.";
+}
+
+//Monster Spawner and Medic
+.float spawn_max;
+.float spawn_count;
+.float strogg_type;
+
+/*
+
+LOOT
+
+*/
+
+.float droploot;
+enum
+{
+	LOOT_SHELLS,
+	LOOT_BULLETS,
+	LOOT_ROCKETS,
+	LOOT_SLUGS,
+	LOOT_CELLS,
+	LOOT_ARMOR_SHARD,
+	LOOT_HEALTH_SMALL,
+	LOOT_SHOTGUN,
+	LOOT_SUPERSHOTGUN,
+	LOOT_MACHINEGUN,
+	LOOT_CHAINGUN,
+	LOOT_GRENADE_LAUNCHER,
+	LOOT_ROCKET_LAUNCHER,
+	LOOT_HYPERBLASTER,
+	LOOT_RAILGUN,
+	LOOT_BFG
+};

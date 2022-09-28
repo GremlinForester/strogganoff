@@ -6,6 +6,8 @@ float sv_maxspeed;
 float sv_stopspeed;
 float sv_gravity;
 .float gravity;
+.float ladder_time;
+.entity ladder_entity;
 
 void() SV_PlayerPhysics =
 {

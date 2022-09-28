@@ -62,6 +62,13 @@ void() door_killed;
 void() LinkDoors;
 void() spawn_q2_func_door;
 
+//PARTICLE SPAWNER
+.string myparticle;
+.string myendparticle;
+
+//POINT_SHAKE
+.float	duration;
+
 /*
 =============================================================================
 
@@ -297,8 +304,6 @@ STATIC & DYNAMIC MODELS
 ==============================================================================
 */
 
-.float bAnimLoop;
-//.float bAutoReset;
 .float anim_startframe;
 .float anim_lastframe;
 .float anim_lastframe_hold;
@@ -306,6 +311,18 @@ STATIC & DYNAMIC MODELS
 .float bUseEnable;
 .float bUseEnvLight;
 .float bToggleVisibility;
+.float bAnimLoop;
+
+
+/*
+.float eBits;
+#define bUseEnable 			1
+#define bUseEnvLight 		2
+#define bToggleVisibility	4
+#define bAnimLoop			8
+#define bAutoReset			16
+#define bAnimLastFrameHold 	32
+*/
 
 .float onUse;
 
@@ -348,6 +365,12 @@ void() random4Noise =
 		sound (self, CHAN_AUTO, self.noise, 1, ATTN_NORM);
 	}
 }
+
+//Parenting
+.string		parent;
+
+//currently used for func_water...
+.float speed2;
 
 
 

@@ -29,6 +29,7 @@ void() target_speaker_think =
 	
 	objectivetarget = findradius(self.origin, objectivedist);	
 	
+	/*
 	if (self.spawnflags & 1)
 	{	// looping sound toggles
 		if (self.noise) 
@@ -47,6 +48,7 @@ void() target_speaker_think =
 			self.nextthink = -1;
 		}
 	}
+	*/
 
 	if (autocvar_sound_debug_showall >= 1)
 	{
@@ -149,18 +151,6 @@ void() target_speaker =
 			dprint(vtos(self.origin));
 			return;
 		}
-		// DWH: Use "message" key to store noise for speakers that change levels
-		//      via trigger_transition
-		/*if (!strstr (st.noise, ".wav"))
-		{
-			ent->message = gi.TagMalloc(strlen(st.noise)+5,TAG_LEVEL);
-			sprintf(ent->message, "%s.wav", st.noise);
-		}
-		else
-		{
-			ent->message = gi.TagMalloc(strlen(st.noise)+1,TAG_LEVEL);
-			strcpy(ent->message, st.noise);
-		}*/
 	}
 
 	if (!self.volume)
@@ -186,9 +176,24 @@ void() target_speaker =
 	precache_model ("models/mapobjects/hub/stroggos_system/logo_strogg.MD3");
 	setmodel (self, "models/mapobjects/hub/stroggos_system/logo_strogg.MD3");
 	self.alpha = 0.01;
-	
 
 	self.use = target_speaker_use;
+	
+	if (self.spawnflags & 1)
+	{	// looping sound toggles
+		if (self.noise) 
+		{
+			//pointsound(self.origin, self.noise, self.volume, self.attenuation);
+			//sound7(self, CHAN_BODY, self.noise, self.volume, self.attenuation, self.speed, self.flags);
+			//self.nextthink = (time + soundlength(self.noise));
+
+			ambientsound (self.origin, self.noise, self.volume, self.attenuation);
+			//self.nextthink = -1;
+			remove(self);
+			return;
+		}
+	}		
+
 	self.think = target_speaker_think;
 	self.nextthink = time + soundlength(self.noise);
 }

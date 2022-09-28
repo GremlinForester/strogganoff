@@ -451,20 +451,6 @@ void() W_ChangeWeapon =
 	self.ammo_index = W_Ammo_Index(self.weapon);
 	self.currentammo = W_Ammo_Amount(self.ammo_index);
 	W_Ammo_toItems(self.ammo_index);
-	/*
-	TODO - sync player model
-	ent->client->anim_priority = ANIM_PAIN;
-	if(ent->client->ps.pmove.pm_flags & PMF_DUCKED)
-	{
-			ent->s.frame = FRAME_crpain1;
-			ent->client->anim_end = FRAME_crpain4;
-	}
-	else
-	{
-			ent->s.frame = FRAME_pain301;
-			ent->client->anim_end = FRAME_pain304;
-			
-	}*/
 }
 
 /*

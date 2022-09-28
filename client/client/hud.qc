@@ -248,7 +248,8 @@ void(vector pos, float value, float threshhold) Hud_DrawLargeValue =
 			len--;
 			c = str2chr(s, len);
 
-			drawpic(pos+len * '24 0 0', anumber[c-'0'], '20 24 0', '1 1 1', 1, 0);
+			//drawpic(pos+len * '24 0 0', anumber[c-'0'], '20 24 0', '1 1 1', 1, 0);
+						drawpic(pos+len * '20 0 0', anumber[c-'0'], '20 24 0', '1 1 1', 1, 0);
 		}
 	}
 	else
@@ -259,7 +260,8 @@ void(vector pos, float value, float threshhold) Hud_DrawLargeValue =
 			len--;
 			c = str2chr(s, len);
 
-			drawpic(pos+len * '24 0 0', number[c-'0'], '20 24 0', '1 1 1', 1, 0);
+			//drawpic(pos+len * '24 0 0', number[c-'0'], '20 24 0', '1 1 1', 1, 0);
+						drawpic(pos+len * '20 0 0', number[c-'0'], '20 24 0', '1 1 1', 1, 0);
 		}
 	}
 };
@@ -789,6 +791,10 @@ void Hud_DrawSBar(vector pos)
 			drawpic(pos+'0 -24 0', "pics/p_envirosuit", '24 24 0', '1 1 1', 1, 0);
 			Hud_DrawAmmoCount(STAT_ENVIRO, pos + '15 -8 0', true);			
 			break;
+//		case INV_PICKUP_JUMPBOOTS:
+//			drawpic(pos+'0 -24 0', "pics/p_envirosuit", '24 24 0', '1 1 1', 1, 0);
+//			Hud_DrawAmmoCount(STAT_ENVIRO, pos + '15 -8 0', true);			
+//			break;			
 	}
 
 	if (stat_items & IT_DOUBLER)

@@ -170,7 +170,6 @@ Fire Rilgun
 void(vector start, vector aimdir, float damage) fireRail =
 {
 	local	vector	org;
-	local	entity	impact_point;
 
  	nep_traceline (start, aimdir, FALSE, self);
 //	if (trace_fraction == 1.0)
@@ -184,15 +183,6 @@ void(vector start, vector aimdir, float damage) fireRail =
 
 	trailparticles(self, particleeffectnum("TR_KNIGHTSPIKE"), start, aimdir);
 	trailparticles(self, particleeffectnum("TR_AFRITSPIKE_RED"), start, aimdir);
-
-	impact_point = spawn();
-	impact_point.origin = org;
-	impact_point.solid = SOLID_NOT;
-	impact_point.movetype = MOVETYPE_NONE;
-	impact_point.effects = self.effects | EF_LOWPRECISION;
-	impact_point.nextthink = time + 0.01;
-	setmodel (impact_point, "");
-	impact_point.think = SUB_Remove;
 	
 	if (trace_ent.takedamage)
 	{
@@ -200,7 +190,7 @@ void(vector start, vector aimdir, float damage) fireRail =
 	}
 	else
 	{	// hit wall
-		Q3Surface_Impact_Ent(impact_point);
+		Q3Surface_Impact(org);
 	}
 };
 
@@ -238,7 +228,6 @@ void(float damage) FireBullet =
 	local 	vector 	vel; 
 	local	vector	source;
 	local	vector	org;
-	local	entity	impact_point;
 
 	if (self.flags & FL_DUCKED)
 	{
@@ -254,15 +243,6 @@ void(float damage) FireBullet =
 		return;
 	
 	org = trace_endpos - v_forward*4;
-
-	impact_point = spawn();
-	impact_point.origin = org;
-	impact_point.solid = SOLID_NOT;
-	impact_point.movetype = MOVETYPE_NONE;
-	impact_point.effects = self.effects | EF_LOWPRECISION;
-	impact_point.nextthink = time + 0.1;
-	setmodel (impact_point, "");
-	impact_point.think = SUB_Remove;
 	
 	if (self.weapon == WEP_MACHINEGUN)
 	{
@@ -286,7 +266,7 @@ void(float damage) FireBullet =
 			}
 			
 			T_Damage (trace_ent, self, self, damage);
-			Q3Surface_Impact_Ent(impact_point);
+			Q3Surface_Impact(org);
 		}
 		else
 		{
@@ -295,7 +275,7 @@ void(float damage) FireBullet =
 	}
 	else
 	{	// hit wall
-		Q3Surface_Impact_Ent(impact_point);
+		Q3Surface_Impact(org);
 	}
 	
 	if (self.weapon == WEP_RAILGUN)
@@ -324,41 +304,30 @@ void(float damage, vector dir) Q3SurfaceTraceAttack =
 {
 	local vector vel; 
 	local vector org;
-	local entity impact_point;
 	
 	vel = normalize(dir + v_up*crandom() + v_right*crandom());
 	vel = vel + 2*trace_plane_normal;
 	vel = vel * 200;
 	
 	org = trace_endpos - dir*4;
-
-	impact_point = spawn();
-	impact_point.origin = org;
-	impact_point.solid = SOLID_NOT;
-	impact_point.movetype = MOVETYPE_NONE;
-	impact_point.effects = self.effects | EF_LOWPRECISION;
-	impact_point.nextthink = time + 0.01;
-	setmodel (impact_point, "");
-	impact_point.think = SUB_Remove;
 	
 	if (trace_ent.takedamage && trace_ent.flags & FL_MONSTER || trace_ent.classname == "player")
 	{
 		if (trace_ent.classname == "monster_tank" || trace_ent.classname == "monster_tank_commander")
 		{
 			damage = damage * 0.1;
-			Q3Surface_Impact_Ent(impact_point);
+			Q3Surface_Impact(org);
 		}	
 		else
 		{
 			SpawnBlood (org, vel*0.2, damage);
 		}
 		AddMultiDamage (trace_ent, damage);
-	//	Q3Surface_Impact_Ent(impact_point);
 	}
 	else
 	{
 		AddMultiDamage (trace_ent, damage);
-		Q3Surface_Impact_Ent(impact_point);
+		Q3Surface_Impact(org);
 	}
 };
 

@@ -4,29 +4,25 @@
 
 // control file
 compiler.qc
+
 shared/defs.qc
 shared/nepdefs.qc
 
 //darkplaces extensions
-//dpext.qc
-
 shared/dpextensions.qc
+
 //shared/m_flash.qc
 shared/strogganoff_defs.qc
-
-extras/extras_defs.qc   // pOx - additions
 
 playermovement.qc
 
 // frikbot module - 0.10.1.cat 
-
 frikbot/frik_code.qc
 
 effects.qc //muzzle flashes, shell casings, etc...
 
 materialsys_surface.qc
 materialsys_gibs.qc
-materialsys_breakable.qc
 
 //Co-op
 coop/ext_coop.qc
@@ -42,10 +38,7 @@ q2_items_weapons.qc //Q2 weapon pickups
 q2_items_ammo.qc //Q2 ammo pickups
 q1_items.qc //Q1 map compatibility
 
-
-//weaponsys_anim.qc
 weapons_projectiles.qc
-
 
 q2/g_weapon.qc
 q2/weapons.qc
@@ -54,14 +47,7 @@ world.qc
 client.qc
 q2_player.qc
 monsters.qc
-doors.qc
-q2_doors.qc
-buttons.qc
-triggers.qc
-plats.qc
 misc.qc
-
-q2_misc.qc
 
 q2/monsterq2_flipper.qc
 q2/monsterq2_soldier.qc
@@ -77,6 +63,7 @@ q2/monsterq2_floater.qc
 q2/monsterq2_flyer.qc
 q2/monsterq2_tank.qc
 q2/monsterq2_hover.qc
+q2/monster_q2marine.qc
 q2/monsterq2_insane.qc
 q2/monsterq2_supertank.qc
 q2/monsterq2_boss2.qc
@@ -105,10 +92,7 @@ q1/oldone.qc		// registered
 
 // pOx  - additions (see each file for info)
 extras/extras_subs.qc
-extras/extras_emitters.qc
-extras/extras_water.qc
 extras/extras_triggers.qc
-extras/extras_misc.qc
 
 //Goal: the order of entities here shouldn't matter, any shared defs, fields etc... will always come before these. 
 //These should be as "high level" as possible.
@@ -156,10 +140,13 @@ entities/func_button.qc
 entities/func_train_activator.qc
 entities/func_timer.qc
 entities/func_rotating.qc
-entities/func_door.qc 
+entities/func_door.qc
+entities/func_water.qc
 entities/func_door_secret.qc 
 entities/func_door_rotating.qc
-entities/func_explosive.qc 
+entities/func_explosive.qc
+entities/func_object.qc
+entities/func_conveyor.qc
 entities/point_radar.qc
 entities/point_sensor.qc
 entities/point_shake.qc

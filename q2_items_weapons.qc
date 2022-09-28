@@ -15,6 +15,7 @@ void() weapon_shotgun =
 	self.classname = "weapon_shotgun";
 	self.modelflags = MF_ROTATE;
 	self.touch = weapon_touch;
+	self.classtype = CLASS_WEAPON;	
 	setsize (self, '-16 -16 0', '16 16 56');
 	StartItem ();
 };
@@ -29,6 +30,7 @@ void() weapon_supershotgun =
 	self.netname = "Super Shotgun";
 	self.modelflags = MF_ROTATE;
 	self.touch = weapon_touch;
+	self.classtype = CLASS_WEAPON;
 	setsize (self, '-16 -16 0', '16 16 56');
 	StartItem ();
 };
@@ -44,6 +46,7 @@ void() weapon_machinegun =
 	self.classname = "weapon_machinegun";
 	self.modelflags = MF_ROTATE;
 	self.touch = weapon_touch;
+	self.classtype = CLASS_WEAPON;	
 	setsize (self, '-16 -16 0', '16 16 56');
 	StartItem ();
 };
@@ -59,6 +62,7 @@ void() weapon_chaingun =
 	self.classname = "weapon_chaingun";
 	self.modelflags = MF_ROTATE;
 	self.touch = weapon_touch;
+	self.classtype = CLASS_WEAPON;	
 	setsize (self, '-16 -16 0', '16 16 56');
 	StartItem ();
 };
@@ -74,6 +78,7 @@ void() weapon_grenadelauncher =
 	self.classname = "weapon_grenadelauncher";
 	self.modelflags = MF_ROTATE;
 	self.touch = weapon_touch;
+	self.classtype = CLASS_WEAPON;	
 	setsize (self, '-16 -16 0', '16 16 56');
 	StartItem ();
 };
@@ -90,6 +95,7 @@ void() weapon_rocketlauncher =
 	self.classname = "weapon_rocketlauncher";
 	self.modelflags = MF_ROTATE;
 	self.touch = weapon_touch;
+	self.classtype = CLASS_WEAPON;	
 	setsize (self, '-16 -16 0', '16 16 56');
 	StartItem ();
 };
@@ -106,6 +112,7 @@ void() weapon_hyperblaster =
 	self.classname = "weapon_hyperblaster";
 	self.modelflags = MF_ROTATE;
 	self.touch = weapon_touch;
+	self.classtype = CLASS_WEAPON;	
 	setsize (self, '-16 -16 0', '16 16 56');
 	StartItem ();
 };
@@ -121,6 +128,7 @@ void() weapon_railgun =
 	self.classname = "weapon_railgun";
 	self.modelflags = MF_ROTATE;
 	self.touch = weapon_touch;
+	self.classtype = CLASS_WEAPON;	
 	setsize (self, '-16 -16 0', '16 16 56');
 	StartItem ();
 };
@@ -137,6 +145,7 @@ void() weapon_bfg =
 	self.classname = "weapon_bfg";
 	self.modelflags = MF_ROTATE;
 	self.touch = weapon_touch;
+	self.classtype = CLASS_WEAPON;	
 	setsize (self, '-16 -16 0', '16 16 56');
 	StartItem ();
 };

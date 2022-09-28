@@ -213,7 +213,9 @@ float (entity targ) visible =
 //	{
 		removeBitsFromEntity(self,dphitcontentsmask,DPCONTENTS_MONSTERCLIP); //Anything the AI should see through
 		traceline ((self.origin + self.view_ofs), (targ.origin + targ.view_ofs), TRUE, self);
-		addBitsToEntity(self,dphitcontentsmask,DPCONTENTS_MONSTERCLIP);
+		
+		if (!self.classname == "monster_marine")
+			addBitsToEntity(self,dphitcontentsmask,DPCONTENTS_MONSTERCLIP);
 //	}
 //	self.dphitcontentsmask = self.dphitcontentsmask | rint(contentBuffer);
 
@@ -380,6 +382,39 @@ void() FoundTarget =
 	HuntTarget ();
 };
 
+//Thanks coffee!
+
+// ------------------------------------------------
+float() FindMonster =
+// ------------------------------------------------
+{
+local entity beast;
+
+	if (self.attack_state != AS_ESCORTING)
+		return FALSE;
+
+	if (self.enemy)
+		return FALSE;
+
+	beast = findradius(self.origin, 1500);
+
+	while(beast)
+		{
+		if ( (beast.classtype == CLASS_STROGG || beast.classtype == CLASS_ANIMAL) && visible(beast) && beast != self && beast.health > 0){
+			self.enemy = beast;
+		}
+		
+		beast = beast.chain;
+		
+		}
+	
+	if (!self.enemy)
+		return FALSE;
+	
+	FoundTarget();
+	return TRUE;
+};
+
 /*
 ===========
 FindTarget
@@ -401,6 +436,14 @@ float() FindTarget =
 {
 	local entity	client;
 //	local float		r;
+
+
+	if (self.classname == "monster_marine" || self.classname == "misc_insane")
+	{
+		if (FindMonster()){
+			return TRUE;
+		}
+	}
 
 // if the first spawnflag bit is set, the monster will only wake up on
 // really seeing the player, not another monster getting angry
@@ -446,6 +489,19 @@ float() FindTarget =
 		if ( /* client.show_hostile < time || */ !infront (client))
 			return FALSE;
 	}
+	
+	//Thanks coffee! https://www.quaddicted.com/webarchive/minion.planetquake.gamespy.com/tutorial/tutor8.htm
+	
+	if (self.attack_state == AS_ESCORTING)
+		return FALSE;
+
+	if (self.classname == "monster_marine" || self.classname == "misc_insane")
+	{
+		self.goalentity = client;
+		self.attack_state = AS_ESCORTING;
+		self.th_walk();
+		return TRUE;
+	}	
 	
 //
 // got one
@@ -528,14 +584,15 @@ void(float dist) ai_walk =
 
 	movedist = dist;
 
-	if (self.classname == "monster_dragon")
-	{
-		movetogoal (dist);
-		return;
-	}
 	// check for noticing a player
 	if (FindTarget ())
 		return;
+	
+	if (self.attack_state == AS_ESCORTING && vlen(self.origin - self.goalentity.origin) < 80)
+	{
+		self.pausetime = time + 3;
+		self.th_stand();
+	}	
 
 	movetogoal (dist);
 };
@@ -550,8 +607,9 @@ The monster is staying in one place for a while, with slight angle turns
 */
 void() ai_stand =
 {
-	if (FindTarget ())
+	if (FindTarget ()){
 		return;
+	}
 	
 	if (time > self.pausetime)
 	{
@@ -735,7 +793,7 @@ void(float dist) ai_run =
 //	local	float	direct, ang_rint, ang_floor, ang_ceil;	// fx_warning
 
 	movedist = dist;
-	
+
 // see if the enemy is dead
 	if (self.enemy.health <= 0)
 	{
@@ -797,7 +855,7 @@ void(float dist) ai_run =
 		ai_run_slide ();
 		return;
 	}
-	
+
 // head straight in
 	movetogoal (dist);		// done in C code...
 };

@@ -249,7 +249,6 @@ void(vector start, vector aimdir, float damage, vector speed, float timer, float
 
 void(vector start, vector end, float damage) fire_railgun_base={
 	local	vector	org;
-	local	entity	impact_point;
 
  	traceline (start, end, FALSE, self);
 //	if (trace_fraction == 1.0)
@@ -259,15 +258,6 @@ void(vector start, vector end, float damage) fire_railgun_base={
 
 	trailparticles(self, particleeffectnum("TR_KNIGHTSPIKE"), start, end);
 	trailparticles(self, particleeffectnum("TR_AFRITSPIKE_RED"), start, end);
-
-	impact_point = spawn();
-	impact_point.origin = org;
-	impact_point.solid = SOLID_NOT;
-	impact_point.movetype = MOVETYPE_NONE;
-	impact_point.effects = self.effects | EF_LOWPRECISION;
-	impact_point.nextthink = time + 0.01;
-	setmodel (impact_point, "");
-	impact_point.think = SUB_Remove;
 	
 	if (trace_ent.takedamage)
 	{
@@ -275,7 +265,7 @@ void(vector start, vector end, float damage) fire_railgun_base={
 	}
 	else
 	{	// hit wall
-		Q3Surface_Impact_Ent(impact_point);
+		Q3Surface_Impact(org);
 	}
 };
 

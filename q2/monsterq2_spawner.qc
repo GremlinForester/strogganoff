@@ -43,6 +43,17 @@ void() monster_strogg_spawn =
 	}	
 	
 	e = spawn();
+	e.owner = self;	
+	e.origin = self.origin;
+	e.solid = SOLID_SLIDEBOX;
+	e.movetype = MOVETYPE_STEP;
+	e.fixangle = TRUE;
+	e.angles = self.angles;
+	e.yaw_speed = 20;
+	e.view_ofs = '0 0 28';
+	e.max_health = e.health;
+	e.flags = e.flags | FL_MONSTER;
+	e.takedamage = DAMAGE_AIM;
 	
 	if (self.target)
 	{
@@ -58,7 +69,7 @@ void() monster_strogg_spawn =
 			setmodel (e, "models/monsters/infantry/tris.md2");
 			setsize (e, '-16 -16 -24', '16 16 40');
 			e.health = 30;
-		
+			e.solid = SOLID_SLIDEBOX;		
 			e.th_stand = q2infantry_select_stand;
 			e.th_walk = q2infantry_frames_walk;
 			e.th_run = q2infantry_frames_run;
@@ -317,18 +328,8 @@ void() monster_strogg_spawn =
 			break;				
 	}	
 
-	e.origin = self.origin;
-	e.solid = SOLID_SLIDEBOX;
-	e.movetype = MOVETYPE_STEP;
-	e.fixangle = TRUE;
-	e.angles = self.angles;
-	e.yaw_speed = 20;
-	e.view_ofs = '0 0 28';
-	e.max_health = e.health;
-	e.flags = e.flags | FL_MONSTER;
-	e.takedamage = DAMAGE_AIM;
 	e.think = e.th_walk;
-	e.nextthink = time + 0.1;
+	e.nextthink = time + 0.1;	
 	
 	if (e.classname == "monster_hover"){
 		attachq2hoverSound(e);
@@ -413,6 +414,12 @@ void () monster_strogg_spawner =
 	self.solid = SOLID_NOT;
 	self.movetype = MOVETYPE_NONE;
 	
-	self.think = monster_strogg_spawn;
-	self.nextthink = time + self.delay;
+	if (self.targetname){
+		self.use = monster_strogg_spawn;
+		self.nextthink = -1;
+	}
+	else{
+		self.think = monster_strogg_spawn;
+		self.nextthink = time + self.delay;
+	}
 }

@@ -219,11 +219,6 @@ void() liquid_touch =
 			self.think1();
 			return;
 		}
-		else if (other.classname == "particle" && other.owner.spawnflags & KILLINFWATER) {	
-			self = other;
-			self.think1();
-			return;
-		}
 		
 	// Trick the C code into playing the splash sound... (even though I find it annoying as hell)
 		

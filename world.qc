@@ -260,8 +260,7 @@ void() worldspawn =
 	addstat (STAT_FRAGS,2, frags);
 	addstat (STAT_PLAYERTYPE, 2, playerType);
 	addstat (STAT_UPGRADE_BLASTER_LEVEL, 2, upgrade_blaster_level);
-	addstat (STAT_PLAYERSKIN, 2, skin);		
-	
+	addstat (STAT_PLAYERSKIN, 2, skin);
 	
 #ifndef cv_setdef
 // set cv defaults if set def package not used

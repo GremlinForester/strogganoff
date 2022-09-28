@@ -16,3 +16,8 @@ void() trigger_once =
 	self.wait = -1;
 	trigger_multiple();
 };
+
+void() trigger_always =
+{
+	trigger_once();
+};

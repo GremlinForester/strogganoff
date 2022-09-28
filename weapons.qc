@@ -6,81 +6,6 @@ PLAYER WEAPON USE
 ===============================================================================
 */
 
-void() q2player_run;
-
-/*
-	W_SetCurrentAmmo
-		seemingly called after any	
-			W_ChangeWeapon()
-			W_BestWeapon()
-*/
-/*
-void() W_SetCurrentAmmo =
-{
-// idea: check frame set & only do for fire frames
-	//q2player_run ();		// get out of any weapon firing states
-
-	//I don't know why Q1 originally did this.
-	self.items = self.items - ( self.items & (IT_SHELLS | IT_BULLETS | IT_ROCKETS | IT_CELLS) );
-//	self.weaponframe = 0; // this always happens
-
-	switch(self.weapon){
-		case WEP_BLASTER:
-			self.currentammo = 0;
-			break;
-			
-		case WEP_SHOTGUN:
-			self.currentammo = self.inv_ammo_shells;
-			self.items = self.items | IT_SHELLS;
-			break;
-			
-		case WEP_SUPERSHOTGUN:
-			self.currentammo = self.inv_ammo_shells;
-			self.items = self.items | IT_SHELLS;
-			break;
-			
-		case WEP_MACHINEGUN:
-			self.currentammo = self.inv_ammo_bullets;
-			self.items = self.items | IT_BULLETS;
-			break;
-			
-		case WEP_CHAINGUN:
-			self.currentammo = self.inv_ammo_bullets;
-			self.items = self.items | IT_BULLETS;
-			break;
-			
-		case WEP_GRENADE_LAUNCHER:
-			self.currentammo = self.inv_ammo_rockets;
-			self.items = self.items | IT_ROCKETS;
-			break;
-			
-		case WEP_ROCKET_LAUNCHER:
-			self.currentammo = self.inv_ammo_rockets;
-			self.items = self.items | IT_ROCKETS;
-			break;
-			
-		case WEP_HYPERBLASTER:
-			self.currentammo = self.inv_ammo_cells;
-			self.items = self.items | IT_CELLS;
-			break;
-			
-		case WEP_RAILGUN:
-			self.currentammo = self.inv_ammo_slugs;
-			self.items = self.items | IT_SLUGS;
-			break;
-			
-		case WEP_BFG:
-			self.currentammo = self.inv_ammo_cells;
-			self.items = self.items | IT_CELLS;
-			break;
-		
-		default:
-			self.currentammo = 0;
-			break;
-	}
-};
-*/
-
 float() W_BestWeapon =
 {
 	local	float	it;
@@ -146,21 +71,8 @@ uses the full 8 frames.
 
 void() W_Attack =
 {
-//	local float r;
-	
-	//if (!W_CheckNoAmmo ())
-		//return;
-	
-	//if(self.weaponstate == WEAPON_FIRING){
-	///  return;
-	//}
 	makevectors	(self.v_angle);			// calculate forward angle for velocity
 	self.show_hostile = time + 1;	// wake monsters up
-	
-	//immediate interrupt
-	//if(self.weaponstate != WEAPON_FIRING){
-	//	self.weaponstate_next = WEAPON_FIRING;
-	//}
 };
 
 /*
@@ -169,7 +81,6 @@ W_ChangeWeapon
   player chose specific weapon.
 ============
 */
-void() CycleWeaponCommand;
 
 void() W_ImpulseChangeWeapon =
 {
@@ -299,50 +210,6 @@ void() CheatCommand =
 
 // debug qual
 #endif
-
-/*
-============
-CycleWeaponCommand
-
-Go to the next weapon with ammo
-============
-*/
-
-void() CycleWeaponCommand =
-{
-	local	float	am;
-
-
-// note: no loop protection! - this code assumes the player _always_ has an axe
-	while (1)
-	{
-		am = 0;
-
-// since these are bit flags, * 2 selects next and * 0.5 selects previous - for single select set this to 1
-//		self.weapon = self.weapon * self.f__;
-// weapon select logic
-		if (self.weapon_next == WEP_GRENADE && self.inv_ammo_rockets < 1) am = 1;
-		if (self.weapon_next == WEP_BFG && self.inv_ammo_cells < 1) am = 1;
-		if (self.weapon_next == WEP_RAILGUN && self.inv_ammo_slugs < 1) am = 1;
-		if (self.weapon_next == WEP_HYPERBLASTER && self.inv_ammo_cells < 1) am = 1;
-		if (self.weapon_next == WEP_ROCKET_LAUNCHER && self.inv_ammo_rockets < 1) am = 1;
-		if (self.weapon_next == WEP_GRENADE_LAUNCHER && self.inv_ammo_rockets < 1) am = 1;
-		if (self.weapon_next == WEP_CHAINGUN && self.inv_ammo_bullets < 2) am = 1;
-		if (self.weapon_next == WEP_MACHINEGUN && self.inv_ammo_bullets < 1) am = 1;
-		if (self.weapon_next == WEP_SUPERSHOTGUN && self.inv_ammo_shells < 2) am = 1;
-		if (self.weapon_next == WEP_SHOTGUN && self.inv_ammo_shells < 1) am = 1;
-	
-		if ( (self.inv_weapons & self.weapon_next) && ! am)
-		{
-			self.impulse = 0;
-			self.weaponstate_next = WEAPON_DROPPING;
-			return;
-		}
-// dont cycle single select
-		if (self.impulse <= IMPULSE_USE_WEAPON11) 
-			return;
-	}
-};
 
 float() onlyBlaster =
 {
@@ -662,7 +529,7 @@ void() CycleSkinNext =
 ============
 CycleItemNext
 
-Go to the next item with ammo
+Go to the next item in inventory
 ============
 */
 
@@ -680,7 +547,7 @@ void() CycleItemNext =
 ============
 CycleItemPrev
 
-Go to the previous item with ammo
+Go to the previous item in inventory
 ============
 */
 
@@ -1126,9 +993,9 @@ void() W_WeaponFrame =
 		{
 			self.state = STATE_ATTACKING;
 			SuperDamageSound ();
-//			Q3Surface_Impact(self.cursor_trace_endpos);
-//			T_Damage (self.cursor_trace_ent, self, self, 40);
-//			VLOG(self.cursor_trace_endpos);
+	//		Q3Surface_Impact(self.cursor_trace_endpos);
+	//		T_Damage (self.cursor_trace_ent, self, self, 40);
+	//		VLOG(self.cursor_trace_endpos);
 			W_Attack ();
 		}
 	}

@@ -997,13 +997,14 @@ void() PutClientInServer =
 		makevectors(self.angles);
 		spawn_tfog (self.origin + v_forward*20);
 	}
-	spawn_tdeath (self.origin, self);
-  
+
 	// pOx - START - func_water support
 	self.fwatershift = TRUE;// catch runaway cshifts (changlevel/respawn while in func_water)
 	self.oldgravity = 0;// use unmodified sv_gravity
-	// pOx - END - func_water support
-
+	// pOx - END - func_water support	
+	
+	spawn_tdeath (self.origin, self);
+  
 	if (world.fadein == 1)
 	{
 		stuffcmd(self, "bf 0 0 0 1\n");
@@ -1134,10 +1135,12 @@ void() CheckRules =
 	{
 		NextLevel();
 //		return;
-	}	
+	}
 };
 
 //============================================================================
+
+void() CheckFuncWaterDeath;
 
 void() PlayerDeathThink =
 {
@@ -1145,8 +1148,8 @@ void() PlayerDeathThink =
 	local float		forward;
 
 	// pOx - func_water support
-	CheckFuncWaterDeath();//check cshift for dead players in func_water	
-	
+	CheckFuncWaterDeath();//check cshift for dead players in func_water
+
 	if ((self.flags & FL_ONGROUND))
 	{
 		forward = vlen (self.velocity);
@@ -1177,6 +1180,7 @@ void() PlayerDeathThink =
 };
 
 void() q2player_jumpframes;
+.float jumpcount;
 
 void() PlayerJump =
 {
@@ -1212,22 +1216,41 @@ void() PlayerJump =
 		return;
 	}
 
-	if (!(self.flags & FL_ONGROUND))
-		return;
-
 	if ( !(self.flags & FL_JUMPRELEASED) )
 		return;		// don't pogo stick
-
-	self.flags = self.flags - (self.flags & FL_JUMPRELEASED);
-
-	self.flags = self.flags - FL_ONGROUND;	// don't stairwalk
 	
+	if (!(self.flags & FL_ONGROUND))
+		return;
+	
+	self.flags = self.flags - (self.flags & FL_JUMPRELEASED);
+	self.flags = self.flags - FL_ONGROUND;	// don't stairwalk
 	self.button2 = 0;
-// player jumping sound
-//	sound (self, CHAN_VOICE, "player/plyrjmp8.wav", 1, ATTN_NORM);
+	
+	// player jumping sound, can be jump boots sound if they make it in
+	// sound (self, CHAN_BODY, "player/plyrjmp8.wav", 1, ATTN_NORM);
 	playerVOSound(PLAYER_VOICE_JUMP);
 	q2player_jumpframes();
-	self.velocity_z = self.velocity_z + 285; //270
+	if (self.items & IT_JUMPBOOTS){
+		self.velocity_z = self.velocity_z + 485;
+		self.jumpcount++;
+		if (self.jumpcount >= 10){
+			centerprint(self, "Jumpboots depleted...\n");
+			removeBitsFromEntity(self, items, IT_JUMPBOOTS);
+		}
+		else if (self.jumpcount == 7){
+			centerprint(self, "You have 3 jumps remaining...\n");
+		}
+		else if (self.jumpcount == 8){
+			centerprint(self, "You have 2 jumps remaining...\n");
+		}
+		else if (self.jumpcount == 9){
+			centerprint(self, "You have 1 jump remaining...\n");
+		}
+	}
+	else
+	{
+		self.velocity_z = self.velocity_z + 285; //270	
+	}
 };
 
 
@@ -1498,7 +1521,7 @@ void() PlayerPreThink =
 		self.gravity = self.oldgravity;// reset normal gravity
 	else
 		self.gravity = 0.0001;// zero G (0 OR 1 is normal)
-	// pOx - END  - func_water & func_ladder support	
+	// pOx - END  - func_water & func_ladder support
 	
 	CheckRules ();
 	WaterMove ();
@@ -1919,24 +1942,24 @@ void() W_surfaceSniffer =
 	local	vector	org;
 
 	makevectors (self.v_angle);
-	source = self.origin + '0 0 -16';
-	traceline (source, source + v_forward*32, FALSE, self);
-	org = trace_endpos - v_forward*4;
+	source = self.origin + '0 0 16';
+//	traceline (source, source + v_forward*32, FALSE, self);
+//	org = trace_endpos - v_forward*4;
 	
 	if (self.movetype == MOVETYPE_NOCLIP)
 		return;
 
 //	makevectors (self.v_angle);
 
-	tracebox (self.origin, VEC_HULL_MIN, VEC_HULL_MAX, self.origin + '32 0 0', FALSE, self);
+	tracebox (self.origin, CROUCH_VEC_HULL_MIN, CROUCH_VEC_HULL_MAX, source + v_forward*16, FALSE, self);
 	
 	
-//	if (trace_dphitcontents == 4097)
+	if (trace_dphitcontents == 4097)
 //	if (trace_dphitcontents == 4104)
 //	if (trace_dphitcontents == 4864) //this seems to be ladder?
 //	well I give up! :(
-	/*
-	if (trace_dphitcontents ==	4864)
+	
+//	if (trace_dphitcontents ==	4864)
 	{
 		bprint ("Ladder?");
 		bprint ("\n");
@@ -1944,12 +1967,11 @@ void() W_surfaceSniffer =
 	//	self.velocity_z = 160;
 		self.movetype = MOVETYPE_FLY;
 	}
-	else if (!trace_dphitcontents)
+	else
 	{
 	//	self.onladder = FALSE;
 		self.movetype = MOVETYPE_WALK;
 	}
-	*/
 };
 
 void() PlayerPostThink =
@@ -1960,6 +1982,8 @@ void() PlayerPostThink =
 #ifdef FRIKBOT
 
 // frikbot tie-in
+
+	local float fall_damage = (((self.jump_flag) * -1) / 25);
 
 	if ( BotPostFrame () )
 		return ;
@@ -1989,18 +2013,13 @@ void() PlayerPostThink =
 // check to see if player landed and play landing sound
 	if ((self.jump_flag < -100) && (self.flags & FL_ONGROUND) && (self.health > 0))
 	{
-		if (self.watertype == CONTENT_WATER)
+		if (self.watertype == CONTENT_WATER){
 			sound (self, CHAN_BODY, "player/h2ojump.wav", 1, ATTN_NORM);
+		}
 		else if (self.jump_flag < -650)
 		{
-			T_Damage (self, world, world, 10);
-			//sound (self, CHAN_VOICE, "player/land2.wav", 1, ATTN_NORM);
-			playerVOSound(PLAYER_VOICE_LAND1);
-			self.deathtype = "falling";
-		}
-		else if (self.jump_flag < -850)
-		{
-			T_Damage (self, world, world, 200);
+			T_Damage (self, world, world, fall_damage);
+			FLOG(fall_damage);
 			//sound (self, CHAN_VOICE, "player/land2.wav", 1, ATTN_NORM);
 			playerVOSound(PLAYER_VOICE_LAND1);
 			self.deathtype = "falling";
@@ -2393,8 +2412,6 @@ void(entity targ, entity attacker) ClientObituary =
 					bprint (" was eviscerated by a Fiend\n");
 				if (attacker.classname == "monster_dog")
 					bprint (" was mauled by a Rottweiler\n");
-				if (attacker.classname == "monster_dragon")
-					bprint (" was fried by a Dragon\n");
 				if (attacker.classname == "monster_enforcer")
 					bprint (" was blasted by an Enforcer\n");
 				if (attacker.classname == "monster_fish")

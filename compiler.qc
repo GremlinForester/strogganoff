@@ -474,4 +474,5 @@ void() t_on
 #message			-- compile: Replace Quake 1 Demon with Quake 2 Mutant 
 #endif
 
+#define misc_insane_weapon_pickup
 

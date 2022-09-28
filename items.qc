@@ -120,7 +120,8 @@ void() PlaceItem =
 	self.mdl = self.model;		// so it can be restored on respawn
 	self.flags = FL_ITEM;		// make extra wide
 	self.solid = SOLID_TRIGGER;
-	self.movetype = MOVETYPE_TOSS;	
+
+	self.movetype = MOVETYPE_TOSS;
 	self.velocity = '0 0 0';
 	self.origin_z = self.origin_z + 6;
 	/*
@@ -465,6 +466,7 @@ weapon_touch
 =============
 */
 float() W_BestWeapon;
+void() insane_gotaweapon;
 
 void() weapon_touch =
 {
@@ -475,6 +477,30 @@ void() weapon_touch =
 
 	if (!(other.flags & FL_CLIENT))
 		return;
+	
+	#ifdef misc_insane_weapon_pickup
+	if (other.classname == "misc_insane")
+	{
+		if (other.deadflag == DEAD_DEAD)
+			return;
+		
+		if (other.spawnflags & 8) //no helping anyone who's crucified!
+			return;
+		
+		if (anyWeapons(other)){ //already has a weapon
+			LOG2("I already got a ", printWeaponName(other));
+			return;
+		}
+		
+		other.inv_ammo_shells = self.inv_ammo_shells;
+		other.inv_ammo_bullets = self.inv_ammo_bullets;
+		other.inv_ammo_rockets = self.inv_ammo_rockets;
+		other.inv_ammo_slugs = self.inv_ammo_slugs;
+		other.inv_ammo_cells = self.inv_ammo_cells;		
+		other.think = insane_gotaweapon;
+		leave = 1;
+	}
+	#endifdef
 
 // if the player was using his best weapon, change up to the new one if better		
 	stemp = self;
@@ -1222,10 +1248,99 @@ void(float lootType, float lootAmt, vector org) DropLoot =
 			setmodel (loot, "models/items/armor/shard/tris.md2");
 			setsize (loot, '-16 -16 -16', '16 16 16');
 			loot.noise = "misc/ar2_pkup.wav";
-//			loot.inv_ammo_cells = lootAmt;
 			loot.modelflags = MF_ROTATE;
 			loot.touch = armor_touch;
 			break;
+		case LOOT_SHOTGUN:
+			loot.netname = "Shotgun";
+			loot.classname = "weapon_shotgun";
+			setmodel (loot, "models/weapons/g_shotg/tris.md2");
+			setsize (loot, '-16 -16 0', '16 16 56');
+			loot.noise = "weapons/pkup.wav";
+			loot.inv_ammo_shells = lootAmt;
+			loot.modelflags = MF_ROTATE;
+			loot.touch = weapon_touch;
+			break;
+		case LOOT_SUPERSHOTGUN:
+			loot.netname = "Super Shotgun";
+			loot.classname = "weapon_supershotgun";
+			setmodel (loot, "models/weapons/g_shotg2/tris.md2");
+			setsize (loot, '-16 -16 0', '16 16 56');
+			loot.noise = "weapons/pkup.wav";
+			loot.inv_ammo_shells = lootAmt;
+			loot.modelflags = MF_ROTATE;
+			loot.touch = weapon_touch;
+			break;
+		case LOOT_MACHINEGUN:
+			loot.netname = "Machinegun";
+			loot.classname = "weapon_machinegun";
+			setmodel (loot, "models/weapons/g_machn/tris.md2");
+			setsize (loot, '-16 -16 0', '16 16 56');
+			loot.noise = "weapons/pkup.wav";
+			loot.inv_ammo_bullets = lootAmt;
+			loot.modelflags = MF_ROTATE;
+			loot.touch = weapon_touch;
+			break;
+		case LOOT_CHAINGUN:
+			loot.netname = "Chaingun";
+			loot.classname = "weapon_chaingun";
+			setmodel (loot, "models/weapons/g_chain/tris.md2");
+			setsize (loot, '-16 -16 0', '16 16 56');
+			loot.noise = "weapons/pkup.wav";
+			loot.inv_ammo_bullets = lootAmt;
+			loot.modelflags = MF_ROTATE;
+			loot.touch = weapon_touch;
+			break;
+		case LOOT_GRENADE_LAUNCHER:
+			loot.netname = "Grenade Launcher";
+			loot.classname = "weapon_grenadelauncher";
+			setmodel (loot, "models/weapons/g_launch/tris.md2");
+			setsize (loot, '-16 -16 0', '16 16 56');
+			loot.noise = "weapons/pkup.wav";
+			loot.inv_ammo_rockets = lootAmt;
+			loot.modelflags = MF_ROTATE;
+			loot.touch = weapon_touch;
+			break;
+		case LOOT_ROCKET_LAUNCHER:
+			loot.netname = "Rocket Launcher";
+			loot.classname = "weapon_rocketlauncher";
+			setmodel (loot, "models/weapons/g_rocket/tris.md2");
+			setsize (loot, '-16 -16 0', '16 16 56');
+			loot.noise = "weapons/pkup.wav";
+			loot.inv_ammo_rockets = lootAmt;
+			loot.modelflags = MF_ROTATE;
+			loot.touch = weapon_touch;
+			break;
+		case LOOT_HYPERBLASTER:
+			loot.netname = "Hyperblaster";
+			loot.classname = "weapon_hyperblaster";
+			setmodel (loot, "models/weapons/g_hyperb/tris.md2");
+			setsize (loot, '-16 -16 0', '16 16 56');
+			loot.noise = "weapons/pkup.wav";
+			loot.inv_ammo_cells = lootAmt;
+			loot.modelflags = MF_ROTATE;
+			loot.touch = weapon_touch;
+			break;
+		case LOOT_RAILGUN:
+			loot.netname = "Railgun";
+			loot.classname = "weapon_railgun";
+			setmodel (loot, "models/weapons/g_rail/tris.md2");
+			setsize (loot, '-16 -16 0', '16 16 56');
+			loot.noise = "weapons/pkup.wav";
+			loot.inv_ammo_slugs = lootAmt;
+			loot.modelflags = MF_ROTATE;
+			loot.touch = weapon_touch;
+			break;
+		case LOOT_BFG:
+			loot.netname = "BFG";
+			loot.classname = "weapon_bfg";
+			setmodel (loot, "models/weapons/g_bfg/tris.md2");
+			setsize (loot, '-16 -16 0', '16 16 56');
+			loot.noise = "weapons/pkup.wav";
+			loot.inv_ammo_cells = lootAmt;
+			loot.modelflags = MF_ROTATE;
+			loot.touch = weapon_touch;
+			break;			
 	}
 	
 	loot.flags = FL_ITEM;
@@ -1272,35 +1387,35 @@ void() q2_tossWeapon={
 	}
 	else if (this.weapon == WEP_SHOTGUN){
 		weapon_shotgun();
-		self.classname = "weapon_shotgun";
+		self.classname = "weapon_shotgun";	
 	}
 	else if (this.weapon == WEP_MACHINEGUN){
 		weapon_machinegun();
-		self.classname = "weapon_machinegun";
+		self.classname = "weapon_machinegun";	
 	}
 	else if (this.weapon == WEP_CHAINGUN){
 		weapon_chaingun();
-		self.classname = "weapon_chaingun";
+		self.classname = "weapon_chaingun";	
 	}
 	else if (this.weapon == WEP_GRENADE_LAUNCHER){
 		weapon_grenadelauncher();
-		self.classname = "weapon_grenadelauncher";
+		self.classname = "weapon_grenadelauncher";	
 	}
 	else if (this.weapon == WEP_ROCKET_LAUNCHER){
 		weapon_rocketlauncher();
-		self.classname = "weapon_rocketlauncher";
+		self.classname = "weapon_rocketlauncher";		
 	}
 	else if (this.weapon == WEP_HYPERBLASTER){
 		weapon_hyperblaster();
-		self.classname = "weapon_hyperblaster";
+		self.classname = "weapon_hyperblaster";	
 	}
 	else if (this.weapon == WEP_RAILGUN){
 		weapon_railgun();
-		self.classname = "weapon_railgun";
+		self.classname = "weapon_railgun";	
 	}
 	else if (this.weapon == WEP_BFG){
 		weapon_bfg();
-		self.classname = "weapon_bfg";
+		self.classname = "weapon_bfg";	
 	}
 	else{
 		self = this;
@@ -1317,6 +1432,7 @@ void() q2_tossWeapon={
 	self.velocity_z = 150;
 	
 	self.movetype = MOVETYPE_TOSS;
+	self.solid = SOLID_BBOX;	
 	
 	self.think = PlaceItem;
 	self.nextthink = time + 1;

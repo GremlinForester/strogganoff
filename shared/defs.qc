@@ -482,6 +482,7 @@ float		skill;
 #define	AS_SLIDING		2
 #define	AS_MELEE		3
 #define	AS_MISSILE		4
+#define AS_ESCORTING 	5
 
 //
 // player only fields

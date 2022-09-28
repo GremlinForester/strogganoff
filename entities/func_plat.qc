@@ -25,7 +25,8 @@ void() plat_spawn_inside_trigger =
 	
 	tmin = self.mins + '25 25 0';
 	tmax = self.maxs - '25 25 -8';
-	tmin_z = tmax_z - (self.pos1_z - self.pos2_z + 8);
+	//tmin_z = tmax_z - (self.pos1_z - self.pos2_z + 8);
+	tmin_z = tmax_z - (self.pos1_z - self.pos2_z + self.lip);
 	if (self.spawnflags & PLAT_LOW_TRIGGER)
 		tmax_z = tmin_z + 8;
 	
@@ -259,10 +260,24 @@ void() func_plat =
 // pos1 is the top position, pos2 is the bottom
 	self.pos1 = self.origin;
 	self.pos2 = self.origin;
+/*
 	if (self.height)
 		self.pos2_z = self.origin_z - self.height;
 	else
 		self.pos2_z = self.origin_z - self.size_z + 8;
+*/
+
+	if (self.height)
+		self.pos2_z = self.origin_z - self.height;
+	else
+		self.pos2_z = (self.origin_z - self.size_z) + self.lip;
+
+/*
+	if (self.height)
+		self.pos2_z -= self.height;
+	else
+		self.pos2_z -= (self.maxs_z - self.mins_z) - self.lip;	
+*/
 
 	self.use = plat_trigger_use;
 

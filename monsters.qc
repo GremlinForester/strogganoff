@@ -14,15 +14,17 @@
 #define GIB_VELOCITY_MUL 1.1
 #define GIB_VELOCITY_FLAMING_MUL random() * 4
 
-void setWounded(entity ent)
+void(entity ent) setWounded =
 {
 	//Any weird pain skin workaround stuff can go here
-	if (ent.bIsWounded)
+	if (ent.bIsWounded){
 		return;
-	else
+	}
+	else{
 		self.bIsWounded = 1;
 		self.bleedcount = 3;
 		ent.skin++;
+	}
 }
 
 void() initClassType =
