@@ -75,7 +75,9 @@ void() point_shake_think =
 			self.estate = ESTATE_OFF;
 			self.cnt = 0;
 		}
-		FLOG(self.cnt);
+	//	LOG("Point Shake Thinking... ");
+	//	FLOG(self.cnt);
+		return;
 	}
 }
 

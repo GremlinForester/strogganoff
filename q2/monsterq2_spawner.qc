@@ -19,7 +19,7 @@
 */
 void() monster_strogg_spawn =
 {
-	local entity e;
+//	local entity e;
 	local float r;
 	
 	if (self.spawn_count >= self.spawn_max)
@@ -40,8 +40,216 @@ void() monster_strogg_spawn =
 		bprint("Unknown Strogg_type set.");
 		bprint("\n");
 		return;
-	}	
+	}
 	
+	switch (self.strogg_type)
+	{
+		case 1:
+			localcmd ("ent_create monster_infantry\n");
+			break;
+		case 2:
+			localcmd ("ent_create monster_soldier_light\n");			
+			break;
+			/*
+		case 3:
+			e.classname = "monster_soldier";
+			setmodel (e, "models/monsters/soldier/tris.md2");
+			setsize (e, '-16 -16 -24', '16 16 32');
+			e.health = 30;
+			e.skin = 2;
+
+			e.th_stand = q2soldier_frames_stand;
+			e.th_walk = q2soldier_2walk1;
+			e.th_run = q2soldier_run1;
+			e.th_missile = q2soldier_select_attack;
+			e.th_pain = q2soldier_pain;
+			e.th_die = q2soldier_die;
+
+			e.sightSound = "soldier/solsght1.wav";
+			break;
+		case 4:
+			e.classname = "monster_soldier_ss";
+			setmodel (e, "models/monsters/soldier/tris.md2");
+			setsize (e, '-16 -16 -24', '16 16 32');
+			e.health = 40;
+			e.skin = 4;
+			
+			e.th_stand = q2soldier_frames_stand;
+			e.th_walk = q2soldier_2walk1;
+			e.th_run = q2soldier_run1;
+			e.th_missile = q2soldier_select_attack;
+			e.th_pain = q2soldier_pain;
+			e.th_die = q2soldier_die;
+
+			e.sightSound = "soldier/solsght1.wav";
+			break;
+		case 5:
+			setmodel (e, "models/monsters/soldier/tris.md2");
+			setsize (e, '-16 -16 -24', '16 16 32');
+
+			if (random() < 0.3){
+			e.classname = "monster_soldier_ss";		
+			e.skin = 4;
+			e.health = 40;
+			}
+			else if (random() < 0.7){
+			e.classname = "monster_soldier_light";		
+			e.skin = 0;
+			e.health = 30;			
+			}
+			else{
+			e.classname = "monster_soldier";		
+			e.skin = 2;
+			e.health = 30;			
+			}
+			
+			e.th_stand = q2soldier_frames_stand;
+			e.th_walk = q2soldier_2walk1;
+			e.th_run = q2soldier_run1;
+			e.th_missile = q2soldier_select_attack;
+			e.th_pain = q2soldier_pain;
+			e.th_die = q2soldier_die;
+
+			e.sightSound = "soldier/solsght1.wav";
+			break;
+		case 6:
+			e.classname = "monster_berserk";
+			setmodel (e, "models/monsters/berserk/tris.md2");
+
+			setsize (e, '-16 -16 -24', '16 16 32');
+			e.health = 240;
+
+			e.th_stand = q2berserk_select_stand;
+			e.th_walk = q2berserk_walk;
+			e.th_run = q2berserk_run;
+			e.th_pain = q2berserk_pain;
+			e.th_die = q2berserk_die;
+			e.th_melee = q2berserk_melee;
+			
+			e.sightSound = BERSERK_SOUND_SIGHT;
+			break;
+		case 7:
+			e.classname = "monster_brain";
+			setmodel (e, "models/monsters/brain/tris.md2");
+
+			setsize (e, '-16 -16 -24', '16 16 32');
+			e.health = 150;
+
+			e.th_stand = brain_stand_frames;
+			e.th_walk = brain_walk;
+			e.th_run = brain_run;
+			e.th_melee = brain_melee;
+			e.th_pain = brain_pain;
+			e.th_die = brain_die;
+			
+			e.sightSound = BRAIN_SIGHT;
+			break;
+		case 8:
+			e.classname = "monster_chick";
+			setmodel (e, "models/monsters/bitch/tris.md2");
+
+			setsize (e, '-16 -16 0', '16 16 56');
+			e.health = 175;
+
+			e.th_stand = q2chick_frames_stand;
+			e.th_walk = q2chick_frames_walk;
+			e.th_run = q2chick_frames_run;
+			e.th_pain = q2chick_pain;
+			e.th_die = q2chick_die;
+			e.th_missile = q2chick_missile_attack;
+			e.th_melee = q2chick_melee_attack;
+			
+			e.sightSound = CHICK_SOUND_SIGHT;
+			break;
+		case 9:
+			e.classname = "monster_floater";
+			setmodel(e, "models/monsters/float/tris.md2");
+			
+			setsize(e, '-16 -16 -16', '16 16 40');
+			e.health = 200;
+			
+			e.th_stand = floater_stand_switch;
+			e.th_walk = floater_walk1;
+			e.th_run = floater_run1;
+			e.th_missile = floater_attack_start;
+			e.th_melee = floater_melee_select;
+			e.th_pain = floater_pain;
+			e.th_die = floater_die;
+			e.flags = e.flags | FL_FLY;
+			e.sightSound = FLOATER_SOUND_SIGHT;
+			break;
+		case 10:
+			e.classname = "monster_flyer";
+			setmodel(e, "models/monsters/flyer/tris.md2");
+			
+			setsize(e, '-16 -16 -24', '16 16 32');
+			
+			e.health = 50;
+			
+			e.th_stand = flyer_stand;
+			e.th_walk = flyer_walk;
+			e.th_run = flyer_run_start;
+			e.th_missile = flyer_attack;
+			e.th_melee = flyer_melee;
+			e.th_pain = flyer_pain;
+			e.th_die = flyer_die;
+	
+			e.flags = e.flags | FL_FLY;
+			
+			e.sightSound = FLYER_SOUND_SIGHT;
+			break;
+		case 11:
+			e.classname = "monster_gladiator";
+			setmodel (e, "models/monsters/gladiatr/tris.md2");
+
+			setsize (e, '-32 -32 -24', '32 32 64');
+			e.health = 400;
+
+			e.th_stand = q2gladiator_stand;
+			e.th_walk = q2gladiator_walk;
+			e.th_run = q2gladiator_run;
+			e.th_pain = q2gladiator_pain;
+			e.th_die = q2gladiator_die;
+			e.th_missile = q2gladiator_attack;
+			e.th_melee = q2gladiator_melee_select;
+			
+			e.sightSound = GLADIATOR_SOUND_SIGHT;
+			break;
+		case 12:
+			e.classname = "monster_gunner";
+			setmodel (e, "models/monsters/gunner/tris.md2");
+
+			setsize (e, '-16 -16 -24', '16 16 32');
+			e.health = 175;
+
+			e.th_stand = q2gunner_frames_stand;
+			e.th_walk = q2gunner_frames_walk;
+			e.th_run = q2gunner_frames_run;
+			e.th_pain = q2gunner_pain;
+			e.th_die = q2gunner_die;
+			e.th_missile = q2gunner_select_attack;
+			e.th_melee = q2gunner_attack_chain;
+			
+			e.sightSound = GUNNER_SOUND_SIGHT;
+			break;
+		case 13: //TODO: attach hover sound
+			localcmd ("ent_create monster_hover\n");
+			break;
+		case 14:
+			localcmd ("ent_create monster_mutant\n");
+			break;
+		case 15: //TODO: tank commander
+			break;
+		*/			
+	}
+		WriteByte (MSG_BROADCAST, SVC_TEMPENTITY);
+	WriteByte (MSG_BROADCAST, TE_TELEPORT);
+	WriteCoord (MSG_BROADCAST, self.origin_x);
+	WriteCoord (MSG_BROADCAST, self.origin_y);
+	WriteCoord (MSG_BROADCAST, self.origin_z);
+}	
+	
+	/*
 	e = spawn();
 	e.owner = self;	
 	e.origin = self.origin;

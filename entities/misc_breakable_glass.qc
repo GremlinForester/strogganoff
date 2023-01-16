@@ -27,11 +27,11 @@ void() breakable_glass_die =
 		//self.skin = 2;
 		
 		for (n= 0; n < 6; n++)
-			ThrowGib ("models/glass_debris_shard2.md3", self.health, GIB_GLASS, 1);
+			ThrowGib ("models/glass_debris_shard2.md3", self.health, GIB_GLASS, 1, 1);
 		for (n= 0; n < 4; n++)
-			ThrowGib ("models/glass_debris_shard1.md3", self.health, GIB_GLASS, 1);
+			ThrowGib ("models/glass_debris_shard1.md3", self.health, GIB_GLASS, 1, 1);
 		for (n= 0; n < 2; n++)
-			ThrowGib ("models/glass_debris1.md3", self.health, GIB_GLASS, 1);
+			ThrowGib ("models/glass_debris1.md3", self.health, GIB_GLASS, 1, 1);
 		
 		self.solid = SOLID_NOT;
 		self.takedamage = DAMAGE_NO;
@@ -42,8 +42,8 @@ void() breakable_glass_die =
 		pointparticles(particleeffectnum("TE_GLASS_SHATTER"), (self.origin + '0 -32 20'), '0 -32 0', 1);			
 	}
 	SUB_UseTargets();
-	bprint (ftos(self.health));
-	bprint ("\n");
+	//bprint (ftos(self.health));
+	//bprint ("\n");
 }
 
 void(entity inflictor, entity attacker, float damage, entity ignore) T_RadiusDamage;
@@ -74,8 +74,8 @@ void(entity attacker, float damage)	breakable_glass_pain =
 		sound (self, CHAN_VOICE, "glass_crack.wav", 1, ATTN_NORM);
 		self.touch = breakable_glass_touch;
 	}
-	bprint (ftos(self.health));
-	bprint ("\n");
+	//bprint (ftos(self.health));
+	//bprint ("\n");
 };
 
 void() misc_breakable_glass =
@@ -101,4 +101,35 @@ void() misc_breakable_glass =
 	
 	self.th_die = breakable_glass_die;
 	self.th_pain = breakable_glass_pain;
-}; 
+};
+
+entity(vector org) glass_new_pane =
+{
+  local entity pane, this;
+  local vector randomcolor;
+  
+  randomcolor_x = random();
+    randomcolor_y = random();
+	  randomcolor_z = random();
+
+  this = self;
+  pane = spawn();
+  self = pane;
+    self.classname = "breakable_glass_pane";
+	self.solid = SOLID_BSP;
+	self.movetype = MOVETYPE_NONE;
+	precache_model("models/glass64_cracked.MD3");
+	setorigin (self, org);
+	setmodel (self, "models/glass64_cracked.MD3");
+	self.health = 20;
+	self.takedamage = DAMAGE_YES;
+	self.touch = breakable_glass_touch;
+	self.th_die = breakable_glass_die;
+	self.th_pain = breakable_glass_pain;
+	self.colormod = randomcolor;
+	self.scale = 0.25;
+  self = this;
+  return pane;
+};
+
+

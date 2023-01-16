@@ -306,7 +306,7 @@ string(float f, float chars, string lead) FormatFloat
 void Hud_DrawIBar(vector pos)
 {
 //	drawpic(pos, "ibar", '320 24 0', '1 1 1', 0.333, 0);
-
+	/*
 	if (getstati(STAT_ACTIVEWEAPON) & WEP_SHOTGUN){
 		drawpic(pos+'0 8 0', "gfx/hud_shotgun", '32 16 0', '1 1 1', 1, 0);	
 	}
@@ -368,6 +368,77 @@ void Hud_DrawIBar(vector pos)
 	}
 	else if (getstati(STAT_Q2WEAPONS) & WEP_BFG){
 		drawpic(pos+'256 8 0', "gfx/hud_bfg", '32 16 0', '1 1 1', 0.5, 0);
+	}
+	*/
+
+	if (getstati(STAT_ACTIVEWEAPON) & WEP_BLASTER){
+		drawpic(pos+'0 8 0', "pics/w_blaster", '16 16 0', '1 1 1', 1, 0);	
+	}
+	else if (getstati(STAT_Q2WEAPONS) & WEP_BLASTER){
+		drawpic(pos+'0 8 0', "pics/w_blaster", '16 16 0', '1 1 1', 0.5, 0);
+	}
+
+	if (getstati(STAT_ACTIVEWEAPON) & WEP_SHOTGUN){
+		drawpic(pos+'16 8 0', "pics/w_shotgun", '16 16 0', '1 1 1', 1, 0);	
+	}
+	else if (getstati(STAT_Q2WEAPONS) & WEP_SHOTGUN){
+		drawpic(pos+'16 8 0', "pics/w_shotgun", '16 16 0', '1 1 1', 0.5, 0);
+	}
+	
+	if (getstati(STAT_ACTIVEWEAPON) & WEP_SUPERSHOTGUN){
+		drawpic(pos+'32 8 0', "pics/w_sshotgun", '16 16 0', '1 1 1', 1, 0);
+	}
+	else if (getstati(STAT_Q2WEAPONS) & WEP_SUPERSHOTGUN){
+		drawpic(pos+'32 8 0', "pics/w_sshotgun", '16 16 0', '1 1 1', 0.5, 0);
+	}
+
+	if (getstati(STAT_ACTIVEWEAPON) & WEP_MACHINEGUN){
+		drawpic(pos+'48 8 0', "pics/w_machinegun", '16 16 0', '1 1 1', 1, 0);
+	}
+	else if (getstati(STAT_Q2WEAPONS) & WEP_MACHINEGUN){
+		drawpic(pos+'48 8 0', "pics/w_machinegun", '16 16 0', '1 1 1', 0.5, 0);
+	}
+
+	if (getstati(STAT_ACTIVEWEAPON) & WEP_CHAINGUN){
+		drawpic(pos+'64 8 0', "pics/w_chaingun", '16 16 0', '1 1 1', 1, 0);
+	}
+	else if (getstati(STAT_Q2WEAPONS) & WEP_CHAINGUN){
+		drawpic(pos+'64 8 0', "pics/w_chaingun", '16 16 0', '1 1 1', 0.5, 0);
+	}
+
+	if (getstati(STAT_ACTIVEWEAPON) & WEP_GRENADE_LAUNCHER){
+		drawpic(pos+'80 8 0', "pics/w_glauncher", '16 16 0', '1 1 1', 1, 0);
+	}
+	else if (getstati(STAT_Q2WEAPONS) & WEP_GRENADE_LAUNCHER){
+		drawpic(pos+'80 8 0', "pics/w_glauncher", '16 16 0', '1 1 1', 0.5, 0);
+	}
+	
+	if (getstati(STAT_ACTIVEWEAPON) & WEP_ROCKET_LAUNCHER){
+		drawpic(pos+'96 8 0', "pics/w_rlauncher", '16 16 0', '1 1 1', 1, 0);
+	}
+	else if (getstati(STAT_Q2WEAPONS) & WEP_ROCKET_LAUNCHER){
+		drawpic(pos+'96 8 0', "pics/w_rlauncher", '16 16 0', '1 1 1', 0.5, 0);
+	}
+
+	if (getstati(STAT_ACTIVEWEAPON) & WEP_HYPERBLASTER){
+		drawpic(pos+'112 8 0', "pics/w_hyperblaster", '16 16 0', '1 1 1', 1, 0);
+	}
+	else if (getstati(STAT_Q2WEAPONS) & WEP_HYPERBLASTER){
+		drawpic(pos+'112 8 0', "pics/w_hyperblaster", '16 16 0', '1 1 1', 0.5, 0);
+	}
+	
+	if (getstati(STAT_ACTIVEWEAPON) & WEP_RAILGUN){
+		drawpic(pos+'128 8 0', "pics/w_railgun", '16 16 0', '1 1 1', 1, 0);
+	}
+	else if (getstati(STAT_Q2WEAPONS) & WEP_RAILGUN){
+		drawpic(pos+'128 8 0', "pics/w_railgun", '16 16 0', '1 1 1', 0.5, 0);
+	}
+	
+	if (getstati(STAT_ACTIVEWEAPON) & WEP_BFG){
+		drawpic(pos+'144 8 0', "pics/w_bfg", '16 16 0', '1 1 1', 1, 0);
+	}
+	else if (getstati(STAT_Q2WEAPONS) & WEP_BFG){
+		drawpic(pos+'144 8 0', "pics/w_bfg", '16 16 0', '1 1 1', 0.5, 0);
 	}
 	
 	drawpic(pos+'0 -2 0', "pics/a_shells", '10 10 0', '1 1 1', 0.85, 0);	
@@ -499,8 +570,8 @@ void Hud_DrawSBar(vector pos)
 
 	if (stat_items & IT_INVULNERABILITY)
 	{
-		drawpic(pos, "gfx/disc", '24 24 0', '1 1 1', 1, 0);
-		Hud_DrawLargeValue(pos+'24 0 0', 999, 25);
+		drawpic(pos+'0 -8 0', "gfx/disc", '24 24 0', '1 1 1', 1, 0);
+		Hud_DrawLargeValue(pos+'24 -8 0', 999, 25);
 	}
 	else
 	{
@@ -508,66 +579,67 @@ void Hud_DrawSBar(vector pos)
 		{
 		}
 		else{
-		Hud_DrawLargeValue(pos+'24 0 0', getstati(STAT_ARMOR), 25);
+		Hud_DrawLargeValue(pos+'24 -8 0', getstati(STAT_ARMOR), 25);
 		if (stat_items & IT_ARMOR_BODY)
-			drawpic(pos, "pics/i_bodyarmor", '24 24 0', '1 1 1', 1, 0);
+			drawpic(pos+'0 -8 0', "pics/i_bodyarmor", '24 24 0', '1 1 1', 1, 0);
 		else if (stat_items & IT_ARMOR_COMBAT)
-			drawpic(pos, "pics/i_combatarmor", '24 24 0', '1 1 1', 1, 0);
+			drawpic(pos+'0 -8 0', "pics/i_combatarmor", '24 24 0', '1 1 1', 1, 0);
 		else if (stat_items & IT_ARMOR_JACKET)
-			drawpic(pos, "pics/i_jacketarmor", '24 24 0', '1 1 1', 1, 0);
+			drawpic(pos+'0 -8 0', "pics/i_jacketarmor", '24 24 0', '1 1 1', 1, 0);
 		}
 	}
 	
 	local float skinnum = getstati(STAT_PLAYERSKIN)
+	local vector icon_offset = '106 -8 0';
 
 	if (getstati(STAT_PLAYERTYPE) == 0)
 	{
 	switch (skinnum)
 		{
 		case 0:
-			drawpic(pos+'106 0 0', "players/male/grunt_i", '0 24 0', '1 1 1', 1, 0);
+			drawpic(pos+icon_offset, "players/male/grunt_i", '0 24 0', '1 1 1', 1, 0);
 			break;
 		case 1:
-			drawpic(pos+'106 0 0', "players/male/cipher_i", '0 24 0', '1 1 1', 1, 0);
+			drawpic(pos+icon_offset, "players/male/cipher_i", '0 24 0', '1 1 1', 1, 0);
 			break;
 		case 2:
-			drawpic(pos+'106 0 0', "players/male/claymore_i", '0 24 0', '1 1 1', 1, 0);
+			drawpic(pos+icon_offset, "players/male/claymore_i", '0 24 0', '1 1 1', 1, 0);
 			break;
 		case 3:
-			drawpic(pos+'106 0 0', "players/male/flak_i", '0 24 0', '1 1 1', 1, 0);
+			drawpic(pos+icon_offset, "players/male/flak_i", '0 24 0', '1 1 1', 1, 0);
 			break;
 		case 4:
-			drawpic(pos+'106 0 0', "players/male/howitzer_i", '0 24 0', '1 1 1', 1, 0);
+			drawpic(pos+icon_offset, "players/male/howitzer_i", '0 24 0', '1 1 1', 1, 0);
 			break;
 		case 5:
-			drawpic(pos+'106 0 0', "players/male/major_i", '0 24 0', '1 1 1', 1, 0);
+			drawpic(pos+icon_offset, "players/male/major_i", '0 24 0', '1 1 1', 1, 0);
 			break;
 		case 6:
-			drawpic(pos+'106 0 0', "players/male/nightops_i", '0 24 0', '1 1 1', 1, 0);
+			drawpic(pos+icon_offset, "players/male/nightops_i", '0 24 0', '1 1 1', 1, 0);
 			break;
 		case 7:
-			drawpic(pos+'106 0 0', "players/male/pointman_i", '0 24 0', '1 1 1', 1, 0);
+			drawpic(pos+icon_offset, "players/male/pointman_i", '0 24 0', '1 1 1', 1, 0);
 			break;
 		case 8:
-			drawpic(pos+'106 0 0', "players/male/psycho_i", '0 24 0', '1 1 1', 1, 0);
+			drawpic(pos+icon_offset, "players/male/psycho_i", '0 24 0', '1 1 1', 1, 0);
 			break;
 		case 9:
-			drawpic(pos+'106 0 0', "players/male/rampage_i", '0 24 0', '1 1 1', 1, 0);
+			drawpic(pos+icon_offset, "players/male/rampage_i", '0 24 0', '1 1 1', 1, 0);
 			break;
 		case 10:
-			drawpic(pos+'106 0 0', "players/male/razor_i", '0 24 0', '1 1 1', 1, 0);
+			drawpic(pos+icon_offset, "players/male/razor_i", '0 24 0', '1 1 1', 1, 0);
 			break;
 		case 11:
-			drawpic(pos+'106 0 0', "players/male/recon_i", '0 24 0', '1 1 1', 1, 0);
+			drawpic(pos+icon_offset, "players/male/recon_i", '0 24 0', '1 1 1', 1, 0);
 			break;
 		case 12:
-			drawpic(pos+'106 0 0', "players/male/scout_i", '0 24 0', '1 1 1', 1, 0);
+			drawpic(pos+icon_offset, "players/male/scout_i", '0 24 0', '1 1 1', 1, 0);
 			break;
 		case 13:
-			drawpic(pos+'106 0 0', "players/male/sniper_i", '0 24 0', '1 1 1', 1, 0);
+			drawpic(pos+icon_offset, "players/male/sniper_i", '0 24 0', '1 1 1', 1, 0);
 			break;
 		case 14:
-			drawpic(pos+'106 0 0', "players/male/viper_i", '0 24 0', '1 1 1', 1, 0);
+			drawpic(pos+icon_offset, "players/male/viper_i", '0 24 0', '1 1 1', 1, 0);
 			break;			
 		}
 	}
@@ -576,34 +648,34 @@ void Hud_DrawSBar(vector pos)
 	switch (skinnum)
 		{
 		case 0:
-			drawpic(pos+'106 0 0', "players/female/athena_i", '0 24 0', '1 1 1', 1, 0);
+			drawpic(pos+icon_offset, "players/female/athena_i", '0 24 0', '1 1 1', 1, 0);
 			break;
 		case 1:
-			drawpic(pos+'106 0 0', "players/female/brianna_i", '0 24 0', '1 1 1', 1, 0);
+			drawpic(pos+icon_offset, "players/female/brianna_i", '0 24 0', '1 1 1', 1, 0);
 			break;
 		case 2:
-			drawpic(pos+'106 0 0', "players/female/cobalt_i", '0 24 0', '1 1 1', 1, 0);
+			drawpic(pos+icon_offset, "players/female/cobalt_i", '0 24 0', '1 1 1', 1, 0);
 			break;
 		case 3:
-			drawpic(pos+'106 0 0', "players/female/ensign_i", '0 24 0', '1 1 1', 1, 0);
+			drawpic(pos+icon_offset, "players/female/ensign_i", '0 24 0', '1 1 1', 1, 0);
 			break;
 		case 4:
-			drawpic(pos+'106 0 0', "players/female/jezebel_i", '0 24 0', '1 1 1', 1, 0);
+			drawpic(pos+icon_offset, "players/female/jezebel_i", '0 24 0', '1 1 1', 1, 0);
 			break;
 		case 5:
-			drawpic(pos+'106 0 0', "players/female/jungle_i", '0 24 0', '1 1 1', 1, 0);
+			drawpic(pos+icon_offset, "players/female/jungle_i", '0 24 0', '1 1 1', 1, 0);
 			break;
 		case 6:
-			drawpic(pos+'106 0 0', "players/female/lotus_i", '0 24 0', '1 1 1', 1, 0);
+			drawpic(pos+icon_offset, "players/female/lotus_i", '0 24 0', '1 1 1', 1, 0);
 			break;
 		case 7:
-			drawpic(pos+'106 0 0', "players/female/stiletto_i", '0 24 0', '1 1 1', 1, 0);
+			drawpic(pos+icon_offset, "players/female/stiletto_i", '0 24 0', '1 1 1', 1, 0);
 			break;
 		case 8:
-			drawpic(pos+'106 0 0', "players/female/venus_i", '0 24 0', '1 1 1', 1, 0);
+			drawpic(pos+icon_offset, "players/female/venus_i", '0 24 0', '1 1 1', 1, 0);
 			break;
 		case 9:
-			drawpic(pos+'106 0 0', "players/female/voodoo_i", '0 24 0', '1 1 1', 1, 0);
+			drawpic(pos+icon_offset, "players/female/voodoo_i", '0 24 0', '1 1 1', 1, 0);
 			break;			
 		}
 	}
@@ -612,125 +684,17 @@ void Hud_DrawSBar(vector pos)
 	switch (skinnum)
 		{
 		case 0:
-			drawpic(pos+'106 0 0', "players/cyborg/oni911_i", '0 24 0', '1 1 1', 1, 0);
+			drawpic(pos+icon_offset, "players/cyborg/oni911_i", '0 24 0', '1 1 1', 1, 0);
 			break;
 		case 1:
-			drawpic(pos+'106 0 0', "players/cyborg/ps9000_i", '0 24 0', '1 1 1', 1, 0);
+			drawpic(pos+icon_offset, "players/cyborg/ps9000_i", '0 24 0', '1 1 1', 1, 0);
 			break;
 		case 2:
-			drawpic(pos+'106 0 0', "players/cyborg/tyr574_i", '0 24 0', '1 1 1', 1, 0);
+			drawpic(pos+icon_offset, "players/cyborg/tyr574_i", '0 24 0', '1 1 1', 1, 0);
 			break;
 		}
 	}
 	/*
-	else
-	{
-		drawpic(pos+'112 0 0', "pics/i_health", '0 24 0', '1 1 1', 1, 0);
-	}
-	*/
-	/*
-	if (self.playerType == 0)
-	{
-	switch (self.skin)
-		{
-		case 0:
-			drawpic(pos+'106 0 0', "players/male/grunt_i", '0 24 0', '1 1 1', 1, 0);
-			break;
-		case 1:
-			drawpic(pos+'106 0 0', "players/male/cipher_i", '0 24 0', '1 1 1', 1, 0);
-			break;
-		case 2:
-			drawpic(pos+'106 0 0', "players/male/claymore_i", '0 24 0', '1 1 1', 1, 0);
-			break;
-		case 3:
-			drawpic(pos+'106 0 0', "players/male/flak_i", '0 24 0', '1 1 1', 1, 0);
-			break;
-		case 4:
-			drawpic(pos+'106 0 0', "players/male/howitzer_i", '0 24 0', '1 1 1', 1, 0);
-			break;
-		case 5:
-			drawpic(pos+'106 0 0', "players/male/major_i", '0 24 0', '1 1 1', 1, 0);
-			break;
-		case 6:
-			drawpic(pos+'106 0 0', "players/male/nightops_i", '0 24 0', '1 1 1', 1, 0);
-			break;
-		case 7:
-			drawpic(pos+'106 0 0', "players/male/pointman_i", '0 24 0', '1 1 1', 1, 0);
-			break;
-		case 8:
-			drawpic(pos+'106 0 0', "players/male/psycho_i", '0 24 0', '1 1 1', 1, 0);
-			break;
-		case 9:
-			drawpic(pos+'106 0 0', "players/male/rampage_i", '0 24 0', '1 1 1', 1, 0);
-			break;
-		case 10:
-			drawpic(pos+'106 0 0', "players/male/razor_i", '0 24 0', '1 1 1', 1, 0);
-			break;
-		case 11:
-			drawpic(pos+'106 0 0', "players/male/recon_i", '0 24 0', '1 1 1', 1, 0);
-			break;
-		case 12:
-			drawpic(pos+'106 0 0', "players/male/scout_i", '0 24 0', '1 1 1', 1, 0);
-			break;
-		case 13:
-			drawpic(pos+'106 0 0', "players/male/sniper_i", '0 24 0', '1 1 1', 1, 0);
-			break;
-		case 14:
-			drawpic(pos+'106 0 0', "players/male/viper_i", '0 24 0', '1 1 1', 1, 0);
-			break;			
-		}
-	}
-	else if (self.playerType == 1)
-	{
-	switch (self.skin)
-		{
-		case 0:
-			drawpic(pos+'106 0 0', "players/female/athena_i", '0 24 0', '1 1 1', 1, 0);
-			break;
-		case 1:
-			drawpic(pos+'106 0 0', "players/female/brianna_i", '0 24 0', '1 1 1', 1, 0);
-			break;
-		case 2:
-			drawpic(pos+'106 0 0', "players/female/cobalt_i", '0 24 0', '1 1 1', 1, 0);
-			break;
-		case 3:
-			drawpic(pos+'106 0 0', "players/female/ensign_i", '0 24 0', '1 1 1', 1, 0);
-			break;
-		case 4:
-			drawpic(pos+'106 0 0', "players/female/jezebel_i", '0 24 0', '1 1 1', 1, 0);
-			break;
-		case 5:
-			drawpic(pos+'106 0 0', "players/female/jungle_i", '0 24 0', '1 1 1', 1, 0);
-			break;
-		case 6:
-			drawpic(pos+'106 0 0', "players/female/lotus_i", '0 24 0', '1 1 1', 1, 0);
-			break;
-		case 7:
-			drawpic(pos+'106 0 0', "players/female/stiletto_i", '0 24 0', '1 1 1', 1, 0);
-			break;
-		case 8:
-			drawpic(pos+'106 0 0', "players/female/venus_i", '0 24 0', '1 1 1', 1, 0);
-			break;
-		case 9:
-			drawpic(pos+'106 0 0', "players/female/voodoo_i", '0 24 0', '1 1 1', 1, 0);
-			break;			
-		}
-	}
-	else if (self.playerType == 2)
-	{
-	switch (self.skin)
-		{
-		case 0:
-			drawpic(pos+'106 0 0', "players/cyborg/oni911_i", '0 24 0', '1 1 1', 1, 0);
-			break;
-		case 1:
-			drawpic(pos+'106 0 0', "players/cyborg/ps9000_i", '0 24 0', '1 1 1', 1, 0);
-			break;
-		case 2:
-			drawpic(pos+'106 0 0', "players/cyborg/tyr574_i", '0 24 0', '1 1 1', 1, 0);
-			break;
-		}
-	}
 	else
 	{
 		drawpic(pos+'112 0 0', "pics/i_health", '0 24 0', '1 1 1', 1, 0);
@@ -739,26 +703,26 @@ void Hud_DrawSBar(vector pos)
 	
 	//drawpic(pos+'112 0 0', "pics/i_health", '0 24 0', '1 1 1', 1, 0);
 
-	Hud_DrawLargeValue(pos+'136 0 0', getstati(STAT_HEALTH), 25);
+	Hud_DrawLargeValue(pos+'136 -8 0', getstati(STAT_HEALTH), 25);
 
 	if (stat_items & IT_SHELLS)
-		drawpic(pos+'224 0 0', "pics/a_shells", '24 24 0', '1 1 1', 1, 0);
+		drawpic(pos+'224 -8 0', "pics/a_shells", '24 24 0', '1 1 1', 1, 0);
 	else if (stat_items & IT_BULLETS)
-		drawpic(pos+'224 0 0', "pics/a_bullets", '24 24 0', '1 1 1', 1, 0);
+		drawpic(pos+'224 -8 0', "pics/a_bullets", '24 24 0', '1 1 1', 1, 0);
 	else if (stat_items & IT_ROCKETS)
-		drawpic(pos+'224 0 0', "pics/a_rockets", '24 24 0', '1 1 1', 1, 0);
+		drawpic(pos+'224 -8 0', "pics/a_rockets", '24 24 0', '1 1 1', 1, 0);
 	else if (stat_items & IT_CELLS)
-		drawpic(pos+'224 0 0', "pics/a_cells", '24 24 0', '1 1 1', 1, 0);
+		drawpic(pos+'224 -8 0', "pics/a_cells", '24 24 0', '1 1 1', 1, 0);
 	else if (stat_items & IT_SLUGS)
-		drawpic(pos+'224 0 0', "pics/a_slugs", '24 24 0', '1 1 1', 1, 0);
+		drawpic(pos+'224 -8 0', "pics/a_slugs", '24 24 0', '1 1 1', 1, 0);
 	else
-		drawpic(pos+'224 0 0', "pics/a_blaster", '24 24 0', '1 1 1', 1, 0);
+		drawpic(pos+'224 -8 0', "pics/a_blaster", '24 24 0', '1 1 1', 1, 0);
 	
 	if (getstati(STAT_ACTIVEWEAPON) & WEP_BLASTER){
 	//	Hud_DrawWeaponActive(0, pos+'0 8 0');
 	}
 	else{
-	Hud_DrawLargeValue(pos+'248 0 0', getstati(STAT_AMMO), 10);
+	Hud_DrawLargeValue(pos+'248 -8 0', getstati(STAT_AMMO), 10);
 	}
 	
 	local string itemImage = string_null;
@@ -768,28 +732,28 @@ void Hud_DrawSBar(vector pos)
 			itemImage = string_null;
 			break;
 		case INV_PICKUP_QUAD:
-			drawpic(pos+'0 -24 0', "pics/p_quad", '24 24 0', '1 1 1', 1, 0);
-			Hud_DrawAmmoCount(STAT_INV_QUAD, pos + '15 -8 0', true);
+			drawpic(pos+'0 -32 0', "pics/p_quad", '24 24 0', '1 1 1', 1, 0);
+			Hud_DrawAmmoCount(STAT_INV_QUAD, pos + '15 -16 0', true);
 			break;
 		case INV_PICKUP_REBREATHER:
-			drawpic(pos+'0 -24 0', "pics/p_rebreather", '24 24 0', '1 1 1', 1, 0);
-			Hud_DrawAmmoCount(STAT_INV_REBREATHER, pos + '15 -8 0', true);			
+			drawpic(pos+'0 -32 0', "pics/p_rebreather", '24 24 0', '1 1 1', 1, 0);
+			Hud_DrawAmmoCount(STAT_INV_REBREATHER, pos + '15 -16 0', true);			
 			break;
 		case INV_PICKUP_INVISIBILITY:
-			drawpic(pos+'0 -24 0', "pics/i_powerscreen", '24 24 0', '1 1 1', 1, 0);
-			Hud_DrawAmmoCount(STAT_INV_INVIS, pos + '15 -8 0', true);			
+			drawpic(pos+'0 -32 0', "pics/i_powerscreen", '24 24 0', '1 1 1', 1, 0);
+			Hud_DrawAmmoCount(STAT_INV_INVIS, pos + '15 -16 0', true);			
 			break;
 		case INV_PICKUP_SILENCER:
-			drawpic(pos+'0 -24 0', "gfx/i_silencer", '24 24 0', '1 1 1', 1, 0);
-			Hud_DrawAmmoCount(STAT_INV_SILENCER, pos + '15 -8 0', true);			
+			drawpic(pos+'0 -32 0', "pics/p_silencer", '24 24 0', '1 1 1', 1, 0);
+			Hud_DrawAmmoCount(STAT_INV_SILENCER, pos + '15 -16 0', true);			
 			break;
 		case INV_PICKUP_INVULNERABILITY:
-			drawpic(pos+'0 -24 0', "pics/p_invulnerability", '24 24 0', '1 1 1', 1, 0);
-			Hud_DrawAmmoCount(STAT_INVINVUL, pos + '15 -8 0', true);			
+			drawpic(pos+'0 -32 0', "pics/p_invulnerability", '24 24 0', '1 1 1', 1, 0);
+			Hud_DrawAmmoCount(STAT_INVINVUL, pos + '15 -16 0', true);			
 			break;
 		case INV_PICKUP_ENVIROSUIT:
-			drawpic(pos+'0 -24 0', "pics/p_envirosuit", '24 24 0', '1 1 1', 1, 0);
-			Hud_DrawAmmoCount(STAT_ENVIRO, pos + '15 -8 0', true);			
+			drawpic(pos+'0 -32 0', "pics/p_envirosuit", '24 24 0', '1 1 1', 1, 0);
+			Hud_DrawAmmoCount(STAT_ENVIRO, pos + '15 -16 0', true);			
 			break;
 //		case INV_PICKUP_JUMPBOOTS:
 //			drawpic(pos+'0 -24 0', "pics/p_envirosuit", '24 24 0', '1 1 1', 1, 0);
@@ -798,20 +762,28 @@ void Hud_DrawSBar(vector pos)
 	}
 
 	if (stat_items & IT_DOUBLER)
-		drawpic(pos+'96 -20 0', "gfx/i_silencer", '16 16 0', '1 1 1', 1, 0);
+		drawpic(pos+'96 -28 0', "pics/p_silencer", '16 16 0', '1 1 1', 1, 0);
 	if (stat_items & IT_BREATHER)
-		drawpic(pos+'112 -20 0', "pics/p_rebreather", '16 16 0', '1 1 1', 1, 0);
+		drawpic(pos+'112 -28 0', "pics/p_rebreather", '16 16 0', '1 1 1', 1, 0);
 	if (stat_items & IT_INVISIBILITY)
-		drawpic(pos+'128 -20 0', "pics/i_powerscreen", '16 16 0', '1 1 1', 1, 0);
+		drawpic(pos+'128 -28 0', "pics/i_powerscreen", '16 16 0', '1 1 1', 1, 0);
 	if (stat_items & IT_INVULNERABILITY)
-		drawpic(pos+'144 -20 0', "pics/p_invulnerability", '16 16 0', '1 1 1', 1, 0);
+		drawpic(pos+'144 -28 0', "pics/p_invulnerability", '16 16 0', '1 1 1', 1, 0);
 	if (stat_items & IT_SUIT)
-		drawpic(pos+'160 -20 0', "pics/p_envirosuit", '16 16 0', '1 1 1', 1, 0);
+		drawpic(pos+'160 -28 0', "pics/p_envirosuit", '16 16 0', '1 1 1', 1, 0);
 	if (stat_items & IT_QUAD)
-		drawpic(pos+'176 -20 0', "pics/p_quad", '16 16 0', '1 1 1', 1, 0);
+		drawpic(pos+'176 -28 0', "pics/p_quad", '16 16 0', '1 1 1', 1, 0);
 };
 
 float intermission_time;	/* when the intermission started */
+
+enum
+{
+	HUD_NONE,
+	HUD_DEATHMATCH,
+	HUD_COOP,
+	HUD_SP
+};
 
 nonstatic void Hud_Draw(float hudtype, float scoreboard, float width, float height)
 {

@@ -492,6 +492,8 @@ float() FindTarget =
 	
 	//Thanks coffee! https://www.quaddicted.com/webarchive/minion.planetquake.gamespy.com/tutorial/tutor8.htm
 	
+	
+	
 	if (self.attack_state == AS_ESCORTING)
 		return FALSE;
 
@@ -502,6 +504,7 @@ float() FindTarget =
 		self.th_walk();
 		return TRUE;
 	}	
+	
 	
 //
 // got one

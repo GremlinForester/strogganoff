@@ -1,3 +1,48 @@
+/*
+Idea: reusable library of effects that can be applied to any entity in the world.
+It basically creates an invisible 'job thread' entity that changes some property on its owner over time and eventually removes itself (and maybe the owner).
+
+It is meant to make it easy to add effects on a per-project basis.
+
+Instructions:
+
+during some frame call, call "thread(FADEOUT, self);"
+
+FADEOUT is a member of an enum or something.
+
+The entity is instantiated and begins thinking at time + delay.
+
+UNTESTED
+
+
+const float FADEOUT = 1;
+
+void() threadThinkFadeOut =
+{
+	
+	self.owner.alpha-=0.05;
+	
+	if (self.owner.alpha <= 0){
+		remove(self.owner);
+		remove(self);
+	}
+	
+	self.think = threadThinkFadeOut;
+	self.nextthink = time + 0.1;	
+}
+
+entity(float threadType, entity ent, float delay) thread =
+{
+	self.owner = ent;
+	
+	if (threadType == FADEOUT)
+	{
+		self.think = threadThinkFadeOut;
+		self.nextthink = time + delay;
+	}
+}
+*/
+
 void() teleporterAfterImageFadeOUT =
 {
 	if (self.alpha <= 0.1){
@@ -740,7 +785,7 @@ void(vector pos, string model, float skinnum, vector ColorMod, float additive) S
 		return;
 	}
 	
-	FLOG(other.numoverlays);
+	//FLOG(other.numoverlays);
 
 	//other.overlay_active_count++;	
 	overlay = spawn();

@@ -44,7 +44,7 @@ void() trigger_hub_on_state;
 void() sv_ext_hub_ini={
   local entity hubStateTrig;
 
-  registercvar(SV_CVAR_HUB, "0");
+  registercvar(SV_CVAR_HUB, "0"); 
   registercvar(SV_CVAR_HUB_STATE, "0");
   registercvar(SV_CVAR_HUB_MAP, "");
 

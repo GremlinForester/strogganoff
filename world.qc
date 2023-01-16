@@ -215,6 +215,21 @@ void() main =
 	precache_file2 ("maps/dm6.bsp");
 };
 
+/*
+void() spawnsomebots =
+{
+local float f;
+
+	if (deathmatch)
+	{
+		if (cvar("numbots") < cvar("maxplayers"))
+		{
+			f = cvar("skill");
+			BotConnect(0, 0, f);
+		}
+	}	
+}
+*/
 
 entity	lastspawn;
 
@@ -351,7 +366,8 @@ void() worldspawn =
 	if (self.model == "maps/e1m8.bsp")
 		cvar_set ("sv_gravity", "100");
 	else
-		cvar_set ("sv_gravity", "800");
+		cvar_set ("sv_gravity", "800");	
+	
 /*
 
 Quake 2 MP Map ladder volumes
@@ -591,6 +607,8 @@ Quake 2 MP Map ladder volumes
 
 	// 63 testing
 	lightstyle(63, "a");
+	
+
 };
 
 void() StartFrame =
@@ -607,7 +625,6 @@ void() StartFrame =
 	BotFrame(); 
 
 #endif
-
 };
 
 /*

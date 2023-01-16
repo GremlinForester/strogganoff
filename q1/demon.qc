@@ -225,9 +225,9 @@ void() demon_die =
 	{
 		sound (self, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
 		ThrowHead ("progs/h_demon.mdl", self.health);
-		ThrowGib ("progs/gib1.mdl", self.health, GIB_FLESH, 1);
-		ThrowGib ("progs/gib1.mdl", self.health, GIB_FLESH, 1);
-		ThrowGib ("progs/gib1.mdl", self.health, GIB_FLESH, 1);
+		ThrowGib ("progs/gib1.mdl", self.health, GIB_FLESH, 1, 1);
+		ThrowGib ("progs/gib1.mdl", self.health, GIB_FLESH, 1, 1);
+		ThrowGib ("progs/gib1.mdl", self.health, GIB_FLESH, 1, 1);
 		return;
 	}
 
@@ -248,7 +248,6 @@ void() Demon_MeleeAttack =
 
 */
 
-#ifndef q2monster_replace_demon
 void() monster_demon1 =
 {
 	if (deathmatch)
@@ -284,7 +283,6 @@ void() monster_demon1 =
 
 	walkmonster_start;
 };
-#endif
 
 /*
 ==============================================================================

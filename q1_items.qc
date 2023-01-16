@@ -420,10 +420,10 @@ void() item_armor2 =
 	StartItem ();
 };
 
-/*QUAKED item_armorInv (0 .5 .8) (-16 -16 0) (16 16 32)
+/*QUAKED item_armor (0 .5 .8) (-16 -16 0) (16 16 32)
 */
 
-void() item_armorInv =
+void() item_armor =
 {
 	self.touch = armor_touch;
 	precache_model ("progs/armor.mdl");

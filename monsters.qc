@@ -108,11 +108,11 @@ void() gibMonster =
 	
 	//everyone gets a little meat	
 	for (n= 0; n < 2; n++)
-		ThrowGib ("models/objects/gibs/bone/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 1);
+		ThrowGib ("models/objects/gibs/bone/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 1, 1);
 	for (n= 0; n < 4; n++)
-		ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 1);
+		ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 1, 1);
 	for (n= 0; n < 3; n++)
-		ThrowGib ("models/objects/gibs/bone2/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 1);	
+		ThrowGib ("models/objects/gibs/bone2/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 1, 1);	
 	
 	//Explosive Monsters
 	if (self.classname == "monster_hover"
@@ -131,12 +131,12 @@ void() gibMonster =
 			T_RadiusDamage (self, self.owner, 5, other);	
 		}
 		
-		ThrowGib ("models/objects/debris1/tris.md2", self.health * GIB_VELOCITY_FLAMING_MUL, GIB_FLAMING, 1);
-		ThrowGib ("models/objects/debris2/tris.md2", self.health * GIB_VELOCITY_FLAMING_MUL, GIB_FLAMING, 1);
-		ThrowGib ("models/objects/debris3/tris.md2", self.health * GIB_VELOCITY_FLAMING_MUL, GIB_FLAMING, 1);
-		ThrowGib ("models/objects/gibs/skull/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 1);
+		ThrowGib ("models/objects/debris1/tris.md2", self.health, GIB_FLAMING, 1, GIB_VELOCITY_FLAMING_MUL);
+		ThrowGib ("models/objects/debris2/tris.md2", self.health, GIB_FLAMING, 1, GIB_VELOCITY_FLAMING_MUL);
+		ThrowGib ("models/objects/debris3/tris.md2", self.health, GIB_FLAMING, 1, GIB_VELOCITY_FLAMING_MUL);
+		ThrowGib ("models/objects/gibs/skull/tris.md2", self.health, GIB_FLESH, 1, 1);
 		for (n= 0; n < 2; n++){
-		ThrowGib ("models/objects/gibs/gear/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_METAL, 0.75);
+		ThrowGib ("models/objects/gibs/gear/tris.md2", self.health, GIB_METAL, 0.75, 1);
 		}
 
 		sound (self, CHAN_BODY, "weapons/r_exp3.wav", 1, ATTN_NORM);
@@ -150,12 +150,12 @@ void() gibMonster =
 	
 	if (self.classname == "monster_floater")
 	{
-		ThrowGib ("models/objects/debris1/tris.md2", self.health * GIB_VELOCITY_FLAMING_MUL, GIB_FLAMING, 1);
-		ThrowGib ("models/objects/debris2/tris.md2", self.health * GIB_VELOCITY_FLAMING_MUL, GIB_FLAMING, 1);
-		ThrowGib ("models/objects/debris3/tris.md2", self.health * GIB_VELOCITY_FLAMING_MUL, GIB_FLAMING, 1);
-		ThrowGib ("models/objects/gibs/skull/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 1);
+		ThrowGib ("models/objects/debris1/tris.md2", self.health * GIB_VELOCITY_FLAMING_MUL, GIB_FLAMING, 1, 1);
+		ThrowGib ("models/objects/debris2/tris.md2", self.health * GIB_VELOCITY_FLAMING_MUL, GIB_FLAMING, 1, 1);
+		ThrowGib ("models/objects/debris3/tris.md2", self.health * GIB_VELOCITY_FLAMING_MUL, GIB_FLAMING, 1, 1);
+		ThrowGib ("models/objects/gibs/skull/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 1, 1);
 		for (n= 0; n < 2; n++){
-		ThrowGib ("models/objects/gibs/gear/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_METAL, 1);
+		ThrowGib ("models/objects/gibs/gear/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_METAL, 1, 1);
 		}
 		
 		T_RadiusDamage (self, self.owner, 10, other);
@@ -180,8 +180,8 @@ void() gibMonster =
 	|| self.classname == "monster_chick"
 	|| self.classname == "monster_parasite")
 	{
-		ThrowGib ("models/objects/gibs/chest/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 0.75);
-		ThrowGib ("models/objects/gibs/head2/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 1);
+		ThrowGib ("models/objects/gibs/chest/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 0.75, 1);
+		ThrowGib ("models/objects/gibs/head2/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 1, 1);
 	}	
 	
 /*
@@ -542,7 +542,8 @@ void() monster_go =
 
 void(float flg) monster_start =
 {
-	self.dphitcontentsmask = self.dphitcontentsmask | (DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_MONSTERCLIP | DPCONTENTS_DONOTENTER| DPCONTENTS_BOTCLIP | DPCONTENTS_WATER);
+	//self.dphitcontentsmask = self.dphitcontentsmask | (DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_MONSTERCLIP | DPCONTENTS_DONOTENTER| DPCONTENTS_BOTCLIP | DPCONTENTS_WATER);
+	self.dphitcontentsmask = self.dphitcontentsmask | (DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_MONSTERCLIP | DPCONTENTS_DONOTENTER| DPCONTENTS_BOTCLIP);
 
 // this fires specific code in monster_go
 	self.flags = self.flags | flg;

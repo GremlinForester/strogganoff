@@ -54,7 +54,7 @@ void(vector entOrg, vector aimAngle, float speed, float damage, float clr, float
 //		if (self.shotcount >= 2)
 		if (self.weaponframe == 6 || self.weaponframe == 9)
 		{
-			newmis.color = '1 0 0'; // color (does not affect radius), typical value '1 1 1' (bright white), can be up to '255 255 255' (nuclear blast)
+			newmis.color = '1 0.5 0'; // color (does not affect radius), typical value '1 1 1' (bright white), can be up to '255 255 255' (nuclear blast)
 			newmis.style = 6; // light style (like normal light entities, flickering torches or switchable, etc)
 			newmis.pflags = PFLAGS_NOSHADOW | PFLAGS_FULLDYNAMIC;
 			newmis.glow_color = clr;
@@ -66,7 +66,7 @@ void(vector entOrg, vector aimAngle, float speed, float damage, float clr, float
 	
 	if (self.weapon == WEP_BLASTER)
 	{
-			newmis.color = '1 0 0'; // color (does not affect radius), typical value '1 1 1' (bright white), can be up to '255 255 255' (nuclear blast)
+			newmis.color = '1 0.5 0'; // color (does not affect radius), typical value '1 1 1' (bright white), can be up to '255 255 255' (nuclear blast)
 			newmis.style = 6; // light style (like normal light entities, flickering torches or switchable, etc)
 			newmis.pflags = PFLAGS_NOSHADOW | PFLAGS_FULLDYNAMIC; // flags (see PFLAGS_ constants)
 			newmis.glow_color = clr;

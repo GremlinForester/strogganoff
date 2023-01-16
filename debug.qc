@@ -54,7 +54,7 @@
 //		- trigger_jctest just changes a lightstyle, and can have a dprint
 
 // with no obvious use, they can be blocked from compiling by commenting out this define:
-#define idtest
+//#define idtest
 
 #ifdef idtest
 
@@ -220,3 +220,5 @@ void() item_deathball =
 	self.touch = deathball_touch;
 };
 */
+
+#endif

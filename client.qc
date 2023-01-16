@@ -391,6 +391,7 @@ void() DecodeLevelParms =
 	self.inv_pickup_envirosuit = parm18;
 	self.playerType = parm19;
 	self.upgrade_blaster_level = parm20;
+	
 };
 
 /*
@@ -737,6 +738,7 @@ SelectSpawnPoint
 Returns the entity to spawn at
 ============
 */
+/*
 entity() SelectSpawnPoint =
 {
 	local	entity spot;
@@ -745,6 +747,118 @@ entity() SelectSpawnPoint =
 	
 // testinfo_player_start is only found in regioned levels
 	spot = find (world, classname, "testplayerstart");
+	if (spot)
+		return spot;
+		
+// choose a info_player_deathmatch point
+	if (coop)
+	{
+    //Stroggannoff - check for cool new co-op spawns.
+    spot = selectCoopSpawnPoint();
+    if(spot){
+      return spot;
+    }
+    else{
+      //Stroggannoff - we didn't find hip new co-op spawns, defaulting behavior.
+      lastspawn = find(lastspawn, classname, "info_player_coop");
+      if (! lastspawn){// == world)
+        lastspawn = find (lastspawn, classname, "info_player_start");
+      }
+      if (lastspawn){ // != world)
+        return lastspawn;
+      }
+    }
+	}
+	else if (deathmatch)
+	{
+		spot = lastspawn;
+		while (1)
+		{
+			spot = find(spot, classname, "info_player_deathmatch");
+			if (spot) // != world)
+			{
+				if (spot == lastspawn)
+					return lastspawn;
+				pcount = 0;
+				thing = findradius(spot.origin, 32);
+				while(thing)
+				{
+					if (thing.classname == "player")
+						pcount = pcount + 1;
+					thing = thing.chain;
+				}
+				if (! pcount) // == 0)
+				{
+					lastspawn = spot;
+					return spot;
+				}
+			}
+		}
+	}
+
+	if (serverflags)
+	{	// return with a rune to start
+		spot = find (world, classname, "info_player_start2");
+		if (spot)
+			return spot;
+	}
+	
+	spot = find (world, classname, "info_player_start");
+	if (!spot)
+#ifdef noobjerr
+	{
+// later use our uber random find dest
+		spot = find (world, classname, "info_player_deathmatch");
+		if (!spot) spot = find (world, classname, "info_teleport_destination");
+		if (!spot) spot = find (world, classname, "info_intermission");
+		if (!spot)
+		{
+			spot = spawn(); // bounce player in at 0, 0, 0 - might be a bad move
+			spot.classname =  "info_player_start"; // save for DM / coop spawns
+		}
+
+	}
+#else
+		error ("PutClientInServer: no info_player_start on level");					//opgrade protected
+#endif
+	
+	return spot;
+};
+*/
+
+var string autocvar_q2_spawnspot;
+
+entity() SelectSpawnPoint =
+{
+	local	entity spot;
+	local	entity thing;
+	local	float  pcount;
+
+	//spot = find (world, classname, "info_player_start");
+	spot = find (world, targetname, autocvar_q2_spawnspot);
+
+	if (autocvar_q2_spawnspot != "")
+	{
+		if (spot)
+		{
+			return spot;
+		}
+	}
+	else
+	{
+		spot = find (world, classname, "info_player_start");
+	}
+
+	/*
+	if (spot.targetname == autocvar_q2spawnspot)
+	{
+		return spot;
+	}
+	*/
+	
+// testinfo_player_start is only found in regioned levels
+	spot = find (world, classname, "testplayerstart");
+	
 	if (spot)
 		return spot;
 		
@@ -873,7 +987,7 @@ void(entity ent) setPlayerModel =
 		setsize (ent, VEC_HULL_MIN, VEC_HULL_MAX);
 	}
 	
-	ent.skin = 0;	
+	//ent.skin = 0;	
 }
 
 /*
@@ -941,20 +1055,18 @@ void() PutClientInServer =
 // paustime is set by teleporters to keep the player from moving a while
 	self.pausetime = 0;
 
-	/*
-	if (autocvar_cl_playertype == PT_MALE)
+	if (cvar("cl_playertype") == PT_MALE)
 	{
 		self.playerType = PT_MALE;
 	}
-	if (autocvar_cl_playertype == PT_FEMALE)
+	if (cvar("cl_playertype") == PT_FEMALE)
 	{
 		self.playerType = PT_FEMALE;
 	}
-	if (autocvar_cl_playertype == PT_OTHER)
+	if (cvar("cl_playertype") == PT_OTHER)
 	{
 		self.playerType = PT_OTHER;
 	}
-	*/
 	
 //	spot = SelectSpawnPoint ();
 
@@ -2019,7 +2131,7 @@ void() PlayerPostThink =
 		else if (self.jump_flag < -650)
 		{
 			T_Damage (self, world, world, fall_damage);
-			FLOG(fall_damage);
+			//FLOG(fall_damage);
 			//sound (self, CHAN_VOICE, "player/land2.wav", 1, ATTN_NORM);
 			playerVOSound(PLAYER_VOICE_LAND1);
 			self.deathtype = "falling";

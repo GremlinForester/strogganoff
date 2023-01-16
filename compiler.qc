@@ -462,16 +462,10 @@ void() t_on
 //#define q2model_lighting
 
 //#define q2monster_replace_soldier
-//#define q2monster_replace_demon
 
 // Quake 2 Strogg Replacements
-// Replaces Quake 1 monsters with Quake 2 counterparts
-
 #ifdef q2monster_replace_soldier
 #message			-- compile: Replace Quake 1 Soldier with Quake 2 Soldier 
-#endif
-#ifdef q2monster_replace_demon
-#message			-- compile: Replace Quake 1 Demon with Quake 2 Mutant 
 #endif
 
 #define misc_insane_weapon_pickup

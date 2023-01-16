@@ -464,7 +464,7 @@ void() q2soldier_dead =
 
 framer($death101, $death136, q2soldier_die1, SUB_Null, 0.1,
 	
-	frame_arb($death103,
+	frame_arb($death101,
 
 		q2soldier_dead();
 	);
@@ -483,7 +483,7 @@ framer($death101, $death136, q2soldier_die1, SUB_Null, 0.1,
 
 framer($death201, $death235, q2soldier_die2, SUB_Null, 0.1,
 	
-	frame_arb($death203,
+	frame_arb($death201,
 
 		q2soldier_dead();
 	);
@@ -493,14 +493,14 @@ framer($death201, $death235, q2soldier_die2, SUB_Null, 0.1,
 
 framer($death301, $death345, q2soldier_die3, SUB_Null, 0.1,
 	
-	frame_arb($death303, q2soldier_dead(););
+	frame_arb($death301, q2soldier_dead(););
 );
 
 // DEATH 4
 
 framer($death401, $death453, q2soldier_die4, SUB_Null, 0.1,
 	
-	frame_arb($death402,
+	frame_arb($death401,
 
 		q2soldier_dead();
 	);
@@ -510,7 +510,7 @@ framer($death401, $death453, q2soldier_die4, SUB_Null, 0.1,
 
 framer($death501, $death524, q2soldier_die5, SUB_Null, 0.1,
 	
-	frame_arb($death502,
+	frame_arb($death501,
 
 		q2soldier_dead();
 	);
@@ -520,7 +520,7 @@ framer($death501, $death524, q2soldier_die5, SUB_Null, 0.1,
 
 framer($death601, $death610, q2soldier_die6, SUB_Null, 0.1,
 	
-	frame_arb($death602,
+	frame_arb($death601,
 
 		q2soldier_dead();
 	);
@@ -539,11 +539,12 @@ void() q2soldier_die =
 
 	self.takedamage = DAMAGE_YES;
 
- 	if (self.deadflag == DEAD_DEAD){
+ 	if (self.deadflag == DEAD_DEAD)//{
 		return;
-	}
-	else
-	{
+//	}
+//	else
+//	{
+	
 	// regular death
 	sound (self, CHAN_VOICE, "soldier/soldeth2.wav", 1, ATTN_NORM);
 	self.deadflag = DEAD_DEAD;
@@ -562,7 +563,7 @@ void() q2soldier_die =
 	else if (r < 4) q2soldier_die4 ();
 	else if (r < 5) q2soldier_die5 ();
 	else            q2soldier_die6 ();
-	}
+//	}
 };
 
 void()	q2soldier_selectwalk =
@@ -747,6 +748,8 @@ void () monster_soldier_flak =
 	self.skin = 6; //machinegun
 }
 
+//these should be server cvars, play through a q1 map and decide how much q2 you want in 
+//there by percentage q1_strogg_monster_replacement_chance (or something shorter)
 
 #ifdef q2monster_replace_soldier
 void() monster_army =

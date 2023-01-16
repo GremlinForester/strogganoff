@@ -784,7 +784,7 @@ void() q2key_touch =
 	stuffcmd (other, "bf\n");
 	other.items_q2keys = other.items_q2keys | self.items_q2keys;
 
-	FLOG(self.items_q2keys);
+	//FLOG(self.items_q2keys);
 
 	if (!coop)
 	{	

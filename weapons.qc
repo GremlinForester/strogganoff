@@ -46,8 +46,8 @@ float() W_CheckNoAmmo =
 		return TRUE;
 	}
 	self.weapon_next = W_BestWeapon ();
-  bprint(ftos(self.weapon_next));   //debug
-  bprint("\n");
+  //bprint(ftos(self.weapon_next));   //debug
+  //bprint("\n");
   //override state system
 	self.weaponstate_next = WEAPON_DROPPING;
 	return FALSE;
@@ -92,12 +92,13 @@ void() W_ImpulseChangeWeapon =
 		self.impulse = 0;	//consume events
 		return;
 	}
+	/*
 	if (cvar("developer")){
 	bprint("W_ChangeWeapon state = ");	//debug
 	bprint(ftos(self.weaponstate));	//debug
 	bprint("\n");	//debug
 	}
-		
+	*/
 	switch (self.impulse){
 		case IMPULSE_USE_WEAPON1:
 			wep = WEP_BLASTER;

@@ -166,8 +166,8 @@ void() model_static_use =
 					
 void(entity attacker, float damage)	model_static_pain =
 {
-	bprint (ftos(self.health));
-	bprint ("\n");
+	//bprint (ftos(self.health));
+	//bprint ("\n");
 };
 
 void() model_static_die =
@@ -179,57 +179,57 @@ void() model_static_die =
 	{
 		break_sound = "misc/udeath.wav";
 			for (n= 0; n < 2; n++)
-				ThrowGib ("models/objects/gibs/bone/tris.md2", self.health, GIB_FLESH, 1);
+				ThrowGib ("models/objects/gibs/bone/tris.md2", self.health, GIB_FLESH, 1, 1);
 			for (n= 0; n < 4; n++)
-				ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health, GIB_FLESH, 1);
+				ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health, GIB_FLESH, 1, 1);
 			for (n= 0; n < 3; n++)
-				ThrowGib ("models/objects/gibs/bone2/tris.md2", self.health, GIB_FLESH, 1);
+				ThrowGib ("models/objects/gibs/bone2/tris.md2", self.health, GIB_FLESH, 1, 1);
 	}
 	else if (self.material == 3)
 	{
 			for (n= 0; n < 2; n++)
-				ThrowGib ("models/objects/debris1/tris.md2", self.health, GIB_METAL, 1);
+				ThrowGib ("models/objects/debris1/tris.md2", self.health, GIB_METAL, 1, 1);
 			for (n= 0; n < 3; n++)
-				ThrowGib ("models/objects/debris2/tris.md2", self.health, GIB_METAL, 1);
+				ThrowGib ("models/objects/debris2/tris.md2", self.health, GIB_METAL, 1, 1);
 			for (n= 0; n < 4; n++)
-				ThrowGib ("models/objects/debris3/tris.md2", self.health, GIB_METAL, 1);				
+				ThrowGib ("models/objects/debris3/tris.md2", self.health, GIB_METAL, 1, 1);				
 	}
 	else if (self.material == 4)
 	{
 			for (n= 0; n < 2; n++)
-				ThrowGib ("models/objects/debris1/tris.md2", self.health, GIB_FLAMING, 1);
+				ThrowGib ("models/objects/debris1/tris.md2", self.health, GIB_FLAMING, 1, 1);
 			for (n= 0; n < 3; n++)
-				ThrowGib ("models/objects/debris2/tris.md2", self.health, GIB_FLAMING, 1);
+				ThrowGib ("models/objects/debris2/tris.md2", self.health, GIB_FLAMING, 1, 1);
 			for (n= 0; n < 4; n++)
-				ThrowGib ("models/objects/debris3/tris.md2", self.health, GIB_FLAMING, 1);	
+				ThrowGib ("models/objects/debris3/tris.md2", self.health, GIB_FLAMING, 1, 1);	
 	}
 	else if (self.material == 5)
 	{
 			sound (self, CHAN_VOICE, "world/brkglas.wav", 1, ATTN_NORM);
 			for (n= 0; n < 2; n++)
-				ThrowGib ("models/objects/debris1/tris.md2", self.health, GIB_GLASS, 1);
+				ThrowGib ("models/objects/debris1/tris.md2", self.health, GIB_GLASS, 1, 1);
 			for (n= 0; n < 3; n++)
-				ThrowGib ("models/objects/debris2/tris.md2", self.health, GIB_GLASS, 1);
+				ThrowGib ("models/objects/debris2/tris.md2", self.health, GIB_GLASS, 1, 1);
 			for (n= 0; n < 4; n++)
-				ThrowGib ("models/objects/debris3/tris.md2", self.health, GIB_GLASS, 1);				
+				ThrowGib ("models/objects/debris3/tris.md2", self.health, GIB_GLASS, 1, 1);				
 	}
 	else if (self.material == 6)
 	{
 			for (n= 0; n < 2; n++)
-				ThrowGib ("models/objects/debris1/tris.md2", self.health, GIB_WOOD, 1);
+				ThrowGib ("models/objects/debris1/tris.md2", self.health, GIB_WOOD, 1, 1);
 			for (n= 0; n < 3; n++)
-				ThrowGib ("models/objects/debris2/tris.md2", self.health, GIB_WOOD, 1);
+				ThrowGib ("models/objects/debris2/tris.md2", self.health, GIB_WOOD, 1, 1);
 			for (n= 0; n < 4; n++)
-				ThrowGib ("models/objects/debris3/tris.md2", self.health, GIB_WOOD, 1);			
+				ThrowGib ("models/objects/debris3/tris.md2", self.health, GIB_WOOD, 1, 1);			
 	}
 	else if (self.material == 7)
 	{
 			for (n= 0; n < 2; n++)
-				ThrowGib ("models/objects/debris1/tris.md2", self.health, GIB_STONE, 1);
+				ThrowGib ("models/objects/debris1/tris.md2", self.health, GIB_STONE, 1, 1);
 			for (n= 0; n < 3; n++)
-				ThrowGib ("models/objects/debris2/tris.md2", self.health, GIB_STONE, 1);
+				ThrowGib ("models/objects/debris2/tris.md2", self.health, GIB_STONE, 1, 1);
 			for (n= 0; n < 4; n++)
-				ThrowGib ("models/objects/debris3/tris.md2", self.health, GIB_STONE, 1);			
+				ThrowGib ("models/objects/debris3/tris.md2", self.health, GIB_STONE, 1, 1);			
 	}	
 
 	self.solid = SOLID_NOT;

@@ -1,3 +1,8 @@
+//Weapon idle pause frames
+.float pausemin;
+.float pausemax;
+.float idletime;
+
 // func_liquid & func_ladder
 .float fwatershift;
 .float fwatershifttime;
@@ -135,6 +140,8 @@ For Monster Customization/Debugging, sets default values. Can be changed by exec
 //BERSERK
 var float autocvar_sk_q2berserk_health = 240;
 var float autocvar_sk_q2berserk_melee_damage = 20;
+var float autocvar_sk_q2berserk_radial_damage = 30;
+var float autocvar_sk_q2berserk_slam_range = 150;
 
 //BRAIN
 var float autocvar_sk_q2brain_melee_damage = 3;

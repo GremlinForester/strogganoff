@@ -319,12 +319,3 @@ void() monster_mutant =
 	walkmonster_start;
 };
 
-//MrC FixMe: Mutant replacement in E1M2 crashes, seems related to th_missile 
-
-#ifdef q2monster_replace_demon
-void() monster_demon1 =
-{
-	monster_mutant ();
-};
-#endif
-

@@ -320,38 +320,22 @@ current
 void() W_ChangeWeapon = 
 {
 	local float i;
+	local string readySfx;
 
 	if (self.grenade_time)
 	{
 		self.grenade_time = 0;
-		//ent->client->weapon_sound = 0;
-		//weapon_grenade_fire (ent, false);
 		self.grenade_time = 0;
 	}
+
+	self.pausemin = 50; 
+	self.pausemax = 100;
 
 	self.lastweapon = self.weapon;
 	self.weapon = self.weapon_next;
 	self.weapon_next = 0;
 	self.machinegun_shots = 0;
 
-	// set visible model
-	//TODO
-	/*if (self.modelindex == 255) {
-		if (self.weapon)
-			i = ((ent->client->pers.weapon->weapmodel & 0xff) << 8);
-		else
-			i = 0;
-		ent->s.skinnum = (ent - g_edicts - 1) | i;
-	}*/
-
-	/*
-		TODO - ammo index
-	if (self.weapon && ent->client->pers.weapon->ammo)
-		self.ammo_index = ITEM_INDEX(FindItem(ent->client->pers.weapon->ammo));
-	else
-		self.ammo_index = 0;
-	*/
-	
 	if (!self.weapon)
 	{	// dead
 		self.weaponmodel = "";
@@ -360,10 +344,7 @@ void() W_ChangeWeapon =
 
 	self.weaponstate = WEAPON_ACTIVATING;
 	self.weaponframe = 0;
-	
-	//TODO - gun model
-	//ent->client->ps.gunindex = gi.modelindex(ent->client->pers.weapon->view_model);
-	local string readySfx;
+
 	switch(self.weapon){
 		case WEP_BLASTER:
 			readySfx = "weapons/HGRENT1A.WAV";
@@ -546,7 +527,8 @@ void() W_WeaponAnimate={
 	}
 };
 */
-void() W_WeaponAnimate={
+void() W_WeaponAnimate =
+{
 	if( time > self.weapon_think )
 	{
 		if (self.weaponstate == WEAPON_ACTIVATING || self.weaponstate == WEAPON_DROPPING)
@@ -582,8 +564,7 @@ void() q2playeronly_8attackframes;
 /*
 doPlayerframes
 This is called in weapon_generic. 
-It calls the appropriate player animation during weapon WEAPON_READY if WEAPON_FIRING.
-
+It calls the appropriate player animation during WEAPON_READY/WEAPON_FIRING.
 */
 void() doPlayerframes =
 {
@@ -667,9 +648,9 @@ void(float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRAME_IDLE_LAST, fl
 			W_ChangeWeapon();
 			return;
 		}
+		/*
 		else if ((FRAME_DEACTIVATE_LAST - self.weaponframe) == 4)
 		{
-			/*
 			if (self.flags & FL_DUCKED)
 			{
 				q2player_wepSwitchCrouch();
@@ -678,8 +659,8 @@ void(float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRAME_IDLE_LAST, fl
 			{
 				q2player_wepSwitchStand();
 			}
-			*/
 		}
+		*/
 		self.weaponframe++;
 		return;
 	}
@@ -700,11 +681,11 @@ void(float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRAME_IDLE_LAST, fl
 	{
 		self.weaponstate = WEAPON_DROPPING;
 		self.weaponframe = FRAME_DEACTIVATE_FIRST;
-
+		/*
 		if ((FRAME_DEACTIVATE_LAST - FRAME_DEACTIVATE_FIRST) < 4)
 		{
 			//TODO - player model anim syncing
-			/*
+
 			if (self.flags & FL_DUCKED)
 			{
 				q2player_wepSwitchCrouch();
@@ -713,8 +694,9 @@ void(float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRAME_IDLE_LAST, fl
 			{
 				q2player_wepSwitchStand();
 			}
-			*/
+
 		}
+		*/
 		return;
 	}
 
@@ -723,7 +705,7 @@ void(float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRAME_IDLE_LAST, fl
 		if ( self.button0 )
 		{
 			self.button0 = 0;
-			if ( !self.ammo_index || W_Ammo_Amount(self.ammo_index) >= self.weapon_ammo_min)	//ent->client->pers.weapon->quantity
+			if ( !self.ammo_index || W_Ammo_Amount(self.ammo_index) >= self.weapon_ammo_min)
 			{
 				self.weaponframe = FRAME_FIRE_FIRST;
 				self.weaponstate = WEAPON_FIRING;
@@ -743,6 +725,7 @@ void(float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRAME_IDLE_LAST, fl
 				self.weaponframe = FRAME_IDLE_FIRST;
 				return;
 			}
+			
 			if (self.weapon_pause_frames)
 			{
 				if(self.weapon_pause_frames()){
@@ -750,6 +733,26 @@ void(float FRAME_ACTIVATE_LAST, float FRAME_FIRE_LAST, float FRAME_IDLE_LAST, fl
 						return;
 				}
 			}
+			
+			/* 
+			if (self.weapon_pause_frames)
+			{
+				if(self.weapon_pause_frames())
+				{
+					//bprint (ftos(self.idletime));
+					//bprint ("\n");
+					if (self.idletime >= (random() * self.pausemin) + (random() * self.pausemax))
+					{
+					self.idletime = 0;
+					}
+					else
+					{
+					self.idletime++;
+					return;
+					}
+				}
+			}
+			*/
 			self.weaponframe++;
 			doWeaponfx();
 			return;
@@ -823,7 +826,6 @@ void() Weapon_Shotgun_Fire={
 	sound(self, CHAN_WEAPON, "weapons/Shotgf1b.wav", 1, ATTN_NORM);
 	self.weaponframe++;
 
-	//if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
 	self.inv_ammo_shells = max(self.inv_ammo_shells - 1, 0);
 	self.currentammo = W_Ammo_Amount(self.ammo_index);
 };
@@ -851,7 +853,6 @@ void() Weapon_SuperShotgun={
 	SpawnMuzzleFlash(WEP_MACHINEGUN_MFLASH_OFFSET_FP, 2, 0.75);
 	sound (self ,CHAN_WEAPON, "weapons/Sshotf1b.wav", 1, ATTN_NORM);
 	
-//	makevectors(self.v_angle);
 	left = self.origin + (v_right * -5);
 	right = self.origin + (v_right * 5);
 
@@ -862,8 +863,6 @@ void() Weapon_SuperShotgun={
 	
 	self.weaponframe++;
 
-	//TODO - infinite ammo flag?
-	//if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
 	self.inv_ammo_shells = max(self.inv_ammo_shells - 2,0);
 	self.currentammo = self.inv_ammo_shells;
 };
@@ -872,9 +871,8 @@ void() weapon_supershotg_update={
 	Weapon_Generic (6, 17, 57, 61, Weapon_SuperShotgun);
 };
 
-void() Weapon_MachineGun_Fire={
-	
-	//local vector start, offset;
+void() Weapon_MachineGun_Fire =
+{
 	local float i, damage, kick, cone, sfx;
 	
 	damage = WEAPON_MACHINEGUN_DAMAGE;
@@ -907,7 +905,6 @@ void() Weapon_MachineGun_Fire={
 
 	for (i=1 ; i<3 ; i++)
 	{
-		//ent->client->kick_origin[i] = crandom() * 0.35;
 		if(i==1){
 			self.punchangle_y = crandom() * 0.7;
 		}
@@ -921,6 +918,7 @@ void() Weapon_MachineGun_Fire={
 	//self.punchangle_x = self.machinegun_shots * -1.5;
 	
 	// raise the gun as it is firing
+	/*
 	if (!deathmatch)
 	{
 		self.machinegun_shots++;
@@ -929,8 +927,8 @@ void() Weapon_MachineGun_Fire={
 	}
 	
 	cone = self.machinegun_shots / 9;
-	
-	//Aim is all over the place? Reverted back to FireBullet for now.
+	*/
+	//Aim is all over the place? Reverted back to FireBullet for now. -MrC
 //	fire_bullet_base(self.origin, self.v_angle, '0.02 0.02 0' * cone, damage);
 	self.solid = SOLID_BBOX;
 	FireBullet(damage);
@@ -953,7 +951,6 @@ void() Weapon_MachineGun_Fire={
 		sound(self, CHAN_AUTO, "weapons/Machgf5b.wav", 1.0, ATTN_NORM);
 	}
 	
-	//if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
 	self.inv_ammo_bullets = max(self.inv_ammo_bullets - 1, 0);
 	self.currentammo = W_Ammo_Amount(self.ammo_index);
 };
@@ -978,7 +975,6 @@ void() Weapon_Chaingun_Fire={
 	{
 		sound(self, CHAN_WEAPON2, "weapons/noammo.wav", 0.1, ATTN_IDLE);
 		self.weaponframe = 32;
-		//ent->client->weapon_sound = 0;
 		return;
 	}
 	else if (self.weaponframe == 21 && self.button0 && W_Ammo_Amount(self.ammo_index))
@@ -992,13 +988,11 @@ void() Weapon_Chaingun_Fire={
 
 	if (self.weaponframe == 22)
 	{
-		//ent->client->weapon_sound = 0;
 		sound(self, CHAN_WEAPON2, "weapons/noammo.wav", 1, ATTN_IDLE);
 		sound(self, CHAN_WEAPON, "weapons/chngnd1a.wav", 1, ATTN_IDLE);
 	}
 	else
 	{
-		//ent->client->weapon_sound = gi.soundindex("weapons/chngnl1a.wav");
 		sound(self, CHAN_WEAPON, "", 1, ATTN_IDLE);
 		sound(self, CHAN_WEAPON2, "weapons/chngnl1a.wav", 1, ATTN_IDLE);
 	}
@@ -1045,7 +1039,6 @@ void() Weapon_Chaingun_Fire={
 
 	for (i=0 ; i < shots ; i=i+1)
 	{
-		//fire_bullet (ent, start, forward, damage, kick, DEFAULT_BULLET_HSPREAD, DEFAULT_BULLET_VSPREAD, MOD_CHAINGUN);
 		self.solid = SOLID_BBOX;
 		//fire_bullet_base(self.origin, self.v_angle, '0.02 0.02', damage);
 		FireBullet(damage);
@@ -1069,7 +1062,6 @@ void() Weapon_Chaingun_Fire={
 		sound(self, CHAN_AUTO, "weapons/Machgf5b.wav", 1.0, ATTN_NORM);
 	}
 
-	//if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
 	self.inv_ammo_bullets = max(self.inv_ammo_bullets - shots, 0);
 	self.currentammo = W_Ammo_Amount(self.ammo_index);
 
@@ -1106,7 +1098,6 @@ void() Weapon_GrenadeLauncher_Fire={
 	
 	self.weaponframe++;
 	
-	//if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
 	self.inv_ammo_rockets = max(self.inv_ammo_rockets - 1, 0);
 	self.currentammo = W_Ammo_Amount(self.ammo_index);
 };
@@ -1140,9 +1131,6 @@ void() Weapon_RocketLauncher_Fire={
 	
 	sound(self, CHAN_WEAPON, "weapons/ROCKLF1A.WAV", 1.0, ATTN_NORM);
 	
-	// send muzzle flash
-	
-	//if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
 	self.inv_ammo_rockets = max(self.inv_ammo_rockets - 1, 0);
 	self.currentammo = W_Ammo_Amount(self.ammo_index);
 	self.weaponframe++;
@@ -1153,13 +1141,9 @@ void() weapon_rocketlaunch_update={
 	Weapon_Generic (4, 12, 50, 54, Weapon_RocketLauncher_Fire);
 };
 
-void() Weapon_Hyperblaster_Fire={
-
-//	local float rotation, effect, 
+void() Weapon_Hyperblaster_Fire =
+{
 	local float damage;
-//	local vector offset;
-
-	//ent->client->weapon_sound = gi.soundindex("weapons/hyprbl1a.wav");
 
 	if (!self.button0)
 	{
@@ -1185,7 +1169,6 @@ void() Weapon_Hyperblaster_Fire={
 			sound (self, CHAN_WEAPON, "weapons/Hyprbf1a.wav", 1, ATTN_NORM);
 			sound (self, CHAN_WEAPON2, "weapons/Hyprbl1a.wav", 1, ATTN_NORM);
 			
-			//if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
 			self.inv_ammo_cells = max(self.inv_ammo_cells - 1, 0);
 			self.currentammo = W_Ammo_Amount(self.ammo_index);
 		}
@@ -1229,8 +1212,6 @@ void() Weapon_Railgun_Fire={
 
 	self.punchangle_x = -3;
 
-//	makevectors(self.v_angle);
-	//start = self.origin + v_forward*10;
 	start = self.origin + (v_forward * 10) + (v_right * 5) + (v_up * 5);
 	start_z = self.absmin_z + self.size_z * 0.7;
 	
@@ -1242,7 +1223,6 @@ void() Weapon_Railgun_Fire={
 	
 	sound(self, CHAN_WEAPON, "weapons/RAILGF1A.WAV", 1.0, ATTN_NORM);
 
-	//if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
 	self.inv_ammo_slugs = max(self.inv_ammo_slugs - 1, 0);
 	self.currentammo = W_Ammo_Amount(self.ammo_index);
 };
@@ -1282,7 +1262,6 @@ void() Weapon_BFG_Fire={
 	fire_bfg_base(self.origin, self.v_angle, 400, damage, damage_radius);
 	self.weaponframe++;
 
-	//if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
 	self.inv_ammo_cells = max(self.inv_ammo_cells - 50, 0);
 	self.currentammo = W_Ammo_Amount(self.ammo_index);
 };

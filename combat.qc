@@ -122,17 +122,14 @@ void(entity targ, entity attacker) Killed =
 	self.enemy = attacker;
 
 	// bump the monster counter and award points/frags if coop
+	/*
 	if (self.flags & FL_MONSTER)
 	{
 		if (coop)
 		{
 			if (attacker.classname == "player")
 			{
-				if (self.solid == SOLID_CORPSE)
-				{
-					attacker.frags = attacker.frags + 0;
-				}
-				else
+				if (!self.solid == SOLID_CORPSE || !self.deadflag == DEAD_DEAD)
 				{
 					attacker.frags = attacker.frags + 1;
 					killed_monsters = killed_monsters + 1;			
@@ -142,11 +139,7 @@ void(entity targ, entity attacker) Killed =
 		}			
 		else
 		{
-			if (self.solid == SOLID_CORPSE)
-			{
-				//CORPSE'S DON'T COUNT
-			}
-			else
+			if (!self.solid == SOLID_CORPSE || !self.deadflag == DEAD_DEAD)
 			{
 				killed_monsters = killed_monsters + 1;			
 				WriteByte (MSG_ALL, SVC_KILLEDMONSTER);
@@ -154,6 +147,21 @@ void(entity targ, entity attacker) Killed =
 		}
 //			killed_monsters = killed_monsters + 1;			
 //			WriteByte (MSG_ALL, SVC_KILLEDMONSTER);
+	}
+	*/
+
+	// bump the monster counter and award points/frags if coop
+	if (self.flags & FL_MONSTER && attacker.classname == "player")
+	{
+		if (!self.solid == SOLID_CORPSE || !self.deadflag == DEAD_DEAD)
+		{
+			if (coop)
+			{
+				attacker.frags = attacker.frags + 1;
+			}
+			killed_monsters = killed_monsters + 1;			
+			WriteByte (MSG_ALL, SVC_KILLEDMONSTER);
+		}
 	}
 	
 	if (autocvar_cl_smacktalk >= 1)
@@ -232,6 +240,7 @@ void(entity targ, entity inflictor, entity attacker, float damage) T_Damage=
 	{
 		dir = targ.origin - (inflictor.absmin + inflictor.absmax) * 0.5;
 		dir = normalize(dir);
+
 		targ.velocity = targ.velocity + dir*damage*8;
 	}
 
@@ -297,7 +306,7 @@ void(entity targ, entity inflictor, entity attacker, float damage) T_Damage=
 		self.th_pain (attacker, take);
 	// nightmare mode monsters don't go into pain frames often
 		if (skill == 3)
-			self.pain_finished = time + 5;		
+			self.pain_finished = time + 5;
 	}
 
 	self = oldself;
@@ -447,9 +456,9 @@ void(string hd) gibbs =
 // some code needs to play other sounds - call sound() with the same channel and this will not be heard
 	sound(self, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
 	if (hd) ThrowHead (hd, self.health);
-	ThrowGib ("progs/gib1.mdl", self.health, GIB_FLESH, 1);
-	ThrowGib ("progs/gib2.mdl", self.health, GIB_FLESH, 1);
-	ThrowGib ("progs/gib3.mdl", self.health, GIB_FLESH, 1);
+	ThrowGib ("progs/gib1.mdl", self.health, GIB_FLESH, 1, 1);
+	ThrowGib ("progs/gib2.mdl", self.health, GIB_FLESH, 1, 1);
+	ThrowGib ("progs/gib3.mdl", self.health, GIB_FLESH, 1, 1);
 };
 
 
