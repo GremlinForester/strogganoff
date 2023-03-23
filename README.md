@@ -25,7 +25,7 @@ The CSQC needs work to say the least! This is still a major component to tackle 
 
 The MENU was a late addition, so it's basically the battleMETAL menu mashed in there and hastily modified to make it work for this mod. Although it's in better shape than the CSQC portion!
 
-And just to be clear, there is code from all over the place, written by many people over a very long time. I've tried to keep original comments, readme's and any mentions containing credits intact or at the very least where that code came from. To my knowledge all code used is GPL (or was up for grabs as-is) if hoever, there's an issue please reach out to get things addressed asap.
+And just to be clear, there is code from all over the place, written by many people over a very long time. I've tried to keep original comments, readme's and any mentions containing credits intact or at the very least where that code came from. To my knowledge all code used is GPL (or was up for grabs as-is) if however, there's an issue please reach out to get things addressed asap.
 
 ## Features
 
@@ -45,7 +45,7 @@ And just to be clear, there is code from all over the place, written by many peo
 - Slew of added visual effects.
 - Lots and bugs (unplanned features).
 
-HUD/Client code readme credits (edited):
+## HUD/Client code readme credits (edited):
 Chip for the great quakewiki.net 
 Seven for arranging my code 
 Unknow programmer for his great and simple use of csqc http://www.quakewiki.net/quake-1/mods/custom-hud/ 
@@ -71,4 +71,4 @@ Please see the file called LICENSE.
 
 ## Contacts
 
-* If want to report a bug or request a feature you can submit them to the project issue tracker at [LINK].
+* If want to report a bug or request a feature you can submit them to the project using the issue tracker.
