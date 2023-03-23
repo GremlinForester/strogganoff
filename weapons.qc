@@ -761,6 +761,7 @@ void(string model, float skinnum, float tim) q2player_ping_point =
 	q2playerping = spawn();
 	q2playerping.movetype = MOVETYPE_NONE;
 	q2playerping.solid = SOLID_NOT;
+	setsize (q2playerping, '-8 -8 -8', '8 8 8');	
 	q2playerping.effects = q2playerping.effects + EF_ADDITIVE + EF_NODEPTHTEST + EF_LOWPRECISION;
 	q2playerping.owner = self;
 	q2playerping.classname = "q2playerping";
@@ -891,7 +892,8 @@ void() ImpulseCommands =
 			
 			if (coop)
 			{
-				q2player_ping("models/mapobjects/hub/stroggos_system/logo_strogg.MD3", 0, 0.1);
+			//	q2player_ping("models/mapobjects/hub/stroggos_system/logo_strogg.MD3", 0, 0.1);
+				q2player_ping("progs/icon_location.spr32", 0, 0.1);
 				self.impulse = 0;
 			}
 			return;
@@ -899,7 +901,8 @@ void() ImpulseCommands =
 
 		if (coop)
 		{
-			q2player_ping("models/mapobjects/hub/stroggos_system/logo_strogg.MD3", 0, 0.1);
+		//	q2player_ping("models/mapobjects/hub/stroggos_system/logo_strogg.MD3", 0, 0.1);
+			q2player_ping("progs/icon_location.spr32", 0, 0.1);
 		}
 
 		sprint (self, "WAVE\n");
@@ -911,7 +914,8 @@ void() ImpulseCommands =
 			
 			if (coop)
 			{
-				q2player_ping_point("models/mapobjects/hub/stroggos_system/logo_strogg.MD3", 0, 0.1);
+			//	q2player_ping_point("models/mapobjects/hub/stroggos_system/logo_strogg.MD3", 0, 0.1);
+				q2player_ping_point("models/plane.md3", 0, 0.1);
 				self.impulse = 0;
 			}
 			return;
@@ -919,7 +923,8 @@ void() ImpulseCommands =
 
 		if (coop)
 		{
-			q2player_ping_point("models/mapobjects/hub/stroggos_system/logo_strogg.MD3", 0, 0.1);
+		//	q2player_ping_point("models/mapobjects/hub/stroggos_system/logo_strogg.MD3", 0, 0.1);
+				q2player_ping_point("models/plane.md3", 0, 0.1);
 		}
 
 		sprint (self, "POINT\n");		

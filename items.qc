@@ -379,18 +379,18 @@ WEAPONS
 
 /// NOTE: logic change in touch code has changed other to self in this call - *** any mod code that calls this must take into account
 
-void() bound_other_ammo =
+void(entity ent) bound_other_ammo =
 {
-	if (self.inv_ammo_shells > 100)
-		self.inv_ammo_shells = 100;
-	if (self.inv_ammo_bullets > 200)
-		self.inv_ammo_bullets = 200;
-	if (self.inv_ammo_rockets > 100)
-		self.inv_ammo_rockets = 100;
-	if (self.inv_ammo_cells > 100)
-		self.inv_ammo_cells = 100;
-	if (self.inv_ammo_slugs > 100)
-		self.inv_ammo_slugs = 100;	
+	if (ent.inv_ammo_shells > 100)
+		ent.inv_ammo_shells = 100;
+	if (ent.inv_ammo_bullets > 200)
+		ent.inv_ammo_bullets = 200;
+	if (ent.inv_ammo_rockets > 100)
+		ent.inv_ammo_rockets = 100;
+	if (ent.inv_ammo_cells > 100)
+		ent.inv_ammo_cells = 100;
+	if (ent.inv_ammo_slugs > 100)
+		ent.inv_ammo_slugs = 100;	
 };
 
 //MrC: TODO, compare these to Q2 or give this a going over.
@@ -651,7 +651,7 @@ void() weapon_touch =
 	
 	
 	self.inv_weapons = self.inv_weapons | new;
-	bound_other_ammo ();
+	bound_other_ammo (self);
 	
 	/*if (!deathmatch)
 		self.weapon = new;
@@ -741,7 +741,7 @@ local float		best;
 		self.inv_ammo_slugs = self.inv_ammo_slugs + stemp.aflag;
 	}
 
-	bound_other_ammo ();
+	bound_other_ammo (self);
 	
 	sprint (self, "You got ");
 	sprint (self, ftos(stemp.aflag));
@@ -1008,10 +1008,107 @@ void() powerup_touch =
 /*
 ===============================================================================
 
-PLAYER BACKPACKS
+PLAYER BACKPACKS AND LOOT
 
 ===============================================================================
 */
+
+void() lootTouch =
+{
+	if (other.classname != "player")
+		return;
+	if (other.health <= 0)
+		return;
+
+	sprint (other, "You get ");
+
+	other.inv_ammo_shells += self.inv_ammo_shells;
+	other.inv_ammo_bullets += self.inv_ammo_bullets;
+	other.inv_ammo_rockets += self.inv_ammo_rockets;
+	other.inv_ammo_cells += self.inv_ammo_cells;
+	other.inv_ammo_slugs += self.inv_ammo_slugs;
+	
+	bound_other_ammo (other);
+
+	if (self.inv_ammo_shells)
+	{
+//		sprint(other, ", ");
+		sprint (other, ftos(self.inv_ammo_shells));
+		
+		if (self.inv_ammo_shells == 1)
+		{
+			sprint (other, " shell");
+		}
+		else
+		{
+			sprint (other, " shells");
+		}
+	}
+	if (self.inv_ammo_bullets)
+	{
+//		sprint(other, ", ");
+		sprint (other, ftos(self.inv_ammo_bullets));
+		
+		if (self.inv_ammo_bullets == 1)
+		{
+			sprint (other, " bullet");
+		}
+		else
+		{
+			sprint (other, " bullets");
+		}
+	}
+	if (self.inv_ammo_rockets)
+	{
+//		sprint(other, ", ");
+		sprint (other, ftos(self.inv_ammo_rockets));
+		
+		if (self.inv_ammo_rockets == 1)
+		{
+			sprint (other, " rocket");
+		}
+		else
+		{
+			sprint (other, " rockets");
+		}
+	}
+	if (self.inv_ammo_cells)
+	{
+//		sprint(other, ", ");
+		sprint (other, ftos(self.inv_ammo_cells));
+
+		if (self.inv_ammo_cells == 1)
+		{
+			sprint (other, " cell");
+		}
+		else
+		{
+			sprint (other, " cells");
+		}
+	}
+	if (self.inv_ammo_slugs)
+	{
+//		sprint(other, ", ");
+		sprint (other, ftos(self.inv_ammo_slugs));
+
+		if (self.inv_ammo_slugs == 1)
+		{
+			sprint (other, " slug");
+		}
+		else
+		{
+			sprint (other, " slugs");
+		}
+	}
+	
+	sprint (other, "\n");
+	sound (other, CHAN_ITEM, "weapons/lock4.wav", 1, ATTN_NORM);
+	stuffcmd (other, "bf\n");
+
+	W_updateCurrentAmmo(other);
+
+	remove(self);
+};
 
 void() BackpackTouch =
 {
@@ -1061,9 +1158,16 @@ void() BackpackTouch =
 #ifdef unused
 	old = self.items;
 #endif
-	self.items = self.items | new;
 	
-	bound_other_ammo ();
+	self.items = self.items | new; 
+	//MrC: FIXME: this seems to be causing the "jumpboot" bug when players pick up shells (and maybe other ammo types? More testing needed).
+	//This can be replicated by picking up shells dropped by the berserk in the test_buttons map.
+	//Actually now I'm not sure. Okay. So, spawn into test_buttons, kill the berserk with the machinegun and pick up the shells, boom! Jumpboots.
+	//Use the shotgun or have less than the max ammo (100) for shells and no jumpboots. No added ammo either (in general).
+	//This is strange as hell (or at least I'm not astute enough to see why this is happening). 
+	//Screw it, I'm just gonna write a new loot touch function or something.
+	
+	bound_other_ammo (self);
 
 // moved for logic change
 	self = stemp;
@@ -1127,6 +1231,8 @@ void() BackpackTouch =
 		self.weapon = new;
 	else
 		Deathmatch_Weapon(new);
+
+	W_updateCurrentAmmo(other);
 	
 #undef stemp
 #undef acount
@@ -1208,7 +1314,7 @@ void(float lootType, float lootAmt, vector org) DropLoot =
 	loot.velocity_x = -10 + (random() * 5);
 	loot.velocity_y = -10 + (random() * 5);
 	loot.netname = string_null;
-	loot.touch = BackpackTouch;	
+	loot.touch = BackpackTouch;
 
 	switch (lootType)
 	{
@@ -1217,30 +1323,35 @@ void(float lootType, float lootAmt, vector org) DropLoot =
 			setmodel (loot, "models/items/ammo/shells/medium/tris.md2");
 			setsize (loot, '-16 -16 -16', '16 16 16');
 			loot.inv_ammo_shells = lootAmt;
+			loot.touch = lootTouch;			
 			break;
 		case LOOT_BULLETS:
 			loot.netname = "Bullets";
 			setmodel (loot, "models/items/ammo/bullets/medium/tris.md2");
 			setsize (loot, '-16 -16 -16', '16 16 16');
 			loot.inv_ammo_bullets = lootAmt;
+			loot.touch = lootTouch;			
 			break;
 		case LOOT_ROCKETS:
 			loot.netname = "Rockets";
 			setmodel (loot, "models/items/ammo/rockets/medium/tris.md2");
 			setsize (loot, '-16 -16 -16', '16 16 16');
-			loot.inv_ammo_rockets = lootAmt;			
+			loot.inv_ammo_rockets = lootAmt;
+			loot.touch = lootTouch;			
 			break;
 		case LOOT_SLUGS:
 			loot.netname = "Slugs";
 			setmodel (loot, "models/items/ammo/slugs/medium/tris.md2");
 			setsize (loot, '-16 -16 -16', '16 16 16');
 			loot.inv_ammo_slugs = lootAmt;
+			loot.touch = lootTouch;			
 			break;
 		case LOOT_CELLS:
 			loot.netname = "Cells";
 			setmodel (loot, "models/items/ammo/cells/medium/tris.md2");
 			setsize (loot, '-16 -16 -16', '16 16 16');
 			loot.inv_ammo_cells = lootAmt;
+			loot.touch = lootTouch;			
 			break;
 		case LOOT_ARMOR_SHARD:
 			loot.netname = "Armor Shard";

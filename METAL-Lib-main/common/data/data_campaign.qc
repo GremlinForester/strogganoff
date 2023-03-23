@@ -1,7 +1,6 @@
 /*
-battleMETAL
-Author: Peter Roohr
-Date: 08/05/2020
+Based on the battleMETAL menu and metal-lib library by Peter Roohr 
+and adapted for Q2DP by MrC (so if it's broke you know who to blame).
 Overview: 
   Simple Campaign file that both the Menu and Client reference.
   

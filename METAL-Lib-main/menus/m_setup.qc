@@ -340,7 +340,7 @@ void(float nextIcon) setup_icon_set =
 	
 	setup_icon.image1 = setup_set_icon( setup_icon_value.len );
 	
-	setup_background_icon.image1 = setup_set_hero( setup_icon_value.len );
+	//setup_background_icon.image1 = setup_set_hero( setup_icon_value.len );
 };
 
 void() setup_icon_prev_f =
@@ -462,9 +462,10 @@ void() m_setup_i =
   
 	setup_icon = lbl_img(setup_icon_value.origin, '96 96', setup_set_icon(setup_icon_value.len), '1 1 1', 0, M_SETUP, 1, UI_FLAG_IMG_SIZE_ASPECT | UI_FLAG_CENTER_IMG);
 	//setup_background_icon = lbl_img(ANCHOR_UPPER_LEFT, Vector2(VIEW_MAX_y, VIEW_MAX_y), setup_icon.image1, '1 1 1', 0, M_SETUP, 0.5, 0);
-	setup_background_icon = lbl_img(ANCHOR_CENTER_75 - '256 0', '256 256', setup_background_icon.image1, '1 1 1', 0, M_SETUP, 1, 0);
+	
+	//setup_background_icon = lbl_img(ANCHOR_CENTER_75 - '256 0', '256 256', setup_background_icon.image1, '1 1 1', 0, M_SETUP, 1, 0);
 
-	setup_background_icon.image1 = setup_set_hero( setup_icon_value.len );
+	//setup_background_icon.image1 = setup_set_hero( setup_icon_value.len );
   
 	setup_icon_prev = btn_img_callback(setup_icon_value.origin - '64 0', '14 14', UI_IMG_ARW_LFT, 0, M_SETUP, setup_icon_prev_f, '1 1 1', '0 1 0', 1, UI_FLAG_NOLABEL);
 	setup_icon_next = btn_img_callback(setup_icon_value.origin + '64 0', '14 14', UI_IMG_ARW_RGT, 0, M_SETUP, setup_icon_next_f, '1 1 1', '0 1 0', 1, UI_FLAG_NOLABEL);

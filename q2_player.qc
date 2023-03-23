@@ -412,23 +412,7 @@ void() q2playerDeathSound =
 		playerVOSound(PLAYER_VOICE_DROWN);
 		return;
 	}
-/*	
-	self.rnd_ = rint ((random() * 4) + 1);
-	if (self.rnd_ == 1)
-		self.noise = "player/death1.wav";
-	if (self.rnd_ == 2)
-		self.noise = "player/death2.wav";
-	if (self.rnd_ == 3)
-		self.noise = "player/death3.wav";
-	if (self.rnd_ == 4)
-		self.noise = "player/death4.wav";
-	if (self.rnd_ == 5)
-		self.noise = "player/death5.wav";
-
-	sound (self, CHAN_VOICE, self.noise, 1, ATTN_NONE);
-	*/
 	playerVOSound(PLAYER_VOICE_DEATH);
-//	return;
 };
 
 

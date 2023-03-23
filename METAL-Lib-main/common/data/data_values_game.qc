@@ -1,8 +1,6 @@
 /*
-battleMETAL
-Author: Peter Roohr
-Date: 1/26/2018
-mod: 07/23/2019
+Based on the battleMETAL menu and metal-lib library by Peter Roohr 
+and adapted for Q2DP by MrC (so if it's broke you know who to blame).
 Overview: 
   all the miscellaneous shared values between client and server.
 */

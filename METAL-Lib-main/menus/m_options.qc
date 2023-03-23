@@ -57,8 +57,6 @@ void() m_options_i =
 
 	main_title2 = lbl_img(MENU_ORG + menu_parent_center_width(10) + '-20 -20', '2.5 2.5 0', IMG_MAIN_TITLE2, '1 1 1', VIEW_CTX, M_OPTIONS, 1, UI_FLAG_SIZE_IMG);
 	main_title = lbl_img(MENU_ORG + menu_parent_center_width(10) + '-20 -20', '2.5 2.5 0', IMG_MAIN_TITLE, '1 1 1', VIEW_CTX, M_OPTIONS, 1, UI_FLAG_SIZE_IMG);
-    
-	options_heroshot = lbl_img(MENU_ORG + menu_parent_center_width(10) + '415 185', '1 1 0', OPTIONS_HEROSHOT_IMAGE, '1 1 1', VIEW_CTX, M_OPTIONS, 1, UI_FLAG_SIZE_IMG);
 
     options_gameplay = btn_text_callback(MENU_ORG + menu_parent_center_width(spacing+=spacer), '40 40', "GAMEPLAY", VIEW_CTX, M_OPTIONS, click_options_gameplay, CLR_DEF_TXT_GRAY_SMOOTH, '0 1 0', 1, (UI_FLAG_NOLABEL | UI_FLAG_SIZE_IMG));
     options_gameplay.fontId = FONT_NUM_BLACKOPS_BOLD;

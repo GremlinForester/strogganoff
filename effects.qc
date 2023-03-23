@@ -6,42 +6,72 @@ It is meant to make it easy to add effects on a per-project basis.
 
 Instructions:
 
-during some frame call, call "thread(FADEOUT, self);"
+during some frame call, call "thread(FADEOUT, self, 0.1);"
 
 FADEOUT is a member of an enum or something.
 
 The entity is instantiated and begins thinking at time + delay.
 
-UNTESTED
-
+NOTE: mostly UNTESTED
+*/
 
 const float FADEOUT = 1;
+const float FADEIN = 2;
+
+void() threadThinkFadeIn =
+{
+	self.owner.alpha += 0.1;
+	
+	if (self.owner.alpha >= 1.0)
+	{
+		self.think = SUB_Remove;		
+		return;
+	}
+	self.think = threadThinkFadeIn;
+	self.nextthink = time + 0.1;
+}
 
 void() threadThinkFadeOut =
 {
+	self.owner.alpha -= 0.1;
 	
-	self.owner.alpha-=0.05;
-	
-	if (self.owner.alpha <= 0){
-		remove(self.owner);
-		remove(self);
+	if (self.owner.alpha <= 0.1)
+	{
+		LOG("threadThinkSUB_Remove");
+		self.think = SUB_Remove;		
+		return;
 	}
-	
+	LOG("threadThinkFadeOut");
 	self.think = threadThinkFadeOut;
-	self.nextthink = time + 0.1;	
+	self.nextthink = time + 0.1;
 }
 
-entity(float threadType, entity ent, float delay) thread =
+void(float threadType, entity ent, float delay) thread =
 {
-	self.owner = ent;
+	local entity ef;
+	
+	ef = spawn();
+	ef.solid = SOLID_NOT;
+	ef.movetype = MOVETYPE_NONE;
+	setsize (self, '-8 -8 -8', '8 8 8');
+	setorigin(ef, self.origin);
+	ef.owner = ent;	
 	
 	if (threadType == FADEOUT)
 	{
-		self.think = threadThinkFadeOut;
-		self.nextthink = time + delay;
+		if (self.alpha <= 1)
+			self.alpha = 1;
+	
+		ef.think = threadThinkFadeOut;
+		ef.nextthink = time + delay;
 	}
+	
+	if (threadType == FADEIN)
+	{
+		ef.think = threadThinkFadeIn;
+		ef.nextthink = time + delay;
+	}	
 }
-*/
 
 void() teleporterAfterImageFadeOUT =
 {
@@ -78,9 +108,6 @@ void(entity ent) teleporterAfterImage =
 	afterImage.think = teleporterAfterImageFadeOUT;
 	afterImage.nextthink = time;
 };
-
-//MrC: Muzzle Flash stuff from http://www.insideqc.com/qctut/qctut-85.shtml
-//Thanks Supajoe
 
 .float isdecor;
 
@@ -634,6 +661,9 @@ entity(entity e) newdecor =
 	return e;
 };
 
+//MrC: Muzzle Flash stuff from http://www.insideqc.com/qctut/qctut-85.shtml
+//Thanks Supajoe
+
 /*
 ============
 MUZZLE FLASH EFFECTS
@@ -651,7 +681,8 @@ void(vector org, float mfsize) SpawnMuzzleFlashTP =
 	setattachment(mflashtp, self, "");
 	mflashtp.touch = SUB_Null;
 	mflashtp.effects = mflashtp.effects + EF_ADDITIVE;
-	setmodel(mflashtp, "progs/muzzleflash3.spr");
+	//setmodel(mflashtp, "progs/muzzleflash3.spr");
+	setmodel(mflashtp, "progs/combust.spr32");
 	mflashtp.solid = SOLID_NOT;
 	mflashtp.scale = mfsize;
 	setsize(mflashtp, '0 0 0', '0 0 0');
@@ -675,7 +706,8 @@ void(vector pos, float mfsize, float trans) SpawnMuzzleFlash =			//Spawns a firs
 	mflashfp.classname = "flashfp";
 	mflashfp.effects = mflashfp.effects + EF_ADDITIVE;
 	mflashfp.alpha = trans;
-	setmodel(mflashfp, "progs/muzzleflash3.spr"); 
+//	setmodel(mflashfp, "progs/muzzleflash3.spr"); 
+	setmodel(mflashfp, "progs/combust.spr32"); 
 //	setmodel(mflashfp, "progs/combust.spr32");
 	setsize(mflashfp, '0 0 0', '0 0 0');
 	setorigin(mflashfp, pos);

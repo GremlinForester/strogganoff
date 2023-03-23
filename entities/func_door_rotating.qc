@@ -54,12 +54,15 @@ void() rotating_door_blocked =
 	
 // if a door has a negative wait, it would never come back if blocked,
 // so let it just squash the object to death real fast
+
 	if (self.wait >= 0)
 	{
-		if (self.state == STATE_DOWN)
-			rotatingdoor_go_up ();
-		else
-			rotatingdoor_go_down ();
+		T_Damage (other, self, self, self.dmg);
+		
+	//	if (self.state == STATE_DOWN)
+	//		rotatingdoor_go_up ();
+	//	else
+	//		rotatingdoor_go_down ();
 	}
 };
 

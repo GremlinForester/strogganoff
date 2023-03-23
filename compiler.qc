@@ -73,11 +73,13 @@
 /// compiler controls
 
 // dont list unused vars warning when compiling
-//#pragma warning disable Q302
+#pragma warning disable Q302
 
 // turn off warnings for map spawn functions - most are normally only called by the engine
 #pragma warning off F300
 #pragma warning off F317
+#pragma warning off F209
+#pragma warning off F210
 
 
 

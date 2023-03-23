@@ -38,21 +38,21 @@ void play_step_sound () =
 	else if (self.waterlevel == 1) //Foot Splashes
 	{
 		if (r < 1) {sound(self, CHAN_AUTO, "player/splash1.wav", 0.25, ATTN_IDLE);
-						pointparticles(particleeffectnum("TE_GLASS_SHATTER"), (self.origin + '0 8 -8'), '0 32 0', 1);}
+						pointparticles(particleeffectnum("watersplashbig"), (self.origin + '0 8 -8'), '0 32 0', 1);}
 		else if (r < 2) {sound(self, CHAN_AUTO, "player/splash2.wav", 0.25, ATTN_IDLE);
-						pointparticles(particleeffectnum("TE_GLASS_SHATTER"), (self.origin + '0 -8 -8'), '0 32 0', 1);}
+						pointparticles(particleeffectnum("watersplashbig"), (self.origin + '0 -8 -8'), '0 32 0', 1);}
 		else if (r < 3) {sound(self, CHAN_AUTO, "player/splash3.wav", 0.25, ATTN_IDLE);
-						pointparticles(particleeffectnum("TE_GLASS_SHATTER"), (self.origin + '0 8 -8'), '0 32 0', 1);}
+						pointparticles(particleeffectnum("watersplashbig"), (self.origin + '0 8 -8'), '0 32 0', 1);}
 		else            {sound(self, CHAN_AUTO, "player/splash4.wav", 0.25, ATTN_IDLE);
-						pointparticles(particleeffectnum("TE_GLASS_SHATTER"), (self.origin + '0 -8 -8'), '0 32 0', 1);}
+						pointparticles(particleeffectnum("watersplashbig"), (self.origin + '0 -8 -8'), '0 32 0', 1);}
 	}
 	else if (self.waterlevel == 2) //Water Wade
 	{
-		sound (self, CHAN_AUTO, sprintf("player/wade%s.wav", ftos((rint(random()*2)+1))), 0.25, ATTN_IDLE);	
+		sound (self, CHAN_AUTO, sprintf("player/wade%s.ogg", ftos((rint(random()*3)+1))), 0.25, ATTN_IDLE);		
 	}
 	else if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
 	{
-		sound (self, CHAN_AUTO, sprintf("player/clank%s.wav", ftos((rint(random()*3)+1))), 0.25, ATTN_IDLE);		
+		sound (self, CHAN_AUTO, sprintf("player/metal%s.wav", ftos((rint(random()*3)+1))), 0.25, ATTN_IDLE);		
 	}
 	else if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_WOOD)
 	{
@@ -60,15 +60,15 @@ void play_step_sound () =
 	}
 	else if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_FLESH)
 	{
-		sound (self, CHAN_AUTO, sprintf("player/footsteps/pl_slosh%s.wav", ftos((rint(random()*3)+1))), 0.25, ATTN_IDLE);
+		sound (self, CHAN_AUTO, sprintf("player/flesh%s.wav", ftos((rint(random()*3)+1))), 0.25, ATTN_IDLE);
 	}
 	else if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_GLASS)
 	{
-		sound (self, CHAN_AUTO, sprintf("player/footsteps/pl_ladder%s.wav", ftos((rint(random()*3)+1))), 0.25, ATTN_IDLE);	
+		sound (self, CHAN_AUTO, sprintf("player/gfvent%s.wav", ftos((rint(random()*5)+1))), 0.35, ATTN_IDLE);	
 	}
 	else if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_DIRT)
 	{
-		sound (self, CHAN_AUTO, sprintf("player/footsteps/pl_dirt%s.wav", ftos((rint(random()*3)+1))), 0.25, ATTN_IDLE);
+		sound (self, CHAN_AUTO, sprintf("player/dirt%s.wav", ftos((rint(random()*3)+1))), 0.25, ATTN_IDLE);
 	}
 	else if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_FORCEFIELD)
 	{
@@ -76,15 +76,19 @@ void play_step_sound () =
 	}
 	else if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_GRASS)
 	{
-		sound (self, CHAN_AUTO, sprintf("player/footsteps/pl_grass%s.ogg", ftos((rint(random()*3)+1))), 0.25, ATTN_IDLE);
+		sound (self, CHAN_AUTO, sprintf("player/grass%s.ogg", ftos((rint(random()*3)+1))), 0.25, ATTN_IDLE);		
 	}
 	else if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_TILE)
 	{
-		sound (self, CHAN_AUTO, sprintf("player/footsteps/pl_tile%s.wav", ftos((rint(random()*3)+1))), 0.25, ATTN_IDLE);
+		sound (self, CHAN_AUTO, sprintf("player/tile%s.wav", ftos((rint(random()*3)+1))), 0.25, ATTN_IDLE);
 	}
 	else
 	{
-		sound (self, CHAN_AUTO, sprintf("player/foot%s.wav", ftos((rint(random()*3)+1))), 0.35, ATTN_IDLE);
+	// Quake 2 Steps 
+	sound (self, CHAN_AUTO, sprintf("player/step%s.wav", ftos((rint(random()*3)+1))), 0.35, ATTN_IDLE);
+	
+	//	sound (self, CHAN_AUTO, sprintf("player/gfstep%s.wav", ftos((rint(random()*3)+1))), 0.35, ATTN_IDLE);
+	//	sound7(self, CHAN_AUTO, sprintf("player/gfstep%s.wav", ftos((rint(random()*3)+1))), 0.35, ATTN_IDLE, ((random() + 0.4) * 100), 0);	
 	}
 }
 

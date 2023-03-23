@@ -81,7 +81,8 @@ vector( float id ) gameplay_hudcolor_color={
 };
 
 string( float id)gameplay_crosshair_img={
-  switch( id ){
+  switch( id )
+  {
     case 1:
       return "gfx/crosshair1";
     case 2:

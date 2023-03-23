@@ -386,6 +386,12 @@ void() m_newmap =
 	{
 	//	localcmd("r_drawviewmodel 1;\n");
 	}
+
+	if( clientstate() == CS_CONNECTED)
+	{
+		  DRAW_MOUSE = FALSE;
+	}
+	
 };
 
 /*

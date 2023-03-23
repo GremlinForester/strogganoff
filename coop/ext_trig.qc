@@ -6,7 +6,7 @@
       
       trigger_hub_changelevel
       
-      trigger_hub_on_state
+      target_hub_on_state
       
       trigger_hub_set_map
       
@@ -140,6 +140,7 @@ void() trigger_hub_changelevel={
 #define FLAG_MORE_THAN 4
 #define FLAG_NOT_EQUAL 8
 #define REMOVE_TARGETS 16
+#define TRIGGER_ON_SPAWN 32
 
 void() hub_onState={
 
@@ -180,8 +181,12 @@ void() hub_onState_load={
   }
   
   if(conditionMet){
-    if(self.target){
-      SUB_UseTargets();
+    if(self.target)
+	{
+		if (!activator)
+			activator = self;
+      
+	  SUB_UseTargets();
     }
   }
   else if((self.spawnflags & REMOVE_TARGETS)){
@@ -198,16 +203,26 @@ void() hub_onState_load={
   self.nextthink = time + 0.1;
 };
 //Stroggannoff EXT-HUB / fire triggers based on hubstate
-/*QUAKED trigger_hub_on_state (.5 .5 .5) EQUAL_TO HUB_LESS_THAN HUB_MORE_THAN NOT_EQUAL REMOVE_TARGETS
+/*QUAKED target_hub_on_state (.5 .5 .5) (-16 -16 -16) (16 16 16) EQUAL_TO HUB_LESS_THAN HUB_MORE_THAN NOT_EQUAL REMOVE_TARGETS
   Kills / removes any entity with matching TARGETNAME
   .hubState(integer) : "the hubState value to compare to server."
 */
-void() trigger_hub_on_state={
-  InitTrigger ();
+
+void() target_hub_init = 
+{
+  if (self.spawnflags & TRIGGER_ON_SPAWN){
+	self.think = hub_onState_load;
+    self.nextthink = time + 0.1;
+  }
+}
+
+void() target_hub_on_state = 
+{
+//  InitTrigger ();
   
   self.solid = SOLID_NOT;
   self.touch = SUB_Null;
   self.use = hub_onState_load;
-  self.think = hub_onState_load;
-  self.nextthink = time + 0.15;
+	self.think = target_hub_init;
+	self.nextthink = time + 0.1;
 };

@@ -50,13 +50,13 @@ void() chat_chat =
 	WriteByte(MSG_ALL, 1);// svc_nop
 	WriteString(MSG_ALL, self.netname);
 	WriteByte(MSG_ALL, 8);
-	WriteByte(MSG_ALL, 1);
+	//WriteByte(MSG_ALL, 1);
 	WriteString(MSG_ALL, ": ");
 	WriteByte(MSG_ALL, 8);
-	WriteByte(MSG_ALL, 1);
+	//WriteByte(MSG_ALL, 1);
 	WriteString(MSG_ALL, self.message);
 	WriteByte(MSG_ALL, 8);
-	WriteByte(MSG_ALL, 2);// svc_disconnect
+	//WriteByte(MSG_ALL, 2);// svc_disconnect
 	WriteString(MSG_ALL, "\n");
 	
 	if (self.target)

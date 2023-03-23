@@ -8,9 +8,9 @@ void( ) FRIK_FILE_precaches =
 	
 	
 	
-	f = fopen("cache/precache_server.txt" , FILE_READ);        // opens "data/precache.txt" to be read
+	f = fopen("data/cache/precache_server.txt" , FILE_READ);        // opens "data/precache.txt" to be read
 
-    bprint("loaded cache/precache_server.txt\n");  //DEBUG
+    bprint("loaded data/cache/precache_server.txt\n");  //DEBUG
 	
 	if (f != -1){                                        // if f = -1 then the file could not be found
 		ln = fgets(f);                              // this line sets ln to the string read from the file with the file handle of f
@@ -231,6 +231,25 @@ local float f;
 }
 */
 
+void() deathmatch_think =
+{
+	LOG("Deathmatch!!!");
+	self.nextthink = time + 0.5;
+	self.think = deathmatch_think;
+}
+
+void() spawn_deathmatch_gamemanager =
+{
+	self.classname = "deathmatch_gamemanager";
+	self.solid = SOLID_NOT;
+	self.movetype = MOVETYPE_NONE;
+	setorigin (self, '0 0 0');
+
+	self.nextthink = time + 0.5;
+	self.think = deathmatch_think;
+}
+
+
 entity	lastspawn;
 
 void(vector org, float height, vector rot) make_ladderVolume;
@@ -381,20 +400,22 @@ Quake 2 MP Map ladder volumes
 
 	// the area based ambient sounds MUST be the first precache_sounds
 
-// player precaches	
+	// player precaches	
 	W_Precache ();			// get weapon precaches
 
 	FRIK_FILE_precaches(); //MrC: Thanks goes to Peter Roohr (battleMETAL), precaching with external text files is TIGHT!
+	//precached again below becuase I couldn't figure out how to disable the (see #pragma stuff in compiler.qc), 
+	//so anything worth precaching is worth precaching twice! I guess.
 
-  //Stroggannoff EXT-HUB / initialize hub-map extension
-  sv_ext_hub_ini();
-  //-------------------
+	//Stroggannoff EXT-HUB / initialize hub-map extension
+	sv_ext_hub_ini();
+	//-------------------
 	
-// sounds used from C physics code
+	// sounds used from C physics code
 	precache_sound ("demon/dland2.wav");		// landing thud
 	precache_sound ("misc/h2ohit1.wav");		// landing splash
 
-// setup precaches allways needed
+	// setup precaches allways needed
 	precache_sound ("items/itembk2.wav");		// item respawn sound
 	precache_sound ("player/plyrjmp8.wav");		// player jump
 	precache_sound ("player/land.wav");			// player landing
@@ -421,11 +442,12 @@ Quake 2 MP Map ladder volumes
 
 	precache_sound ("misc/power.wav");			//lightning for boss
 
-// player gib sounds
+	// player gib sounds
 	precache_sound ("player/gib.wav");			// player gib sound
 	precache_sound ("player/udeath.wav");		// player gib sound
 	precache_sound ("player/tornoff2.wav");		// gib sound
-
+	
+	/*
 	precache_sound (PLAYER_KILLCOMMENT_1);
 	precache_sound (PLAYER_KILLCOMMENT_2);
 	precache_sound (PLAYER_KILLCOMMENT_3);
@@ -437,24 +459,9 @@ Quake 2 MP Map ladder volumes
 	precache_sound (PLAYER_IDLECOMMENT_2);
 	precache_sound (PLAYER_IDLECOMMENT_3);
 	precache_sound (PLAYER_IDLECOMMENT_4);
+	*/
 
-// player pain sounds
-
-	precache_sound ("player/pain1.wav");
-	precache_sound ("player/pain2.wav");
-	precache_sound ("player/pain3.wav");
-	precache_sound ("player/pain4.wav");
-	precache_sound ("player/pain5.wav");
-	precache_sound ("player/pain6.wav");
-
-// player death sounds
-	precache_sound ("player/death1.wav");
-	precache_sound ("player/death2.wav");
-	precache_sound ("player/death3.wav");
-	precache_sound ("player/death4.wav");
-	precache_sound ("player/death5.wav");
-
-// ax sounds	
+	// ax sounds
 	precache_sound ("weapons/ax1.wav");			// ax swoosh
 	precache_sound ("player/axhit1.wav");		// ax hit meat
 	precache_sound ("player/axhit2.wav");		// ax hit world
@@ -557,7 +564,7 @@ Quake 2 MP Map ladder volumes
 	precache_sound ("weapons/HGRENT1A.WAV");
 	precache_sound ("weapons/ROCKLF1A.wav");
 	
-	precache_sound ("items/suit2.wav");	
+	precache_sound ("items/suit2.wav");
 
 //
 // Setup light animation tables. 'a' is total darkness, 'z' is maxbright.
@@ -608,7 +615,9 @@ Quake 2 MP Map ladder volumes
 	// 63 testing
 	lightstyle(63, "a");
 	
-
+	if (deathmatch){
+		spawn_deathmatch_gamemanager();
+	}
 };
 
 void() StartFrame =

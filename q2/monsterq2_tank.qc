@@ -19,9 +19,11 @@ void() tank_reattack_blaster;
 #define TANK_SOUND_IDLE		"tank/tnkidle1.wav"
 #define TANK_SOUND_DIE		"tank/death.wav"
 #define TANK_SOUND_STEP		"tank/step.wav"
-#define TANK_SOUND_WINDUP		"tank/tnkatck4.wav"
-#define TANK_SOUND_STRIKE		"tank/tnkatck5.wav"
-#define TANK_SOUND_SIGHT		"tank/sight1.wav"
+#define TANK_SOUND_WINDUP	"tank/tnkatck4.wav"
+#define TANK_SOUND_STRIKE	"tank/tnkatck5.wav"
+#define TANK_SOUND_SIGHT	"tank/sight1.wav"
+#define TANK_ROCKET_LAUNCH 	"tank/Tnkatck1.wav"
+#define TANK_BLASTER_LAUNCH "tank/Tnkatck3.wav"
 
 //Muzzle Flash offsets
 #define MZ2_TANK_BLASTER_1	'20.7 -18.5 28.7'
@@ -31,10 +33,6 @@ void() tank_reattack_blaster;
 #define MZ2_TANK_ROCKET_1	'6.2 29.1 49.1'
 #define MZ2_TANK_ROCKET_2	'6.9 23.8 49.1'
 #define MZ2_TANK_ROCKET_3	'8.3 17.8 49.5'
-
-void() tank_sight={
-	sound (self, CHAN_VOICE, TANK_SOUND_SIGHT, 1, ATTN_NORM);
-};
 
 void() tank_footstep={
 	sound (self, CHAN_BODY, TANK_SOUND_STEP, 1, ATTN_NORM);
@@ -52,12 +50,38 @@ void() tank_idle={
 	sound (self, CHAN_VOICE, TANK_SOUND_IDLE, 1, ATTN_NORM);
 };
 
-//STAND
-framerloop($FRAME_stand01, $FRAME_stand30, tank_move_stand, 0.1, ai_stand(););
-
-void() tank_stand={
-	tank_move_stand();
+void() tank_fire_bullet =
+{
+	if (random() >= 0.2)
+	{
+		sound (self, CHAN_AUTO, "tank/tnkatk2a.wav", 1, ATTN_NORM);	
+	}
+	else if (random() >= 0.4)
+	{
+		sound (self, CHAN_AUTO, "tank/tnkatk2b.wav", 1, ATTN_NORM);			
+	}
+	else if (random() >= 0.6)
+	{
+		sound (self, CHAN_AUTO, "tank/tnkatk2c.wav", 1, ATTN_NORM);			
+	}
+	else if (random() >= 0.8)
+	{
+		sound (self, CHAN_AUTO, "tank/tnkatk2d.wav", 1, ATTN_NORM);			
+	}
+	else
+	{
+		sound (self, CHAN_AUTO, "tank/tnkatk2e.wav", 1, ATTN_NORM);			
+	}	
+	
 };
+
+//STAND
+framerloop($FRAME_stand01, $FRAME_stand30, tank_stand, 0.1, 
+
+	frame_arb($FRAME_stand01, if (random() < 0.2) tank_idle(); );
+	ai_stand();
+);
+
 
 //WALK
 void() tank_walk;
@@ -213,9 +237,10 @@ void() TankBlaster ={
 	start = self.origin + (v_forward * org_offset_x) + (v_right * org_offset_y) + (v_up * org_offset_z);
 	end = self.enemy.origin;
 	end_z = end_z + self.enemy.view_ofs_z;
-	
+		   
 	dir = normalize(end - start);
-	
+
+	sound(self, CHAN_WEAPON, TANK_BLASTER_LAUNCH, 1, ATTN_NORM);
 	monster_fire_blaster (start, dir, autocvar_sk_q2tank_blaster_damage, '2 0.5 0.5', MF_TRACER2);
 };
 
@@ -244,6 +269,7 @@ void() TankRocket ={
 	
 	dir = normalize(end - start);
 	
+	sound (self, CHAN_WEAPON, TANK_ROCKET_LAUNCH, 1, ATTN_NORM);
 	monster_fire_rocket (start, dir, autocvar_sk_q2tank_rocket_damage);
 };
 
@@ -285,6 +311,8 @@ void() TankMachineGun={
 	makevectors(dir);
 	vec = start + (v_forward * vlen(self.enemy.origin - self.origin));
 	
+		pointparticles(particleeffectnum("nailgun_muzzleflash"), start, '0 0 0', 1);
+	tank_fire_bullet();
 	monster_fire_bullet (start, normalize(vec - start), '0.025 0.01 0', autocvar_sk_q2tank_bullet_damage);
 };
 
@@ -348,7 +376,8 @@ framer($FRAME_attak301, $FRAME_attak321, tank_move_attack_pre_rocket, tank_doatt
 	
 	ai_rep($FRAME_attak309, ai_charge, 0,0,0,0,-3,-6,-6,-6);
 	
-	frame_arb($FRAME_attak316, tank_footstep(););
+	frame_arb($FRAME_attak301, tank_windup(););
+	frame_arb($FRAME_attak316, tank_footstep(););	
 );
 
 framer($FRAME_attak322, $FRAME_attak330, tank_move_attack_fire_rocket, tank_refire_rocket, 0.1, 
@@ -504,6 +533,7 @@ void() precache_tank =
 	precache_sound (TANK_SOUND_WINDUP);
 	precache_sound (TANK_SOUND_STRIKE);
 	precache_sound (TANK_SOUND_SIGHT);
+	precache_sound (TANK_BLASTER_LAUNCH);
 	
 	precache_sound ("tank/tnkatck1.wav");
 	precache_sound ("tank/tnkatk2a.wav");
@@ -511,7 +541,6 @@ void() precache_tank =
 	precache_sound ("tank/tnkatk2c.wav");
 	precache_sound ("tank/tnkatk2d.wav");
 	precache_sound ("tank/tnkatk2e.wav");
-	precache_sound ("tank/tnkatck3.wav");
 }
 
 /*QUAKED monster_tank (1 .5 0) (-32 -32 -16) (32 32 72) Ambush Trigger_Spawn Sight
@@ -555,6 +584,9 @@ void() monster_tank={
 	self.th_missile = tank_attack;
 	self.th_die = tank_die;
 	self.th_pain = tank_pain;
+
+	self.sightSound = TANK_SOUND_SIGHT;	
+
 	
 	walkmonster_start;
 };

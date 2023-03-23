@@ -8,11 +8,14 @@ void() rt_lights_editor_help =
 	
 	if (!help)
 	{
-		v_x = vid_conwidth - ( 320 - 75 );
-		v_y = vid_conheight - 245;
+		//v_x = vid_conwidth; - ( 320 - 75 );
+		//v_y = vid_conheight; - 245;		
+		
+		v_x = vid_conwidth * 0.05;
+		v_y = vid_conheight * 0.05;
 //		drawpic(v, "gfx/blacktile", '3345 168', VEC_1, 0.7, DRAWFLAG_NORMAL); v_x = v_x + 5;
 		
-		drawstring(v,"==================================", '7 7', '1 1 1', 1, DRAWFLAG_NORMAL); v_y = v_y + 7;
+/* 		drawstring(v,"==================================", '7 7', '1 1 1', 1, DRAWFLAG_NORMAL); v_y = v_y + 7;
 		drawstring(v,"      or        Tick: x1 x10 x100 ", '7 7', '1 1 1', 1, DRAWFLAG_NORMAL); drawstring(v,"Wheel    Mouse3", '7 7', '1 1 0', 1, DRAWFLAG_NORMAL); v_y = v_y + 7;
 		drawstring(v,"==================================", '7 7', '1 1 1', 1, DRAWFLAG_NORMAL); v_y = v_y + 7;
 		drawstring(v," Hold (Key) + (Mouse Wheel)       ", '7 7', '1 1 1', 1, DRAWFLAG_NORMAL); v_y = v_y + 7;
@@ -33,17 +36,42 @@ void() rt_lights_editor_help =
 		drawstring(v,"( )  ( )    Light: Copy, Paste    ", '7 7', '1 1 1', 1, DRAWFLAG_NORMAL); drawstring(v," C    V", '7 7', '1 1 0', 1, DRAWFLAG_NORMAL); v_y = v_y + 7;
 		drawstring(v,"( )  ( )    Shadows, Corona       ", '7 7', '1 1 1', 1, DRAWFLAG_NORMAL); drawstring(v," J    Z", '7 7', '1 1 0', 1, DRAWFLAG_NORMAL); v_y = v_y + 7;
 		drawstring(v,"( )  ( )    Normal, Realtime      ", '7 7', '1 1 1', 1, DRAWFLAG_NORMAL); drawstring(v," N    M", '7 7', '1 1 0', 1, DRAWFLAG_NORMAL); v_y = v_y + 7;
-		drawstring(v,"( )  ( )    Save To File, Help    ", '7 7', '1 1 1', 1, DRAWFLAG_NORMAL); drawstring(v," Q    H", '7 7', '1 1 0', 1, DRAWFLAG_NORMAL);
+		drawstring(v,"( )  ( )    Save To File, Help    ", '7 7', '1 1 1', 1, DRAWFLAG_NORMAL); drawstring(v," Q    H", '7 7', '1 1 0', 1, DRAWFLAG_NORMAL); */
+		
+		drawstring(v,"==================================", '10 10', '0 1 1', 1, DRAWFLAG_NORMAL); v_y = v_y + 10;
+		drawstring(v,"(Wheel or Mouse3) Grid:           ", '10 10', '1 1 1', 1, DRAWFLAG_NORMAL); v_y = v_y + 10;
+		drawstring(v,"==================================", '10 10', '0 1 1', 1, DRAWFLAG_NORMAL); v_y = v_y + 10;
+		drawstring(v," Hold (Key) + (Mouse Wheel)       ", '10 10', '1 1 1', 1, DRAWFLAG_NORMAL); v_y = v_y + 10;
+		drawstring(v,"==================================", '10 10', '0 1 1', 1, DRAWFLAG_NORMAL); v_y = v_y + 10;
+		//drawstring(v,"Base Tick:                        ", '10 10', '1 1 1', 1, DRAWFLAG_NORMAL); v_y = v_y + 10;
+		drawstring(v,"(Right) (Down) (Up) Move:  X Y Z  ", '10 10', '1 1 1', 1, DRAWFLAG_NORMAL); v_y = v_y + 10;
+		drawstring(v,"(<) (>) (?)         Angle: X Y Z  ", '10 10', '1 1 1', 1, DRAWFLAG_NORMAL); v_y = v_y + 10;
+		drawstring(v,"(Y)     (K) Radius, Style         ", '10 10', '1 1 1', 1, DRAWFLAG_NORMAL); v_y = v_y + 14;
+		//drawstring(v,"Base Tick:                        ", '10 10', '1 1 1', 1, DRAWFLAG_NORMAL); v_y = v_y + 10;
+		drawstring(v,"(R) (G) (B) Red, Green, Blue      ", '10 10', '1 1 1', 1, DRAWFLAG_NORMAL); v_y = v_y + 10;
+		drawstring(v,"(X)CorS (T) Color Scale:          ", '10 10', '1 1 1', 1, DRAWFLAG_NORMAL); v_y = v_y + 10;
+		drawstring(v,"(U) (I) (O) Ambient, Diff, Spec   ", '10 10', '1 1 1', 1, DRAWFLAG_NORMAL); v_y = v_y + 10;
+		drawstring(v,"==================================", '10 10', '0 1 1', 1, DRAWFLAG_NORMAL); v_y = v_y + 10;
+		drawstring(v," Press (Key)                      ", '10 10', '1 1 1', 1, DRAWFLAG_NORMAL); v_y = v_y + 10;
+		drawstring(v,"==================================", '10 10', '0 1 1', 1, DRAWFLAG_NORMAL); v_y = v_y + 10;
+		drawstring(v,"(Mouse1)    Spawn Light           ", '10 10', '1 1 1', 1, DRAWFLAG_NORMAL); v_y = v_y + 10;
+		drawstring(v,"(Mouse2)    Remove Light          ", '10 10', '1 1 1', 1, DRAWFLAG_NORMAL); v_y = v_y + 10;
+		drawstring(v,"(C)  (V)    Light: Copy, Paste    ", '10 10', '1 1 1', 1, DRAWFLAG_NORMAL); v_y = v_y + 10;
+		drawstring(v,"(J)  (Z)    Shadows, Corona       ", '10 10', '1 1 1', 1, DRAWFLAG_NORMAL); v_y = v_y + 10;
+		drawstring(v,"(N)  (M)    Normal, Realtime      ", '10 10', '1 1 1', 1, DRAWFLAG_NORMAL); v_y = v_y + 10;
+		drawstring(v,"(Q)  (H)    Save To File, Help    ", '10 10', '1 1 1', 1, DRAWFLAG_NORMAL);	
 	}
-	
+	/*
 	if (grey)
 	{
 		v_x = vid_conwidth - ( 320 - 80) + 25 * 7;
 		v_y = vid_conheight - 245 + 12 * 7; 
 		drawstring(v,ftos(scale_cache), '7 7', '1 0.2 0.2', 1, DRAWFLAG_NORMAL);
 	}
-
-	v_y = vid_conheight - 245 + 7; 
+	*/
+	
+/* 	v_y = vid_conheight - 245 + 7;
+	
 	if 	(increment == 1)
 	{
 		v_x = vid_conwidth - ( 320 - 80 ) + 22 * 7;
@@ -58,7 +86,30 @@ void() rt_lights_editor_help =
 	{
 		v_x = vid_conwidth - ( 320 - 80 ) + 29 * 7;
 		drawstring(v,"x100", '7 7', '1 0 0', 1, DRAWFLAG_NORMAL);
+	} */
+	
+	v_x = vid_conwidth * 0.05;
+	v_y = vid_conheight * 0.05;	
+	
+	if 	(increment == 1)
+	{
+		v_x = vid_conwidth * 0.05 + 100;
+		v_y = vid_conheight * 0.05 + 10;			
+		drawstring(v,"1", '10 10', '1 1 0', 1, DRAWFLAG_NORMAL);
 	}
+	else if (increment == 10)
+	{
+		v_x = vid_conwidth * 0.05 + 100;
+		v_y = vid_conheight * 0.05 + 10;		
+		drawstring(v,"10", '10 10', '1 1 0', 1, DRAWFLAG_NORMAL);
+	}
+	else if (increment == 100)
+	{
+		v_x = vid_conwidth * 0.05 + 100;
+		v_y = vid_conheight * 0.05 + 10;
+		drawstring(v,"100", '10 10', '1 1 0', 1, DRAWFLAG_NORMAL);
+	}
+	
 };
 
 
@@ -408,7 +459,7 @@ float(float event, float parama) rt_lights_editor =
 			if (inc > 0) inc = 1;
 			else inc = -1;
 			inc = cvar("r_editlights_current_style") + inc;
-			if (inc < 12 && inc >= 0) localcmd(strcat("r_editlights_edit lstyle ", ftos(inc), "\n"));
+			if (inc < 12 && inc >= 0) localcmd(strcat("r_editlights_edit style ", ftos(inc), "\n"));
 		}
 		
 		else

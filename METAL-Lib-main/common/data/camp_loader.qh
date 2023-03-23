@@ -1,7 +1,6 @@
 /*
-battleMETAL
-author: Peter Roohr
-date: 05/08/2020
+Based on the battleMETAL menu and metal-lib library by Peter Roohr 
+and adapted for Q2DP by MrC (so if it's broke you know who to blame).
 overview:
   Header for campaign file loader.
 */

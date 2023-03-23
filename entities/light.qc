@@ -148,7 +148,6 @@ void() rtlight =
 	self.movetype = MOVETYPE_NOCLIP;
 	self.skin = self.skin;
 	setorigin (self, self.origin);
-//	self.color = self.color;
 	self.glow_size = self.light_lev;
 	
 	if (self.targetname)

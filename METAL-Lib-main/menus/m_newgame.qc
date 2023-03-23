@@ -75,7 +75,8 @@ void() click_newg_launch_map =
 	localcmd("coop 0\n");
 	localcmd("cd stop\n");
 	localcmd("maxplayers 1\n");
-
+	localcmd("sv_hub_state 0\n");	
+	
 	/*
 	if( GAME_SAVES_NEWG[cvar("saveslot")] )
 	{

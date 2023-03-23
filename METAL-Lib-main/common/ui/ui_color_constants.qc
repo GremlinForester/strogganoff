@@ -1,7 +1,6 @@
 /*
-battleMETAL
-Author: Peter Roohr
-Date: 04/14/2018
+Based on the battleMETAL menu and metal-lib library by Peter Roohr 
+and adapted for Q2DP by MrC (so if it's broke you know who to blame).
 Overview: Made the csqc color constants defs into a /common/ file
 so that these defs can be shared / expanded by menu.dat
 */

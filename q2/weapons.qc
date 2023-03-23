@@ -368,7 +368,7 @@ void() W_ChangeWeapon =
 			self.weapon_update_func = weapon_supershotg_update;
 			self.weapon_pause_frames = weapon_supershotg_pause;
 			self.weapon_fire_frames = weapon_supershotg_fire;
-			self.weapon_ammo_min = 2;
+			self.weapon_ammo_min = 1;
 			break;
 		case WEP_MACHINEGUN:
 			readySfx = "weapons/HGRENT1A.WAV";
@@ -788,8 +788,8 @@ void() Weapon_Blaster_Fire=
 		damage = 10 + (self.upgrade_blaster_level * autocvar_sk_blaster_upgrade_multiplier);
 
 	fire_blaster_base(self.origin, self.v_angle, 800, damage, 200, 100, 200);	
-	SpawnMuzzleFlash(WEP_BLASTER_MFLASH_OFFSET_FP, WEP_BLASTER_MFLASH_SCALE, 0.5);
-	SpawnMuzzleFlashTP(WEP_BLASTER_MFLASH_OFFSET_TP, 0.5);
+	//SpawnMuzzleFlash(WEP_BLASTER_MFLASH_OFFSET_FP, WEP_BLASTER_MFLASH_SCALE, 0.25);
+	//SpawnMuzzleFlashTP(WEP_BLASTER_MFLASH_OFFSET_TP, 0.5);
 	sound (self, CHAN_WEAPON, "weapons/BLASTF1A.WAV", 1, ATTN_NORM);
 	self.weaponframe++;
 }
@@ -822,7 +822,7 @@ void() Weapon_Shotgun_Fire={
 	self.solid = SOLID_SLIDEBOX;
 	self.punchangle_x = random() * kick;
 
-	SpawnMuzzleFlash(WEP_MACHINEGUN_MFLASH_OFFSET_FP, 1, 0.75);
+	SpawnMuzzleFlash(WEP_MACHINEGUN_MFLASH_OFFSET_FP, 0.5, 1);
 	sound(self, CHAN_WEAPON, "weapons/Shotgf1b.wav", 1, ATTN_NORM);
 	self.weaponframe++;
 
@@ -834,6 +834,38 @@ void() weapon_shotgun_update={
 
 	Weapon_Generic (7, 18, 36, 39, Weapon_Shotgun_Fire);
 };
+
+/* void() Weapon_SuperShotgun={
+
+	local vector v, left, right;
+	local float damage, kick;
+	damage = 6;
+	kick = 12;
+	
+	
+	self.punchangle_x = -2;
+	
+	if (self.super_damage_finished > time){
+		damage *= 4;
+		kick *= 4;
+	}
+
+	SpawnMuzzleFlash(WEP_MACHINEGUN_MFLASH_OFFSET_FP, 2, 0.45);
+	sound (self ,CHAN_WEAPON, "weapons/Sshotf1b.wav", 1, ATTN_NORM);
+	
+	left = self.origin + (v_right * -5);
+	right = self.origin + (v_right * 5);
+
+	self.solid = SOLID_BBOX;
+	fire_shotgun_base(left, self.v_angle, 6, '0.08 0.06', damage);
+	fire_shotgun_base(right, self.v_angle, 6, '0.08 0.06', damage);
+	self.solid = SOLID_SLIDEBOX;
+	
+	self.weaponframe++;
+
+	self.inv_ammo_shells = max(self.inv_ammo_shells - 2,0);
+	self.currentammo = self.inv_ammo_shells;
+}; */
 
 void() Weapon_SuperShotgun={
 
@@ -850,20 +882,35 @@ void() Weapon_SuperShotgun={
 		kick *= 4;
 	}
 
-	SpawnMuzzleFlash(WEP_MACHINEGUN_MFLASH_OFFSET_FP, 2, 0.75);
+	SpawnMuzzleFlash(WEP_MACHINEGUN_MFLASH_OFFSET_FP, 2, 0.45);
 	sound (self ,CHAN_WEAPON, "weapons/Sshotf1b.wav", 1, ATTN_NORM);
 	
 	left = self.origin + (v_right * -5);
 	right = self.origin + (v_right * 5);
 
-	self.solid = SOLID_BBOX;
-	fire_shotgun_base(left, self.v_angle, 6, '0.08 0.06', damage);
-	fire_shotgun_base(right, self.v_angle, 6, '0.08 0.06', damage);
-	self.solid = SOLID_SLIDEBOX;
-	
+	if (self.inv_ammo_shells >= 2)
+	{
+		self.solid = SOLID_BBOX;
+		fire_shotgun_base(left, self.v_angle, 6, '0.08 0.06', damage);
+		fire_shotgun_base(right, self.v_angle, 6, '0.08 0.06', damage);
+		self.inv_ammo_shells = max(self.inv_ammo_shells - 2,0);	
+		self.solid = SOLID_SLIDEBOX;
+	}
+	else
+	{
+		self.solid = SOLID_BBOX;
+		if (random() < 0.5)
+		{
+			fire_shotgun_base(left, self.v_angle, 6, '0.08 0.06', damage);
+		}
+		else
+		{
+			fire_shotgun_base(right, self.v_angle, 6, '0.08 0.06', damage);			
+		}
+		self.inv_ammo_shells = max(self.inv_ammo_shells - 1,0);	
+		self.solid = SOLID_SLIDEBOX;		
+	}
 	self.weaponframe++;
-
-	self.inv_ammo_shells = max(self.inv_ammo_shells - 2,0);
 	self.currentammo = self.inv_ammo_shells;
 };
 void() weapon_supershotg_update={
@@ -1043,7 +1090,8 @@ void() Weapon_Chaingun_Fire={
 		//fire_bullet_base(self.origin, self.v_angle, '0.02 0.02', damage);
 		FireBullet(damage);
 		self.solid = SOLID_SLIDEBOX;
-		SpawnMuzzleFlash(WEP_MACHINEGUN_MFLASH_OFFSET_FP, 2, 0.5);
+		SpawnMuzzleFlash(WEP_MACHINEGUN_MFLASH_OFFSET_FP, 0.50, 0.65);		
+		SpawnMuzzleFlash(WEP_MACHINEGUN_MFLASH_OFFSET_FP, 1.35, 0.25);
 	}
 	sfx = random() * 1.0;
 	if(sfx < 0.3){
@@ -1164,8 +1212,8 @@ void() Weapon_Hyperblaster_Fire =
 			
 			fire_blaster_base(self.origin, self.v_angle, 800, damage, 200, 100, 200);
 			self.shotcount++;
-			SpawnMuzzleFlash(WEP_BLASTER_MFLASH_OFFSET_FP, WEP_BLASTER_MFLASH_SCALE, 0.5);
-			SpawnMuzzleFlashTP(WEP_BLASTER_MFLASH_OFFSET_TP, 0.5);
+			//SpawnMuzzleFlash(WEP_BLASTER_MFLASH_OFFSET_FP, WEP_BLASTER_MFLASH_SCALE, 0.5);
+			//SpawnMuzzleFlashTP(WEP_BLASTER_MFLASH_OFFSET_TP, 0.5);
 			sound (self, CHAN_WEAPON, "weapons/Hyprbf1a.wav", 1, ATTN_NORM);
 			sound (self, CHAN_WEAPON2, "weapons/Hyprbl1a.wav", 1, ATTN_NORM);
 			

@@ -1,7 +1,6 @@
 /*
-battleMETAL
-Author: Peter Roohr
-Date: 4/11/2018
+Based on the battleMETAL menu and metal-lib library by Peter Roohr 
+and adapted for Q2DP by MrC (so if it's broke you know who to blame).
 Overview: utility functions for menu
 */
 

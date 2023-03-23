@@ -118,13 +118,6 @@ The following is from Quake 2 for now. TODO make it work here or use it as a gen
 #define	MASK_OPAQUE				(CONTENTS_SOLID|CONTENTS_SLIME|CONTENTS_LAVA)
 #define	MASK_SHOT				(CONTENTS_SOLID|CONTENTS_MONSTER|CONTENTS_WINDOW|CONTENTS_DEADMONSTER)
 
-/*
-
-HUB Globals
-
-*/
-.float isHub; //used in worldspawn to mark level as a HUB
-
 .float fadein;
 
 var float autocvar_howmanyplayers;
@@ -862,7 +855,7 @@ WEAPONS
 
 #define	WEP_MACHINEGUN_MFLASH_OFFSET_FP '74 -23 -17'
 #define	WEP_MACHINEGUN_MFLASH_OFFSET_TP '40 -18 -10'
-#define	WEP_MACHINEGUN_MFLASH_SCALE 0.5
+#define	WEP_MACHINEGUN_MFLASH_SCALE 0.35
 #define	WEP_MG_MFLASH_ALPHA 0.5
 
 /*

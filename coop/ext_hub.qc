@@ -35,7 +35,7 @@
 */
 
 //import 
-void() trigger_hub_on_state;
+void() target_hub_on_state;
 
 /*
   Stroggannoff EXT-HUB / initialize hub-map extension
