@@ -204,6 +204,9 @@ void(entity targ, entity inflictor, entity attacker, float damage) T_Damage=
 
 	if (!targ.takedamage)
 		return;
+	
+	if (targ.movetype == MOVETYPE_NOCLIP)
+		return;	
 
 // used by buttons and triggers to set activator for target firing
 	damage_attacker = attacker;

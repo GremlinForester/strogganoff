@@ -311,6 +311,8 @@ void() model_static =
 	self.oscale = self.scale;	
 	self.avelocity = self.avelocity;
 
+	self.angles_x = self.angles_x * -1; //just because why not?
+
 	self.nextthink = time + 0.1;
 	self.think = model_static_init;
 	

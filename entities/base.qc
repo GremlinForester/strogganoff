@@ -335,6 +335,7 @@ STATIC & DYNAMIC MODELS
 #define SF_HOLOGRAM 1
 #define SF_SOLID_BSP 2
 #define SF_START_INVIS 4
+#define SF_NOTSOLID 8
 
 .vector holo_color;
 
@@ -372,5 +373,50 @@ void() random4Noise =
 //currently used for func_water...
 .float speed2;
 
+/*
+void execute_joblist(argv(0), argv(1)) =
+{
+}
 
+void(string filename) menu_execute_cvar_list={
+  local float f;
+	local string ln;
+  f = fopen(filename, FILE_READ);
+	if (f != -1){
+		ln = fgets(f); 
+		while(ln != ""){ 
+			if(strstrofs(ln, "//",0) == -1){
+        tokenizebyseparator(ln, " ");
+        cvar_set(argv(0), argv(1));
+			}
+			ln = fgets(f);
+		}
+    fclose(f);    
+	} 
+};
 
+void(float level) graphics_light_set={
+  local string cvars;
+  switch(level){
+    default:
+      cvars = "data/cache/settings/lighting_low.cvl";
+      break;
+    case 2:
+      cvars = "data/cache/settings/lighting_normal.cvl"; 
+      break;
+    case 3:
+      cvars = "data/cache/settings/lighting_high.cvl";
+      break;
+    case 4:
+      cvars = "data/cache/settings/lighting_max.cvl";
+      break;
+  }
+  menu_execute_cvar_list(cvars);
+};
+*/
+
+.vector offset;
+
+#define IS_TRAIL 2
+#define IS_RANDOM 4
+#define FIRE_ONCE 8

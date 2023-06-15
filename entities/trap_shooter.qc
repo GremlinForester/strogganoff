@@ -100,6 +100,8 @@ void(vector org, vector dir) launch_shooter_custom_projectile =
 	setorigin (newmis, org);
 
 	newmis.velocity = dir * self.speed;
+	
+	SUB_UseTargets ();
 };
 
 void() shooter_custom_use =
@@ -145,8 +147,14 @@ void() trap_shooter_custom =
 		self.count = 10;
 	
 	if (! self.dmg)
-		self.dmg = 200;	
+		self.dmg = 200;
 	
 	self.nextthink = self.nextthink + self.wait + self.ltime;
+	
+	if (self.spawnflags & IS_RANDOM) //4
+	{		
+		self.nextthink = self.ltime + (self.wait * random());
+	}	
+	
 	self.think = shooter_custom_think;
 };

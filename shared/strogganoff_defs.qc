@@ -1189,3 +1189,6 @@ enum
 	LOOT_RAILGUN,
 	LOOT_BFG
 };
+
+.void() oldthink;
+.float oldthinktime;

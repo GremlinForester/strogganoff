@@ -43,7 +43,7 @@ And just to be clear, there is code from all over the place, written by many peo
 - Custom MENU based on [battleMETAL](https://github.com/Subject9x/battleMETAL).
 - Blaster upgrade powerup (experimental).
 - Slew of added visual effects.
-- Lots and bugs (unplanned features).
+- Lots of bugs (unplanned features).
 
 ## HUD/Client code readme credits (edited):
 Chip for the great quakewiki.net 

@@ -17,6 +17,10 @@
 14 = mutant
 15 = tank
 */
+
+//This worked at some point, then it didn't, tried experiemnting with ent_create?
+//Mark this as another TBD WIP WTF LOL
+
 void() monster_strogg_spawn =
 {
 //	local entity e;

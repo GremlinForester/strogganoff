@@ -52,6 +52,24 @@ void() SUB_regen =
 	setorigin (self, self.origin);
 };
 
+void() SUB_triggerRegen =
+{
+	self.nextthink = self.oldthinktime;
+	self.think = self.oldthink;
+	self.solid = SOLID_TRIGGER;	// allow it to be touched again
+};
+
+void(float tim) triggerTouched =
+{
+	self.oldthinktime = self.nextthink;
+	self.oldthink = self.think;
+	
+	activator = other;
+	SUB_UseTargets();				// fire all targets / killtargets	
+	self.solid = SOLID_NOT;
+	self.nextthink = time + tim;
+	self.think = SUB_triggerRegen;
+};
 
 // stand in for much repetitve touch code - all touch do this
 // in mark 3 all touch fn will route through a master fn that will do this
@@ -500,7 +518,7 @@ void() weapon_touch =
 		other.think = insane_gotaweapon;
 		leave = 1;
 	}
-	#endifdef
+	#endif
 
 // if the player was using his best weapon, change up to the new one if better		
 	stemp = self;

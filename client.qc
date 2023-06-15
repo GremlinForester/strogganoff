@@ -1032,6 +1032,7 @@ void() PutClientInServer =
 	#endif
   
   //Stroggannoff EXT-COOP / playerCache ops
+  /*
   local entity cache;
   cache = PLAYER_CACHE_ENTS[self.playerCache];
   if(self.isNewCache){
@@ -1046,6 +1047,9 @@ void() PutClientInServer =
       sv_coop_client_setCache(cache, self);
     }
   }
+*/
+
+    DecodeLevelParms ();
 
 	self.attack_finished = time;
 	self.th_pain = q2player_pain;
@@ -2601,7 +2605,21 @@ void(entity targ, entity attacker) ClientObituary =
 			{
 				bprint (" became one with the force... field\n");
 				return;
-			}			
+			}
+			if (attacker.classname == "func_damage")
+			{
+				if (attacker.message)
+				{
+					bprint(strcat(" ",attacker.message,"\n"));  //DEBUG					
+				}
+				else
+				{
+					bprint (" died\n");
+				}
+				return;
+			}
+
+			
 			if (attacker.solid == SOLID_BSP && attacker) // != world)
 			{
 				bprint (" was squished\n");

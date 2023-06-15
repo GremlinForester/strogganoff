@@ -343,5 +343,5 @@ void() textfilter_ini_keyarray={
   TXT_INPUT_FILTER[107] = 87;
   TXT_INPUT_FILTER[108] = 88;
   TXT_INPUT_FILTER[109] = 89;
-  TXT_INPUT_FILTER[110] = 90;
+  TXT_INPUT_FILTER[110] = 90;  
 };

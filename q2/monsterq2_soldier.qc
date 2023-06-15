@@ -444,7 +444,7 @@ void() q2soldier_death1fire =
 	}
 	else if (self.classname == "monster_soldier_flak"){
 		sound (self, CHAN_WEAPON, "soldier/Solatck1.wav", 1, ATTN_NORM);
-		monster_fire_flechette(2, org, self.enemy.origin - self.origin, '0.05 0.06', autocvar_sk_q2soldier_flak_damage);
+		monster_fire_flechette(2, org, v_forward * 2000, '0.05 0.06', autocvar_sk_q2soldier_flak_damage);
 	}
 	else
 	{

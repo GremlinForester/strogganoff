@@ -90,7 +90,7 @@ void() Gib_Touch_Wood =
 	remove(self);
 	}
 	
-	if (self.velocity >= '10 10 10'){
+	if (vlen(self.velocity) >= 10){
 	sound (self, CHAN_BODY, "weapons/bounce.wav", 0.3, ATTN_NORM);
 	Gib_Touch();
 	}
@@ -102,7 +102,7 @@ void() Gib_Touch_Metal =
 	remove(self);
 	}
 	
-	if (self.velocity >= '10 10 10'){
+	if (vlen(self.velocity) >= 10){
 	sound (self, CHAN_BODY, "weapons/bounce.wav", 0.3, ATTN_NORM);
 	Gib_Touch();
 	}
@@ -136,7 +136,7 @@ void() Gib_Touch_Flesh =
 //		SetVModelOverlayOther('0 0 0', "models/overlay.md3", OVERLAY_RAIN, '1 0 0');
 	//remove(self);
 	}
-	else if (self.velocity >= '10 10 10'){
+	else if (vlen(self.velocity) >= 10){
 	sound (self, CHAN_BODY, "zombie/z_miss.wav", 0.5, ATTN_NORM);
 	}
 	else{
@@ -267,14 +267,22 @@ void(string gibname, float dm) ThrowGibPhysics =
 	//physics_addforce(new, self.origin * 900000 , '500 600 700');
 };
 
-void(string gibname, float dm, float GibType, float gibScale) ThrowGib =
+void(string gibname, float dm, float GibType, float gibScale, float multiplier) ThrowGib =
 {
 	nspawn = spawn();
 	nspawn.classname = "gib";
 	nspawn.origin = self.origin;
 	setmodel (nspawn, gibname);
 	setsize (nspawn, '0 0 0', '0 0 0');
-	nspawn.velocity = VelocityForDamage (dm);
+	
+	if (multiplier > 1){
+		nspawn.velocity = VelocityForDamage(dm) + (self.movedir * multiplier);
+		//nspawn.velocity = VelocityForDamage(dm) * multiplier;
+	}
+	else{
+		nspawn.velocity = VelocityForDamage(dm);
+	}
+	
 	nspawn.movetype = MOVETYPE_BOUNCE;
 	nspawn.solid = SOLID_BBOX;
 	nspawn.avelocity_x = random()*600;
@@ -286,11 +294,11 @@ void(string gibname, float dm, float GibType, float gibScale) ThrowGib =
 	nspawn.nextthink = time + 10 + random()*10;
 
 	if (!gibScale){
-	nspawn.scale = 1;
+		nspawn.scale = 1;
 	}
 	else
 	{
-	nspawn.scale = gibScale;
+		nspawn.scale = gibScale;
 	}
 	
 	switch(GibType)
@@ -314,7 +322,6 @@ void(string gibname, float dm, float GibType, float gibScale) ThrowGib =
 		nspawn.avelocity_x = random()*900;
 		nspawn.avelocity_y = random()*800;
 		nspawn.avelocity_z = random()*700;
-		nspawn.velocity = VelocityForDamage(dm);
 		nspawn.touch = Gib_Touch;
 		nspawn.nextthink = time + 1 + random()*2;
 	break;
@@ -420,10 +427,10 @@ void(string gibname, float dm) ThrowHead =
 	self.avelocity = crandom() * '0 600 0';
 }
 
-void(string model, float dmg, float amt, float gibtype, float gibscale) TossGibs =
+void(string model, float dmg, float amt, float gibtype, float gibscale, float gibmultiplier) TossGibs =
 {
 		local float n;
 	
 		for (n = 1; n < amt; n++)
-		ThrowGib (model, dmg, gibtype, gibscale);
+		ThrowGib (model, dmg, gibtype, gibscale, gibmultiplier);
 }

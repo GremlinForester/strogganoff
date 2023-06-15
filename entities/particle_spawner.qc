@@ -21,9 +21,6 @@ Trigger to toggle between ON/OFF states.
 */
 
 //float ESTATE_ON = 1;		// Switch ON
-#define IS_TRAIL 2
-#define IS_RANDOM 4
-#define FIRE_ONCE 8
 
 void() particle_spawner_think =
 {

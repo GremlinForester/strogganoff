@@ -229,7 +229,7 @@ float (entity targ) visible =
 	return FALSE;
 #endif
 };
-#endifdef
+#endif
 
 /*
 =============
@@ -327,6 +327,12 @@ void() HuntTarget =
 void() SightSound =
 {
 //local float	rsnd;
+
+	if (self.classname == "monster_mutant_mini")
+	{
+		sound7(self, CHAN_VOICE, self.sightSound, 0.7, ATTN_NORM, 175, 0);
+		return;
+	}
 
 	sound (self, CHAN_VOICE, self.sightSound, 1, ATTN_NORM);
 

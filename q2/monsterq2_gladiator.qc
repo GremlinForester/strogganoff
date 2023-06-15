@@ -133,7 +133,7 @@ void() q2gladiator_fire =
 	org = self.origin + (v_forward * 30) + (v_right * 16) + (v_up * 30);
 	
 	end = self.enemy.origin - self.enemy.velocity*0.05;
-	end_z = end_z + self.enemy.view_ofs_z - self.enemy.velocity*0.05;
+//	end_z = end_z + self.enemy.view_ofs_z - self.enemy.velocity*0.05;
 	
 	dir = normalize(end - org);
 	

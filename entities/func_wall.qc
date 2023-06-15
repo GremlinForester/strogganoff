@@ -26,9 +26,13 @@ void() func_wall =
 
 	if (self.spawnflags & SF_START_INVIS)
 	{
-//		self.bToggleVisibility = 1;
 		self.solid = SOLID_NOT;
 		addBitsToEntity(self,effects,EF_NODRAW);		
+	}
+
+	if (self.spawnflags & SF_NOTSOLID)
+	{
+		self.solid = SOLID_NOT;	
 	}	
 	
 }; 

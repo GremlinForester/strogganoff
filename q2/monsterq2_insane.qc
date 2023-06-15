@@ -380,9 +380,9 @@ void() insane_die=
 	{
 		sound (self, CHAN_VOICE, "misc/udeath.wav", 1, ATTN_IDLE);
 		for (n= 0; n < 2; n++)
-			ThrowGib ("models/objects/gibs/bone/tris.md2", self.health, GIB_FLESH, 1);
+			ThrowGib ("models/objects/gibs/bone/tris.md2", self.health, GIB_FLESH, 1, 1);
 		for (n= 0; n < 4; n++)
-			ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health, GIB_FLESH, 1);
+			ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health, GIB_FLESH, 1, 1);
 		ThrowHead ("models/objects/gibs/head2/tris.md2", self.health);
 		self.deadflag = DEAD_DEAD;
 		return;
@@ -540,7 +540,8 @@ void() misc_insane =
 
 	#ifdef misc_insane_weapon_pickup
 	self.flags = FL_CLIENT; //should probably use something else
-	#endifdef
+	//self.touch = insane_touch;		
+	#endif
 
 	self.health = 30;
 
@@ -550,8 +551,6 @@ void() misc_insane =
 	self.th_stand = insane_stand;
 	self.th_walk = insane_walk;
 	self.th_run = insane_run;
-	//self.touch = insane_touch;	
-
 
 	//if ((self.spawnflags & 16))				// Stand Ground
 		//self->monsterinfo.aiflags |= AI_STAND_GROUND;

@@ -546,6 +546,9 @@ void() click_graphics_accept =
   localcmd("vid_restart;\n");
   RESO_CHANGE = TRUE;
   //apparently also loads autoexec.cfg and .rc
+  
+  menu_clear_items(M_STATE);
+  m_graphics_f();  
 };
 
 void() click_graphics_defaults =
@@ -647,7 +650,7 @@ void() m_graphics_i =
 	}	
 */
 	
-		menu_parent_setup(ANCHOR_CENTER_LEFT + '100 -215', '0 0');
+	menu_parent_setup(ANCHOR_CENTER_LEFT + '100 -215', '0 0');
 	
 	VID_NEXT = '0 0 0'; //initialize this here so its not null;
 

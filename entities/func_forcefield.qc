@@ -28,11 +28,40 @@ Solid wall that toggles between solid/visible and passible/invisible
 */
 void() func_forcefield=
 {
-// v107 - this code is repeated twice below, and can even be used as-is for func_illusionary
 	self.angles = '0 0 0';
 	self.movetype = MOVETYPE_PUSH;	// so it doesn't get pushed by anything
 	self.solid = SOLID_BSP;
 	self.use = func_forcefield_use;
 	self.touch = func_forcefield_touch;
 	setmodel (self, self.model);
-};  
+};
+
+void() func_damage_reset =
+{
+	self.solid = SOLID_BSP;
+	self.nextthink = -1;
+};
+
+void() func_damage_touch =
+{
+	if (other.takedamage)
+	{
+		self.solid = SOLID_NOT;
+		T_Damage (other, self, self, self.dmg);
+		self.nextthink = time + 0.5;		
+		self.think = func_damage_reset;
+	}
+}
+
+/*QUAKED func_damage (0 .5 .8) ?
+Solid wall that damages on touch with a message for the obit
+*/
+void() func_damage=
+{
+	self.angles = '0 0 0';
+	self.movetype = MOVETYPE_PUSH;	// so it doesn't get pushed by anything
+	self.solid = SOLID_BSP;
+	self.use = func_forcefield_use;
+	self.touch = func_forcefield_touch;
+	setmodel (self, self.model);
+}; 

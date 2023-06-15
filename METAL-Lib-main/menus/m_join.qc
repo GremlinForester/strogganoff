@@ -29,7 +29,6 @@ float	gethostcachenumber(float fld, float hostnr)
 */
 
 //join Globals
-
 string SERVER_BASE_DATA_DIR = "Threshold3";
 
 float SERVER_CURRENT;
@@ -195,7 +194,7 @@ void() m_join_i =
 {
   menu_parent_setup(VIEW_ORG + '160 20', '512 416');
   
-  menu_setup_mainservers();
+  //menu_setup_mainservers(); //MrC: TODO figure out custom server host thingy?
   
   resethostcachemasks();
   sethostcachesort(gethostcacheindexforkey("ping"), FALSE);

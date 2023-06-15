@@ -26,14 +26,39 @@ mutant
 // SOUNDS
 //
 
+//for mini mutant pitching
+void(string snd, float chan) q2mutant_sound =
+{
+	if (self.classname == "monster_mutant_mini")
+	{
+		sound7(self, chan, snd, 0.7, ATTN_NORM, 175, 0);
+	}
+	else
+	{
+		sound (self, chan, snd, 1, ATTN_NORM);		
+	}	
+}
+
 void() q2mutant_step =
 {
-	if (random() > 0.33)
-		sound (self, CHAN_VOICE, MUTANT_SOUND_STEP1, 1, ATTN_NORM);	
-	else if (random() > 0.66)
-		sound (self, CHAN_VOICE, MUTANT_SOUND_STEP2, 1, ATTN_NORM);	
+	if (self.classname == "monster_mutant_mini")
+	{
+		if (random() > 0.33)
+			sound7(self, CHAN_BODY, MUTANT_SOUND_STEP1, 0.7, ATTN_NORM, 150, 0);
+		else if (random() > 0.66)
+			sound7(self, CHAN_BODY, MUTANT_SOUND_STEP2, 0.7, ATTN_NORM, 150, 0);	
+		else
+			sound7(self, CHAN_BODY, MUTANT_SOUND_STEP3, 0.7, ATTN_NORM, 150, 0);
+	}
 	else
-		sound (self, CHAN_VOICE, MUTANT_SOUND_STEP3, 1, ATTN_NORM);	
+	{
+		if (random() > 0.33)
+			sound (self, CHAN_BODY, MUTANT_SOUND_STEP1, 1, ATTN_NORM);	
+		else if (random() > 0.66)
+			sound (self, CHAN_BODY, MUTANT_SOUND_STEP2, 1, ATTN_NORM);	
+		else
+			sound (self, CHAN_BODY, MUTANT_SOUND_STEP3, 1, ATTN_NORM);		
+	}	
 }
 
 //
@@ -92,7 +117,14 @@ void(float side)	q2mutant_Melee =
 	else
 		sound (self, CHAN_VOICE, MUTANT_SOUND_HIT2, 1, ATTN_NORM);	
 	
-	self.ldmg_ = autocvar_sk_q2mutant_melee_damage + 5*random();
+	if (self.classname == "monster_mutant_mini")
+	{
+		self.ldmg_ = (autocvar_sk_q2mutant_melee_damage + 5*random()) * 0.25;
+	}
+	else
+	{
+		self.ldmg_ = autocvar_sk_q2mutant_melee_damage + 5*random();
+	}
 	T_Damage (self.enemy, self, self, self.ldmg_);	
 
 	makevectors (self.angles);
@@ -191,19 +223,22 @@ void(entity attacker, float damage)	q2mutant_pain =
 	{
 		self.pain_finished = time + 1;
 		q2mutant_pain1 ();
-		sound (self, CHAN_VOICE, MUTANT_SOUND_PAIN1, 1, ATTN_NORM);
+		//sound (self, CHAN_VOICE, MUTANT_SOUND_PAIN1, 1, ATTN_NORM);
+		q2mutant_sound(MUTANT_SOUND_PAIN1, CHAN_VOICE);
 	}
 	else if (random() < 0.66)
 	{
 		self.pain_finished = time + 1;
 		q2mutant_pain2 ();
-		sound (self, CHAN_VOICE, MUTANT_SOUND_PAIN2, 1, ATTN_NORM);
+		//sound (self, CHAN_VOICE, MUTANT_SOUND_PAIN2, 1, ATTN_NORM);
+		q2mutant_sound(MUTANT_SOUND_PAIN2, CHAN_VOICE);
 	}
 	else
 	{
 		self.pain_finished = time + 1;
 		q2mutant_pain3 ();
-		sound (self, CHAN_VOICE, MUTANT_SOUND_PAIN1, 1, ATTN_NORM);
+		//sound (self, CHAN_VOICE, MUTANT_SOUND_PAIN1, 1, ATTN_NORM);
+		q2mutant_sound(MUTANT_SOUND_PAIN1, CHAN_VOICE);
 	}
 	
 	SpawnBlood (org, '0 0 0', 20);
@@ -312,6 +347,42 @@ void() monster_mutant =
 	self.th_die = q2mutant_die;
 	self.th_melee = q2mutant_atta1;		// one of two attacks
 	self.th_missile = q2mutant_jump;			// jump attack
+	self.th_pain = q2mutant_pain;
+
+	self.sightSound = MUTANT_SOUND_SIGHT;
+
+	walkmonster_start;
+};
+
+/*QUAKED monster_mutant_mini (1 .5 0) (-16 -16 -12) (16 16 16) Ambush Trigger_Spawn Sight
+*/
+void() monster_mutant_mini =
+{
+	self.classname = "monster_mutant_mini";
+	
+	if (deathmatch)
+	{
+		remove(self);
+		return;
+	}
+
+	precache_mutant();
+
+	self.solid = SOLID_SLIDEBOX;
+	self.movetype = MOVETYPE_STEP;
+	
+	setmodel (self, "models/monsters/mutant/tris.md2");
+	self.scale = 0.5;
+	setsize (self, '-16 -16 -12', '16 16 20');
+	self.health = autocvar_sk_q2mutant_health * 0.25;
+	self.max_health = self.health;
+
+	self.th_stand = q2mutant_stand;
+	self.th_walk = q2mutant_walk;
+	self.th_run = q2mutant_run;
+	self.th_die = q2mutant_die;
+	self.th_melee = q2mutant_atta1;		// one of two attacks
+	//self.th_missile = q2mutant_jump;			// mini-me don't jump
 	self.th_pain = q2mutant_pain;
 
 	self.sightSound = MUTANT_SOUND_SIGHT;

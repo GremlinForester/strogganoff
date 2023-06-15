@@ -57,11 +57,18 @@ void() train_next =
 	else
 		self.wait = 0;
 	sound (self, CHAN_VOICE, self.noise1, 1, ATTN_NORM);
+		//sound7(self, CHAN_VOICE, self.noise1, 1, ATTN_IDLE, targ.speed *.5, 0);
 	
-	local vector mypos = bmodelOrigin();
-	
-	SUB_CalcMove (targ.origin - self.mins, self.speed, train_wait);
-//	VLOG(bmodelOrigin());
+	if (!targ.speed)
+	{
+		SUB_CalcMove (targ.origin - self.mins, self.speed, train_wait);
+	}
+	else
+	{
+		SUB_CalcMove (targ.origin - self.mins, targ.speed, train_wait);
+		sound (self, CHAN_AUTO, self.noise, 1, ATTN_NORM);
+	}
+//	SUB_CalcMove (targ.origin - ((self.mins + self.maxs) * .5), self.speed, train_wait);
 };
 
 void() func_train_find =
@@ -106,10 +113,10 @@ void() func_train =
 
 	if (self.sounds == 1)
 	{
-		self.noise = ("plats/train2.wav");
-		precache_sound ("plats/train2.wav");
-		self.noise1 = ("plats/train1.wav");
-		precache_sound ("plats/train1.wav");
+		self.noise = ("world/train2.wav");
+		precache_sound ("world/train2.wav");
+        self.noise1 = "plats/train1.wav"; //move sound
+        precache_sound("plats/train1.wav");
 	}
 
 	self.cnt = 1;
