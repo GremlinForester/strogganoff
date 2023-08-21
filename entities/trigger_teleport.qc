@@ -161,6 +161,8 @@ void() teleport_seamless_touch =
 
 	SUB_UseTargets ();
 
+	addBitsToEntity(other,effects,EF_TELEPORT_BIT); //prevent trail particles as object is moved for 1 frame
+	
 	if (self.target)
 	t = find (world, targetname, self.target);
 
@@ -196,9 +198,9 @@ void() teleport_seamless_touch =
 	setorigin (other, t.origin + self.offset);
 	other.velocity_z = other.velocity_z * 1;
 	other.velocity_x = other.velocity_x * 1;
-	other.velocity_y = other.velocity_y * 1;	
+	other.velocity_y = other.velocity_y * 1;
 	
-	VLOG(t.origin - self.offset);
+	//VLOG(t.origin - self.offset);
 	
 	if (other.classname == "player")
 	{

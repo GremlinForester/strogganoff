@@ -230,6 +230,7 @@ var float autocvar_sk_q2tank_commander_health = 1000;
 //STROGG ZOMBIE
 var float autocvar_sk_q2zombie_grenade_damage = 30;
 var float autocvar_sk_q2zombie_health = 60;
+var float autocvar_sk_q2zombie_bounce = 99;
 
 //PLAYER WEAPONS
 var float autocvar_sk_blaster_upgrade_multiplier = 2;
@@ -275,11 +276,23 @@ float maxdecors;
 
 //LOG STUFF (might expand on this) these may require {} braces on any conditional i.e. 'if' logging.
 
-#define LOG(x) bprint(x);bprint("\n")
+void(string line) DLOG =
+{
+	if (cvar("developer"))
+	{
+		bprint(line);
+		bprint("\n");
+	}
+}
+
+//#define LOG(x) bprint(x);bprint("\n")
+#define LOG(x) if(cvar("developer")){bprint(x);bprint("\n");}
 #define LOG2(x,y) bprint(x);bprint(y);bprint("\n")
 #define LOG3(x,y,z) bprint(x);bprint(y);bprint(z);bprint("\n")
-#define VLOG(x) bprint(vtos(x));bprint("\n")
-#define FLOG(x) bprint(ftos(x));bprint("\n")
+//#define VLOG(x) bprint(vtos(x));bprint("\n")
+#define VLOG(x) if(cvar("developer")){bprint(vtos(x));bprint("\n");}
+//#define FLOG(x) bprint(ftos(x));bprint("\n")
+#define FLOG(x) if(cvar("developer")){bprint(ftos(x));bprint("\n");}
 
 /*
 ============
@@ -503,6 +516,7 @@ ADDITIONAL CONSOLE COMMANDS
 
 var float autocvar_cl_fastweaponswitch = 0;
 var float autocvar_cl_surfacesniffer = 0;
+var float autocvar_debug_relationshiptable = 0;
 var float autocvar_cl_smacktalk = 0;
 var float autocvar_cl_idletalk = 0;
 var float autocvar_cl_printpos = 0;
@@ -1105,7 +1119,8 @@ GIB_METAL,
 GIB_FLAMING,
 GIB_GLASS,
 GIB_WOOD,
-GIB_STONE
+GIB_STONE,
+GIB_EXPLOSIVE
 };
 
 #define GIB_LIFE 4
@@ -1192,3 +1207,861 @@ enum
 
 .void() oldthink;
 .float oldthinktime;
+
+
+/*
+
+The following (which should eventually go in its own file, ai_relationship.qc or something) 
+is an attempt to copy the functionality of Half-Life's 2D array relationship table by passing
+in 2 values that translate to what does X think about Y?
+
+Might explore something more later as I'm interested in greatly expanding the AI system but
+just going to leave this here for now as-is.
+
+*/
+
+//.float classrid;
+
+//Keep this order and just add to it, order matters in getRelationship.
+enum
+{
+PLAYER,
+MONSTER_SOLDIER_LIGHT,
+MONSTER_SOLDIER_SS,
+MONSTER_SOLDIER,
+MONSTER_SOLDIER_FLAK,
+MONSTER_INFANTRY,
+MONSTER_INFANTRY_NAIL,
+MONSTER_BERSERK,
+MONSTER_BRAIN,
+MONSTER_CHICK,
+MONSTER_FLIPPER,
+MONSTER_FLOATER,
+MONSTER_FLYER,
+MONSTER_GLADIATOR,
+MONSTER_GUNNER,
+MONSTER_HOVER,
+MONSTER_HOVER_TELEPORTER,
+MONSTER_MEDIC,
+MONSTER_MUTANT,
+MONSTER_MUTANT_MINI,
+MONSTER_PARASITE,
+MONSTER_TANK,
+MONSTER_TANK_COMMANDER,
+MONSTER_STROGGZOMBIE,
+MONSTER_ARMY
+};
+
+// monster to monster relationship types
+#define R_AL -2 // (ALLY) pals. Good alternative to R_NO when applicable.
+#define R_FR -1// (FEAR)will run
+#define	R_NO 0// (NO RELATIONSHIP) disregard
+#define R_DL 1// (DISLIKE) will attack
+#define R_HT 2// (HATE)will attack this character instead of any visible DISLIKEd characters
+#define R_NM 3// (NEMESIS)  A monster Will ALWAYS attack its nemsis, no matter what
+
+float getIDFromClassname(string cname) =
+{
+	local float cnameid;
+
+	switch (cname)
+	{
+	case "player":
+		cnameid = PLAYER;
+	break;
+	case "monster_soldier_light":
+		cnameid = 1;
+	break;
+	case "monster_soldier_ss":
+		cnameid = 2;
+	break;	
+	case "monster_soldier":
+		cnameid = 3;
+	break;
+	case "monster_soldier_flak":
+		cnameid = 4;
+	break;	
+	case "monster_infantry":
+		cnameid = 5;
+	break;
+	case "monster_infantry_nail":
+		cnameid = 6;
+	break;
+	case "monster_berserk":
+		cnameid = 7;
+	break;	
+	case "monster_brain":
+		cnameid = 8;
+	break;	
+	case "monster_chick":
+		cnameid = 9;
+	break;	
+	case "monster_flipper":
+		cnameid = 10;
+	break;	
+	case "monster_floater":
+		cnameid = 11;
+	break;	
+	case "monster_flyer":
+		cnameid = 12;
+	break;	
+	case "monster_gladiator":
+		cnameid = 13;
+	break;	
+	case "monster_gunner":
+		cnameid = 14;
+	break;	
+	case "monster_hover":
+		cnameid = 15;
+	break;	
+	case "monster_hover_teleporter":
+		cnameid = 16;
+	break;	
+	case "monster_medic":
+		cnameid = 17;
+	break;	
+	case "monster_mutant":
+		cnameid = 18;
+	break;	
+	case "monster_mutant_mini":
+		cnameid = 19;
+	break;	
+	case "monster_parasite":
+		cnameid = 20;
+	break;	
+	case "monster_tank":
+		cnameid = 21;
+	break;	
+	case "monster_tank_commander":
+		cnameid = 22;
+	break;	
+	case "monster_stroggzombie":
+		cnameid = 23;
+	break;
+	case "monster_army":
+		cnameid = 24;
+	break;	
+	}
+	return cnameid;	
+}
+
+string(float fRelationship) returnRelationshipString =
+{
+	local string rtype = "";
+	
+	switch (fRelationship)
+	{
+	case -2:
+		rtype = "ALLY";
+	break;
+	case -1:
+		rtype = "FEAR";
+	break;
+	case 0:
+		rtype = "NO RELATIONSHIP";
+	break;	
+	case 1:
+		rtype = "DISLIKE";
+	break;
+	case 2:
+		rtype = "HATE";
+	break;	
+	case 3:
+		rtype = "NEMESIS";
+	break;
+	}
+	
+	return rtype;
+}
+
+float iEnemy[25]; //= {R_HT, R_HT, R_NO, R_NO, R_NO, R_NO, R_NO, R_NO, R_NO, R_NO, R_NO, R_NO, R_NO, R_NO, R_NO, R_NO, R_NO, R_NO, R_NO, R_NO, R_NO, R_NO, R_NO, R_NO, R_NO, R_NO, R_NO, R_NO};
+
+//2D Array Workaround... (ish)
+
+//Drumroll...
+
+float( string iClassname, string eClassname ) getRelationship =
+{
+		local float rClassname = getIDFromClassname(eClassname);
+		
+		//DEFAULT
+		iEnemy[0] = R_HT; /* PLAYER */
+		iEnemy[1] = R_NO; /* MONSTER_SOLDIER_LIGHT */
+		iEnemy[2] = R_NO; /* MONSTER_SOLDIER_SS */
+		iEnemy[3] = R_NO; /* MONSTER_SOLDIER */
+		iEnemy[4] = R_NO; /* MONSTER_SOLDIER_FLAK */
+		iEnemy[5] = R_NO; /* MONSTER_INFANTRY */
+		iEnemy[6] = R_NO; /* MONSTER_INFANTRY_NAIL */
+		iEnemy[7] = R_NO; /* MONSTER_BERSERK */
+		iEnemy[8] = R_NO; /* MONSTER_BRAIN */
+		iEnemy[9] = R_NO; /* MONSTER_CHICK */
+		iEnemy[10] = R_NO; /* MONSTER_FLIPPER */
+		iEnemy[11] = R_NO; /* MONSTER_FLOATER */
+		iEnemy[12] = R_NO; /* MONSTER_FLYER */
+		iEnemy[13] = R_NO; /* MONSTER_GLADIATOR */
+		iEnemy[14] = R_NO; /* MONSTER_GUNNER */
+		iEnemy[15] = R_NO; /* MONSTER_HOVER */
+		iEnemy[16] = R_NO; /* MONSTER_HOVER_TELEPORTER */
+		iEnemy[17] = R_NO; /* MONSTER_MEDIC */
+		iEnemy[18] = R_NO; /* MONSTER_MUTANT */
+		iEnemy[19] = R_NO; /* MONSTER_MUTANT_MINI */
+		iEnemy[20] = R_NO; /* MONSTER_PARASITE */
+		iEnemy[21] = R_NO; /* MONSTER_TANK */
+		iEnemy[22] = R_NO; /* MONSTER_TANK_COMMANDER */
+		iEnemy[23] = R_NO;  /* MONSTER_STROGGZOMBIE */
+		iEnemy[24] = R_HT;  /* MONSTER_ARMY */		
+	
+	switch(iClassname)
+	{
+	case "monster_soldier_light":
+		iEnemy[0] = R_NO; /* PLAYER */
+		iEnemy[1] = R_NO; /* MONSTER_SOLDIER_LIGHT */
+		iEnemy[2] = R_NO; /* MONSTER_SOLDIER_SS */
+		iEnemy[3] = R_NO; /* MONSTER_SOLDIER */
+		iEnemy[4] = R_NO; /* MONSTER_SOLDIER_FLAK */
+		iEnemy[5] = R_NO; /* MONSTER_INFANTRY */
+		iEnemy[6] = R_NO; /* MONSTER_INFANTRY_NAIL */
+		iEnemy[7] = R_NO; /* MONSTER_BERSERK */
+		iEnemy[8] = R_NO; /* MONSTER_BRAIN */
+		iEnemy[9] = R_NO; /* MONSTER_CHICK */
+		iEnemy[10] = R_NO; /* MONSTER_FLIPPER */
+		iEnemy[11] = R_NO; /* MONSTER_FLOATER */
+		iEnemy[12] = R_NO; /* MONSTER_FLYER */
+		iEnemy[13] = R_NO; /* MONSTER_GLADIATOR */
+		iEnemy[14] = R_NO; /* MONSTER_GUNNER */
+		iEnemy[15] = R_NO; /* MONSTER_HOVER */
+		iEnemy[16] = R_NO; /* MONSTER_HOVER_TELEPORTER */
+		iEnemy[17] = R_NO; /* MONSTER_MEDIC */
+		iEnemy[18] = R_NO; /* MONSTER_MUTANT */
+		iEnemy[19] = R_NO; /* MONSTER_MUTANT_MINI */
+		iEnemy[20] = R_NO; /* MONSTER_PARASITE */
+		iEnemy[21] = R_NO; /* MONSTER_TANK */
+		iEnemy[22] = R_NO; /* MONSTER_TANK_COMMANDER */
+		iEnemy[23] = R_NO;  /* MONSTER_STROGGZOMBIE */
+		iEnemy[24] = R_HT;  /* MONSTER_ARMY */			
+		break;
+	case "monster_soldier_ss":
+		iEnemy[0] = R_HT; /* PLAYER */
+		iEnemy[1] = R_NO; /* MONSTER_SOLDIER_LIGHT */
+		iEnemy[2] = R_NO; /* MONSTER_SOLDIER_SS */
+		iEnemy[3] = R_NO; /* MONSTER_SOLDIER */
+		iEnemy[4] = R_NO; /* MONSTER_SOLDIER_FLAK */
+		iEnemy[5] = R_NO; /* MONSTER_INFANTRY */
+		iEnemy[6] = R_NO; /* MONSTER_INFANTRY_NAIL */
+		iEnemy[7] = R_NO; /* MONSTER_BERSERK */
+		iEnemy[8] = R_NO; /* MONSTER_BRAIN */
+		iEnemy[9] = R_NO; /* MONSTER_CHICK */
+		iEnemy[10] = R_NO; /* MONSTER_FLIPPER */
+		iEnemy[11] = R_NO; /* MONSTER_FLOATER */
+		iEnemy[12] = R_NO; /* MONSTER_FLYER */
+		iEnemy[13] = R_NO; /* MONSTER_GLADIATOR */
+		iEnemy[14] = R_NO; /* MONSTER_GUNNER */
+		iEnemy[15] = R_NO; /* MONSTER_HOVER */
+		iEnemy[16] = R_NO; /* MONSTER_HOVER_TELEPORTER */
+		iEnemy[17] = R_NO; /* MONSTER_MEDIC */
+		iEnemy[18] = R_NO; /* MONSTER_MUTANT */
+		iEnemy[19] = R_NO; /* MONSTER_MUTANT_MINI */
+		iEnemy[20] = R_NO; /* MONSTER_PARASITE */
+		iEnemy[21] = R_NO; /* MONSTER_TANK */
+		iEnemy[22] = R_NO; /* MONSTER_TANK_COMMANDER */
+		iEnemy[23] = R_NO;  /* MONSTER_STROGGZOMBIE */
+		iEnemy[24] = R_HT;  /* MONSTER_ARMY */			
+		break;
+	case "monster_soldier":
+		iEnemy[0] = R_HT; /* PLAYER */
+		iEnemy[1] = R_NO; /* MONSTER_SOLDIER_LIGHT */
+		iEnemy[2] = R_NO; /* MONSTER_SOLDIER_SS */
+		iEnemy[3] = R_NO; /* MONSTER_SOLDIER */
+		iEnemy[4] = R_NO; /* MONSTER_SOLDIER_FLAK */
+		iEnemy[5] = R_NO; /* MONSTER_INFANTRY */
+		iEnemy[6] = R_NO; /* MONSTER_INFANTRY_NAIL */
+		iEnemy[7] = R_NO; /* MONSTER_BERSERK */
+		iEnemy[8] = R_NO; /* MONSTER_BRAIN */
+		iEnemy[9] = R_NO; /* MONSTER_CHICK */
+		iEnemy[10] = R_NO; /* MONSTER_FLIPPER */
+		iEnemy[11] = R_NO; /* MONSTER_FLOATER */
+		iEnemy[12] = R_NO; /* MONSTER_FLYER */
+		iEnemy[13] = R_NO; /* MONSTER_GLADIATOR */
+		iEnemy[14] = R_NO; /* MONSTER_GUNNER */
+		iEnemy[15] = R_NO; /* MONSTER_HOVER */
+		iEnemy[16] = R_NO; /* MONSTER_HOVER_TELEPORTER */
+		iEnemy[17] = R_NO; /* MONSTER_MEDIC */
+		iEnemy[18] = R_NO; /* MONSTER_MUTANT */
+		iEnemy[19] = R_NO; /* MONSTER_MUTANT_MINI */
+		iEnemy[20] = R_NO; /* MONSTER_PARASITE */
+		iEnemy[21] = R_NO; /* MONSTER_TANK */
+		iEnemy[22] = R_NO; /* MONSTER_TANK_COMMANDER */
+		iEnemy[23] = R_NO;  /* MONSTER_STROGGZOMBIE */
+		iEnemy[24] = R_HT;  /* MONSTER_ARMY */			
+		break;
+	case "monster_soldier_flak":
+		iEnemy[0] = R_HT; /* PLAYER */
+		iEnemy[1] = R_NO; /* MONSTER_SOLDIER_LIGHT */
+		iEnemy[2] = R_NO; /* MONSTER_SOLDIER_SS */
+		iEnemy[3] = R_NO; /* MONSTER_SOLDIER */
+		iEnemy[4] = R_NO; /* MONSTER_SOLDIER_FLAK */
+		iEnemy[5] = R_NO; /* MONSTER_INFANTRY */
+		iEnemy[6] = R_NO; /* MONSTER_INFANTRY_NAIL */
+		iEnemy[7] = R_NO; /* MONSTER_BERSERK */
+		iEnemy[8] = R_NO; /* MONSTER_BRAIN */
+		iEnemy[9] = R_NO; /* MONSTER_CHICK */
+		iEnemy[10] = R_NO; /* MONSTER_FLIPPER */
+		iEnemy[11] = R_NO; /* MONSTER_FLOATER */
+		iEnemy[12] = R_NO; /* MONSTER_FLYER */
+		iEnemy[13] = R_NO; /* MONSTER_GLADIATOR */
+		iEnemy[14] = R_NO; /* MONSTER_GUNNER */
+		iEnemy[15] = R_NO; /* MONSTER_HOVER */
+		iEnemy[16] = R_NO; /* MONSTER_HOVER_TELEPORTER */
+		iEnemy[17] = R_NO; /* MONSTER_MEDIC */
+		iEnemy[18] = R_NO; /* MONSTER_MUTANT */
+		iEnemy[19] = R_NO; /* MONSTER_MUTANT_MINI */
+		iEnemy[20] = R_NO; /* MONSTER_PARASITE */
+		iEnemy[21] = R_NO; /* MONSTER_TANK */
+		iEnemy[22] = R_NO; /* MONSTER_TANK_COMMANDER */
+		iEnemy[23] = R_NO;  /* MONSTER_STROGGZOMBIE */
+		iEnemy[24] = R_HT;  /* MONSTER_ARMY */			
+		break;
+	case "monster_infantry":
+		iEnemy[0] = R_HT; /* PLAYER */
+		iEnemy[1] = R_NO; /* MONSTER_SOLDIER_LIGHT */
+		iEnemy[2] = R_HT; /* MONSTER_SOLDIER_SS */
+		iEnemy[3] = R_HT; /* MONSTER_SOLDIER */
+		iEnemy[4] = R_NO; /* MONSTER_SOLDIER_FLAK */
+		iEnemy[5] = R_NO; /* MONSTER_INFANTRY */
+		iEnemy[6] = R_NO; /* MONSTER_INFANTRY_NAIL */
+		iEnemy[7] = R_NO; /* MONSTER_BERSERK */
+		iEnemy[8] = R_NO; /* MONSTER_BRAIN */
+		iEnemy[9] = R_NO; /* MONSTER_CHICK */
+		iEnemy[10] = R_NO; /* MONSTER_FLIPPER */
+		iEnemy[11] = R_NO; /* MONSTER_FLOATER */
+		iEnemy[12] = R_NO; /* MONSTER_FLYER */
+		iEnemy[13] = R_NO; /* MONSTER_GLADIATOR */
+		iEnemy[14] = R_NO; /* MONSTER_GUNNER */
+		iEnemy[15] = R_NO; /* MONSTER_HOVER */
+		iEnemy[16] = R_NO; /* MONSTER_HOVER_TELEPORTER */
+		iEnemy[17] = R_NO; /* MONSTER_MEDIC */
+		iEnemy[18] = R_NO; /* MONSTER_MUTANT */
+		iEnemy[19] = R_NO; /* MONSTER_MUTANT_MINI */
+		iEnemy[20] = R_NO; /* MONSTER_PARASITE */
+		iEnemy[21] = R_NO; /* MONSTER_TANK */
+		iEnemy[22] = R_NO; /* MONSTER_TANK_COMMANDER */
+		iEnemy[23] = R_NO;  /* MONSTER_STROGGZOMBIE */
+		iEnemy[24] = R_HT;  /* MONSTER_ARMY */			
+		break;
+	case "monster_infantry_nail":
+		iEnemy[0] = R_HT; /* PLAYER */
+		iEnemy[1] = R_NO; /* MONSTER_SOLDIER_LIGHT */
+		iEnemy[2] = R_NO; /* MONSTER_SOLDIER_SS */
+		iEnemy[3] = R_NO; /* MONSTER_SOLDIER */
+		iEnemy[4] = R_NO; /* MONSTER_SOLDIER_FLAK */
+		iEnemy[5] = R_NO; /* MONSTER_INFANTRY */
+		iEnemy[6] = R_NO; /* MONSTER_INFANTRY_NAIL */
+		iEnemy[7] = R_NO; /* MONSTER_BERSERK */
+		iEnemy[8] = R_NO; /* MONSTER_BRAIN */
+		iEnemy[9] = R_NO; /* MONSTER_CHICK */
+		iEnemy[10] = R_NO; /* MONSTER_FLIPPER */
+		iEnemy[11] = R_NO; /* MONSTER_FLOATER */
+		iEnemy[12] = R_NO; /* MONSTER_FLYER */
+		iEnemy[13] = R_NO; /* MONSTER_GLADIATOR */
+		iEnemy[14] = R_NO; /* MONSTER_GUNNER */
+		iEnemy[15] = R_NO; /* MONSTER_HOVER */
+		iEnemy[16] = R_NO; /* MONSTER_HOVER_TELEPORTER */
+		iEnemy[17] = R_NO; /* MONSTER_MEDIC */
+		iEnemy[18] = R_NO; /* MONSTER_MUTANT */
+		iEnemy[19] = R_NO; /* MONSTER_MUTANT_MINI */
+		iEnemy[20] = R_NO; /* MONSTER_PARASITE */
+		iEnemy[21] = R_NO; /* MONSTER_TANK */
+		iEnemy[22] = R_NO; /* MONSTER_TANK_COMMANDER */
+		iEnemy[23] = R_NO;  /* MONSTER_STROGGZOMBIE */
+		iEnemy[24] = R_HT;  /* MONSTER_ARMY */			
+		break;		
+	case "monster_berserk":
+		iEnemy[0] = R_HT; /* PLAYER */
+		iEnemy[1] = R_NO; /* MONSTER_SOLDIER_LIGHT */
+		iEnemy[2] = R_NO; /* MONSTER_SOLDIER_SS */
+		iEnemy[3] = R_NO; /* MONSTER_SOLDIER */
+		iEnemy[4] = R_NO; /* MONSTER_SOLDIER_FLAK */
+		iEnemy[5] = R_NO; /* MONSTER_INFANTRY */
+		iEnemy[6] = R_NO; /* MONSTER_INFANTRY_NAIL */
+		iEnemy[7] = R_NO; /* MONSTER_BERSERK */
+		iEnemy[8] = R_NO; /* MONSTER_BRAIN */
+		iEnemy[9] = R_NO; /* MONSTER_CHICK */
+		iEnemy[10] = R_NO; /* MONSTER_FLIPPER */
+		iEnemy[11] = R_NO; /* MONSTER_FLOATER */
+		iEnemy[12] = R_NO; /* MONSTER_FLYER */
+		iEnemy[13] = R_NO; /* MONSTER_GLADIATOR */
+		iEnemy[14] = R_NO; /* MONSTER_GUNNER */
+		iEnemy[15] = R_NO; /* MONSTER_HOVER */
+		iEnemy[16] = R_NO; /* MONSTER_HOVER_TELEPORTER */
+		iEnemy[17] = R_NO; /* MONSTER_MEDIC */
+		iEnemy[18] = R_NO; /* MONSTER_MUTANT */
+		iEnemy[19] = R_NO; /* MONSTER_MUTANT_MINI */
+		iEnemy[20] = R_NO; /* MONSTER_PARASITE */
+		iEnemy[21] = R_NO; /* MONSTER_TANK */
+		iEnemy[22] = R_NO; /* MONSTER_TANK_COMMANDER */
+		iEnemy[23] = R_NO;  /* MONSTER_STROGGZOMBIE */
+		iEnemy[24] = R_HT;  /* MONSTER_ARMY */			
+		break;
+	case "monster_brain":
+		iEnemy[0] = R_HT; /* PLAYER */
+		iEnemy[1] = R_NO; /* MONSTER_SOLDIER_LIGHT */
+		iEnemy[2] = R_NO; /* MONSTER_SOLDIER_SS */
+		iEnemy[3] = R_NO; /* MONSTER_SOLDIER */
+		iEnemy[4] = R_NO; /* MONSTER_SOLDIER_FLAK */
+		iEnemy[5] = R_NO; /* MONSTER_INFANTRY */
+		iEnemy[6] = R_NO; /* MONSTER_INFANTRY_NAIL */
+		iEnemy[7] = R_NO; /* MONSTER_BERSERK */
+		iEnemy[8] = R_NO; /* MONSTER_BRAIN */
+		iEnemy[9] = R_NO; /* MONSTER_CHICK */
+		iEnemy[10] = R_NO; /* MONSTER_FLIPPER */
+		iEnemy[11] = R_NO; /* MONSTER_FLOATER */
+		iEnemy[12] = R_NO; /* MONSTER_FLYER */
+		iEnemy[13] = R_NO; /* MONSTER_GLADIATOR */
+		iEnemy[14] = R_NO; /* MONSTER_GUNNER */
+		iEnemy[15] = R_NO; /* MONSTER_HOVER */
+		iEnemy[16] = R_NO; /* MONSTER_HOVER_TELEPORTER */
+		iEnemy[17] = R_NO; /* MONSTER_MEDIC */
+		iEnemy[18] = R_NO; /* MONSTER_MUTANT */
+		iEnemy[19] = R_NO; /* MONSTER_MUTANT_MINI */
+		iEnemy[20] = R_NO; /* MONSTER_PARASITE */
+		iEnemy[21] = R_NO; /* MONSTER_TANK */
+		iEnemy[22] = R_NO; /* MONSTER_TANK_COMMANDER */
+		iEnemy[23] = R_NO;  /* MONSTER_STROGGZOMBIE */
+		iEnemy[24] = R_HT;  /* MONSTER_ARMY */			
+		break;
+	case "monster_chick":
+		iEnemy[0] = R_HT; /* PLAYER */
+		iEnemy[1] = R_NO; /* MONSTER_SOLDIER_LIGHT */
+		iEnemy[2] = R_NO; /* MONSTER_SOLDIER_SS */
+		iEnemy[3] = R_NO; /* MONSTER_SOLDIER */
+		iEnemy[4] = R_NO; /* MONSTER_SOLDIER_FLAK */
+		iEnemy[5] = R_NO; /* MONSTER_INFANTRY */
+		iEnemy[6] = R_NO; /* MONSTER_INFANTRY_NAIL */
+		iEnemy[7] = R_NO; /* MONSTER_BERSERK */
+		iEnemy[8] = R_NO; /* MONSTER_BRAIN */
+		iEnemy[9] = R_NO; /* MONSTER_CHICK */
+		iEnemy[10] = R_NO; /* MONSTER_FLIPPER */
+		iEnemy[11] = R_NO; /* MONSTER_FLOATER */
+		iEnemy[12] = R_NO; /* MONSTER_FLYER */
+		iEnemy[13] = R_NO; /* MONSTER_GLADIATOR */
+		iEnemy[14] = R_NO; /* MONSTER_GUNNER */
+		iEnemy[15] = R_NO; /* MONSTER_HOVER */
+		iEnemy[16] = R_NO; /* MONSTER_HOVER_TELEPORTER */
+		iEnemy[17] = R_NO; /* MONSTER_MEDIC */
+		iEnemy[18] = R_NO; /* MONSTER_MUTANT */
+		iEnemy[19] = R_NO; /* MONSTER_MUTANT_MINI */
+		iEnemy[20] = R_NO; /* MONSTER_PARASITE */
+		iEnemy[21] = R_NO; /* MONSTER_TANK */
+		iEnemy[22] = R_NO; /* MONSTER_TANK_COMMANDER */
+		iEnemy[23] = R_NO;  /* MONSTER_STROGGZOMBIE */
+		iEnemy[24] = R_HT;  /* MONSTER_ARMY */			
+		break;
+	case "monster_flipper":
+		iEnemy[0] = R_HT; /* PLAYER */
+		iEnemy[1] = R_NO; /* MONSTER_SOLDIER_LIGHT */
+		iEnemy[2] = R_NO; /* MONSTER_SOLDIER_SS */
+		iEnemy[3] = R_NO; /* MONSTER_SOLDIER */
+		iEnemy[4] = R_NO; /* MONSTER_SOLDIER_FLAK */
+		iEnemy[5] = R_NO; /* MONSTER_INFANTRY */
+		iEnemy[6] = R_NO; /* MONSTER_INFANTRY_NAIL */
+		iEnemy[7] = R_NO; /* MONSTER_BERSERK */
+		iEnemy[8] = R_NO; /* MONSTER_BRAIN */
+		iEnemy[9] = R_NO; /* MONSTER_CHICK */
+		iEnemy[10] = R_NO; /* MONSTER_FLIPPER */
+		iEnemy[11] = R_NO; /* MONSTER_FLOATER */
+		iEnemy[12] = R_NO; /* MONSTER_FLYER */
+		iEnemy[13] = R_NO; /* MONSTER_GLADIATOR */
+		iEnemy[14] = R_NO; /* MONSTER_GUNNER */
+		iEnemy[15] = R_NO; /* MONSTER_HOVER */
+		iEnemy[16] = R_NO; /* MONSTER_HOVER_TELEPORTER */
+		iEnemy[17] = R_NO; /* MONSTER_MEDIC */
+		iEnemy[18] = R_NO; /* MONSTER_MUTANT */
+		iEnemy[19] = R_NO; /* MONSTER_MUTANT_MINI */
+		iEnemy[20] = R_NO; /* MONSTER_PARASITE */
+		iEnemy[21] = R_NO; /* MONSTER_TANK */
+		iEnemy[22] = R_NO; /* MONSTER_TANK_COMMANDER */
+		iEnemy[23] = R_NO;  /* MONSTER_STROGGZOMBIE */
+		iEnemy[24] = R_HT;  /* MONSTER_ARMY */			
+		break;
+	case "monster_floater":
+		iEnemy[0] = R_HT; /* PLAYER */
+		iEnemy[1] = R_NO; /* MONSTER_SOLDIER_LIGHT */
+		iEnemy[2] = R_NO; /* MONSTER_SOLDIER_SS */
+		iEnemy[3] = R_NO; /* MONSTER_SOLDIER */
+		iEnemy[4] = R_NO; /* MONSTER_SOLDIER_FLAK */
+		iEnemy[5] = R_NO; /* MONSTER_INFANTRY */
+		iEnemy[6] = R_NO; /* MONSTER_INFANTRY_NAIL */
+		iEnemy[7] = R_NO; /* MONSTER_BERSERK */
+		iEnemy[8] = R_NO; /* MONSTER_BRAIN */
+		iEnemy[9] = R_NO; /* MONSTER_CHICK */
+		iEnemy[10] = R_NO; /* MONSTER_FLIPPER */
+		iEnemy[11] = R_NO; /* MONSTER_FLOATER */
+		iEnemy[12] = R_NO; /* MONSTER_FLYER */
+		iEnemy[13] = R_NO; /* MONSTER_GLADIATOR */
+		iEnemy[14] = R_NO; /* MONSTER_GUNNER */
+		iEnemy[15] = R_NO; /* MONSTER_HOVER */
+		iEnemy[16] = R_NO; /* MONSTER_HOVER_TELEPORTER */
+		iEnemy[17] = R_NO; /* MONSTER_MEDIC */
+		iEnemy[18] = R_NO; /* MONSTER_MUTANT */
+		iEnemy[19] = R_NO; /* MONSTER_MUTANT_MINI */
+		iEnemy[20] = R_NO; /* MONSTER_PARASITE */
+		iEnemy[21] = R_NO; /* MONSTER_TANK */
+		iEnemy[22] = R_NO; /* MONSTER_TANK_COMMANDER */
+		iEnemy[23] = R_NO;  /* MONSTER_STROGGZOMBIE */
+		iEnemy[24] = R_HT;  /* MONSTER_ARMY */			
+		break;
+	case "monster_flyer":
+		iEnemy[0] = R_HT; /* PLAYER */
+		iEnemy[1] = R_NO; /* MONSTER_SOLDIER_LIGHT */
+		iEnemy[2] = R_NO; /* MONSTER_SOLDIER_SS */
+		iEnemy[3] = R_NO; /* MONSTER_SOLDIER */
+		iEnemy[4] = R_NO; /* MONSTER_SOLDIER_FLAK */
+		iEnemy[5] = R_NO; /* MONSTER_INFANTRY */
+		iEnemy[6] = R_NO; /* MONSTER_INFANTRY_NAIL */
+		iEnemy[7] = R_NO; /* MONSTER_BERSERK */
+		iEnemy[8] = R_NO; /* MONSTER_BRAIN */
+		iEnemy[9] = R_NO; /* MONSTER_CHICK */
+		iEnemy[10] = R_NO; /* MONSTER_FLIPPER */
+		iEnemy[11] = R_NO; /* MONSTER_FLOATER */
+		iEnemy[12] = R_NO; /* MONSTER_FLYER */
+		iEnemy[13] = R_NO; /* MONSTER_GLADIATOR */
+		iEnemy[14] = R_NO; /* MONSTER_GUNNER */
+		iEnemy[15] = R_NO; /* MONSTER_HOVER */
+		iEnemy[16] = R_NO; /* MONSTER_HOVER_TELEPORTER */
+		iEnemy[17] = R_NO; /* MONSTER_MEDIC */
+		iEnemy[18] = R_NO; /* MONSTER_MUTANT */
+		iEnemy[19] = R_NO; /* MONSTER_MUTANT_MINI */
+		iEnemy[20] = R_NO; /* MONSTER_PARASITE */
+		iEnemy[21] = R_NO; /* MONSTER_TANK */
+		iEnemy[22] = R_NO; /* MONSTER_TANK_COMMANDER */
+		iEnemy[23] = R_NO;  /* MONSTER_STROGGZOMBIE */
+		iEnemy[24] = R_HT;  /* MONSTER_ARMY */			
+		break;
+	case "monster_gladiator":
+		iEnemy[0] = R_HT; /* PLAYER */
+		iEnemy[1] = R_NO; /* MONSTER_SOLDIER_LIGHT */
+		iEnemy[2] = R_NO; /* MONSTER_SOLDIER_SS */
+		iEnemy[3] = R_NO; /* MONSTER_SOLDIER */
+		iEnemy[4] = R_NO; /* MONSTER_SOLDIER_FLAK */
+		iEnemy[5] = R_NO; /* MONSTER_INFANTRY */
+		iEnemy[6] = R_NO; /* MONSTER_INFANTRY_NAIL */
+		iEnemy[7] = R_NO; /* MONSTER_BERSERK */
+		iEnemy[8] = R_NO; /* MONSTER_BRAIN */
+		iEnemy[9] = R_NO; /* MONSTER_CHICK */
+		iEnemy[10] = R_NO; /* MONSTER_FLIPPER */
+		iEnemy[11] = R_NO; /* MONSTER_FLOATER */
+		iEnemy[12] = R_NO; /* MONSTER_FLYER */
+		iEnemy[13] = R_NO; /* MONSTER_GLADIATOR */
+		iEnemy[14] = R_NO; /* MONSTER_GUNNER */
+		iEnemy[15] = R_NO; /* MONSTER_HOVER */
+		iEnemy[16] = R_NO; /* MONSTER_HOVER_TELEPORTER */
+		iEnemy[17] = R_NO; /* MONSTER_MEDIC */
+		iEnemy[18] = R_NO; /* MONSTER_MUTANT */
+		iEnemy[19] = R_NO; /* MONSTER_MUTANT_MINI */
+		iEnemy[20] = R_NO; /* MONSTER_PARASITE */
+		iEnemy[21] = R_NO; /* MONSTER_TANK */
+		iEnemy[22] = R_NO; /* MONSTER_TANK_COMMANDER */
+		iEnemy[23] = R_NO;  /* MONSTER_STROGGZOMBIE */
+		iEnemy[24] = R_HT;  /* MONSTER_ARMY */			
+		break;
+	case "monster_gunner":
+		iEnemy[0] = R_HT; /* PLAYER */
+		iEnemy[1] = R_NO; /* MONSTER_SOLDIER_LIGHT */
+		iEnemy[2] = R_NO; /* MONSTER_SOLDIER_SS */
+		iEnemy[3] = R_NO; /* MONSTER_SOLDIER */
+		iEnemy[4] = R_NO; /* MONSTER_SOLDIER_FLAK */
+		iEnemy[5] = R_NO; /* MONSTER_INFANTRY */
+		iEnemy[6] = R_NO; /* MONSTER_INFANTRY_NAIL */
+		iEnemy[7] = R_NO; /* MONSTER_BERSERK */
+		iEnemy[8] = R_NO; /* MONSTER_BRAIN */
+		iEnemy[9] = R_NO; /* MONSTER_CHICK */
+		iEnemy[10] = R_NO; /* MONSTER_FLIPPER */
+		iEnemy[11] = R_NO; /* MONSTER_FLOATER */
+		iEnemy[12] = R_NO; /* MONSTER_FLYER */
+		iEnemy[13] = R_NO; /* MONSTER_GLADIATOR */
+		iEnemy[14] = R_NO; /* MONSTER_GUNNER */
+		iEnemy[15] = R_NO; /* MONSTER_HOVER */
+		iEnemy[16] = R_NO; /* MONSTER_HOVER_TELEPORTER */
+		iEnemy[17] = R_NO; /* MONSTER_MEDIC */
+		iEnemy[18] = R_NO; /* MONSTER_MUTANT */
+		iEnemy[19] = R_NO; /* MONSTER_MUTANT_MINI */
+		iEnemy[20] = R_NO; /* MONSTER_PARASITE */
+		iEnemy[21] = R_NO; /* MONSTER_TANK */
+		iEnemy[22] = R_NO; /* MONSTER_TANK_COMMANDER */
+		iEnemy[23] = R_NO;  /* MONSTER_STROGGZOMBIE */
+		iEnemy[24] = R_HT;  /* MONSTER_ARMY */			
+		break;
+	case "monster_hover":
+		iEnemy[0] = R_HT; /* PLAYER */
+		iEnemy[1] = R_NO; /* MONSTER_SOLDIER_LIGHT */
+		iEnemy[2] = R_NO; /* MONSTER_SOLDIER_SS */
+		iEnemy[3] = R_NO; /* MONSTER_SOLDIER */
+		iEnemy[4] = R_NO; /* MONSTER_SOLDIER_FLAK */
+		iEnemy[5] = R_NO; /* MONSTER_INFANTRY */
+		iEnemy[6] = R_NO; /* MONSTER_INFANTRY_NAIL */
+		iEnemy[7] = R_NO; /* MONSTER_BERSERK */
+		iEnemy[8] = R_NO; /* MONSTER_BRAIN */
+		iEnemy[9] = R_NO; /* MONSTER_CHICK */
+		iEnemy[10] = R_NO; /* MONSTER_FLIPPER */
+		iEnemy[11] = R_NO; /* MONSTER_FLOATER */
+		iEnemy[12] = R_NO; /* MONSTER_FLYER */
+		iEnemy[13] = R_NO; /* MONSTER_GLADIATOR */
+		iEnemy[14] = R_NO; /* MONSTER_GUNNER */
+		iEnemy[15] = R_NO; /* MONSTER_HOVER */
+		iEnemy[16] = R_NO; /* MONSTER_HOVER_TELEPORTER */
+		iEnemy[17] = R_NO; /* MONSTER_MEDIC */
+		iEnemy[18] = R_NO; /* MONSTER_MUTANT */
+		iEnemy[19] = R_NO; /* MONSTER_MUTANT_MINI */
+		iEnemy[20] = R_NO; /* MONSTER_PARASITE */
+		iEnemy[21] = R_NO; /* MONSTER_TANK */
+		iEnemy[22] = R_NO; /* MONSTER_TANK_COMMANDER */
+		iEnemy[23] = R_NO;  /* MONSTER_STROGGZOMBIE */
+		iEnemy[24] = R_HT;  /* MONSTER_ARMY */			
+		break;
+	case "monster_hover_teleporter":
+		iEnemy[0] = R_HT; /* PLAYER */
+		iEnemy[1] = R_NO; /* MONSTER_SOLDIER_LIGHT */
+		iEnemy[2] = R_NO; /* MONSTER_SOLDIER_SS */
+		iEnemy[3] = R_NO; /* MONSTER_SOLDIER */
+		iEnemy[4] = R_NO; /* MONSTER_SOLDIER_FLAK */
+		iEnemy[5] = R_NO; /* MONSTER_INFANTRY */
+		iEnemy[6] = R_NO; /* MONSTER_INFANTRY_NAIL */
+		iEnemy[7] = R_NO; /* MONSTER_BERSERK */
+		iEnemy[8] = R_NO; /* MONSTER_BRAIN */
+		iEnemy[9] = R_NO; /* MONSTER_CHICK */
+		iEnemy[10] = R_NO; /* MONSTER_FLIPPER */
+		iEnemy[11] = R_NO; /* MONSTER_FLOATER */
+		iEnemy[12] = R_NO; /* MONSTER_FLYER */
+		iEnemy[13] = R_NO; /* MONSTER_GLADIATOR */
+		iEnemy[14] = R_NO; /* MONSTER_GUNNER */
+		iEnemy[15] = R_NO; /* MONSTER_HOVER */
+		iEnemy[16] = R_NO; /* MONSTER_HOVER_TELEPORTER */
+		iEnemy[17] = R_NO; /* MONSTER_MEDIC */
+		iEnemy[18] = R_NO; /* MONSTER_MUTANT */
+		iEnemy[19] = R_NO; /* MONSTER_MUTANT_MINI */
+		iEnemy[20] = R_NO; /* MONSTER_PARASITE */
+		iEnemy[21] = R_NO; /* MONSTER_TANK */
+		iEnemy[22] = R_NO; /* MONSTER_TANK_COMMANDER */
+		iEnemy[23] = R_NO;  /* MONSTER_STROGGZOMBIE */
+		iEnemy[24] = R_HT;  /* MONSTER_ARMY */			
+		break;		
+	case "monster_medic":
+		iEnemy[0] = R_HT; /* PLAYER */
+		iEnemy[1] = R_NO; /* MONSTER_SOLDIER_LIGHT */
+		iEnemy[2] = R_NO; /* MONSTER_SOLDIER_SS */
+		iEnemy[3] = R_NO; /* MONSTER_SOLDIER */
+		iEnemy[4] = R_NO; /* MONSTER_SOLDIER_FLAK */
+		iEnemy[5] = R_NO; /* MONSTER_INFANTRY */
+		iEnemy[6] = R_NO; /* MONSTER_INFANTRY_NAIL */
+		iEnemy[7] = R_NO; /* MONSTER_BERSERK */
+		iEnemy[8] = R_NO; /* MONSTER_BRAIN */
+		iEnemy[9] = R_NO; /* MONSTER_CHICK */
+		iEnemy[10] = R_NO; /* MONSTER_FLIPPER */
+		iEnemy[11] = R_NO; /* MONSTER_FLOATER */
+		iEnemy[12] = R_NO; /* MONSTER_FLYER */
+		iEnemy[13] = R_NO; /* MONSTER_GLADIATOR */
+		iEnemy[14] = R_NO; /* MONSTER_GUNNER */
+		iEnemy[15] = R_NO; /* MONSTER_HOVER */
+		iEnemy[16] = R_NO; /* MONSTER_HOVER_TELEPORTER */
+		iEnemy[17] = R_NO; /* MONSTER_MEDIC */
+		iEnemy[18] = R_NO; /* MONSTER_MUTANT */
+		iEnemy[19] = R_NO; /* MONSTER_MUTANT_MINI */
+		iEnemy[20] = R_NO; /* MONSTER_PARASITE */
+		iEnemy[21] = R_NO; /* MONSTER_TANK */
+		iEnemy[22] = R_NO; /* MONSTER_TANK_COMMANDER */
+		iEnemy[23] = R_NO;  /* MONSTER_STROGGZOMBIE */
+		iEnemy[24] = R_HT;  /* MONSTER_ARMY */			
+		break;
+	case "monster_mutant":
+		iEnemy[0] = R_HT; /* PLAYER */
+		iEnemy[1] = R_NO; /* MONSTER_SOLDIER_LIGHT */
+		iEnemy[2] = R_NO; /* MONSTER_SOLDIER_SS */
+		iEnemy[3] = R_NO; /* MONSTER_SOLDIER */
+		iEnemy[4] = R_NO; /* MONSTER_SOLDIER_FLAK */
+		iEnemy[5] = R_NO; /* MONSTER_INFANTRY */
+		iEnemy[6] = R_NO; /* MONSTER_INFANTRY_NAIL */
+		iEnemy[7] = R_NO; /* MONSTER_BERSERK */
+		iEnemy[8] = R_NO; /* MONSTER_BRAIN */
+		iEnemy[9] = R_NO; /* MONSTER_CHICK */
+		iEnemy[10] = R_NO; /* MONSTER_FLIPPER */
+		iEnemy[11] = R_NO; /* MONSTER_FLOATER */
+		iEnemy[12] = R_NO; /* MONSTER_FLYER */
+		iEnemy[13] = R_NO; /* MONSTER_GLADIATOR */
+		iEnemy[14] = R_NO; /* MONSTER_GUNNER */
+		iEnemy[15] = R_NO; /* MONSTER_HOVER */
+		iEnemy[16] = R_NO; /* MONSTER_HOVER_TELEPORTER */
+		iEnemy[17] = R_NO; /* MONSTER_MEDIC */
+		iEnemy[18] = R_NO; /* MONSTER_MUTANT */
+		iEnemy[19] = R_NO; /* MONSTER_MUTANT_MINI */
+		iEnemy[20] = R_NO; /* MONSTER_PARASITE */
+		iEnemy[21] = R_NO; /* MONSTER_TANK */
+		iEnemy[22] = R_NO; /* MONSTER_TANK_COMMANDER */
+		iEnemy[23] = R_NO;  /* MONSTER_STROGGZOMBIE */
+		iEnemy[24] = R_HT;  /* MONSTER_ARMY */			
+		break;
+	case "monster_mutant_mini":
+		iEnemy[0] = R_HT; /* PLAYER */
+		iEnemy[1] = R_NO; /* MONSTER_SOLDIER_LIGHT */
+		iEnemy[2] = R_NO; /* MONSTER_SOLDIER_SS */
+		iEnemy[3] = R_NO; /* MONSTER_SOLDIER */
+		iEnemy[4] = R_NO; /* MONSTER_SOLDIER_FLAK */
+		iEnemy[5] = R_NO; /* MONSTER_INFANTRY */
+		iEnemy[6] = R_NO; /* MONSTER_INFANTRY_NAIL */
+		iEnemy[7] = R_NO; /* MONSTER_BERSERK */
+		iEnemy[8] = R_NO; /* MONSTER_BRAIN */
+		iEnemy[9] = R_NO; /* MONSTER_CHICK */
+		iEnemy[10] = R_NO; /* MONSTER_FLIPPER */
+		iEnemy[11] = R_NO; /* MONSTER_FLOATER */
+		iEnemy[12] = R_NO; /* MONSTER_FLYER */
+		iEnemy[13] = R_NO; /* MONSTER_GLADIATOR */
+		iEnemy[14] = R_NO; /* MONSTER_GUNNER */
+		iEnemy[15] = R_NO; /* MONSTER_HOVER */
+		iEnemy[16] = R_NO; /* MONSTER_HOVER_TELEPORTER */
+		iEnemy[17] = R_NO; /* MONSTER_MEDIC */
+		iEnemy[18] = R_NO; /* MONSTER_MUTANT */
+		iEnemy[19] = R_NO; /* MONSTER_MUTANT_MINI */
+		iEnemy[20] = R_NO; /* MONSTER_PARASITE */
+		iEnemy[21] = R_NO; /* MONSTER_TANK */
+		iEnemy[22] = R_NO; /* MONSTER_TANK_COMMANDER */
+		iEnemy[23] = R_NO;  /* MONSTER_STROGGZOMBIE */
+		iEnemy[24] = R_HT;  /* MONSTER_ARMY */			
+		break;		
+	case "monster_parasite":
+		iEnemy[0] = R_HT; /* PLAYER */
+		iEnemy[1] = R_NO; /* MONSTER_SOLDIER_LIGHT */
+		iEnemy[2] = R_NO; /* MONSTER_SOLDIER_SS */
+		iEnemy[3] = R_NO; /* MONSTER_SOLDIER */
+		iEnemy[4] = R_NO; /* MONSTER_SOLDIER_FLAK */
+		iEnemy[5] = R_NO; /* MONSTER_INFANTRY */
+		iEnemy[6] = R_NO; /* MONSTER_INFANTRY_NAIL */
+		iEnemy[7] = R_NO; /* MONSTER_BERSERK */
+		iEnemy[8] = R_NO; /* MONSTER_BRAIN */
+		iEnemy[9] = R_NO; /* MONSTER_CHICK */
+		iEnemy[10] = R_NO; /* MONSTER_FLIPPER */
+		iEnemy[11] = R_NO; /* MONSTER_FLOATER */
+		iEnemy[12] = R_NO; /* MONSTER_FLYER */
+		iEnemy[13] = R_NO; /* MONSTER_GLADIATOR */
+		iEnemy[14] = R_NO; /* MONSTER_GUNNER */
+		iEnemy[15] = R_NO; /* MONSTER_HOVER */
+		iEnemy[16] = R_NO; /* MONSTER_HOVER_TELEPORTER */
+		iEnemy[17] = R_NO; /* MONSTER_MEDIC */
+		iEnemy[18] = R_NO; /* MONSTER_MUTANT */
+		iEnemy[19] = R_NO; /* MONSTER_MUTANT_MINI */
+		iEnemy[20] = R_NO; /* MONSTER_PARASITE */
+		iEnemy[21] = R_NO; /* MONSTER_TANK */
+		iEnemy[22] = R_NO; /* MONSTER_TANK_COMMANDER */
+		iEnemy[23] = R_NO;  /* MONSTER_STROGGZOMBIE */
+		iEnemy[24] = R_HT;  /* MONSTER_ARMY */			
+		break;	
+	case "monster_tank":
+		iEnemy[0] = R_HT; /* PLAYER */
+		iEnemy[1] = R_NO; /* MONSTER_SOLDIER_LIGHT */
+		iEnemy[2] = R_NO; /* MONSTER_SOLDIER_SS */
+		iEnemy[3] = R_NO; /* MONSTER_SOLDIER */
+		iEnemy[4] = R_NO; /* MONSTER_SOLDIER_FLAK */
+		iEnemy[5] = R_NO; /* MONSTER_INFANTRY */
+		iEnemy[6] = R_NO; /* MONSTER_INFANTRY_NAIL */
+		iEnemy[7] = R_NO; /* MONSTER_BERSERK */
+		iEnemy[8] = R_NO; /* MONSTER_BRAIN */
+		iEnemy[9] = R_NO; /* MONSTER_CHICK */
+		iEnemy[10] = R_NO; /* MONSTER_FLIPPER */
+		iEnemy[11] = R_NO; /* MONSTER_FLOATER */
+		iEnemy[12] = R_NO; /* MONSTER_FLYER */
+		iEnemy[13] = R_NO; /* MONSTER_GLADIATOR */
+		iEnemy[14] = R_NO; /* MONSTER_GUNNER */
+		iEnemy[15] = R_NO; /* MONSTER_HOVER */
+		iEnemy[16] = R_NO; /* MONSTER_HOVER_TELEPORTER */
+		iEnemy[17] = R_NO; /* MONSTER_MEDIC */
+		iEnemy[18] = R_NO; /* MONSTER_MUTANT */
+		iEnemy[19] = R_NO; /* MONSTER_MUTANT_MINI */
+		iEnemy[20] = R_NO; /* MONSTER_PARASITE */
+		iEnemy[21] = R_NO; /* MONSTER_TANK */
+		iEnemy[22] = R_NO; /* MONSTER_TANK_COMMANDER */
+		iEnemy[23] = R_NO;  /* MONSTER_STROGGZOMBIE */
+		iEnemy[24] = R_HT;  /* MONSTER_ARMY */			
+		break;
+	case "monster_tank_commander":
+		iEnemy[0] = R_HT; /* PLAYER */
+		iEnemy[1] = R_NO; /* MONSTER_SOLDIER_LIGHT */
+		iEnemy[2] = R_NO; /* MONSTER_SOLDIER_SS */
+		iEnemy[3] = R_NO; /* MONSTER_SOLDIER */
+		iEnemy[4] = R_NO; /* MONSTER_SOLDIER_FLAK */
+		iEnemy[5] = R_NO; /* MONSTER_INFANTRY */
+		iEnemy[6] = R_NO; /* MONSTER_INFANTRY_NAIL */
+		iEnemy[7] = R_NO; /* MONSTER_BERSERK */
+		iEnemy[8] = R_NO; /* MONSTER_BRAIN */
+		iEnemy[9] = R_NO; /* MONSTER_CHICK */
+		iEnemy[10] = R_NO; /* MONSTER_FLIPPER */
+		iEnemy[11] = R_NO; /* MONSTER_FLOATER */
+		iEnemy[12] = R_NO; /* MONSTER_FLYER */
+		iEnemy[13] = R_NO; /* MONSTER_GLADIATOR */
+		iEnemy[14] = R_NO; /* MONSTER_GUNNER */
+		iEnemy[15] = R_NO; /* MONSTER_HOVER */
+		iEnemy[16] = R_NO; /* MONSTER_HOVER_TELEPORTER */
+		iEnemy[17] = R_NO; /* MONSTER_MEDIC */
+		iEnemy[18] = R_NO; /* MONSTER_MUTANT */
+		iEnemy[19] = R_NO; /* MONSTER_MUTANT_MINI */
+		iEnemy[20] = R_NO; /* MONSTER_PARASITE */
+		iEnemy[21] = R_NO; /* MONSTER_TANK */
+		iEnemy[22] = R_NO; /* MONSTER_TANK_COMMANDER */
+		iEnemy[23] = R_NO;  /* MONSTER_STROGGZOMBIE */
+		iEnemy[24] = R_HT;  /* MONSTER_ARMY */			
+		break;
+	case "monster_stroggzombie":
+		iEnemy[0] = R_HT; /* PLAYER */
+		iEnemy[1] = R_NO; /* MONSTER_SOLDIER_LIGHT */
+		iEnemy[2] = R_NO; /* MONSTER_SOLDIER_SS */
+		iEnemy[3] = R_NO; /* MONSTER_SOLDIER */
+		iEnemy[4] = R_NO; /* MONSTER_SOLDIER_FLAK */
+		iEnemy[5] = R_NO; /* MONSTER_INFANTRY */
+		iEnemy[6] = R_NO; /* MONSTER_INFANTRY_NAIL */
+		iEnemy[7] = R_NO; /* MONSTER_BERSERK */
+		iEnemy[8] = R_NO; /* MONSTER_BRAIN */
+		iEnemy[9] = R_NO; /* MONSTER_CHICK */
+		iEnemy[10] = R_NO; /* MONSTER_FLIPPER */
+		iEnemy[11] = R_NO; /* MONSTER_FLOATER */
+		iEnemy[12] = R_NO; /* MONSTER_FLYER */
+		iEnemy[13] = R_NO; /* MONSTER_GLADIATOR */
+		iEnemy[14] = R_NO; /* MONSTER_GUNNER */
+		iEnemy[15] = R_NO; /* MONSTER_HOVER */
+		iEnemy[16] = R_NO; /* MONSTER_HOVER_TELEPORTER */
+		iEnemy[17] = R_NO; /* MONSTER_MEDIC */
+		iEnemy[18] = R_NO; /* MONSTER_MUTANT */
+		iEnemy[19] = R_NO; /* MONSTER_MUTANT_MINI */
+		iEnemy[20] = R_NO; /* MONSTER_PARASITE */
+		iEnemy[21] = R_NO; /* MONSTER_TANK */
+		iEnemy[22] = R_NO; /* MONSTER_TANK_COMMANDER */
+		iEnemy[23] = R_NO;  /* MONSTER_STROGGZOMBIE */
+		iEnemy[24] = R_HT;  /* MONSTER_ARMY */
+		break;
+	case "monster_army":
+		iEnemy[0] = R_HT; /* PLAYER */
+		iEnemy[1] = R_NO; /* MONSTER_SOLDIER_LIGHT */
+		iEnemy[2] = R_NO; /* MONSTER_SOLDIER_SS */
+		iEnemy[3] = R_NO; /* MONSTER_SOLDIER */
+		iEnemy[4] = R_NO; /* MONSTER_SOLDIER_FLAK */
+		iEnemy[5] = R_NO; /* MONSTER_INFANTRY */
+		iEnemy[6] = R_NO; /* MONSTER_INFANTRY_NAIL */
+		iEnemy[7] = R_NO; /* MONSTER_BERSERK */
+		iEnemy[8] = R_NO; /* MONSTER_BRAIN */
+		iEnemy[9] = R_NO; /* MONSTER_CHICK */
+		iEnemy[10] = R_NO; /* MONSTER_FLIPPER */
+		iEnemy[11] = R_NO; /* MONSTER_FLOATER */
+		iEnemy[12] = R_NO; /* MONSTER_FLYER */
+		iEnemy[13] = R_NO; /* MONSTER_GLADIATOR */
+		iEnemy[14] = R_NO; /* MONSTER_GUNNER */
+		iEnemy[15] = R_NO; /* MONSTER_HOVER */
+		iEnemy[16] = R_NO; /* MONSTER_HOVER_TELEPORTER */
+		iEnemy[17] = R_NO; /* MONSTER_MEDIC */
+		iEnemy[18] = R_NO; /* MONSTER_MUTANT */
+		iEnemy[19] = R_NO; /* MONSTER_MUTANT_MINI */
+		iEnemy[20] = R_NO; /* MONSTER_PARASITE */
+		iEnemy[21] = R_NO; /* MONSTER_TANK */
+		iEnemy[22] = R_NO; /* MONSTER_TANK_COMMANDER */
+		iEnemy[23] = R_NO;  /* MONSTER_STROGGZOMBIE */
+		iEnemy[24] = R_NO;  /* MONSTER_ARMY */			
+		break;		
+	}
+
+	return iEnemy[rClassname];
+};

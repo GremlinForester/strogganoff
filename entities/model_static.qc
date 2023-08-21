@@ -166,8 +166,8 @@ void() model_static_use =
 					
 void(entity attacker, float damage)	model_static_pain =
 {
-	//bprint (ftos(self.health));
-	//bprint ("\n");
+	bprint (ftos(self.health));
+	bprint ("\n");
 };
 
 void() model_static_die =
@@ -237,29 +237,6 @@ void() model_static_die =
 	remove(self);
 }
 
-void() model_static_init =
-{
-	if (self.health > 0) 
-	{
-		if (self.spawnflags & SF_SOLID_BSP)
-		{
-			self.takedamage = DAMAGE_YES;
-			self.nextthink = time + 0.1;
-			self.think = model_static_think;
-			return;
-		}
-			
-		self.solid = SOLID_BBOX;		
-		self.takedamage = DAMAGE_YES;
-	}
-
-//	if (!self.scale)
-//		self.scale = 1.0;
-		
-	self.nextthink = time + 0.1;
-	self.think = model_static_think;
-}
-
 void() model_static =
 {
 	self.classname = "model_static";	
@@ -269,10 +246,12 @@ void() model_static =
 	{
 		self.solid = SOLID_BSP;
 	}
+	/*
 	else
 	{
 		self.solid = SOLID_NOT;
 	}
+	*/
 	
 	/*
 	if (self._color){
@@ -284,7 +263,7 @@ void() model_static =
 	}
 	*/
 	
-	self.movetype = MOVETYPE_NOCLIP;
+	self.movetype = MOVETYPE_NONE;
 	precache_model(self.model);
 	setorigin (self, self.origin);
 
@@ -297,7 +276,7 @@ void() model_static =
 //	self.effects = self.effects | EF_LOWPRECISION;
 
 	self.max_health = self.health;
-	self.takedamage = DAMAGE_NO;
+	
 //	self.skin = 0;
 	self.th_die = model_static_die;
 	self.use = model_static_use;	
@@ -308,14 +287,31 @@ void() model_static =
 	}	
 	
 	self.scale = self.modelscale;
-	self.oscale = self.scale;	
-	self.avelocity = self.avelocity;
+	self.oscale = self.scale;
 
 	self.angles_x = self.angles_x * -1; //just because why not?
 
-	self.nextthink = time + 0.1;
-	self.think = model_static_init;
-	
+	self.avelocity = self.avelocity;
+
+	if (self.health > 0) 
+	{
+//		if (self.spawnflags & SF_SOLID_BSP)
+//		{
+			self.takedamage = DAMAGE_YES;
+//		}
+
+			
+		
+		self.takedamage = DAMAGE_YES;
+	}
+	else
+	{
+		self.takedamage = DAMAGE_NO;
+	}
+		
+//	if (!self.scale)
+//		self.scale = 1.0;
+
 	/*
 	if (self.bUseEnable == 1){
 		self.bUseEnable = TRUE;
@@ -343,6 +339,9 @@ void() model_static =
 		self.bToggleVisibility = 1;
 		addBitsToEntity(self,effects,EF_NODRAW);		
 	}	
+
+	self.nextthink = time + 0.1;
+	self.think = model_static_think;
 	
 };
 

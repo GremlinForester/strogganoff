@@ -24,8 +24,6 @@ Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 	trigger_chat_relay
 */
 
-
-
 //============================================================================
 
 void() chat_chat =
@@ -119,54 +117,20 @@ void() trigger_chat_relay =
 	self.use = chat_chat;
 };
 
-
-/*QUAKED target_message_finale(.5 .5 .5) (-8 -8 -8) (8 8 8) ?
-Custom finale text that types itself across the screen.
-
-"message"		The chat message
-"delay"			Delay before activating target
-"target"		Activate this ent after delay
-"delay"			Delay before activating target entity
-"targetname"	This trigger's name
-*/
-void() target_finale_use =
-{
-execute_changelevel();
-
-WriteByte (MSG_ALL, SVC_FINALE);
-WriteString (MSG_ALL, self.message);
-
-nextmap = self.map;	
-}
-
-void() target_message_finale =
-{
-	if (!self.message) objerror("trigger_message_finale without message");
-	
-	if (self.delay <=0)
-		self.delay = 0.1;
-		
-	self.use = target_finale_use;
-};
-
-
-
-/*QUAKED target_cdtrack(.5 .5 .5) (-8 -8 -8) (8 8 8) ?
-Trigger this entity to change background music track using sounds.
+/*QUAKED target_music(.5 .5 .5) (-8 -8 -8) (8 8 8) ?
+Target this entity to change background music track using sounds.
 
 "sounds"		Music track to play, 0 stops music
 "targetname"	This entity's name
 */
-void() target_cdtrack_use =
+void() target_music_use =
 {
 	WriteByte (MSG_ALL, SVC_CDTRACK);
 	WriteByte (MSG_ALL, self.sounds);
 	WriteByte (MSG_ALL, self.sounds);
 }
 
-void() target_cdtrack =
+void() target_music =
 {
-	self.use = target_cdtrack_use;
+	self.use = target_music_use;
 };
-
-

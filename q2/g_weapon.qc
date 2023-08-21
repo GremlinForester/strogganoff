@@ -19,7 +19,7 @@ void() blaster_base_touch={
 	self.avelocity = '0 0 0';
 
 	self.think = SUB_Remove;
-	self.nextthink = time + 0.01;
+	self.nextthink = time;
 	
 	if(!other.takedamage){
 		pointparticles(particleeffectnum("TE_BLASTERIMPACT"), self.origin, '0 0 0', 1);
@@ -29,6 +29,8 @@ void() blaster_base_touch={
 	if(other == self.owner){
 		return;
 	}
+	
+	pointparticles(particleeffectnum("TE_BLASTERIMPACT"), self.origin, '0 0 0', 1);
 	
 	makevectors(self.angles);
 	traceline(self.origin, self.origin + (v_forward * self.maxs_x), FALSE, self);

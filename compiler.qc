@@ -463,7 +463,7 @@ void() t_on
 
 //#define q2model_lighting
 
-//#define q2monster_replace_soldier
+#define q2monster_replace_soldier
 
 // Quake 2 Strogg Replacements
 #ifdef q2monster_replace_soldier

@@ -374,7 +374,7 @@ void() monster_mutant_mini =
 	setmodel (self, "models/monsters/mutant/tris.md2");
 	self.scale = 0.5;
 	setsize (self, '-16 -16 -12', '16 16 20');
-	self.health = autocvar_sk_q2mutant_health * 0.25;
+	self.health = autocvar_sk_q2mutant_health / 8;
 	self.max_health = self.health;
 
 	self.th_stand = q2mutant_stand;

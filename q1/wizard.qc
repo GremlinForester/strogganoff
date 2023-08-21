@@ -398,9 +398,9 @@ void() wiz_die =
 	{
 		sound (self, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
 		ThrowHead ("progs/h_wizard.mdl", self.health);
-		ThrowGib ("progs/gib2.mdl", self.health, GIB_FLESH, 1);
-		ThrowGib ("progs/gib2.mdl", self.health, GIB_FLESH, 1);
-		ThrowGib ("progs/gib2.mdl", self.health, GIB_FLESH, 1);
+		ThrowGib ("progs/gib2.mdl", self.health, GIB_FLESH, 1, 1);
+		ThrowGib ("progs/gib2.mdl", self.health, GIB_FLESH, 1, 1);
+		ThrowGib ("progs/gib2.mdl", self.health, GIB_FLESH, 1, 1);
 		return;
 	}
 
@@ -417,15 +417,10 @@ void(entity attacker, float damage) Wiz_Pain =
 	wiz_pain1 ();
 };
 
-/*
-	more pointless code
-
 void() Wiz_Missile =
 {
 	wiz_fast1();
 };
-*/
-
 
 /*QUAKED monster_wizard (1 0 0) (-16 -16 -24) (16 16 40) Ambush
 */

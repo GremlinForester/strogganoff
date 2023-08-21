@@ -96,7 +96,7 @@ void(vector virtmin, vector virtsize) Hud_DeathmatchScoreboard =
 	if not (getplayerkeyvalue(-24, "name"))
 	{	//and only draw the header when its not a really big game
 		pos_y += 8;
-		Hud_CentrePic("gfx/ranking.lmp", virtsize_x, pos, 24);	pos_y += 24;
+	//	Hud_CentrePic("gfx/ranking.lmp", virtsize_x, pos, 24);	pos_y += 24;
 		pos_y += 10;
 	}
 	/*
@@ -166,7 +166,7 @@ void(vector virtmin, vector virtsize) Hud_CoopScoreboard =
 	if not (getplayerkeyvalue(-24, "name"))
 	{	//and only draw the header when its not a really big game
 		pos_y += 8;
-		Hud_CentrePic("gfx/ranking.lmp", virtsize_x, pos, 24);	pos_y += 24;
+	//	Hud_CentrePic("gfx/ranking.lmp", virtsize_x, pos, 24);	pos_y += 24;
 		pos_y += 10;
 	}
 	/*

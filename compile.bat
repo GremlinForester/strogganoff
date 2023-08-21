@@ -3,6 +3,7 @@
 @echo ================
 cd client
 win64-fteqcc.exe -Wno-mundane -srcfile client.src
+pause
 @echo ================
 @echo compiling server
 @echo ================

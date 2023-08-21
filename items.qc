@@ -917,6 +917,9 @@ void() inv_item_touch =
 		case "item_silencer":
 			other.inv_pickup_silencer += 1;
 			break;
+		case "item_doubler":
+			other.inv_pickup_silencer += 1;
+			break;			
 		case "item_breather":
 			other.inv_pickup_rebreather += 1;
 			break;

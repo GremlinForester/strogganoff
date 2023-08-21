@@ -394,8 +394,8 @@ void() FoundTarget =
 float() FindMonster =
 // ------------------------------------------------
 {
-local entity beast;
-
+	local entity beast;
+	
 	if (self.attack_state != AS_ESCORTING)
 		return FALSE;
 
@@ -403,16 +403,27 @@ local entity beast;
 		return FALSE;
 
 	beast = findradius(self.origin, 1500);
+	
+	/*
+	if (getRelationship(self.classname, self.enemy.classname) == R_NO)
+	{
+		//FLOG(getRelationship(self.classname, self.enemy.classrid));
+		//LOG(returnRelationshipString(getRelationship(self.classname, getIDByClassname(self.enemy.classname))));
+		return FALSE;	
+	}	
+	*/
 
 	while(beast)
-		{
+	{
+
+		
 		if ( (beast.classtype == CLASS_STROGG || beast.classtype == CLASS_ANIMAL) && visible(beast) && beast != self && beast.health > 0){
 			self.enemy = beast;
 		}
 		
 		beast = beast.chain;
 		
-		}
+	}
 	
 	if (!self.enemy)
 		return FALSE;
@@ -443,10 +454,24 @@ float() FindTarget =
 	local entity	client;
 //	local float		r;
 
+/*
+	if (getRelationship(self.classname, self.enemy.classrid) == R_NO)
+	{
+		FLOG(getRelationship(self.classname, self.enemy.classrid));
+		return FALSE;	
+	}
+*/
+	/*
+	if (getRelationship(self.classname, self.enemy.classrid) == R_NO)
+	{
+		return FALSE;	
+	}
+	*/
 
 	if (self.classname == "monster_marine" || self.classname == "misc_insane")
 	{
-		if (FindMonster()){
+		if (FindMonster())
+		{
 			return TRUE;
 		}
 	}
@@ -511,7 +536,6 @@ float() FindTarget =
 		return TRUE;
 	}	
 	
-	
 //
 // got one
 //
@@ -525,6 +549,13 @@ float() FindTarget =
 			return FALSE;
 		}
 	}
+
+	/*
+	bprint(self.classname); bprint(" has ");
+	LOG(returnRelationshipString(getRelationship(self.classname, self.enemy.classname)));
+	bprint(" with "); 
+	LOG(self.enemy.classname);
+	*/
 	
 	FoundTarget ();
 

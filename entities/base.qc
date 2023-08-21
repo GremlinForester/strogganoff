@@ -420,3 +420,7 @@ void(float level) graphics_light_set={
 #define IS_TRAIL 2
 #define IS_RANDOM 4
 #define FIRE_ONCE 8
+
+//Force debris to call the remove cleanup function on touch, 
+//doesn't affect any debris that already do this (glass).
+#define SF_DEBRIS_REMOVE_ON_TOUCH 8

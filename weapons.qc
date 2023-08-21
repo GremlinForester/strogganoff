@@ -992,7 +992,7 @@ void() W_WeaponFrame =
 	if (self.impulse)
 #endif
 		ImpulseCommands ();
-	
+		
 	// check for attack
 	if(self.weaponstate == WEAPON_READY || time > self.attack_finished){
 		if (self.button0)

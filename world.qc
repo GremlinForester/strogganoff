@@ -1,5 +1,6 @@
 //
 void() InitBodyQue;
+void() precache_mobs;	//include from Horde Mod
 
 void( ) FRIK_FILE_precaches =
 {
@@ -402,6 +403,9 @@ Quake 2 MP Map ladder volumes
 
 	// player precaches	
 	W_Precache ();			// get weapon precaches
+	
+	//NOTE - horde mode API
+	horde_wave_manager();	
 
 	FRIK_FILE_precaches(); //MrC: Thanks goes to Peter Roohr (battleMETAL), precaching with external text files is TIGHT!
 	//precached again below becuase I couldn't figure out how to disable the (see #pragma stuff in compiler.qc), 
@@ -565,6 +569,9 @@ Quake 2 MP Map ladder volumes
 	precache_sound ("weapons/ROCKLF1A.wav");
 	
 	precache_sound ("items/suit2.wav");
+	
+	//horde
+	precache_mobs();	
 
 //
 // Setup light animation tables. 'a' is total darkness, 'z' is maxbright.

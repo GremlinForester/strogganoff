@@ -114,7 +114,8 @@ void() point_shake =
 
 	self.noise = "world/quake.wav";
 
-	if (self.targetname){
+	if (self.targetname)
+	{
 		self.estate = ESTATE_OFF;
 	}
 	else

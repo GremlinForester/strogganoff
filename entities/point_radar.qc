@@ -1,5 +1,7 @@
 //3D Radar by VENOMUS
 
+//Will display its "target" entity position along with a custom icon or display of target entity's scaled down model. 
+
 // VENOMUS START
 void () radar_think =
 {

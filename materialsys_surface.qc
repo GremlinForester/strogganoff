@@ -105,6 +105,9 @@ void() Q3Surface_FootStep =
 		self.nextfootstep = time + 0.35 + random() * 0.1;
 	else
 		self.nextfootstep = time + 0.25 + random() * 0.1;
+		
+	if (self.waterlevel == 2)
+		self.nextfootstep = time + 1.25 + random() * 0.1;
 
 	traceline(self.origin, self.origin - '0 0 32', MOVE_NORMAL, self);
 
@@ -183,6 +186,13 @@ void(vector org) Impact_Spark =
 
 void(vector org) Q3Surface_Impact =
 {
+	if (trace_ent.flags & FL_MONSTER)
+	{
+		pointsound (org, sprintf("world/impacts/flesh%s.ogg", ftos((rint(random()*3)+1))), 1, ATTN_IDLE);	
+		pointparticles(particleeffectnum("TE_BLOOD"), org, '0 0 0', 1);
+		return;
+	}
+	
 	if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS)
 	{
 		return;
@@ -202,7 +212,7 @@ void(vector org) Q3Surface_Impact =
 		pointsound (org, sprintf("world/impacts/wood%s.ogg", ftos((rint(random()*3)+1))), 1, ATTN_IDLE);
 		pointparticles(particleeffectnum("TE_WOODIMPACT"), org, '0 0 0', 1);
 	}
-	else if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_GLASS)
+	else if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_GLASS || trace_ent.material == GIB_GLASS)
 	{
 		pointsound (org, sprintf("world/impacts/glass%s.ogg", ftos((rint(random()*3)+1))), 1, ATTN_IDLE);
 		pointparticles(particleeffectnum("TE_WOODIMPACT"), org, '0 0 0', 1);

@@ -68,5 +68,5 @@ void() target_changelevel =
 	setsize (self, '-24 -24 -24', '24 24 24');	
 	self.use = changelevel_use;
 
-	LOG(nextmap);	
+	//LOG(nextmap);	
 };

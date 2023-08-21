@@ -14,6 +14,10 @@ shared/dpextensions.qc
 //shared/m_flash.qc
 shared/strogganoff_defs.qc
 
+//HORDE MOD
+horde/defs/horde_defs.qc
+
+
 playermovement.qc
 
 // frikbot module - 0.10.1.cat 
@@ -147,6 +151,7 @@ entities/func_door_rotating.qc
 entities/func_explosive.qc
 entities/func_object.qc
 entities/func_conveyor.qc
+entities/func_weather.qc
 entities/point_radar.qc
 entities/point_sensor.qc
 entities/point_shake.qc
@@ -160,10 +165,17 @@ entities/info_player_start2.qc
 entities/info_player_deathmatch.qc 
 entities/info_player_coop.qc 
 entities/info_teleport_destination.qc
-entities/path_corner.qc 
+entities/path_corner.qc
+entities/target_splash.qc 
+entities/target_gibshooter.qc
 entities/target_speaker.qc
 entities/target_setenemy.qc
 entities/target_objective.qc
+entities/target_explosion.qc
 entities/viewthing.qc
+horde/func_mob_waves.qc
+horde/mob_funcs.qc
+
+//I'm starting to think this was a bad idea...
 
 debug.qc

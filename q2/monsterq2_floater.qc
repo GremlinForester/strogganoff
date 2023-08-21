@@ -79,18 +79,18 @@ void(entity attacker, float damage) floater_pain={
 	
 	r = random();
 	if(r < 0.3){
-		self.pain_finished = time + 0.7;
+		self.pain_finished = time + 2.7;
 		floater_pain1();
 		sound(self, CHAN_VOICE, FLOATER_SOUND_PAIN1, 1, ATTN_NORM);
 	}
 	else if(r <= 0.6){
 		floater_pain2();
-		self.pain_finished = time + 0.8;
+		self.pain_finished = time + 3.8;
 		sound(self, CHAN_VOICE, FLOATER_SOUND_PAIN1, 1, ATTN_NORM);
 	}
 	else{
 		floater_pain3();
-		self.pain_finished = time + 1.2;
+		self.pain_finished = time + 4.2;
 		sound(self, CHAN_VOICE, FLOATER_SOUND_PAIN2, 1, ATTN_NORM);
 	}
 	

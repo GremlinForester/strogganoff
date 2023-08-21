@@ -14,7 +14,7 @@ void (vector org, entity death_owner) spawn_tdeath;
 #define	CROUCH_VEC_HULL_MIN '-16 -16 -24'
 #define	CROUCH_VEC_HULL_MAX '16 16 4'
 
-.float crouch, attemptcrouch;
+//.float crouch, attemptcrouch;
 float (entity targ) crouchcheck =
 {
 	makevectors (self.v_angle);
@@ -40,9 +40,21 @@ void() crouch_on =
 	}
 };
 
-void() crouch_off =
+/* void() crouch_off =
 {
 	if (self.flags & FL_DUCKED && (!self.velocity_z) && crouchcheck(self))  //get up
+	{
+		setsize (self, VEC_HULL_MIN, VEC_HULL_MAX);
+		self.flags = self.flags - (self.flags & FL_DUCKED);
+		self.origin_z = self.origin_z + 16;
+		self.view_ofs = '0 0 22';
+		return;
+	}
+}; */
+
+void() crouch_off =
+{
+	if (self.flags & FL_DUCKED && crouchcheck(self))  //get up
 	{
 		setsize (self, VEC_HULL_MIN, VEC_HULL_MAX);
 		self.flags = self.flags - (self.flags & FL_DUCKED);
@@ -641,6 +653,8 @@ void() changelevel_touch =
 // called by ClientKill and DeadThink
 void() respawn =
 {
+	self.client_state = CL_STATE_RESPN;
+
 	if (coop)
 	{
 		// make a copy of the dead body for appearances sake
@@ -681,19 +695,21 @@ void() ClientKill =
 		return;
 #endif
 	bprint (self.netname);
-	bprint (" suicides\n");
-//	set_suicide_frame ();
+	bprint (" self destructs\n");
 	gibMonster();
 	ThrowHead ("models/objects/gibs/skull/tris.md2", self.health);
 //	self.modelindex = modelindex_player;
 	self.frags = self.frags - 2;	// extra penalty  
   
   //Stroggannoff EXT-COOP / playerCache ops
+  /*
   local entity cache;
   cache = PLAYER_CACHE_ENTS[self.playerCache];
   if(cache && self){
     sv_coop_client_setCache(self, cache);
   }
+  */
+
   
 	respawn ();
 };
@@ -837,7 +853,7 @@ entity() SelectSpawnPoint =
 	//spot = find (world, classname, "info_player_start");
 	spot = find (world, targetname, autocvar_q2_spawnspot);
 
-	if (autocvar_q2_spawnspot != "")
+	if (autocvar_q2_spawnspot != string_null)
 	{
 		if (spot)
 		{
@@ -1007,6 +1023,7 @@ void() PutClientInServer =
 	spot = SelectSpawnPoint ();
 	
 	self.classname = "player";
+	//self.classrid = PLAYER; //for relationship table
 	self.health = 100;
 	self.takedamage = DAMAGE_AIM;
 	self.solid = SOLID_SLIDEBOX;
@@ -1298,6 +1315,44 @@ void() PlayerDeathThink =
 void() q2player_jumpframes;
 .float jumpcount;
 
+
+//Pretty much a repurposed waterjump
+void() CheckVaultJump =
+{
+	local vector start, end;
+	
+	if (self.waterlevel >= 2)
+		return;
+		
+	if (self.onladder)
+		return;
+
+	makevectors (self.angles);
+	start = self.origin;
+	start_z = start_z + 8; 
+	v_forward_z = 0;
+	normalize(v_forward);
+	end = start + v_forward*24;
+	traceline (start, end, TRUE, self);
+	if (trace_fraction < 1)
+	{	// solid at waist
+		start_z = start_z + self.maxs_z + 32; //8
+//		LOG("SOLID WAIST");
+		end = start + v_forward*24;
+		self.movedir = trace_plane_normal * -50;
+		traceline (start, end, TRUE, self);
+		if (trace_fraction == 1)
+		{	// open at eye level
+			self.velocity_z = 225;
+			self.punchangle_x = 5;		
+//			LOG("LAUNCH!");
+			self.flags = self.flags - (self.flags & FL_JUMPRELEASED);
+//			self.teleport_time = time + 2;	// safety net
+//			return;
+		}
+	}
+};
+
 void() PlayerJump =
 {
 //	local vector start, end;	// fx_warning
@@ -1337,6 +1392,9 @@ void() PlayerJump =
 	
 	if (!(self.flags & FL_ONGROUND))
 		return;
+
+	CheckVaultJump ();	//MrC: vaulting!
+//	LOG("VAULTING!!");	
 	
 	self.flags = self.flags - (self.flags & FL_JUMPRELEASED);
 	self.flags = self.flags - FL_ONGROUND;	// don't stairwalk
@@ -1345,7 +1403,8 @@ void() PlayerJump =
 	// player jumping sound, can be jump boots sound if they make it in
 	// sound (self, CHAN_BODY, "player/plyrjmp8.wav", 1, ATTN_NORM);
 	playerVOSound(PLAYER_VOICE_JUMP);
-	q2player_jumpframes();
+	q2player_jumpframes();	
+	
 	if (self.items & IT_JUMPBOOTS){
 		self.velocity_z = self.velocity_z + 485;
 		self.jumpcount++;
@@ -1516,7 +1575,7 @@ void() LadderSound2 =
 	// Reset timer for next sound to play
 	self.timeladder = time + 0.35;
 	// Check for any sounds and query if footsteps are active
-
+	/*
 			if (random() < 0.25) 
 				sound (self, CHAN_BODY, "player/clank1.wav", 1, ATTN_NORM);
 			else if (random() < 0.5) 
@@ -1525,6 +1584,8 @@ void() LadderSound2 =
 				sound (self, CHAN_BODY, "player/clank1.wav", 1, ATTN_NORM);
 			else 
 				sound (self, CHAN_BODY, "player/clank1.wav", 1, ATTN_NORM);
+			*/
+			sound (self, CHAN_AUTO, sprintf("player/metal%s.wav", ftos((rint(random()*3)+1))), 1, ATTN_IDLE);			
 	}
 }
 
@@ -1569,11 +1630,14 @@ void() Ladder_ClimbJump =
 	LadderSound();
 }
 
+var float autocvar_ladder_climbangle = 20;
+
 void() Ladder_ClimbMove =
 {
 	//Use Dot products to determine if user is trying to move up or down
 	
-	if (Dot(v_forward,self.velocity) > 2 || Dot(v_up,self.velocity) < -20 || Dot(v_up,self.velocity) > 20) //-20 20
+	//if (Dot(v_forward,self.velocity) > 2 || Dot(v_up,self.velocity) < -20 || Dot(v_up,self.velocity) > 20) //-20 20
+	if (Dot(v_forward,self.velocity) > 2 || Dot(v_up,self.velocity) < (autocvar_ladder_climbangle * -1) || Dot(v_up,self.velocity) > autocvar_ladder_climbangle) //-20 20
 	{
 		//self.velocity = v_forward*self.entladder.speed;
 		if (self.v_angle_x < -25) //-25
@@ -1644,6 +1708,8 @@ void() PlayerPreThink =
 
 	if (self.waterlevel == 2)
 		CheckWaterJump ();
+	
+
 
 	if (self.deadflag >= DEAD_DEAD)
 	{
@@ -1659,10 +1725,15 @@ void() PlayerPreThink =
 		if (self.flags & FL_DUCKED)
 			return;
 		
+		if (!self.flags & FL_JUMPRELEASED)
+			CheckVaultJump(); //MrC: vaulting! And yes, I did just happen to play Boltgun!
+		
 		PlayerJump ();
 	}
 	else
+	{
 		self.flags = self.flags | FL_JUMPRELEASED;
+	}
 
 // teleporters can force a non-moving pause time	
 	if (time < self.pausetime)
@@ -2052,6 +2123,18 @@ void() W_roomTrace =
 //	Q3Surface_Impact(org);
 };
 
+
+void() W_debug_traceline =
+{
+	local	vector	source;
+	local	vector	org;
+
+	makevectors (self.v_angle);
+	source = self.origin + '0 0 16';
+	traceline (source, source + v_forward*32, FALSE, self);
+	org = trace_endpos - v_forward*4;
+};
+
 void() W_surfaceSniffer =
 {
 	local	vector	source;
@@ -2126,7 +2209,7 @@ void() PlayerPostThink =
 		W_WeaponAnimate();
 	}
 	
-// check to see if player landed and play landing sound
+	// check to see if player landed and play landing sound
 	if ((self.jump_flag < -100) && (self.flags & FL_ONGROUND) && (self.health > 0))
 	{
 		if (self.watertype == CONTENT_WATER){
@@ -2178,6 +2261,14 @@ void() PlayerPostThink =
 
 	if (autocvar_cl_printroomsize >= 1){
 	W_roomTrace();
+	}
+
+	if (autocvar_debug_relationshiptable >= 1)
+	{
+		W_debug_traceline();
+		
+		bprint ("Trace.ent RTable: ");bprint ("\n");
+		FLOG(getRelationship(trace_ent.classname, trace_ent.enemy.classname));
 	}
 	
 	if (autocvar_cl_surfacesniffer >= 1)
@@ -2297,7 +2388,29 @@ called when a player connects to a server
 */
 void() ClientConnect =
 {
-
+	/*
+	self.client_state = CL_STATE_CONN;
+	if(ENT_CLIENT1 == world){
+		CLIENT_ACTIVE_TOTAL = CLIENT_ACTIVE_TOTAL + 1;
+		ENT_CLIENT1 = self;
+		return;
+	}
+	if(ENT_CLIENT2 == world){
+		CLIENT_ACTIVE_TOTAL = CLIENT_ACTIVE_TOTAL + 1;
+		ENT_CLIENT2 = self;
+		return;
+	}
+	if(ENT_CLIENT3 == world){
+		CLIENT_ACTIVE_TOTAL = CLIENT_ACTIVE_TOTAL + 1;
+		ENT_CLIENT3 = self;
+		return;
+	}
+	if(ENT_CLIENT4 == world){
+		CLIENT_ACTIVE_TOTAL = CLIENT_ACTIVE_TOTAL + 1;
+		ENT_CLIENT4 = self;
+	}
+	*/
+	
 #ifdef FRIKBOT
 
 // frikbot tie-in
@@ -2306,6 +2419,10 @@ void() ClientConnect =
 
   //Stroggannoff - ext_coop
   sv_coop_client_connect();
+
+  local float fields = numentityfields();
+  LOG("[SV] ent fields : ");
+  FLOG(fields);
 
 /*
    if ( ((self.netname == "CamClient") || (self.netname == "")) )
@@ -2339,7 +2456,25 @@ called when a player disconnects from a server
 */
 void() ClientDisconnect =
 {
-
+	/*
+	if(self == ENT_CLIENT1){
+		CLIENT_ACTIVE_TOTAL = CLIENT_ACTIVE_TOTAL - 1;
+		ENT_CLIENT1 = world;
+	}
+	if(self == ENT_CLIENT2){
+		CLIENT_ACTIVE_TOTAL = CLIENT_ACTIVE_TOTAL - 1;
+		ENT_CLIENT2 = world;
+	}
+	if(self == ENT_CLIENT3){
+		CLIENT_ACTIVE_TOTAL = CLIENT_ACTIVE_TOTAL - 1;
+		ENT_CLIENT3 = world;
+	}
+	if(self == ENT_CLIENT4){
+		CLIENT_ACTIVE_TOTAL = CLIENT_ACTIVE_TOTAL - 1;
+		ENT_CLIENT4 = world;
+	}
+	*/
+	
 #ifdef FRIKBOT
 
 // frikbot tie-in
@@ -2361,7 +2496,6 @@ void() ClientDisconnect =
 	bprint (ftos(self.frags));
 	bprint (" frags\n");
 	sound (self, CHAN_BODY, "player/tornoff2.wav", 1, ATTN_NONE);
-//	set_suicide_frame ();
 	self.health = 0; //used to remove attachments, hud models, etc...
 	gibMonster();
 	ThrowHead ("models/objects/gibs/skull/tris.md2", self.health);

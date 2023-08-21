@@ -15,6 +15,8 @@ Eventually this special case will be moved to a more general purpose model_stati
 
 void() GrenadeExplode;
 
+var float autocvar_debug_glass_printdamage = 0;
+
 void() breakable_glass_die =
 {
 	local float n;
@@ -42,8 +44,6 @@ void() breakable_glass_die =
 		pointparticles(particleeffectnum("TE_GLASS_SHATTER"), (self.origin + '0 -32 20'), '0 -32 0', 1);			
 	}
 	SUB_UseTargets();
-	//bprint (ftos(self.health));
-	//bprint ("\n");
 }
 
 void(entity inflictor, entity attacker, float damage, entity ignore) T_RadiusDamage;
@@ -74,8 +74,10 @@ void(entity attacker, float damage)	breakable_glass_pain =
 		sound (self, CHAN_VOICE, "glass_crack.wav", 1, ATTN_NORM);
 		self.touch = breakable_glass_touch;
 	}
-	//bprint (ftos(self.health));
-	//bprint ("\n");
+	if (autocvar_debug_glass_printdamage > 0){
+	bprint (ftos(self.health));
+	bprint ("\n");
+	}
 };
 
 void() misc_breakable_glass =

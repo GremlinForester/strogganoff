@@ -2,12 +2,22 @@
 This is solid bmodel that will fall if it's support it removed.
 */
 
+.float bTouchUseTargets;
+
 void() func_object_touch =
 {
+	if (!self.velocity_z){
+		if (other.classname == "player" || other.owner.classname == "player")
+			return;
+	}
+	
 	if (self.velocity_z != 0){
 		sound (self, CHAN_BODY, "weapons/bounce.wav", 0.5, ATTN_NORM);	
 	}	
 
+
+	if (self.bTouchUseTargets)
+		SUB_UseTargets ();
 	
 	if (other.takedamage == DAMAGE_NO)
 		return;
@@ -35,7 +45,6 @@ void() func_object_use =
 
 void() func_object =
 {
-	
 	setmodel (self, self.model);
 	
 	if (self.targetname)

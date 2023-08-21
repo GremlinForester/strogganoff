@@ -10,9 +10,8 @@
 //		<code>
 // };
 
-
 #define GIB_VELOCITY_MUL 1.1
-#define GIB_VELOCITY_FLAMING_MUL random() * 4
+#define GIB_VELOCITY_FLAMING_MUL random()*4
 
 void(entity ent) setWounded =
 {
@@ -85,6 +84,9 @@ void() initClassType =
 	case "monster_mutant":
 		self.classtype = CLASS_ANIMAL;
 		break;
+	case "monster_mutant_mini":
+		self.classtype = CLASS_ANIMAL;
+		break;		
 	case "monster_parasite":
 		self.classtype = CLASS_STROGG;
 		break;	
@@ -100,6 +102,147 @@ void() initClassType =
 	}
 }
 
+/*
+models/objects/gibs/gear/tris.md2
+
+models/objects/gibs/bone/tris.md2
+models/objects/gibs/bone2/tris.md2
+models/objects/gibs/arm/tris.md2 //flesh arm
+models/objects/gibs/head/tris.md2 //player head
+models/objects/gibs/leg/tris.md2 //player leg
+
+models/objects/gibs/skull/tris.md2 //bloody skull
+models/objects/gibs/sm_meat/tris.md2 //round gib
+models/objects/gibs/sm_metal/tris.md2 //bloody pyramid
+
+models/objects/gibs/chest/tris.md2 //strogg chest
+models/objects/gibs/head2/tris.md2 //strogg head
+	
+monster_flipper
+monster_mutant
+misc_insane
+*/	
+
+void() gibMonster =
+{
+	local float n;	
+	
+	switch(self.classname)
+	{
+	case "monster_soldier_light":
+		ThrowGib ("models/objects/gibs/chest/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 0.75, 1);
+		ThrowGib ("models/objects/gibs/head2/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 1, 1);
+		break;
+	case "monster_soldier_ss":
+		ThrowGib ("models/objects/gibs/chest/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 0.75, 1);
+		ThrowGib ("models/objects/gibs/head2/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 1, 1);
+		break;
+	case "monster_soldier":
+		ThrowGib ("models/objects/gibs/chest/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 0.75, 1);
+		ThrowGib ("models/objects/gibs/head2/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 1, 1);
+		break;
+	case "monster_soldier_flak":
+		ThrowGib ("models/objects/gibs/chest/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 0.75, 1);
+		ThrowGib ("models/objects/gibs/head2/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 1, 1);
+		break;
+	case "monster_infantry":
+		ThrowGib ("models/objects/gibs/chest/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 0.75, 1);
+		ThrowGib ("models/objects/gibs/head2/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 1, 1);
+		break;
+	case "monster_infantry_nail":
+		ThrowGib ("models/objects/gibs/chest/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 0.75, 1);
+		ThrowGib ("models/objects/gibs/head2/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 1, 1);
+		break;		
+	case "monster_berserk":
+		ThrowGib ("models/objects/gibs/chest/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 0.75, 1);
+		ThrowGib ("models/objects/gibs/head2/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 1, 1);
+		break;
+	case "monster_brain":
+		self.classtype = CLASS_STROGG;
+		break;
+	case "monster_chick":
+		self.classtype = CLASS_STROGG;
+		break;
+	case "monster_flipper":
+		self.classtype = CLASS_ANIMAL;
+		break;
+	case "monster_floater":
+		ThrowGib ("models/objects/gibs/chest/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 0.75, 1);
+		ThrowGib ("models/objects/gibs/head2/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 1, 1);
+		break;
+	case "monster_flyer":
+		ThrowGib ("models/objects/gibs/head2/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 1, 1);
+		break;
+	case "monster_gladiator":
+		ThrowGib ("models/objects/gibs/chest/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 0.75, 1);
+		ThrowGib ("models/objects/gibs/head2/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 1, 1);
+		break;
+	case "monster_gunner":
+		self.classtype = CLASS_STROGG;
+		break;
+	case "monster_hover":
+		ThrowGib ("models/objects/debris1/tris.md2", self.health, GIB_FLAMING, 1, GIB_VELOCITY_FLAMING_MUL);
+		ThrowGib ("models/objects/debris2/tris.md2", self.health, GIB_FLAMING, 1, GIB_VELOCITY_FLAMING_MUL);
+		ThrowGib ("models/objects/debris3/tris.md2", self.health, GIB_FLAMING, 1, GIB_VELOCITY_FLAMING_MUL);
+		ThrowGib ("models/objects/gibs/skull/tris.md2", self.health, GIB_FLESH, 1, 1);
+		for (n= 0; n < 2; n++)
+		{
+			ThrowGib ("models/objects/gibs/gear/tris.md2", self.health, GIB_METAL, 0.75, 1);
+		}
+		break;
+	case "monster_hover_teleporter":
+		ThrowGib ("models/objects/debris1/tris.md2", self.health, GIB_FLAMING, 1, GIB_VELOCITY_FLAMING_MUL);
+		ThrowGib ("models/objects/debris2/tris.md2", self.health, GIB_FLAMING, 1, GIB_VELOCITY_FLAMING_MUL);
+		ThrowGib ("models/objects/debris3/tris.md2", self.health, GIB_FLAMING, 1, GIB_VELOCITY_FLAMING_MUL);
+		ThrowGib ("models/objects/gibs/skull/tris.md2", self.health, GIB_FLESH, 1, 1);
+		for (n= 0; n < 2; n++)
+		{
+			ThrowGib ("models/objects/gibs/gear/tris.md2", self.health, GIB_METAL, 0.75, 1);
+		}
+		break;		
+	case "monster_medic":
+		self.classtype = CLASS_STROGG;
+		break;
+	case "monster_mutant":
+		self.classtype = CLASS_ANIMAL;
+		break;
+	case "monster_mutant_mini":
+		self.classtype = CLASS_ANIMAL;
+		break;		
+	case "monster_parasite":
+		self.classtype = CLASS_STROGG;
+		break;	
+	case "monster_tank":
+		ThrowGib ("models/objects/gibs/chest/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 0.75, 1);
+		ThrowGib ("models/objects/gibs/head2/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 1, 1);
+		break;
+	case "monster_tank_commander":
+		for (n= 0; n < 8; n++)
+		{
+			ThrowGib ("models/objects/debris3/tris.md2", self.health, GIB_FLAMING, 1, GIB_VELOCITY_FLAMING_MUL);			
+			ThrowGib ("models/objects/gibs/gear/tris.md2", self.health, GIB_METAL, 0.75, 1);
+		}	
+		ThrowGib ("models/objects/gibs/chest/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 0.75, 1);
+		ThrowGib ("models/objects/gibs/head2/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 1, 1);
+		break;
+	case "monster_stroggzombie":
+		T_RadiusDamage (self, self.owner, 85, other); //BOOM! Get out the way!
+		ThrowGib ("models/objects/debris1/tris.md2", self.health, GIB_EXPLOSIVE, 1, 5);
+		ThrowGib ("models/objects/debris2/tris.md2", self.health, GIB_EXPLOSIVE, 1, 5);
+		ThrowGib ("models/objects/debris3/tris.md2", self.health, GIB_EXPLOSIVE, 1, 5);
+		break;		
+	}
+	
+	//everyone gets a little meat
+	for (n= 0; n < 2; n++)
+		ThrowGib ("models/objects/gibs/bone/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 1, 1);
+	for (n= 0; n < 4; n++)
+		ThrowGib ("models/objects/gibs/sm_meat/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 1, 1);
+	for (n= 0; n < 3; n++)
+		ThrowGib ("models/objects/gibs/bone2/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 1, 1);	
+}
+
+/*
 void() gibMonster =
 {
 	local float n;
@@ -124,11 +267,13 @@ void() gibMonster =
 	|| self.classname == "monster_tank")
 	{
 		
-		if (self.classname == "monster_stroggzombie"){
+		if (self.classname == "monster_stroggzombie")
+		{
 			T_RadiusDamage (self, self.owner, 85, other); //BOOM! Get out the way!
-		}
-		else{
-			T_RadiusDamage (self, self.owner, 5, other);	
+				ThrowGib ("models/objects/debris1/tris.md2", self.health, GIB_EXPLOSIVE, 1, GIB_VELOCITY_FLAMING_MUL);
+	ThrowGib ("models/objects/debris2/tris.md2", self.health, GIB_EXPLOSIVE, 1, GIB_VELOCITY_FLAMING_MUL);
+	ThrowGib ("models/objects/debris3/tris.md2", self.health, GIB_EXPLOSIVE, 1, GIB_VELOCITY_FLAMING_MUL);
+	return;
 		}
 		
 		ThrowGib ("models/objects/debris1/tris.md2", self.health, GIB_FLAMING, 1, GIB_VELOCITY_FLAMING_MUL);
@@ -183,29 +328,8 @@ void() gibMonster =
 		ThrowGib ("models/objects/gibs/chest/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 0.75, 1);
 		ThrowGib ("models/objects/gibs/head2/tris.md2", self.health * GIB_VELOCITY_MUL, GIB_FLESH, 1, 1);
 	}	
-	
-/*
-models/objects/gibs/gear/tris.md2
-
-models/objects/gibs/bone/tris.md2
-models/objects/gibs/bone2/tris.md2
-models/objects/gibs/arm/tris.md2 //flesh arm
-models/objects/gibs/head/tris.md2 //player head
-models/objects/gibs/leg/tris.md2 //player leg
-
-models/objects/gibs/skull/tris.md2 //bloody skull
-models/objects/gibs/sm_meat/tris.md2 //round gib
-models/objects/gibs/sm_metal/tris.md2 //bloody pyramid
-
-models/objects/gibs/chest/tris.md2 //strogg chest
-models/objects/gibs/head2/tris.md2 //strogg head
-	
-monster_flipper
-monster_mutant
-misc_insane
-*/	
-	
 }
+*/
 
 /*
 monster_ projectile stuff, ala Quake 2. These essentially wrap as many shared general weapon projectile functions as possible, also used by the player.

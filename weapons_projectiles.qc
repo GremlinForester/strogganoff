@@ -170,6 +170,8 @@ Fire Rilgun
 void(vector start, vector aimdir, float damage) fireRail =
 {
 	local	vector	org;
+	local	vector	loc;
+	local	vector	fx_end;	
 
  	nep_traceline (start, aimdir, FALSE, self);
 //	if (trace_fraction == 1.0)
@@ -257,11 +259,11 @@ void(float damage) FireBullet =
 		{
 			if (self.weapon == WEP_SHOTGUN || self.weapon == WEP_SUPERSHOTGUN || self.weapon == WEP_MACHINEGUN || self.weapon == WEP_CHAINGUN)
 			{
-				damage = damage * 0.1;
+				damage = damage * 0.5;
 			}
 			else if (self.weapon == WEP_RAILGUN)
 			{
-				damage = damage * 20.0; //goes through armor like a hot knife through butter
+				damage = damage * 2.0; //goes through armor like a hot knife through butter
 				SpawnBlood (org, org*0.2, damage);
 			}
 			
@@ -271,6 +273,7 @@ void(float damage) FireBullet =
 		else
 		{
 			T_Damage (trace_ent, self, self, damage);
+			Q3Surface_Impact(org);
 		}
 	}
 	else
@@ -311,22 +314,26 @@ void(float damage, vector dir) Q3SurfaceTraceAttack =
 	
 	org = trace_endpos - dir*4;
 	
-	if (trace_ent.takedamage && trace_ent.flags & FL_MONSTER || trace_ent.classname == "player")
+	if (trace_ent.takedamage /*&& trace_ent.flags & FL_MONSTER || trace_ent.classname == "player"*/)
 	{
-		if (trace_ent.classname == "monster_tank" || trace_ent.classname == "monster_tank_commander")
+		if (trace_ent.flags & FL_MONSTER || trace_ent.flags & FL_CLIENT)//new
 		{
-			damage = damage * 0.1;
-			Q3Surface_Impact(org);
-		}	
-		else
-		{
-			SpawnBlood (org, vel*0.2, damage);
+			if (trace_ent.classname == "monster_tank" || trace_ent.classname == "monster_tank_commander")
+			{
+				damage = damage * 0.5;
+				Q3Surface_Impact(org);
+			}	
+			else
+			{
+				SpawnBlood (org, vel*0.2, damage);
+			}
 		}
 		AddMultiDamage (trace_ent, damage);
+		//Q3Surface_Impact(org);//new
 	}
 	else
 	{
-		AddMultiDamage (trace_ent, damage);
+//		AddMultiDamage (trace_ent, damage);
 		Q3Surface_Impact(org);
 	}
 };
@@ -357,6 +364,7 @@ void(float shotcount, vector org, vector dir, vector spread, float damage) FireB
 		
 		if (trace_fraction != 1.0)
 		{
+			/*
 			if (self.weapon == WEP_SHOTGUN)
 			{
 				Q3SurfaceTraceAttack(WEAPON_SHOTGUN_DAMAGE, direction);
@@ -364,7 +372,9 @@ void(float shotcount, vector org, vector dir, vector spread, float damage) FireB
 			else
 			{
 				Q3SurfaceTraceAttack(damage, direction);				
-			}	
+			}
+			*/
+			Q3SurfaceTraceAttack(damage, direction);
 		}	
 		//	TraceAttack (4, direction);
 

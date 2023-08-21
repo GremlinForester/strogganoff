@@ -100,10 +100,10 @@ void(vector org, float height, vector rot) make_ladderVolume =
 	ladderVolume.speed = 160;
 	ladderVolume.sounds = 1;
 	ladderVolume.waitmin = 0.45;
-	ladderVolume.noise1 = "player/clank1.wav";
-	ladderVolume.noise2 = "player/clank2.wav";
-	ladderVolume.noise3 = "player/clank3.wav";
-	ladderVolume.noise4 = "player/clank4.wav";
+	//ladderVolume.noise1 = "player/clank1.wav";
+	//ladderVolume.noise2 = "player/clank2.wav";
+	//ladderVolume.noise3 = "player/clank3.wav";
+	//ladderVolume.noise4 = "player/clank4.wav";
 	ladderVolume.touch = trigger_ladder_fire;
 	setsize(ladderVolume, '-16 -16 -24', '16 16 32' + ladderHeight); //'-4 -16 -24', '4 16 32'
 };
@@ -111,13 +111,14 @@ void(vector org, float height, vector rot) make_ladderVolume =
 void() trigger_ladder =
 {
 	// Default = wood
-	if (!self.sounds) self.sounds = 2;
+	if (!self.sounds) self.sounds = 1;
+	
 	if (self.sounds == 1) {				// Metal
 		if(!self.waitmin) self.waitmin = 0.45;
-		self.noise1 = "player/ladmetal1.wav";
-		self.noise2 = "player/ladmetal2.wav";
-		self.noise3 = "player/ladmetal3.wav";
-		self.noise4 = "player/ladmetal4.wav";
+		self.noise1 = "player/metal1.wav";
+		self.noise2 = "player/metal2.wav";
+		self.noise3 = "player/metal3.wav";
+		self.noise4 = "player/metal4.wav";
 	}
 	else if (self.sounds == 2) {		// Wood
 		if(!self.waitmin) self.waitmin = 0.4;
@@ -136,10 +137,10 @@ void() trigger_ladder =
 	else {
 		// Custom or empty
 		if (!self.waitmin) self.waitmin = 0.5;
-		if (self.noise1 == "") self.noise1 = SOUND_EMPTY;
-		if (self.noise2 == "") self.noise2 = SOUND_EMPTY;
-		if (self.noise3 == "") self.noise3 = SOUND_EMPTY;
-		if (self.noise4 == "") self.noise4 = SOUND_EMPTY;
+		self.noise1 = "player/metal1.wav";
+		self.noise2 = "player/metal2.wav";
+		self.noise3 = "player/metal3.wav";
+		self.noise4 = "player/metal4.wav";		
 	}
 	precache_sound(self.noise1);
 	precache_sound(self.noise2);
@@ -149,6 +150,7 @@ void() trigger_ladder =
 //	self.classtype = CT_TRIGLADDER;
 	InitTrigger ();
 	if (!self.speed) self.speed = 160;
+	
 	// No trigger damage functionality and always touchable!
 //	self.spawnflags = self.spawnflags | TRIG_ALWAYTOUCH | TRIG_NODAMAGE;
 

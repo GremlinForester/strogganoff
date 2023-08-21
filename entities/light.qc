@@ -141,12 +141,14 @@ void() rtlight_use =
 		self.glow_size = 0;
 };
 
+.float shadowlightradius;
+.float shadowlightintensity;
+
 void() rtlight =
 {
 	self.classname = "rtlight";
 	self.intensity_original = self.light_lev;
 	self.movetype = MOVETYPE_NOCLIP;
-	self.skin = self.skin;
 	setorigin (self, self.origin);
 	self.glow_size = self.light_lev;
 	
@@ -178,3 +180,14 @@ void() rtlight =
 	self.avelocity = self.avelocity;
 	self.style = self.style;
 };
+
+//.vector _color;
+void() dynamic_light =
+{
+	rtlight();
+	self.pflags = self.pflags | PFLAGS_FULLDYNAMIC;
+	//self.color = self._color;
+	self.light_lev = self.shadowlightradius * self.shadowlightintensity; //Quake2 Remaster
+	self.shadowlightintensity = self.light_lev * self.shadowlightintensity;	
+}
+

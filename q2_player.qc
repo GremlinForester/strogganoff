@@ -399,6 +399,7 @@ void() q2player_pain =
 		else if (r < 2) q2player_painFramesB();
 		else            q2player_painFramesC();
 	}
+	SpawnBlood (self.origin, '0 0 10', 20);
 };
 
 void() q2playerDeathSound =

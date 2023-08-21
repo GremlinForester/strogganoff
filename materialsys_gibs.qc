@@ -48,6 +48,18 @@ void () GibThinkRemove =
 	remove(self);
 }
 
+void () gibBrittleTouch =
+{
+	if (self.modelflags == MF_GIB)
+	{
+		SpawnBlood (self.origin, '0 0 20', 55);
+	}
+	else
+	{
+		pointparticles(particleeffectnum("TE_WOODIMPACT"), self.origin, '0 0 0', 1);
+	}
+	remove(self);
+}
 
 void() Glass_Touch =
 {
@@ -112,6 +124,14 @@ void() Gib_Touch_Flesh =
 {
 	if (other.classname == "gib")
 		return;
+		
+	if (other.classname == "func_door")
+	{
+		SpawnBlood (self.origin, '0 0 5', 55);
+		remove(self);
+		return;	
+	}
+	
 	
 	if (pointcontents(self.origin) == CONTENT_SOLID){
 		LOG("Removed stuck debris!");
@@ -139,8 +159,9 @@ void() Gib_Touch_Flesh =
 	else if (vlen(self.velocity) >= 10){
 	sound (self, CHAN_BODY, "zombie/z_miss.wav", 0.5, ATTN_NORM);
 	}
-	else{
-	Gib_Touch();
+	else
+	{
+		Gib_Touch();
 	}
 }
 
@@ -267,6 +288,9 @@ void(string gibname, float dm) ThrowGibPhysics =
 	//physics_addforce(new, self.origin * 900000 , '500 600 700');
 };
 
+//void() StroggZombieGrenadeTouch;
+void() StroggZombieGrenadeBounce;
+
 void(string gibname, float dm, float GibType, float gibScale, float multiplier) ThrowGib =
 {
 	nspawn = spawn();
@@ -275,13 +299,23 @@ void(string gibname, float dm, float GibType, float gibScale, float multiplier) 
 	setmodel (nspawn, gibname);
 	setsize (nspawn, '0 0 0', '0 0 0');
 	
-	if (multiplier > 1){
+	/*
+	if (multiplier > 1)
+	{
 		nspawn.velocity = VelocityForDamage(dm) + (self.movedir * multiplier);
 		//nspawn.velocity = VelocityForDamage(dm) * multiplier;
 	}
-	else{
-		nspawn.velocity = VelocityForDamage(dm);
+	else
+	{
+		nspawn.velocity = VelocityForDamage(dm * multiplier);
 	}
+	*/
+	
+	nspawn.velocity = VelocityForDamage(dm);
+	nspawn.velocity_x = nspawn.velocity_x * multiplier;
+	nspawn.velocity_y = nspawn.velocity_y * multiplier;
+	nspawn.velocity_z = nspawn.velocity_z * multiplier;
+	
 	
 	nspawn.movetype = MOVETYPE_BOUNCE;
 	nspawn.solid = SOLID_BBOX;
@@ -333,6 +367,12 @@ void(string gibname, float dm, float GibType, float gibScale, float multiplier) 
 	break;
 	
 	case GIB_STONE:
+		nspawn.touch = gibBrittleTouch; //Gib_Touch;
+	break;
+
+	case GIB_EXPLOSIVE:
+		nspawn.modelflags = MF_ROCKET;	
+		nspawn.touch = StroggZombieGrenadeBounce; //StroggZombieGrenadeTouch;
 	break;	
 	}
 }
@@ -340,8 +380,9 @@ void(string gibname, float dm, float GibType, float gibScale, float multiplier) 
 .float isdecor;
 void(entity e, vector org, vector vel, string gibname, float GibType) ThrowDebris =
 {
-	if (e)
+	if (e){
 		e = newdecor(e);
+	}
 	else
 	{
 		// if in danger of running out of entities, don't spawn any new ones
@@ -399,6 +440,7 @@ void(entity e, vector org, vector vel, string gibname, float GibType) ThrowDebri
 	break;
 	
 	case GIB_STONE:
+		e.touch = gibBrittleTouch; //Gib_Touch;
 	break;	
 	}
 	

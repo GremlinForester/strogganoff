@@ -16,9 +16,18 @@ These can used but not touched.
 void() func_timer_think  =
 {
 	SUB_UseTargets ();
-	//self.nextthink = time + (((random() * 1 ) + self.wait) + ((random() * 1 ) * self.delay));
-	self.nextthink = ((time + self.wait) + (random() * self.variance));
-//level.time + self->wait + crandom() * self->random;	
+	
+	if (self.spawnflags & FIRE_ONCE)
+	{
+		self.think = SUB_Remove;
+		self.nextthink = time + 0.1;
+	}
+	else
+	{
+		//self.nextthink = time + (((random() * 1 ) + self.wait) + ((random() * 1 ) * self.delay));
+		self.nextthink = ((time + self.wait) + (random() * self.variance));
+		//level.time + self->wait + crandom() * self->random;
+	}
 }
 
 void() func_timer_use =

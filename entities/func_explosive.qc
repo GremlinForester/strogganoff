@@ -193,15 +193,15 @@ void() xwall_breakthink =
 		break;
 		
 		case 6:
-		if (r == 0) ThrowDebris(world, v, v2, "models/objects/debris1/tris.md2", GIB_WOOD);
-		if (r == 1) ThrowDebris(world, v, v2, "models/objects/debris2/tris.md2", GIB_WOOD);
-		if (r == 2) ThrowDebris(world, v, v2, "models/objects/debris3/tris.md2", GIB_WOOD);
+		if (r == 0) ThrowDebris(world, v, v2, "models/objects/debris1/tris.md2", GIB_WOOD, self);
+		if (r == 1) ThrowDebris(world, v, v2, "models/objects/debris2/tris.md2", GIB_WOOD, self);
+		if (r == 2) ThrowDebris(world, v, v2, "models/objects/debris3/tris.md2", GIB_WOOD, self);
 		break;
 		
 		case 7:
-		if (r == 0) ThrowDebris(world, v, v2, "models/objects/debris1/tris.md2", GIB_STONE);
-		if (r == 1) ThrowDebris(world, v, v2, "models/objects/debris2/tris.md2", GIB_STONE);
-		if (r == 2) ThrowDebris(world, v, v2, "models/objects/debris3/tris.md2", GIB_STONE);
+		if (r == 0) ThrowDebris(world, v, v2, "models/objects/debris1/tris.md2", GIB_STONE, self);
+		if (r == 1) ThrowDebris(world, v, v2, "models/objects/debris2/tris.md2", GIB_STONE, self);
+		if (r == 2) ThrowDebris(world, v, v2, "models/objects/debris3/tris.md2", GIB_STONE, self);
 		break;		
 		}
 

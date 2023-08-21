@@ -8,8 +8,6 @@ Instructions:
 
 during some frame call, call "thread(FADEOUT, self, 0.1);"
 
-FADEOUT is a member of an enum or something.
-
 The entity is instantiated and begins thinking at time + delay.
 
 NOTE: mostly UNTESTED
@@ -650,7 +648,7 @@ entity(entity e) newdecor =
 	e.cnt = 10 * (0.5 + random());
 	e.alpha = 1;
 	e.effects = EF_LOWPRECISION;
-	e.flags = e.flags - (e.flags & FL_ONGROUND);
+	e.flags = e.flags - (e.flags & FL_ONGROUND);	
 	e.groundentity = world;
 	e.movetype = MOVETYPE_NONE;
 	e.solid = SOLID_NOT;

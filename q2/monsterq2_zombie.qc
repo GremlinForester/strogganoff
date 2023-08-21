@@ -58,7 +58,7 @@ WALK
 
 framerloop($walk1, $walk19, stroggzombie_walk1, 0.1,
 
-	frame_arb($walk19,if (random() < 0.2) sound (self, CHAN_VOICE, "zombie/z_idle.wav", 1, ATTN_IDLE));
+	frame_arb($walk19,if (random() < 0.2) sound (self, CHAN_VOICE, "stroggzombie/z_idle.wav", 1, ATTN_IDLE));
 
 	ai_rep($walk1, ai_walk, 0, 2, 3, 2, 1, 0, 0, 0);
 	ai_rep($walk9, ai_walk, 0, 0, 2, 2, 1, 0, 0, 0);
@@ -74,8 +74,8 @@ framerloop($run1, $run18, stroggzombie_run1, 0.1,
 	frame_arb($run1,self.inpain = 0);
 	frame_arb($run18,
 	
-		if (random() < 0.2) sound(self, CHAN_VOICE, "zombie/z_idle.wav", 1, ATTN_IDLE);
-		if (random() > 0.8) sound(self, CHAN_VOICE, "zombie/z_idle1.wav", 1, ATTN_IDLE);
+		if (random() < 0.2) sound(self, CHAN_VOICE, "stroggzombie/z_idle.wav", 1, ATTN_IDLE);
+		if (random() > 0.8) sound(self, CHAN_VOICE, "stroggzombie/z_idle1.wav", 1, ATTN_IDLE);
 	);
 
 	ai_rep($run1, ai_run, 1, 1, 0, 1, 2, 3, 4, 4);
@@ -97,14 +97,12 @@ ATTACKS
 
 void() StroggZombieGrenadeTouch =
 {
-	if (other == self.owner)
-		return;		// don't explode on owner
 	if (other.takedamage)
 	{
 		T_Damage (other, self, self.owner, 20 );
 		sound (self, CHAN_WEAPON, "blob/death1.wav", 1, ATTN_NORM);
 	//	BecomeExplosion();
-		pointparticles(particleeffectnum("TE_EXPLOSION"), self.origin, '0 0 0', 1);		
+		pointparticles(particleeffectnum("TE_EXPLOSION"), self.origin, '0 0 0', 1);
 		remove (self);
 		return;
 	}
@@ -114,7 +112,28 @@ void() StroggZombieGrenadeTouch =
 	T_RadiusDamage (self, self.owner, autocvar_sk_q2zombie_grenade_damage, other);
 	pointparticles(particleeffectnum("TE_EXPLOSION"), self.origin, '0 0 0', 1);
 //	BecomeExplosion();
-	self.touch = SUB_Remove;
+	self.nextthink = time + 0.1;
+	self.think = SUB_Remove;
+};
+
+void() StroggZombieGrenadeBounce =
+{
+	if (other.takedamage)
+	{
+		T_Damage (other, self, self.owner, 20 );
+		sound (self, CHAN_WEAPON, "blob/death1.wav", 1, ATTN_NORM);
+		pointparticles(particleeffectnum("TE_EXPLOSION"), self.origin, '0 0 0', 1);
+		remove (self);
+		return;		
+	}
+//	sound (self, CHAN_WEAPON, "blob/death1.wav", 1, ATTN_NORM);	// bounce sound
+//	T_RadiusDamage (self, self.owner, autocvar_sk_q2zombie_grenade_damage, other);
+//	pointparticles(particleeffectnum("TE_EXPLOSION"), self.origin, '0 0 0', 1);
+	
+	self.cnt += 1;
+	
+	if (self.cnt >= floor(random() * autocvar_sk_q2zombie_bounce))
+		self.touch = StroggZombieGrenadeTouch;
 };
 
 /*
@@ -150,13 +169,15 @@ void(vector st) StroggZombieFireGrenade =
 	newmis.velocity = newmis.velocity * 600;
 	newmis.velocity_z = 200;
 
+
 //	newmis.avelocity = '3000 1000 2000';
 
 	newmis.touch = StroggZombieGrenadeTouch;
 	
 // set missile duration
 	newmis.nextthink = time + 2.5;
-	newmis.modelflags = MF_ROCKET;	
+	newmis.modelflags = MF_ROCKET;
+
 /*
 	newmis.think = SUB_Remove;
 
@@ -227,7 +248,7 @@ PAIN 1
 
 framer($paina1, $paina12, stroggzombie_paina1, stroggzombie_run1, 0.1,
 
-	frame_arb($paina1,sound(self, CHAN_VOICE, "zombie/z_pain.wav", 1, ATTN_NORM));
+	frame_arb($paina1,sound(self, CHAN_VOICE, "stroggzombie/z_pain.wav", 1, ATTN_NORM));
 	frame_arb($paina2,ai_painforward(3));
 	frame_arb($paina3,ai_painforward(1));
 	frame_arb($paina5,ai_pain(3));
@@ -242,7 +263,7 @@ PAIN 2
 
 framer($painb1, $painb28, stroggzombie_painb1, stroggzombie_run1, 0.07,
 
-	frame_arb($painb1,sound(self, CHAN_VOICE, "zombie/z_pain1.wav", 1, ATTN_NORM);self.glowmod = '2 2 0';);
+	frame_arb($painb1,sound(self, CHAN_VOICE, "stroggzombie/z_pain1.wav", 1, ATTN_NORM);self.glowmod = '2 2 0';);
 	frame_arb($painb9,sound(self, CHAN_BODY, "zombie/z_fall.wav", 1, ATTN_NORM));
 	frame_arb($painb18,sound(self, CHAN_VOICE, "world/x_alarm.wav", 1, ATTN_IDLE););	
 	frame_arb($painb25,ai_painforward(1));
@@ -259,7 +280,7 @@ PAIN 3
 
 framer($painc1, $painc18, stroggzombie_painc1, stroggzombie_run1, 0.1,
 
-	frame_arb($painc1,sound(self, CHAN_VOICE, "zombie/z_pain1.wav", 1, ATTN_NORM));
+	frame_arb($painc1,sound(self, CHAN_VOICE, "stroggzombie/z_pain1.wav", 1, ATTN_NORM));
 	frame_arb($painc4,ai_pain(1));
 	frame_arb($painc3,ai_pain(3));
 	frametwo_arb($painc11,$painc12,ai_painforward(1));
@@ -290,7 +311,7 @@ void() stroggzombie_paine12	=[	$paine12,	stroggzombie_paine13	]
 {
 // see if ok to stand up
 	self.health = 60;
-	sound (self, CHAN_VOICE, "zombie/z_idle.wav", 1, ATTN_IDLE);
+	sound (self, CHAN_VOICE, "stroggzombie/z_idle.wav", 1, ATTN_IDLE);
 	self.solid = SOLID_SLIDEBOX;
 	if (!walkmove (0, 0))
 	{
@@ -302,7 +323,7 @@ void() stroggzombie_paine12	=[	$paine12,	stroggzombie_paine13	]
 
 framer($paine1, $paine9, stroggzombie_paine1, stroggzombie_paine10, 0.1,
 
-	frame_arb($paine1,self.health = 60;sound(self, CHAN_VOICE, "zombie/z_pain.wav", 1, ATTN_NORM));
+	frame_arb($paine1,self.health = 60;sound(self, CHAN_VOICE, "stroggzombie/z_pain.wav", 1, ATTN_NORM));
 
 	ai_rep($paine2, ai_pain, 8, 5, 3, 1, 2, 1, 1, 2);
 );
@@ -325,7 +346,8 @@ void() stroggzombie_cleanup =
 
 void() stroggzombie_die =
 {
-//	gibbs("progs/h_zombie.mdl");
+	sound(self, CHAN_BODY, "world/flesh1.wav", 0.8, ATTN_IDLE);
+	sound(self, CHAN_AUTO, "world/explod2.wav", 1, ATTN_IDLE);		
 	gibMonster();
 	self.solid = SOLID_NOT;
 	self.alpha = 0;
@@ -419,16 +441,16 @@ void() monster_stroggzombie =
 	precache_model ("progs/h_zombie.mdl");
 	precache_model ("progs/zom_gib.mdl");
 
-	precache_sound ("zombie/z_idle.wav");
-	precache_sound ("zombie/z_idle1.wav");
+	precache_sound ("stroggzombie/z_idle.wav");
+	precache_sound ("stroggzombie/z_idle1.wav");
 	precache_sound ("zombie/z_shot1.wav");
 	precache_sound ("zombie/z_gib.wav");
-	precache_sound ("zombie/z_pain.wav");
-	precache_sound ("zombie/z_pain1.wav");
+	precache_sound ("stroggzombie/z_pain.wav");
+	precache_sound ("stroggzombie/z_pain1.wav");
 	precache_sound ("zombie/z_fall.wav");
 	precache_sound ("zombie/z_miss.wav");
 	precache_sound ("zombie/z_hit.wav");
-	precache_sound ("zombie/idle_w2.wav");
+	precache_sound ("stroggzombie/idle_w2.wav");
 
 	self.solid = SOLID_SLIDEBOX;
 	self.movetype = MOVETYPE_STEP;
